@@ -8,8 +8,7 @@ import stepper.dd.impl.string.StringDataDefinition;
 public enum DataDefinitionRegistry implements DataDefinition{
     STRING(new StringDataDefinition()),
     DOUBLE(new DoubleDataDefinition()),
-    RELATION(new RelationDataDefinition())
-    ;
+    RELATION(new RelationDataDefinition());
 
     DataDefinitionRegistry(DataDefinition dataDefinition) {
         this.dataDefinition = dataDefinition;

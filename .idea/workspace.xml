@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="Implemented StepLoggers (aggregated in Context)">
+      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/AbstractLogger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/LogLine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/flow/FlowExecutionLoggerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/step/StepExecutionLoggerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stepper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Stepper.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContextImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContextImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/StepExecutionLogger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/StepExecutionLoggerImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="filedumper-step-wip" />
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="DDimpl-number" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="DDimpl-number" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="e764e2ca-0e6a-4b28-9b73-e3cbf6698701" />
+        <option name="url" value="https://github.com/gaviezri/Stepper.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="ProjectId" id="2OdSi7bljaNv1OPl3mEGgTpe7GT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;filedumper-step-wip&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper/stepper-engine&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gavie\OneDrive\Desktop\MTA\3rd Year\semester 2\Java\Stepper\test-flow-defs\flow-from-xml" />
+      <recent name="C:\Users\gavie\OneDrive\Desktop\MTA\3rd Year\semester 2\Java\Stepper\test-flow-defs\flow-from-schema" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Stepper" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Stepper" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="" />
+      <created>1681889091220</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681889091220</updated>
+    </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <created>1681889636383</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1681889636383</updated>
+    </task>
+    <task id="LOCAL-00002" summary="FileDumper-Done&#10;Logger through Context-Done">
+      <created>1681897658775</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1681897658775</updated>
+    </task>
+    <task id="LOCAL-00003" summary="FileDumper-Done&#10;Logger through Context-Done">
+      <created>1681897674434</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681897674434</updated>
+    </task>
+    <task id="LOCAL-00004" summary="done">
+      <created>1681899778460</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1681899778460</updated>
+    </task>
+    <task id="LOCAL-00005" summary="done">
+      <created>1681900377223</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681900377223</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="FileDumper-Done&#10;Logger through Context-Done" />
+    <MESSAGE value="done" />
+    <MESSAGE value="Implemented StepLoggers (aggregated in Context)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented StepLoggers (aggregated in Context)" />
+  </component>
+</project>

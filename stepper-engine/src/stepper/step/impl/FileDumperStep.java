@@ -1,9 +1,8 @@
 package stepper.step.impl;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.StepExecutionLogger;
+import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.DataNecessity;
@@ -58,31 +57,31 @@ public class FileDumperStep extends AbstractStepDefinition {
             StepResult result = StepResult.NULL;
             String content = context.getDataValue("CONTENT", String.class);
             String fileName = context.getDataValue("FILENAME", String.class);
-            StepExecutionLogger logger = context.getLogger();
+            AbstractLogger logger = context.getStepLogger(this);
             result = validateInputs(context);
 
             switch (result){
                 case SUCCESS:
-                    logger.addLogLine("File name is valid",this);
-                    logger.addLogLine("About to create file named " + fileName,this);
+                    logger.addLogLine("File name is valid");
+                    logger.addLogLine("About to create file named " + fileName);
                 case WARNING:
-                    logger.addLogLine("Content is empty",this);
+                    logger.addLogLine("Content is empty");
                     try {
                         createFile(fileName, content);
                     }
                     catch (IOException e) {
-                        logger.addLogLine(e.getMessage(),this);
+                        logger.addLogLine(e.getMessage());
                     }
                     break;
                 case FAILURE:
-                    logger.addLogLine("File name is invalid",this);
+                    logger.addLogLine("File name is invalid");
                 default:
-                    logger.addLogLine("Something went wrong",this);
+                    logger.addLogLine("Something went wrong");
                     break;
             }
 
             context.storeDataValue("RESULT", result);
-            logger.addSummaryLine("File " + fileName + " created successfully !", this);
+            logger.addSummaryLine("File " + fileName + " created successfully !");
             return result;
         }
 

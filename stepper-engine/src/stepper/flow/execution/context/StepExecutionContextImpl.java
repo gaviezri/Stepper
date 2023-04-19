@@ -1,8 +1,10 @@
 package stepper.flow.execution.context;
 
 import stepper.dd.api.DataDefinition;
-import stepper.flow.execution.logger.StepExecutionLogger;
-import stepper.flow.execution.logger.StepExecutionLoggerImpl;
+import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.flow.FlowExecutionLoggerImpl;
+import stepper.flow.execution.logger.step.StepExecutionLoggerImpl;
+import stepper.step.api.StepDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,16 +12,17 @@ import java.util.Map;
 public class StepExecutionContextImpl implements StepExecutionContext {
 
     private final Map<String, Object> dataValues;
-    private final StepExecutionLogger logger;
+    private Map<String, AbstractLogger> step2Logger;
 
     public StepExecutionContextImpl() {
         dataValues = new HashMap<>();
-        logger = new StepExecutionLoggerImpl();
+        step2Logger = new HashMap<>();
     }
 
     @Override
-    public StepExecutionLogger getLogger() {
-        return logger;
+    public AbstractLogger getStepLogger(StepDefinition step) {
+        step2Logger.put(step.name(),  new StepExecutionLoggerImpl(step));
+        return step2Logger.get(step.name());
     }
 
     @Override

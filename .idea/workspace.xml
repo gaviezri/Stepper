@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="Implemented StepLoggers (aggregated in Context)">
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" afterDir="false" />
+    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="WIP - CSV Exporter">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/relation/RelationData.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/relation/RelationData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/relation/RelationDataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/relation/RelationDataDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

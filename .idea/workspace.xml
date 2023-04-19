@@ -5,20 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="Implemented StepLoggers (aggregated in Context)">
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/AbstractLogger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/LogLine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/flow/FlowExecutionLoggerImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/step/StepExecutionLoggerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stepper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Stepper.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContextImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/context/StepExecutionContextImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/StepExecutionLogger.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/logger/StepExecutionLoggerImpl.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="DDimpl-number" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -73,7 +61,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;filedumper-step-wip&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper/stepper-engine&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;

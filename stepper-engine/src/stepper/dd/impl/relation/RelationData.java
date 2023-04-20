@@ -27,6 +27,7 @@ public class RelationData extends RelationDataDefinition{
     }
 
     public List getDataFromRow(int index){
+
         List<String> dataFromRow = new ArrayList<>();
         for (String columnName : columnsNames) {
             dataFromRow.add(columns.get(columnName).get(index));
@@ -40,6 +41,7 @@ public class RelationData extends RelationDataDefinition{
         return columns.get(columnName).get(rowIndex);
     }
     public void addRow(List<String> row){
+
         for (int i = 0; i < row.size(); i++) {
             columns.get(columnsNames.get(i)).add(row.get(i));
             totalSize +=  row.size();
@@ -47,6 +49,7 @@ public class RelationData extends RelationDataDefinition{
         }
     }
     public void addColumn(String columnName, List<String> column){
+
         columns.put(columnName, column);
         rows.forEach(row -> row.addData(columnName, null));
         columnsNames.add(columnName);
@@ -67,6 +70,7 @@ public class RelationData extends RelationDataDefinition{
     //TODO: ?? DELETE ??
 
     private static class SingleRow {
+
         private Map<String, String> data;
 
         public SingleRow() {

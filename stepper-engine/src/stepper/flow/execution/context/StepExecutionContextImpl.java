@@ -11,12 +11,12 @@ import java.util.Map;
 
 public class StepExecutionContextImpl implements StepExecutionContext {
 
-    private final Map<String, Object> dataValues;
-    private Map<String, AbstractLogger> step2Logger;
+    private Map<String, Object> dataValues = new HashMap<>();
+    private Map<String, AbstractLogger> step2Logger = new HashMap<>();
+    //private Map<String, String> step2Output = new HashMap<>();
 
     public StepExecutionContextImpl() {
-        dataValues = new HashMap<>();
-        step2Logger = new HashMap<>();
+
     }
 
     @Override

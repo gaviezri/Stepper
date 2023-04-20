@@ -5,6 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="WIP - CSV Exporter">
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileDataDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/AbstractDataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/AbstractDataDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/DataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/DataDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="DD-FILE" />
+        <entry key="$PROJECT_DIR$" value="CSVExporter-wip" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -54,17 +60,17 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "jdk.selected.JAVA_MODULE": "1.8",
-    "last_opened_file_path": "C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;filedumper-step-wip&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gavie\OneDrive\Desktop\MTA\3rd Year\semester 2\Java\Stepper\test-flow-defs\flow-from-xml" />
@@ -139,29 +145,6 @@
     </task>
     <option name="localTasksCounter" value="7" />
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="main" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />

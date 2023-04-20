@@ -41,19 +41,22 @@ public class FileDumperStep extends AbstractStepDefinition {
 
             String content = context.getDataValue("CONTENT", String.class);
             String fileName = context.getDataValue("FILENAME", String.class);
-
-            if (validateFileName(fileName) == false) {
-                return StepResult.FAILURE;
+            StepResult result;
+            if (! validateFileName(fileName)) {
+                result = StepResult.FAILURE;
             }
-
-            if (validateContent(content) == false) {
-                return StepResult.WARNING;
+            else if (! validateContent(content)) {
+                result = StepResult.WARNING;
             }
-            return StepResult.SUCCESS;
+            else{
+                result =  StepResult.SUCCESS;
+            }
+            return result;
         }
 
         @Override
         public StepResult invoke(StepExecutionContext context) {
+
             StepResult result = StepResult.NULL;
             String content = context.getDataValue("CONTENT", String.class);
             String fileName = context.getDataValue("FILENAME", String.class);
@@ -93,6 +96,7 @@ public class FileDumperStep extends AbstractStepDefinition {
         }
 
     private void createFile(String filename, String content) throws IOException {
+
         File file = new File(filename);
         if (file.createNewFile())
         {

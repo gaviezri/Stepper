@@ -6,4 +6,6 @@ public class RelationDataDefinition extends AbstractDataDefinition {
     public RelationDataDefinition() {
         super("Relation", false, RelationData.class);
     }
+
+
 }

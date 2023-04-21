@@ -3,6 +3,7 @@ package stepper.dd.impl.file;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
 
 public class FileData extends FileDataDefinition{
     File file;
@@ -11,6 +12,11 @@ public class FileData extends FileDataDefinition{
     public FileData(String path) {
         file = new File(path);
         filePath = path;
+    }
+
+    public FileData(Path path) {
+        file = path.toFile();
+        filePath = path.getFileName().toString();
     }
     public boolean exists(){
         return file.exists();

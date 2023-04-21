@@ -1,16 +1,15 @@
 package stepper.step;
 
 import stepper.step.api.StepDefinition;
-import stepper.step.impl.CSVExporter;
-import stepper.step.impl.FileDumperStep;
-import stepper.step.impl.HelloWorldStep;
-import stepper.step.impl.PersonDetailsStep;
+import stepper.step.impl.*;
 
 public enum StepDefinitionRegistry {
     HELLO_WORLD(new HelloWorldStep()),
     PERSON_DETAILS(new PersonDetailsStep()),
     FILE_DUMPER(new FileDumperStep()),
-    CSV_EXPORTER(new CSVExporter())
+    CSV_EXPORTER(new CSVExporterStep()),
+    SPEND_SOME_TIME(new SpendSomeTimeStep()),
+    COLLECT_FILES_IN_FOLDER(new CollectFilesInFolderStep())
     ;
 
     private final StepDefinition stepDefinition;

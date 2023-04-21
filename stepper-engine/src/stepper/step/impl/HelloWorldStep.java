@@ -2,7 +2,7 @@ package stepper.step.impl;
 
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.step.api.AbstractStepDefinition;
-import stepper.step.api.StepResult;
+import stepper.step.api.enums.StepResult;
 
 public class HelloWorldStep extends AbstractStepDefinition {
 

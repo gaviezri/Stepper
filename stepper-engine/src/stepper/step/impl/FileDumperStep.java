@@ -5,8 +5,8 @@ import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
-import stepper.step.api.DataNecessity;
-import stepper.step.api.StepResult;
+import stepper.step.api.enums.DataNecessity;
+import stepper.step.api.enums.StepResult;
 
 import java.io.File;
 import java.io.FileWriter;

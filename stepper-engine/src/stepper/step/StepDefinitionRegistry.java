@@ -8,7 +8,8 @@ public enum StepDefinitionRegistry {
     PERSON_DETAILS(new PersonDetailsStep()),
     FILE_DUMPER(new FileDumperStep()),
     CSV_EXPORTER(new CSVExporterStep()),
-    SPEND_SOME_TIME(new SpendSomeTimeStep());
+    SPEND_SOME_TIME(new SpendSomeTimeStep()),
+    COLLECT_FILES_IN_FOLDER(new CollectFilesInFolderStep())
     ;
 
     private final StepDefinition stepDefinition;

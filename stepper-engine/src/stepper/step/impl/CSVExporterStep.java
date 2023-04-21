@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.relation.RelationDataDefinition;
@@ -11,10 +10,8 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.DataNecessity;
 import stepper.step.api.StepResult;
 
-import java.util.List;
-
-public class CSVExporter extends AbstractStepDefinition {
-    public CSVExporter() {
+public class CSVExporterStep extends AbstractStepDefinition {
+    public CSVExporterStep() {
         super("CSVExporter", true);
 
         //inputs

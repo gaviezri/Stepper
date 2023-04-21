@@ -2,7 +2,7 @@ package stepper.dd.impl;
 
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
-import stepper.dd.impl.number.DoubleDataDefinition;
+import stepper.dd.impl.doublle.DoubleDataDefinition;
 import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.dd.impl.relation.RelationDataDefinition;
 import stepper.dd.impl.string.StringDataDefinition;
@@ -35,4 +35,5 @@ public enum DataDefinitionRegistry implements DataDefinition{
     public Class<?> getType() {
         return dataDefinition.getType();
     }
+
 }

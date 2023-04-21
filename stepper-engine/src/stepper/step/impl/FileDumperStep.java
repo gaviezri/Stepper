@@ -38,17 +38,22 @@ public class FileDumperStep extends AbstractStepDefinition {
 
         @Override
         public StepResult validateInputs(StepExecutionContext context) {
-
+            AbstractLogger logger = context.getStepLogger(this);
             String content = context.getDataValue("CONTENT", String.class);
             String fileName = context.getDataValue("FILENAME", String.class);
             StepResult result;
             if (! validateFileName(fileName)) {
+                logger.addLogLine("File name is invalid");
+                logger.addSummaryLine("File " + fileName + " NOT created!");
                 result = StepResult.FAILURE;
             }
             else if (! validateContent(content)) {
+                logger.addLogLine("Content is empty");
                 result = StepResult.WARNING;
             }
             else{
+                logger.addLogLine("File name is valid");
+                logger.addLogLine("About to create file named " + fileName);
                 result =  StepResult.SUCCESS;
             }
             return result;
@@ -57,40 +62,39 @@ public class FileDumperStep extends AbstractStepDefinition {
         @Override
         public StepResult invoke(StepExecutionContext context) {
 
-            StepResult result = StepResult.NULL;
+            StepResult result = validateInputs(context);
+            AbstractLogger logger = context.getStepLogger(this);
             String content = context.getDataValue("CONTENT", String.class);
             String fileName = context.getDataValue("FILENAME", String.class);
-            String Cause = "";
-            AbstractLogger logger = context.getStepLogger(this);
-            result = validateInputs(context);
+            String cause = "";
+
+
 
             switch (result){
                 case SUCCESS:
-                    logger.addLogLine("File name is valid");
-                    logger.addLogLine("About to create file named " + fileName);
-                    logger.addSummaryLine("File " + fileName + " created successfully !");
                 case WARNING:
-                    Cause = "Content is empty";
-                    logger.addLogLine(Cause);
                     try {
+                        content = context.getDataValue("CONTENT", String.class);
+                        fileName = context.getDataValue("FILENAME", String.class);
                         createFile(fileName, content);
+                        logger.addSummaryLine("File " + fileName + " created successfully !");
                     }
                     catch (IOException e) {
                         logger.addLogLine(e.getMessage());
+                        logger.addSummaryLine("File " + fileName + " NOT created!");
+                        result = StepResult.FAILURE;
                     }
                     break;
                 case FAILURE:
-                    Cause = "File name is invalid";
-                    logger.addLogLine(Cause);
-
                 default:
+                    cause = "file name is invalid";
                     logger.addLogLine("Something went wrong");
                     logger.addSummaryLine("File " + fileName + " NOT created!");
                     break;
             }
 
             context.storeDataValue("RESULT",  result +
-                    (result != StepResult.SUCCESS ?  ": " + Cause : ""));
+                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS"));
 
             return result;
         }

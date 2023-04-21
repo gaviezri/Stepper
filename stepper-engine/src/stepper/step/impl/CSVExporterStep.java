@@ -7,11 +7,11 @@ import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
-import stepper.step.api.enums.DataNecessity;
-import stepper.step.api.enums.StepResult;
+import stepper.step.api.DataNecessity;
+import stepper.step.api.StepResult;
 
-public class CSVExporter extends AbstractStepDefinition {
-    public CSVExporter() {
+public class CSVExporterStep extends AbstractStepDefinition {
+    public CSVExporterStep() {
         super("CSVExporter", true);
 
         //inputs

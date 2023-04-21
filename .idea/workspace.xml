@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="WIP - CSV Exporter">
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileDataDefinition.java" afterDir="false" />
+    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="CSV EXPORTER - ADDED TO REGISTRY">
+      <change afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/SpendSomeTimeStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/AbstractDataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/AbstractDataDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/DataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/api/DataDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporterStep.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="CSVExporter-wip" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -60,17 +58,17 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;filedumper-step-wip&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "SpendSomeTime-WIP",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gavie\OneDrive\Desktop\MTA\3rd Year\semester 2\Java\Stepper\test-flow-defs\flow-from-xml" />
@@ -143,8 +141,40 @@
       <option name="project" value="LOCAL" />
       <updated>1681936606157</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="CSV EXPORTER - ADDED TO REGISTRY">
+      <created>1681998245753</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1681998245760</updated>
+    </task>
+    <task id="LOCAL-00008" summary="CSV EXPORTER - ADDED TO REGISTRY">
+      <created>1681998306194</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1681998306194</updated>
+    </task>
+    <task id="LOCAL-00009" summary="CSV EXPORTER - ADDED TO REGISTRY">
+      <created>1681998401786</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1681998401786</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />
@@ -152,6 +182,7 @@
     <MESSAGE value="done" />
     <MESSAGE value="Implemented StepLoggers (aggregated in Context)" />
     <MESSAGE value="WIP - CSV Exporter" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP - CSV Exporter" />
+    <MESSAGE value="CSV EXPORTER - ADDED TO REGISTRY" />
+    <option name="LAST_COMMIT_MESSAGE" value="CSV EXPORTER - ADDED TO REGISTRY" />
   </component>
 </project>

@@ -9,7 +9,8 @@ public enum StepDefinitionRegistry {
     FILE_DUMPER(new FileDumperStep()),
     CSV_EXPORTER(new CSVExporterStep()),
     SPEND_SOME_TIME(new SpendSomeTimeStep()),
-    COLLECT_FILES_IN_FOLDER(new CollectFilesInFolderStep())
+    COLLECT_FILES_IN_FOLDER(new CollectFilesInFolderStep()),
+    FILES_RENAMER(new FilesRenamerStep()),
     ;
 
     private final StepDefinition stepDefinition;

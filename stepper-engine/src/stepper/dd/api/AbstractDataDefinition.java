@@ -1,10 +1,15 @@
 package stepper.dd.api;
 
 public abstract class AbstractDataDefinition implements DataDefinition {
-
     private final String name;
     private final boolean userFriendly;
     private final Class<?> type;
+    protected abstract String presentToUser();
+
+    @Override
+    public String toString() {
+        return presentToUser();
+    }
 
     public AbstractDataDefinition(String name, boolean userFriendly, Class<?> type) {
         this.name = name;
@@ -26,6 +31,4 @@ public abstract class AbstractDataDefinition implements DataDefinition {
     public Class<?> getType() {
         return type;
     }
-
-
 }

@@ -41,4 +41,9 @@ public class PersonDetailsStep extends AbstractStepDefinition {
         // return result
         return StepResult.SUCCESS;
     }
+
+    @Override
+    public StepResult validateInputs(StepExecutionContext context) {
+        return null;
+    }
 }

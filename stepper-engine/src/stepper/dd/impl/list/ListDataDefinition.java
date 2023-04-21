@@ -6,4 +6,9 @@ public class ListDataDefinition extends AbstractDataDefinition {
     public ListDataDefinition() {
         super("List", false, ListData.class);
     }
+
+    @Override
+    protected String presentToUser() {
+        return null;
+    }
 }

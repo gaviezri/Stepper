@@ -57,4 +57,9 @@ public class FileData extends FileDataDefinition{
             return null;
         }
     }
+
+    @Override
+    public String presentToUser() {
+        return filePath;
+    }
 }

@@ -1,4 +1,4 @@
-package stepper.dd.impl.number;
+package stepper.dd.impl.doublle;
 
 import stepper.dd.api.AbstractDataDefinition;
 

@@ -4,8 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="FILE RENAMER STEP -DONE + ADDED TO REGISTRY">
+    <list default="true" id="ec6e060b-c7a3-4cc4-ad56-2f207f34cc26" name="Changes" comment="String,Double and Number data impl&#10;&#10;TODO:&#10;1. understand Mapping principle and implement accordingly (is it tuple or map)&#10;2. user presentation method position and uses">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/DataDefinitionRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileDataDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/dd/impl/file/FileDataDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/runner/FLowExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/flow/execution/runner/FLowExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/StepDefinitionRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/AbstractStepDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/AbstractStepDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/DataDefinitionDeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/DataDefinitionDeclaration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/DataDefinitionDeclarationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/DataDefinitionDeclarationImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/DataNecessity.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/enums/DataNecessity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/StepDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/StepDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/StepResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/api/enums/StepResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/CSVExporter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/FileDumperStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/HelloWorldStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/HelloWorldStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/PersonDetailsStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/stepper-engine/src/stepper/step/impl/PersonDetailsStep.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +43,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="final_data_def" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,9 +54,15 @@
   }
 }</component>
   <component name="GithubPullRequestsUISettings">
+    <option name="recentNewPullRequestHead">
+      <RepoCoordinatesHolder>
+        <option name="owner" value="gaviezri" />
+        <option name="repository" value="Stepper" />
+      </RepoCoordinatesHolder>
+    </option>
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
-        <option name="accountId" value="e764e2ca-0e6a-4b28-9b73-e3cbf6698701" />
+        <option name="accountId" value="3ac4d52e-67be-45e8-abe3-0855741327f3" />
         <option name="url" value="https://github.com/gaviezri/Stepper.git" />
       </UrlAndAccount>
     </option>
@@ -60,6 +80,23 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
+
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;filedumper-step-wip&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gavie/OneDrive/Desktop/MTA/3rd Year/semester 2/Java/Stepper&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -151,12 +188,12 @@
       <option name="project" value="LOCAL" />
       <updated>1681936606157</updated>
     </task>
-    <task id="LOCAL-00007" summary="FILE RENAMER STEP -DONE + ADDED TO REGISTRY">
-      <created>1682085454058</created>
+    <task id="LOCAL-00007" summary="String,Double and Number data impl&#10;&#10;TODO:&#10;1. understand Mapping principle and implement accordingly (is it tuple or map)&#10;2. user presentation method position and uses">
+      <created>1682070702135</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1682085454058</updated>
+      <updated>1682070702135</updated>
     </task>
     <option name="localTasksCounter" value="8" />
     <servers />
@@ -181,8 +218,8 @@
     <MESSAGE value="done" />
     <MESSAGE value="Implemented StepLoggers (aggregated in Context)" />
     <MESSAGE value="WIP - CSV Exporter" />
-    <MESSAGE value="FILE RENAMER STEP -DONE + ADDED TO REGISTRY" />
-    <option name="LAST_COMMIT_MESSAGE" value="FILE RENAMER STEP -DONE + ADDED TO REGISTRY" />
+    <MESSAGE value="String,Double and Number data impl&#10;&#10;TODO:&#10;1. understand Mapping principle and implement accordingly (is it tuple or map)&#10;2. user presentation method position and uses" />
+    <option name="LAST_COMMIT_MESSAGE" value="String,Double and Number data impl&#10;&#10;TODO:&#10;1. understand Mapping principle and implement accordingly (is it tuple or map)&#10;2. user presentation method position and uses" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

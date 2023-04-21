@@ -4,7 +4,7 @@ import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
-import stepper.step.api.StepResult;
+import stepper.step.api.enums.StepResult;
 
 public class FLowExecutor {
 

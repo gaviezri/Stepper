@@ -7,14 +7,12 @@ public abstract class AbstractStepDefinition implements StepDefinition {
 
     private final String stepName;
     private final boolean readonly;
-    private final List<DataDefinitionDeclaration> inputs;
-    private final List<DataDefinitionDeclaration> outputs;
+    private final List<DataDefinitionDeclaration> inputs = new ArrayList<>();
+    private final List<DataDefinitionDeclaration> outputs = new ArrayList<>();
 
     public AbstractStepDefinition(String stepName, boolean readonly) {
         this.stepName = stepName;
         this.readonly = readonly;
-        inputs = new ArrayList<>();
-        outputs = new ArrayList<>();
     }
 
     protected void addInput(DataDefinitionDeclaration dataDefinitionDeclaration) {

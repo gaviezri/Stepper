@@ -4,8 +4,8 @@ import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
-import stepper.step.api.DataNecessity;
-import stepper.step.api.StepResult;
+import stepper.step.api.enums.DataNecessity;
+import stepper.step.api.enums.StepResult;
 
 public class PersonDetailsStep extends AbstractStepDefinition {
 

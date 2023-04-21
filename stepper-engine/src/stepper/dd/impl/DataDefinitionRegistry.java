@@ -3,6 +3,8 @@ package stepper.dd.impl;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
 import stepper.dd.impl.doublle.DoubleDataDefinition;
+import stepper.dd.impl.mapping.MappingData;
+import stepper.dd.impl.mapping.MappingDataDefinition;
 import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.dd.impl.relation.RelationDataDefinition;
 import stepper.dd.impl.string.StringDataDefinition;
@@ -12,8 +14,10 @@ public enum DataDefinitionRegistry implements DataDefinition{
     NUMBER(new NumberDataDefinition()),
     DOUBLE(new DoubleDataDefinition()),
     RELATION(new RelationDataDefinition()),
-    LIST(new ListDataDefinition())
+    LIST(new ListDataDefinition()),
+    MAPPING(new MappingDataDefinition());
     ;
+
 
     DataDefinitionRegistry(DataDefinition dataDefinition) {
         this.dataDefinition = dataDefinition;

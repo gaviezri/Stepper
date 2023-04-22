@@ -7,4 +7,9 @@ public class StringDataDefinition extends AbstractDataDefinition {
     public StringDataDefinition() {
         super("String", true, String.class);
     }
+
+    @Override
+    protected String presentToUser() {
+        return null;
+    }
 }

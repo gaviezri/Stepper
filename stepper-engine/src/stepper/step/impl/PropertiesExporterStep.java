@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class PropertiesExporterStep extends AbstractStepDefinition {
     public PropertiesExporterStep() {
-        super("PropertiesExporter", true);
+        super("Properties Exporter", true);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION));

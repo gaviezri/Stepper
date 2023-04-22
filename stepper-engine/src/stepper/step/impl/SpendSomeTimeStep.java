@@ -10,7 +10,7 @@ import stepper.step.api.enums.StepResult;
 
 public class SpendSomeTimeStep extends AbstractStepDefinition {
     public SpendSomeTimeStep() {
-        super("SpendSomeTime", true);
+        super("Spend Some Time", true);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("TIME_TO_SPEND", DataNecessity.MANDATORY,"Total sleeping time (sec)", DataDefinitionRegistry.NUMBER));

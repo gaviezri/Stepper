@@ -6,4 +6,9 @@ public class NumberDataDefinition extends AbstractDataDefinition {
     public NumberDataDefinition() {
         super("Number", true, Number.class);
     }
+
+    @Override
+    protected String presentToUser() {
+        return null;
+    }
 }

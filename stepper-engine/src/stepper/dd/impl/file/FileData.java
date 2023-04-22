@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class FileData extends FileDataDefinition{
     File file;
@@ -61,5 +62,18 @@ public class FileData extends FileDataDefinition{
     @Override
     public String presentToUser() {
         return filePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FileData)) return false;
+        FileData fileData = (FileData) o;
+        return Objects.equals(file, fileData.file) && Objects.equals(filePath, fileData.filePath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file, filePath);
     }
 }

@@ -79,4 +79,17 @@ public class RelationData extends RelationDataDefinition{
             data.put(columnName, value);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RelationData)) return false;
+        RelationData that = (RelationData) o;
+        return getRowSize() == that.getRowSize() && getColSize() == that.getColSize() && getTotalSize() == that.getTotalSize() && Objects.equals(getColumnsNames(), that.getColumnsNames()) && Objects.equals(rows, that.rows) && Objects.equals(columns, that.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getColumnsNames(), rows, columns, getRowSize(), getColSize(), getTotalSize());
+    }
 }

@@ -5,6 +5,7 @@ import stepper.dd.api.AbstractDataDefinition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class ListData extends ListDataDefinition {
 
@@ -27,8 +28,8 @@ public class ListData extends ListDataDefinition {
         this.data = data;
         this.size = data.size();
     }
-    public void add(Object data) {
-        this.data.add(data);
+    public void add(AbstractDataDefinition data) {
+        this.data.add( data);
         this.size += 1;
     }
     public Object get(int index) {
@@ -49,4 +50,16 @@ public class ListData extends ListDataDefinition {
         this.size -= 1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ListData)) return false;
+        ListData listData = (ListData) o;
+        return size == listData.size && Objects.equals(data, listData.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, size);
+    }
 }

@@ -21,11 +21,11 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         super("FileDeleter", false);
 
         //inputs
-        addInput(new DataDefinitionDeclarationImpl("FILES_LIST", DataNecessity.MANDATORY, "files list", DataDefinitionRegistry.LIST));
+        addInput(new DataDefinitionDeclarationImpl("FILES_LIST", DataNecessity.MANDATORY, "Files to delete", DataDefinitionRegistry.LIST));
 
         //outputs
-        addOutput(new DataDefinitionDeclarationImpl("DELETED_LIST", DataNecessity.NA, "deleted list", DataDefinitionRegistry.LIST));
-        addOutput(new DataDefinitionDeclarationImpl("DELETION_STATS", DataNecessity.NA, "deletion statistics", DataDefinitionRegistry.MAPPING));
+        addOutput(new DataDefinitionDeclarationImpl("DELETED_LIST", DataNecessity.NA, "Files failed to be deleted", DataDefinitionRegistry.LIST));
+        addOutput(new DataDefinitionDeclarationImpl("DELETION_STATS", DataNecessity.NA, "Deletion summary results", DataDefinitionRegistry.MAPPING));
     }
 
     @Override
@@ -39,10 +39,10 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         List<String> DELETED_LIST = new ArrayList<>();
         StepResult res;
         AbstractLogger logger = context.getStepLogger(this);
-
+        boolean filesListIsEmpty =  FILES_LIST.isEmpty();
         int numberOfFilesToDelete = FILES_LIST.size();
 
-        if(validateInputs(context) == StepResult.SUCCESS) {
+        if(!filesListIsEmpty) {
             logger.addLogLine("About to start delete " + numberOfFilesToDelete + " files");
 
             DELETED_LIST = FILES_LIST.stream()
@@ -52,24 +52,23 @@ public class FilesDeleterStep extends AbstractStepDefinition {
                         if (!deletedSuccessfully) {
                             logger.addLogLine("Failed to delete file " + file.getName());
                         }
-                        return deletedSuccessfully;
+                        return !deletedSuccessfully;
                     })
                     .map(File::getName)
                     .collect(Collectors.toList());
 
-            DELETION_STATS.setCar(new NumberData(DELETED_LIST.size()));
-            DELETION_STATS.setCdr(new NumberData(numberOfFilesToDelete - DELETED_LIST.size()));
+            DELETION_STATS.setCar(new NumberData(numberOfFilesToDelete-DELETED_LIST.size()));
+            DELETION_STATS.setCdr(new NumberData(DELETED_LIST.size()));
         }
 
         context.storeDataValue("DELETED_LIST",DELETED_LIST);
         context.storeDataValue("DELETION_STATS",DELETION_STATS);
 
-        if(DELETED_LIST.size() == numberOfFilesToDelete){
+        if(DELETED_LIST.size() == 0){
             res = StepResult.SUCCESS;
-            logger.addSummaryLine("All files deleted successfully!");
-
+            logger.addSummaryLine(filesListIsEmpty ? "No files? No problem - no files were given so no deletion failed" : "All files deleted successfully!");
         }
-        else if(DELETED_LIST.size() != 0){
+        else if(DELETED_LIST.size() != numberOfFilesToDelete){
             res = StepResult.WARNING;
             logger.addLogLine("WARNING: Only " + DELETION_STATS.getCar() + "/" + numberOfFilesToDelete + " files where deleted!");
         }
@@ -83,20 +82,6 @@ public class FilesDeleterStep extends AbstractStepDefinition {
 
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
-        /**
-         * this method makes sure that a valid input was given:
-         * at least one file to delete in list
-         * list contains File objects as expected
-         */
-        List<File> FILES_LIST = new ArrayList<>(); //context.getDataValue("FILES_LIST",List.class) TODO: the previous command is the correct one but needs to write getDataValue properly
-        StepResult res = FILES_LIST.size()>0 ? StepResult.SUCCESS : StepResult.FAILURE;
-
-        for (int i = 0; i < FILES_LIST.size(); ++i) {
-            if (File.class != FILES_LIST.get(i).getClass()) {
-                res = StepResult.FAILURE;
-            }
-        }
-
-        return res;
+        return null;
     }
 }

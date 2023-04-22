@@ -14,8 +14,8 @@ public class RelationData extends RelationDataDefinition{
     int colSize = 0;
     int totalSize = 0;
 
-    public RelationData(List<String> columnsNames) {
 
+    public RelationData(List<String> columnsNames) {
         this.columnsNames = columnsNames;
         columnsNames.forEach(columnName -> columns.put(columnName, new ArrayList<>()));
         rowSize = colSize = totalSize = 0;

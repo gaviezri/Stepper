@@ -1,5 +1,6 @@
 package stepper.flow.definition.api;
 
+import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface FlowDefinition {
 
     void validateFlowStructure();
     List<DataDefinitionDeclaration> getFlowFreeInputs();
+    public List<StepDefinitionRegistry> getStepDefinitionRegistries();
 }

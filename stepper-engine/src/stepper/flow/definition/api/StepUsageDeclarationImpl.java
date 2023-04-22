@@ -1,5 +1,6 @@
 package stepper.flow.definition.api;
 
+import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.StepDefinition;
 
 public class StepUsageDeclarationImpl implements StepUsageDeclaration {
@@ -34,5 +35,10 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
     @Override
     public boolean skipIfFail() {
         return skipIfFail;
+    }
+
+    @Override
+    public StepDefinitionRegistry getStepDefinitionRegistry() {
+        return StepDefinitionRegistry.valueOf(stepDefinition.name());
     }
 }

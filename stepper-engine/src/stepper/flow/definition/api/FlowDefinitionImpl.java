@@ -1,9 +1,11 @@
 package stepper.flow.definition.api;
 
+import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlowDefinitionImpl implements FlowDefinition {
 
@@ -51,5 +53,11 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public List<String> getFlowFormalOutputs() {
         return flowOutputs;
+    }
+
+    public List<StepDefinitionRegistry> getStepDefinitionRegistries() {
+       return this.getFlowSteps().stream()
+               .map(StepUsageDeclaration::getStepDefinitionRegistry)
+               .collect(Collectors.toList());
     }
 }

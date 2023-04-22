@@ -13,9 +13,9 @@ import java.util.Map;
 public class StepExecutionLoggerImpl implements AbstractLogger {
     private List<LogLine> logs = new ArrayList<>();
     private LogLine summaryLine;
-    private final StepDefinition step;
+    private final String step;
 
-    public StepExecutionLoggerImpl(StepDefinition step) {
+    public StepExecutionLoggerImpl(String step) {
         this.step = step;
     }
 

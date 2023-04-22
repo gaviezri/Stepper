@@ -1,8 +1,10 @@
 package stepper.flow.execution;
 
 import stepper.flow.definition.api.FlowDefinition;
+import stepper.flow.definition.api.StepUsageDeclaration;
 
 import java.time.Duration;
+import java.util.List;
 
 public class FlowExecution {
 
@@ -24,6 +26,9 @@ public class FlowExecution {
 
     public FlowDefinition getFlowDefinition() {
         return flowDefinition;
+    }
+    public List<StepUsageDeclaration> getFlowSteps() {
+        return flowDefinition.getFlowSteps();
     }
 
     public FlowExecutionResult getFlowExecutionResult() {

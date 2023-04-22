@@ -2,13 +2,12 @@ package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.file.FileDataDefinition;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
-import stepper.step.api.DataNecessity;
-import stepper.step.api.StepResult;
+import stepper.step.api.enums.DataNecessity;
+import stepper.step.api.enums.StepResult;
 
 import java.io.IOException;
 import java.nio.file.Path;

@@ -1,6 +1,7 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.list.ListData;
 import stepper.dd.impl.mapping.MappingData;
 import stepper.dd.impl.number.NumberData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -63,8 +64,8 @@ public class FilesDeleterStep extends AbstractStepDefinition {
             DELETION_STATS.setCdr(new NumberData(DELETED_LIST.size()));
         }
 
-        context.storeDataValue("DELETED_LIST",DELETED_LIST);
-        context.storeDataValue("DELETION_STATS",DELETION_STATS);
+        context.storeDataValue("DELETED_LIST", new ListData(DELETED_LIST));
+        context.storeDataValue("DELETION_STATS", DELETION_STATS);
 
         if(DELETED_LIST.size() == 0){
             res = StepResult.SUCCESS;

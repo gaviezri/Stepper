@@ -2,6 +2,10 @@ package stepper.flow.execution.context;
 
 import stepper.dd.api.AbstractDataDefinition;
 import stepper.dd.api.DataDefinition;
+import stepper.dd.impl.mapping.MappingData;
+import stepper.dd.impl.mapping.MappingDataDefinition;
+import stepper.dd.impl.string.StringData;
+import stepper.exception.*;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
@@ -14,6 +18,11 @@ import java.util.Map;
 
 public class StepExecutionContextImpl implements StepExecutionContext {
     /**
+     * this dic will maintain all (data_value_name-alias) for data values in a flow.
+     * if no alias was given, the dic will hold data_value_name-data_value_name for the step.
+     */
+    private Map<MappingData,String>  dataValueName2Alias = new HashMap<>();
+    /**
      * this dic will maintain all (input/output_name-Data_definition) of a flow.
      * each step can address this data as input if needed and update it for outputs.
      */
@@ -22,33 +31,30 @@ public class StepExecutionContextImpl implements StepExecutionContext {
      * this dic will maintain (step-that_step_Manger).
      * */
     private Map<String, StepExecutionDataManager> step2Manager = new HashMap<>();
-    /**
-     * this dic will maintain all step_name-alias for steps in a flow.
-     * if no alias was given, the dic will hold step_name-step_name for the step.
-     */
-//    private Map<String,String>  stepName2Alias = new HashMap<>();
-//    /**
-//     * this dic will maintain all (data_value_name-alias) for data values in a flow.
-//     * if no alias was given, the dic will hold data_value_name-data_value_name for the step.
-//     */
-    private Map<String,String>  dataValueName2Alias = new HashMap<>();
-
-//    public String getFinalStepName(String name){
-//        return stepName2Alias.get(name);
-//    }
-
+    private Map<MappingData, DataDefinition> dataName2DataDefinition = new HashMap<>();
     public String getFinalDataName(String name){
         return dataValueName2Alias.get(name);
     }
 
-    public StepExecutionContextImpl(List<StepUsageDeclaration> steps, Map<String,String>  dataValueName2Alias) {
+    public String getCurrentStepName() {
+        return currentStepName;
+    }
+
+    @Override
+    public void setCurrentStepName(String currentStepName) {
+        this.currentStepName = currentStepName;
+    }
+//TODO: see if really needed...
+    private String currentStepName;
+
+    public StepExecutionContextImpl(List<StepUsageDeclaration> steps, Map<MappingData,String>  dataValueName2Alias) {
         for (StepUsageDeclaration step : steps) {
-            step2Manager.put(step.getFinalStepName(),
-                    new StepExecutionDataManager(step.getFinalStepName())
-            );
+            step2Manager.put(step.getFinalStepName(),new StepExecutionDataManager(step.getFinalStepName()));
+
         }
         this.dataValueName2Alias = dataValueName2Alias;
     }
+
     @Override
     public void setStepResult(String name, StepResult stepResult) {
         // assuming that from the step we can get to its data manager
@@ -67,7 +73,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         StepExecutionDataManager theManager = step2Manager.get(name);
         theManager.setDuration(duration);
     }
-
     @Override
     public Number getStepDuration(String name) {
         // assuming that from the step we can get to its data manager
@@ -80,7 +85,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         StepExecutionDataManager theManager = step2Manager.get(step.getStepName());
         return theManager.getStepLogger();
     }
-
     @Override
     public void tick(String name) {
         // assuming that from the step we can get to its data manager
@@ -96,34 +100,42 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     }
 
     @Override
-    public <T> T getDataValue(String dataName, Class<T> expectedDataType) {
+    public <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException {
+        String finalDataName = dataValueName2Alias.get(new MappingData(new StringData(this.currentStepName),new StringData(dataName)));
+        finalDataName = finalDataName == null ? dataName : finalDataName;
+
         // assuming that from the data name we can get to its data definition
-        DataDefinition theExpectedDataDefinition = null;
+        DataDefinition theExpectedDataDefinition = dataValues.get(finalDataName);
+
+        if (theExpectedDataDefinition == null) throw new NoMatchingKeyWasFoundException("The key " + finalDataName + "cant be found!");
 
         if (expectedDataType.isAssignableFrom(theExpectedDataDefinition.getType())) {
-            Object aValue = dataValues.get(dataName);
-            // what happens if it does not exist ?
+            Object aValue = dataValues.get(finalDataName);
 
             return expectedDataType.cast(aValue);
         } else {
-            // error handling of some sort...
+            throw new GivenValueTypeDontMatchException("Expected type " + expectedDataType + "but " +
+                    theExpectedDataDefinition.getClass() + " was given.");
         }
 
-        return null;
     }
-
     @Override
-    public boolean storeDataValue(String dataName, Object value) {
+    public boolean storeDataValue(String dataName, AbstractDataDefinition value) throws GivenValueTypeDontMatchException{
+        MappingDataDefinition currentStepAndDataNames = new MappingData(new StringData(this.currentStepName),new StringData(dataName))
+        String finalDataName = dataValueName2Alias.get(currentStepAndDataNames);
+        finalDataName = finalDataName == null ? dataName : finalDataName;
+
         // assuming that from the data name we can get to its data definition
-        DataDefinition theData = null;
+        DataDefinition theData = dataName2DataDefinition.get(currentStepAndDataNames);
 
         // we have the DD type so we can make sure that its from the same type
         if (theData.getType().isAssignableFrom(value.getClass())) {
-            dataValues.put(dataName, value);
-        } else {
-            // error handling of some sort...
+            dataValues.put(finalDataName, value);
+        }
+        else {
+            throw new GivenValueTypeDontMatchException("Expected type " + theData.getType() + "but " + value.getClass() + "was given.");
         }
 
-        return false;
+        return true;
     }
 }

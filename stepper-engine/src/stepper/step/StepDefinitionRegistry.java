@@ -3,6 +3,11 @@ package stepper.step;
 import stepper.step.api.StepDefinition;
 import stepper.step.impl.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public enum StepDefinitionRegistry {
     HELLO_WORLD(new HelloWorldStep()),
     PERSON_DETAILS(new PersonDetailsStep()),
@@ -22,7 +27,12 @@ public enum StepDefinitionRegistry {
         this.stepDefinition = stepDefinition;
     }
 
-
+    public static Set<String> getStepNames() {
+        return Arrays.stream(StepDefinitionRegistry.values()).sequential()
+                .map(StepDefinitionRegistry::getStepDefinition)
+                .map(StepDefinition::name)
+                .collect(Collectors.toSet());
+    }
     public StepDefinition getStepDefinition() {
         return stepDefinition;
     }

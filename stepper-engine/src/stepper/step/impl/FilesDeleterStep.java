@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class FilesDeleterStep extends AbstractStepDefinition {
   // TODO: delete this
     public FilesDeleterStep() {
-        super("FileDeleter", false);
+        super("Files Deleter", false);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("FILES_LIST", DataNecessity.MANDATORY, "Files to delete", DataDefinitionRegistry.LIST));

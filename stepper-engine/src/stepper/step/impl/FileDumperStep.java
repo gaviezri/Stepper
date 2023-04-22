@@ -15,7 +15,7 @@ import java.io.IOException;
 public class FileDumperStep extends AbstractStepDefinition {
 
         public FileDumperStep() {
-            super("FileDumper", true);
+            super("File Dumper", true);
 
             //inputs
             addInput(new DataDefinitionDeclarationImpl("CONTENT", DataNecessity.MANDATORY, "Content", DataDefinitionRegistry.STRING));

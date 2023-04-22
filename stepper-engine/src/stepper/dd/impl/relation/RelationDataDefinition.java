@@ -8,4 +8,8 @@ public class RelationDataDefinition extends AbstractDataDefinition {
     }
 
 
+    @Override
+    protected String presentToUser() {
+        return null;
+    }
 }

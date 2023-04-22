@@ -12,7 +12,7 @@ import stepper.step.api.enums.StepResult;
 
 public class CSVExporterStep extends AbstractStepDefinition {
     public CSVExporterStep() {
-        super("CSVExporter", true);
+        super("CSV Exporter", true);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION));

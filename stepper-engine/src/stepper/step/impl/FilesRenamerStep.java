@@ -19,7 +19,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
 
 
     public FilesRenamerStep(){
-        super("FilesRenamer",false);
+        super("Files Renamer",false);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("FILES_TO_RENAME", DataNecessity.MANDATORY, "Files to rename", DataDefinitionRegistry.LIST));

@@ -9,7 +9,7 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
     private final String stepName;
 
     public StepUsageDeclarationImpl(StepDefinition stepDefinition) {
-        this(stepDefinition, false, stepDefinition.name());
+        this(stepDefinition, false, stepDefinition.getStepName());
     }
 
     public StepUsageDeclarationImpl(StepDefinition stepDefinition, String name) {
@@ -39,6 +39,6 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
 
     @Override
     public StepDefinitionRegistry getStepDefinitionRegistry() {
-        return StepDefinitionRegistry.valueOf(stepDefinition.name());
+        return StepDefinitionRegistry.valueOf(stepDefinition.getStepName());
     }
 }

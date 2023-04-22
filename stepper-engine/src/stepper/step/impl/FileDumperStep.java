@@ -60,7 +60,8 @@ public class FileDumperStep extends AbstractStepDefinition {
         }
 
         @Override
-        public StepResult invoke(StepExecutionContext context) {
+        public StepResult invoke(StepExecutionContext context, String finalName) {
+            context.tick(this.getStepName());
 
             StepResult result = validateInputs(context);
             AbstractLogger logger = context.getStepLogger(this);
@@ -95,7 +96,7 @@ public class FileDumperStep extends AbstractStepDefinition {
 
             context.storeDataValue("RESULT",  result +
                     (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS"));
-
+            context.tock(finalName);
             return result;
         }
 

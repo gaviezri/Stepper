@@ -28,7 +28,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
         RelationData relation = (RelationData) context.getDataValue("SOURCE", RelationDataDefinition.class);
         AbstractLogger logger = context.getStepLogger(this);
         StringBuilder CSV = new StringBuilder();

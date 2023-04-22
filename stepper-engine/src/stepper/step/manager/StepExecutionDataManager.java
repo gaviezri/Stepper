@@ -7,6 +7,8 @@ import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
 import stepper.step.execution.StepExecutionData;
 
+import java.util.Optional;
+
 public class StepExecutionDataManager implements DataManager {
     private AbstractLogger stepLogger;
     private StepExecutionData stepExecutionData;

@@ -29,7 +29,9 @@ public class FilesDeleterStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+        context.tick(finalName);
+
         /**
          * goes through the given list and tries to delete each file
          * then log the actions made and return operation result
@@ -76,7 +78,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
             res = StepResult.FAILURE;
             logger.addLogLine("FAILURE: No files where deleted! check yourself before you wreck yourself");
         }
-
+        context.tock(finalName);
         return res;
     }
 

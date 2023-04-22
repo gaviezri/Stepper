@@ -3,6 +3,7 @@ package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.relation.RelationDataDefinition;
+import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -49,7 +50,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
             // last line no comma
             CSV.append(relation.getDataFromRow(i));
             //TODO: Get output-name from context if alias is used
-            context.storeDataValue(this.outputs().get(0).getName(), CSV.toString());
+            context.storeDataValue(this.outputs().get(0).getName(), new StringData(CSV.toString()));
             logger.addSummaryLine("relation exported to CSV successfully");
             result = StepResult.SUCCESS;
         }

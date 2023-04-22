@@ -1,6 +1,7 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
@@ -34,7 +35,7 @@ public class PersonDetailsStep extends AbstractStepDefinition {
         String greeting = "Hello " + firstName.toUpperCase() + " " + lastName.toUpperCase() + "! You were born " + age + " Years ago !";
 
         // add outputs here, somehow
-        context.storeDataValue("DETAILS", greeting);
+        context.storeDataValue("DETAILS", new StringData(greeting));
 
         // through the context, as part of writing the step's logic I should be able to:
         // 1. add log lines

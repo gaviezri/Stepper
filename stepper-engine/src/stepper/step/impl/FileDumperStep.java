@@ -1,6 +1,7 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -69,8 +70,6 @@ public class FileDumperStep extends AbstractStepDefinition {
             String fileName = context.getDataValue("FILENAME", String.class);
             String cause = "";
 
-
-
             switch (result){
                 case SUCCESS:
                 case WARNING:
@@ -94,8 +93,8 @@ public class FileDumperStep extends AbstractStepDefinition {
                     break;
             }
 
-            context.storeDataValue("RESULT",  result +
-                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS"));
+            context.storeDataValue("RESULT",  new StringData(result +
+                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS")));
             context.tock(finalName);
             return result;
         }

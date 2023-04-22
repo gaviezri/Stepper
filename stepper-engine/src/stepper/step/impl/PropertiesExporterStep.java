@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.AbstractDataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -11,7 +10,6 @@ import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class PropertiesExporterStep extends AbstractStepDefinition {
     public PropertiesExporterStep() {
@@ -25,7 +23,8 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+        context.tick(finalName);
 
         AbstractLogger logger = context.getStepLogger(this);
         StepResult stepResult = validateInputs(context);
@@ -60,6 +59,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
             logger.addSummaryLine("Source data is empty\n result is empty");
         }
         logger.addSummaryLine("Properties export completed successfully");
+        context.tock(finalName);
         return stepResult;
     }
 

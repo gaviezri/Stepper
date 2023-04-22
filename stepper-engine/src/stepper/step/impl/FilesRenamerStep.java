@@ -36,7 +36,8 @@ public class FilesRenamerStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+        context.tick(finalName);
 
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = StepResult.SUCCESS;
@@ -90,7 +91,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
                 break;
             }
         }
-
+        context.tock(finalName);
         return result;
     }
 

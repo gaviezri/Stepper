@@ -24,7 +24,7 @@ public abstract class AbstractStepDefinition implements StepDefinition {
     }
 
     @Override
-    public String name() {
+    public String getStepName() {
         return stepName;
     }
 

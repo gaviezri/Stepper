@@ -4,7 +4,7 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.FlowDefinitionImpl;
 import stepper.flow.definition.api.StepUsageDeclarationImpl;
 import stepper.flow.execution.FlowExecution;
-import stepper.flow.execution.runner.FLowExecutor;
+import stepper.flow.execution.runner.FlowExecutor;
 import stepper.step.StepDefinitionRegistry;
 
 public class Main {
@@ -21,7 +21,7 @@ public class Main {
         flow2.getFlowFormalOutputs().add("DETAILS");
         flow2.validateFlowStructure();
 
-        FLowExecutor fLowExecutor = new FLowExecutor();
+        FlowExecutor fLowExecutor = new FlowExecutor();
 
         FlowExecution flow2Execution1 = new FlowExecution("1", flow2);
         // collect all user inputs and store them on the flow execution object

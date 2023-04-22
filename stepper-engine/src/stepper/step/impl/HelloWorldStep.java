@@ -15,8 +15,11 @@ public class HelloWorldStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+        context.tick(finalName);
+
         System.out.println("Hello world !");
+        context.tock(finalName);
         return StepResult.SUCCESS;
     }
 

@@ -22,7 +22,9 @@ public class PersonDetailsStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+        context.tick(finalName);
+
         // fetch inputs here, somehow
         String firstName = context.getDataValue("STRING_1", String.class);
         String lastName = context.getDataValue("STRING_2", String.class);
@@ -39,6 +41,7 @@ public class PersonDetailsStep extends AbstractStepDefinition {
         // 2. add summary line
 
         // return result
+        context.tock(finalName);
         return StepResult.SUCCESS;
     }
 

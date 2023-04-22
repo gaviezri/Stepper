@@ -22,8 +22,8 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
         return timeToSleep > 0 ? StepResult.SUCCESS : StepResult.FAILURE;
     }
     @Override
-    public StepResult invoke(StepExecutionContext context){
-
+    public StepResult invoke(StepExecutionContext context, String finalName){
+        context.tick(finalName);
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = validateInputs(context);
         long timeToSleep = context.getDataValue("TIME_TO_SPEND", Number.class).longValue() * 1000;
@@ -44,6 +44,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
                                   " provided value: " +
                                     timeToSleep);
         }
+        context.tock(finalName);
         return result;
     }
 }

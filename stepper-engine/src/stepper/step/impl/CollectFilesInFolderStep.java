@@ -80,7 +80,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context) {
+    public StepResult invoke(StepExecutionContext context, String finalName) {
+//        context.tick(this.getStepName());
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = validateInputs(context);
         switch (result) {

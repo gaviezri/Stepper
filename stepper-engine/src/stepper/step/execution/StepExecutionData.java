@@ -7,7 +7,6 @@ import stepper.step.api.enums.StepResult;
 import java.util.Map;
 
 public class StepExecutionData {
-
     private StepResult stepResult;
     private Number Duration;
 

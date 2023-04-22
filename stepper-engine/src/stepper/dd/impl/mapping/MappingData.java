@@ -49,4 +49,5 @@ public class MappingData extends MappingDataDefinition{
     public int hashCode() {
         return Objects.hash(getCar(), getCdr());
     }
+
 }

@@ -14,9 +14,6 @@ public class RelationData extends RelationDataDefinition{
     int colSize = 0;
     int totalSize = 0;
 
-    public enum Element {
-        ROW, COLUMN
-    }
 
     public RelationData(List<String> columnsNames) {
         this.columnsNames = columnsNames;
@@ -24,6 +21,9 @@ public class RelationData extends RelationDataDefinition{
         rowSize = colSize = totalSize = 0;
     }
 
+    public List<String> getColumnsNames() {
+        return columnsNames;
+    }
     public List getDataFromRow(int index){
 
         List<String> dataFromRow = new ArrayList<>();
@@ -78,5 +78,18 @@ public class RelationData extends RelationDataDefinition{
         public void addData(String columnName, String value) {
             data.put(columnName, value);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RelationData)) return false;
+        RelationData that = (RelationData) o;
+        return getRowSize() == that.getRowSize() && getColSize() == that.getColSize() && getTotalSize() == that.getTotalSize() && Objects.equals(getColumnsNames(), that.getColumnsNames()) && Objects.equals(rows, that.rows) && Objects.equals(columns, that.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getColumnsNames(), rows, columns, getRowSize(), getColSize(), getTotalSize());
     }
 }

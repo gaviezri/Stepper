@@ -9,6 +9,6 @@ public class ListDataDefinition extends AbstractDataDefinition {
 
     @Override
     protected String presentToUser() {
-        return null;
+        return "List";
     }
 }

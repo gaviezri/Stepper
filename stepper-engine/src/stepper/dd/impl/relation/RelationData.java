@@ -14,11 +14,6 @@ public class RelationData extends RelationDataDefinition{
     int colSize = 0;
     int totalSize = 0;
 
-    public enum Element {
-        ROW, COLUMN
-    }
-
-
     public RelationData(List<String> columnsNames) {
 
         this.columnsNames = columnsNames;
@@ -26,6 +21,9 @@ public class RelationData extends RelationDataDefinition{
         rowSize = colSize = totalSize = 0;
     }
 
+    public List<String> getColumnsNames() {
+        return columnsNames;
+    }
     public List getDataFromRow(int index){
 
         List<String> dataFromRow = new ArrayList<>();

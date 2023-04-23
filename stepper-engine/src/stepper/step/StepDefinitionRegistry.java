@@ -30,7 +30,7 @@ public enum StepDefinitionRegistry {
     public static Set<String> getStepNames() {
         return Arrays.stream(StepDefinitionRegistry.values()).sequential()
                 .map(StepDefinitionRegistry::getStepDefinition)
-                .map(StepDefinition::name)
+                .map(StepDefinition::getStepName)
                 .collect(Collectors.toSet());
     }
     public StepDefinition getStepDefinition() {

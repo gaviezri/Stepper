@@ -121,7 +121,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     }
     @Override
     public boolean storeDataValue(String dataName, AbstractDataDefinition value) throws GivenValueTypeDontMatchException{
-        MappingDataDefinition currentStepAndDataNames = new MappingData(new StringData(this.currentStepName),new StringData(dataName))
+        MappingDataDefinition currentStepAndDataNames = new MappingData(new StringData(this.currentStepName),new StringData(dataName));
         String finalDataName = dataValueName2Alias.get(currentStepAndDataNames);
         finalDataName = finalDataName == null ? dataName : finalDataName;
 

@@ -4,6 +4,8 @@ import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import stepper.dd.impl.mapping.MappingData;
+import stepper.dd.impl.string.StringData;
 import stepper.flow.builder.FlowBuilder;
 import stepper.flow.builder.FreshFlowBuilder;
 import stepper.flow.definition.api.FlowDefinition;
@@ -104,28 +106,34 @@ public class FlowLoader {
     private void validateStepAliasing(NodeList flowDefinitionsNodeList) {
 
         for (int i = 0; i < flowDefinitionsNodeList.getLength(); i++) {
+            // iterate flows
             Element flow = (Element) flowDefinitionsNodeList.item(i);
             NodeList stepDefinitionsNodeList = flow.getElementsByTagName("ST-StepInFlow");
-
-            // replace logic - add step alias to builder's map
-            Set<String> stepNames = new HashSet<>();
+            // iterate steps
             for (int j = 0; j < stepDefinitionsNodeList.getLength(); j++) {
-                Element step = (Element) stepDefinitionsNodeList.item(j);
-                String finalStepName = step.getAttribute("alias").isEmpty() ?
-                        step.getAttribute("name") : step.getAttribute("alias");
-                stepNames.add(finalStepName);
+                List<String> flowStepMapping = new ArrayList<>();
+                String stepName = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("name");
+                String stepAlias = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("alias");
+
+                if (!stepAlias.isEmpty()) {
+                    flowStepMapping.add(flow.getAttribute("name"));
+                    flowStepMapping.add(stepName);
+                    builder.addStepAlias(flowStepMapping, stepAlias);
+                }
             }
 
-
-            NodeList aliasDefinitionsNodeList = flow.getElementsByTagName("ST-FlowLevelAlias");
-            for (int j = 0; j < aliasDefinitionsNodeList.getLength(); j++) {
-                Element alias = (Element) aliasDefinitionsNodeList.item(j);
-                if (!stepNames.contains(alias.getAttribute("step"))) {
-                    throw new RuntimeException("Flow::<" + flow.getAttribute("name") + "> has an alias to a step that doesn't exist: " + alias.getAttribute("step"));
+            List<String> stepNames = builder.getFlowSteps(flow.getAttribute("name"));
+            // validate all aliasing is existing steps
+            for (List<String> allStep2Aliases : builder.getStepAliases(flow.getAttribute("name"))) {
+                for (String stepAlias : allStep2Aliases) {
+                    if (!stepNames.contains(stepAlias)) {
+                        throw new RuntimeException("Flow " + flow.getAttribute("name") + " has an aliasing to a step that doesn't exist: " + stepAlias);
+                    }
                 }
             }
         }
     }
+
     private void validateFlowsNameUniqueness(NodeList flowDefinitionsNodeList) {
 
         List<String> flowNames = new ArrayList<>();

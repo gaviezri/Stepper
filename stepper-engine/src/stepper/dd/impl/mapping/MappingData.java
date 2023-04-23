@@ -16,6 +16,7 @@ public class MappingData extends MappingDataDefinition{
         this.cdr = new NumberData(0);
     };
 
+
     public MappingData(AbstractDataDefinition car, AbstractDataDefinition cdr) {
         this.car = car;
         this.cdr = cdr;
@@ -42,12 +43,20 @@ public class MappingData extends MappingDataDefinition{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MappingData that = (MappingData) o;
-        return Objects.equals(getCar(), that.getCar()) && Objects.equals(getCdr(), that.getCdr());
+        return Objects.equals(getCar(), that.getCdr()) && Objects.equals(getCdr(), that.getCdr());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getCar(), getCdr());
+    }
+
+    @Override
+    public String toString() {
+        return "MappingData{" +
+                "car=" + car +
+                ", cdr=" + cdr +
+                '}';
     }
 
 }

@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.number.NumberDataDefinition;
@@ -9,6 +10,8 @@ import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +34,36 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("FILES_LIST", DataNecessity.NA, "Files list", DataDefinitionRegistry.LIST));
         addOutput(new DataDefinitionDeclarationImpl("TOTAL_FOUND", DataNecessity.NA, "Total files found", DataDefinitionRegistry.NUMBER));
 
+    }
+
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_LIST":
+                return DataDefinitionRegistry.LIST;
+            case "TOTAL_FOUND":
+                return DataDefinitionRegistry.NUMBER;
+            case "FOLDER_NAME":
+            case "FILTER":
+                return DataDefinitionRegistry.STRING;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_LIST":
+            case "TOTAL_FOUND":
+                return DataNecessity.NA;
+            case "FOLDER_NAME":
+                return DataNecessity.MANDATORY;
+            case "FILTER":
+                return DataNecessity.OPTIONAL;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
     }
 
     @Override

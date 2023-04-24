@@ -12,10 +12,6 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
         this(stepDefinition, false, stepDefinition.getStepName());
     }
 
-    public StepUsageDeclarationImpl(StepDefinition stepDefinition, String name) {
-        this(stepDefinition, false, name);
-    }
-
     public StepUsageDeclarationImpl(StepDefinition stepDefinition, boolean skipIfFail, String stepName) {
         this.stepDefinition = stepDefinition;
         this.skipIfFail = skipIfFail;

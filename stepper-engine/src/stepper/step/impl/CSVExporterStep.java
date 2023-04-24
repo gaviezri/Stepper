@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.relation.RelationDataDefinition;
@@ -24,7 +25,28 @@ public class CSVExporterStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "CSV export result", DataDefinitionRegistry.STRING));
 
     }
-
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "SOURCE":
+                return DataDefinitionRegistry.RELATION;
+            case "RESULT":
+                return DataDefinitionRegistry.STRING;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "SOURCE":
+                return DataNecessity.MANDATORY;
+            case "RESULT":
+                return DataNecessity.NA;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
         return StepResult.SUCCESS;

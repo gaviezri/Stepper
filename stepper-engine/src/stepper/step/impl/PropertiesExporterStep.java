@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.string.StringData;
@@ -22,7 +23,28 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
         //outputs
         addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "Properties export result", DataDefinitionRegistry.STRING));
     }
-
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "SOURCE":
+                return DataNecessity.MANDATORY;
+            case "RESULT":
+                return DataNecessity.NA;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "RESULT":
+                return DataDefinitionRegistry.STRING;
+            case "SOURCE":
+                return DataDefinitionRegistry.RELATION;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
     @Override
     public StepResult invoke(StepExecutionContext context, String finalName) {
         context.tick(finalName);

@@ -1,6 +1,7 @@
 package stepper.step.impl;
 
 import javafx.util.Pair;
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -26,7 +27,30 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("DELETED_LIST", DataNecessity.NA, "Files failed to be deleted", DataDefinitionRegistry.LIST));
         addOutput(new DataDefinitionDeclarationImpl("DELETION_STATS", DataNecessity.NA, "Deletion summary results", DataDefinitionRegistry.MAPPING));
     }
-
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_LIST":
+                return DataNecessity.MANDATORY;
+            case "DELETED_LIST":
+            case "DELETION_STATS":
+                return DataNecessity.NA;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "DELETED_LIST":
+            case "FILES_LIST":
+                return DataDefinitionRegistry.LIST;
+            case "DELETION_STATS":
+                return DataDefinitionRegistry.MAPPING;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
     @Override
     public StepResult invoke(StepExecutionContext context, String finalName) {
         context.tick(finalName);

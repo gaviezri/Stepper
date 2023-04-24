@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -16,6 +17,24 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("TIME_TO_SPEND", DataNecessity.MANDATORY,"Total sleeping time (sec)", DataDefinitionRegistry.NUMBER));
+    }
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "TIME_TO_SPEND":
+                return DataNecessity.MANDATORY;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "TIME_TO_SPEND":
+                return DataDefinitionRegistry.NUMBER;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
     }
 
     @Override

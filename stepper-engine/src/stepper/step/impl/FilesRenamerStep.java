@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -29,6 +30,34 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("RENAME_RESULT", DataNecessity.NA, "Rename operation summary", DataDefinitionRegistry.RELATION));
     }
 
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_TO_RENAME":
+                return DataNecessity.MANDATORY;
+            case "PREFIX":
+            case "SUFFIX":
+                return DataNecessity.OPTIONAL;
+            case "RENAME_RESULT":
+                return DataNecessity.NA;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_TO_RENAME":
+                return DataDefinitionRegistry.LIST;
+            case "PREFIX":
+            case "SUFFIX":
+                return DataDefinitionRegistry.STRING;
+            case "RENAME_RESULT":
+                return DataDefinitionRegistry.RELATION;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
         return StepResult.NULL;

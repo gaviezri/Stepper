@@ -1,5 +1,6 @@
 package stepper.step.impl;
 
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -37,6 +38,29 @@ public class FileDumperStep extends AbstractStepDefinition {
             return content != null && !content.isEmpty();
         }
 
+        @Override
+        public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+            switch (dataOriginalName) {
+                case "CONTENT":
+                case "FILE_NAME":
+                case "RESULT":
+                    return DataDefinitionRegistry.STRING;
+                default:
+                    throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+            }
+        }
+        @Override
+        public DataNecessity getResourceNecessity(String dataOriginalName) {
+            switch (dataOriginalName) {
+                case "CONTENT":
+                case "FILE_NAME":
+                    return DataNecessity.MANDATORY;
+                case "RESULT":
+                    return DataNecessity.NA;
+                default:
+                    throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+            }
+        }
         @Override
         public StepResult validateInputs(StepExecutionContext context) {
             AbstractLogger logger = context.getStepLogger(this);

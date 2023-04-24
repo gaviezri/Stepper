@@ -1,4 +1,5 @@
 package stepper.step.impl;
+import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
@@ -83,7 +84,32 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         return data;
 
     }
-
+    @Override
+    public DataNecessity getResourceNecessity(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_LIST":
+                return DataNecessity.MANDATORY;
+            case "LINE":
+                return DataNecessity.MANDATORY;
+            case "DATA":
+                return DataNecessity.NA;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
+    @Override
+    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+        switch (dataOriginalName) {
+            case "FILES_LIST":
+                return DataDefinitionRegistry.LIST;
+            case "LINE":
+                return DataDefinitionRegistry.NUMBER;
+            case "DATA":
+                return DataDefinitionRegistry.RELATION;
+            default:
+                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        }
+    }
     @Override
     public StepResult invoke(StepExecutionContext context, String finalName) {
         context.tick(finalName);

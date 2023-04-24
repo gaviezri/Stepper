@@ -1,6 +1,8 @@
 package stepper.flow.definition.api;
 
 import javafx.util.Pair;
+import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.mapping.MappingGraph;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
@@ -13,13 +15,16 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
     private  String name;
     private  String description;
-    private  List<String> flowOutputs = new ArrayList<>();
+    private List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
+    private  List<String> flowFormalOutputNames = new ArrayList<>();
     private List<String> stepsName = new ArrayList<>();
     private List<String> stepsAliases = new ArrayList<>();
-    private List<Pair<String,String>> stepAliasColonDataName2AliasDataName = new ArrayList<>();
+    //private List<Pair<String,String>> stepAliasXDataName2AliasDataName = new ArrayList<>();
+    private DataAliasingManager dataAliasingManager = new DataAliasingManager();
     private  List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
     private  List<String> stepAliasThatCanSkipIfFail = new ArrayList<>();
-    private  List<Pair<String,String>> SourceStepData2TargetStepDataCustomMapping = new ArrayList<>();
+    private  List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
+    private MappingGraph mappingGraph;
 
 
     public FlowDefinitionImpl(String name) {
@@ -29,7 +34,7 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
     @Override
     public void setFlowFormalOutputs(List<String> flowFormalOutputs) {
-        flowOutputs = flowFormalOutputs;
+        flowFormalOutputNames = flowFormalOutputs;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
     @Override
     public List<String> getFlowFormalOutputs() {
-        return flowOutputs;
+        return flowFormalOutputNames;
     }
 
     @Override
@@ -73,7 +78,8 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
     @Override
     public void addFlowLevelAlias(String stepFinalName, String sourceDataName, String sourceDataAlias) {
-        stepAliasColonDataName2AliasDataName.add(new Pair<>(stepFinalName + ":" + sourceDataName, sourceDataAlias));
+        //stepAliasXDataName2AliasDataName.add(new Pair<>(stepFinalName + ":" + sourceDataName, sourceDataAlias));
+        dataAliasingManager.putAliasDataName(stepFinalName, sourceDataName, sourceDataAlias);
     }
 
     @Override
@@ -97,28 +103,19 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
     @Override
     public void addCustomMapping(String stepName, String dataName, String targetStepName, String targetDataName) {
-        SourceStepData2TargetStepDataCustomMapping.add(new Pair<>(stepName + ":" + dataName, targetStepName + ":" + targetDataName));
+        rawSourceStepData2TargetStepDataMapping.add(new Pair<>(stepName + ":" + dataName, targetStepName + ":" + targetDataName));
     }
 
     @Override
     public String getResourceFinalName(String stepFinalName, String dataName) {
 
-        if (stepAliasColonDataName2AliasDataName.stream()
-                .anyMatch(pair -> pair.getKey()
-                        .split(":")[0]
-                        .equals(stepFinalName) && pair.getValue().equals(dataName))) {
-
-            return stepAliasColonDataName2AliasDataName.stream()
-                    .filter(pair -> pair.getKey()
-                            .split(":")[0]
-                            .equals(stepFinalName) && pair.getValue().equals(dataName))
-                    .findFirst()
-                    .get()
-                    .getValue();
+        if (dataAliasingManager.isAnAlias(stepFinalName, dataName)) {
+            return dataName;
         }
 
-        String originalNameInRegistry = StepDefinitionRegistry.convertFromUserFriendlyToInternal(getStepOriginalName(stepFinalName));
-        StepDefinition theStep = StepDefinitionRegistry.valueOf(originalNameInRegistry).getStepDefinition();
+        StepDefinition theStep = StepDefinitionRegistry.convertFromUserFriendlyToInternal(getStepOriginalName(stepFinalName))
+                .getStepDefinition();
+
         for (DataDefinitionDeclaration dataDef : theStep.inputs()) {
             if (dataDef.getName().equals(dataName)) {
                 return dataName;
@@ -137,4 +134,26 @@ public class FlowDefinitionImpl implements FlowDefinition {
     public void addStepAliasThatCanSkipIfFail(String stepName) {
         stepAliasThatCanSkipIfFail.add(stepName);
     }
+
+    @Override
+    public void createMapping(){
+        for (int stepidx = 0; stepidx < stepsName.size(); ++stepidx ) {
+
+            StepDefinition stepDef = StepDefinitionRegistry.convertFromUserFriendlyToInternal(stepsName.get(stepidx)).getStepDefinition();
+            String alias = stepsAliases.get(stepidx);
+            boolean canSkipIfFail = stepAliasThatCanSkipIfFail.contains(alias);
+            stepsUsageDecl.add(new StepUsageDeclarationImpl(stepDef,canSkipIfFail, alias));
+
+        }
+        mappingGraph = new MappingGraph(stepsUsageDecl, rawSourceStepData2TargetStepDataMapping, dataAliasingManager);
+        createAutomaticMapping();
+
+    }
+    private void createAutomaticMapping(){
+        mappingGraph.createAutomaticMapping();
+
+    }
+
+
+
 }

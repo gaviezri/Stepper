@@ -7,11 +7,17 @@ import java.util.List;
 
 public interface FlowDefinition {
     String getName();
+
     String getDescription();
+
     List<StepUsageDeclaration> getFlowSteps();
+
     List<String> getFlowFormalOutputs();
+
     void setFlowFormalOutputs(List<String> flowFormalOutputs);
+
     void validateFlowStructure();
+
     public List<StepDefinitionRegistry> getStepDefinitionRegistries();
 
     void addStep(String stepName);
@@ -31,4 +37,7 @@ public interface FlowDefinition {
     String getResourceFinalName(String stepFinalName, String dataName);
 
     void addStepAliasThatCanSkipIfFail(String finalname);
+
+    void createMapping();
+
 }

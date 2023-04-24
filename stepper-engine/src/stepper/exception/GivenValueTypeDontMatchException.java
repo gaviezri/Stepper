@@ -1,7 +1,8 @@
 package stepper.exception;
 
-public class GivenValueTypeDontMatchException extends RuntimeException{
-    public GivenValueTypeDontMatchException(String message){
-        super(message);
+
+public class GivenValueTypeDontMatchException extends Exception{
+    public GivenValueTypeDontMatchException(String errorMessage) {
+        super(errorMessage);
     }
 }

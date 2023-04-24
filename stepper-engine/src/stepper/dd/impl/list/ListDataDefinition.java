@@ -2,13 +2,11 @@ package stepper.dd.impl.list;
 
 import stepper.dd.api.AbstractDataDefinition;
 
+import java.util.List;
+
 public class ListDataDefinition extends AbstractDataDefinition {
     public ListDataDefinition() {
-        super("List", false, ListData.class);
+        super("List", false, List.class);
     }
 
-    @Override
-    protected String presentToUser() {
-        return "List";
-    }
 }

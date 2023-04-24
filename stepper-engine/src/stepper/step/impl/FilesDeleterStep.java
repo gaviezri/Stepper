@@ -1,9 +1,7 @@
 package stepper.step.impl;
 
+import javafx.util.Pair;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.list.ListData;
-import stepper.dd.impl.mapping.MappingData;
-import stepper.dd.impl.number.NumberData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -38,7 +36,6 @@ public class FilesDeleterStep extends AbstractStepDefinition {
          * then log the actions made and return operation result
          */
         List<File> FILES_LIST = new ArrayList<>(); //context.getDataValue("FILES_LIST",List.class) TODO: the previous command is the correct one but needs to write getDataValue properly
-        MappingData DELETION_STATS = new MappingData();
         List<String> DELETED_LIST = new ArrayList<>();
         StepResult res;
         AbstractLogger logger = context.getStepLogger(this);
@@ -59,13 +56,11 @@ public class FilesDeleterStep extends AbstractStepDefinition {
                     })
                     .map(File::getName)
                     .collect(Collectors.toList());
-
-            DELETION_STATS.setCar(new NumberData(numberOfFilesToDelete-DELETED_LIST.size()));
-            DELETION_STATS.setCdr(new NumberData(DELETED_LIST.size()));
         }
 
-        context.storeDataValue("DELETED_LIST", new ListData(DELETED_LIST));
-        context.storeDataValue("DELETION_STATS", DELETION_STATS);
+        Pair<Integer, Integer> DELETION_STATS = new Pair<>(numberOfFilesToDelete - DELETED_LIST.size(), DELETED_LIST.size());
+        context.storeDataValue("DELETED_LIST", DELETED_LIST, DataDefinitionRegistry.LIST);
+        context.storeDataValue("DELETION_STATS", DELETION_STATS, DataDefinitionRegistry.MAPPING);
 
         if(DELETED_LIST.size() == 0){
             res = StepResult.SUCCESS;
@@ -73,7 +68,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         }
         else if(DELETED_LIST.size() != numberOfFilesToDelete){
             res = StepResult.WARNING;
-            logger.addLogLine("WARNING: Only " + DELETION_STATS.getCar() + "/" + numberOfFilesToDelete + " files where deleted!");
+            logger.addLogLine("WARNING: Only " + DELETION_STATS.getKey() + "/" + numberOfFilesToDelete + " files where deleted!");
         }
         else{
             res = StepResult.FAILURE;

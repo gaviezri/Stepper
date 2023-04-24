@@ -55,7 +55,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
                 }
             }
             logger.addLogLine("Extracted total of " + source.getTotalSize() + " properties");
-            context.storeDataValue("RESULT", new StringData(result.toString()));
+            context.storeDataValue("RESULT", result.toString(),DataDefinitionRegistry.STRING);
         } else {
             logger.addSummaryLine("Source data is empty\n result is empty");
         }

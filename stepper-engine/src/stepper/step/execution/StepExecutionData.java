@@ -9,6 +9,7 @@ import java.util.Map;
 public class StepExecutionData {
     private StepResult stepResult;
     private Number Duration;
+    private Map<String, Object> data;
 
     public Number getDuration() {
         return Duration;

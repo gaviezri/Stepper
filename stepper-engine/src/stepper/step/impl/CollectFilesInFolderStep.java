@@ -2,8 +2,7 @@ package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.list.ListData;
-import stepper.dd.impl.number.NumberData;
+import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -92,8 +91,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 break;
             case WARNING:
                 logger.addSummaryLine("Folder " + context.getDataValue("FOLDER_NAME", String.class) + " scanned successfully but it is empty");
-                context.storeDataValue(this.outputs().get(0).getName(), null);
-                context.storeDataValue(this.outputs().get(1).getName(), new NumberData(0));
+                context.storeDataValue(this.outputs().get(0).getName(), null, DataDefinitionRegistry.LIST);
+                context.storeDataValue(this.outputs().get(1).getName(), 0, DataDefinitionRegistry.NUMBER);
                 break;
             case FAILURE:
                 break;
@@ -136,8 +135,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             return StepResult.FAILURE;
         }
         if (filesList != null) {
-            context.storeDataValue(this.outputs().get(0).getName(), new ListData(filesList));
-            context.storeDataValue(this.outputs().get(1).getName(), new NumberData(filesList.size()));
+            context.storeDataValue(this.outputs().get(0).getName(), filesList,DataDefinitionRegistry.LIST);
+            context.storeDataValue(this.outputs().get(1).getName(), filesList.size(), DataDefinitionRegistry.NUMBER);
             logger.addSummaryLine("Folder " + folderName + " scanned successfully");
             return StepResult.SUCCESS;
         }

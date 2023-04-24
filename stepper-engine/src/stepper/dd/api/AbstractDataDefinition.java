@@ -6,11 +6,11 @@ public abstract class AbstractDataDefinition implements DataDefinition {
     private final String name;
     private final boolean userFriendly;
     private final Class<?> type;
-    protected abstract String presentToUser();
+    // protected abstract <T> T toDTO(Class<T> dtoType, Object data);
 
     @Override
     public String toString() {
-        return presentToUser();
+        return null;
     }
 
     public AbstractDataDefinition(String name, boolean userFriendly, Class<?> type) {

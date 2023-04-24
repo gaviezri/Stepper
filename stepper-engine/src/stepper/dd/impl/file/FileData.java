@@ -59,10 +59,6 @@ public class FileData extends FileDataDefinition{
         }
     }
 
-    @Override
-    public String presentToUser() {
-        return filePath;
-    }
 
     @Override
     public boolean equals(Object o) {

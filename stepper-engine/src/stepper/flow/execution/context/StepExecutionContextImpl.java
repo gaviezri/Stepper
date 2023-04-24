@@ -1,10 +1,7 @@
 package stepper.flow.execution.context;
 
-import stepper.dd.api.AbstractDataDefinition;
 import stepper.dd.api.DataDefinition;
-import stepper.dd.impl.mapping.MappingData;
-import stepper.dd.impl.mapping.MappingDataDefinition;
-import stepper.dd.impl.string.StringData;
+import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.*;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -21,21 +18,26 @@ public class StepExecutionContextImpl implements StepExecutionContext {
      * this dic will maintain all (data_value_name-alias) for data values in a flow.
      * if no alias was given, the dic will hold data_value_name-data_value_name for the step.
      */
-    private Map<MappingData,String>  dataValueName2Alias = new HashMap<>();
+    private Map<String,String>  dataValueName2Alias = new HashMap<>();
     /**
-     * this dic will maintain all (input/output_name-Data_definition) of a flow.
+     * this dic will maintain all concrete data (input/output) of a flow execution.
      * each step can address this data as input if needed and update it for outputs.
      */
-    private Map<String, AbstractDataDefinition> dataValues = new HashMap<>();
+    private Map<String, Object> ExecutionDataValues = new HashMap<>();
+    /**
+     * this dic will maintain all definition (input/output) of a flow execution.
+     * each step can address this data as input if needed and update it for outputs.
+     */
+    private Map<String, DataDefinition> ExecutionDataName2Definition = new HashMap<>();
     /**
      * this dic will maintain (step-that_step_Manger).
      * */
     private Map<String, StepExecutionDataManager> step2Manager = new HashMap<>();
-    private Map<MappingData, DataDefinition> dataName2DataDefinition = new HashMap<>();
+
     public String getFinalDataName(String name){
         return dataValueName2Alias.get(name);
     }
-
+    @Override
     public String getCurrentStepName() {
         return currentStepName;
     }
@@ -47,7 +49,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 //TODO: see if really needed...
     private String currentStepName;
 
-    public StepExecutionContextImpl(List<StepUsageDeclaration> steps, Map<MappingData,String>  dataValueName2Alias) {
+    public StepExecutionContextImpl(List<StepUsageDeclaration> steps, Map<String,String>  dataValueName2Alias) {
         for (StepUsageDeclaration step : steps) {
             step2Manager.put(step.getFinalStepName(),new StepExecutionDataManager(step.getFinalStepName()));
 
@@ -101,16 +103,16 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
     @Override
     public <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException {
-        String finalDataName = dataValueName2Alias.get(new MappingData(new StringData(this.currentStepName),new StringData(dataName)));
+        String finalDataName = dataValueName2Alias.get(dataName);
         finalDataName = finalDataName == null ? dataName : finalDataName;
 
         // assuming that from the data name we can get to its data definition
-        DataDefinition theExpectedDataDefinition = dataValues.get(finalDataName);
+        DataDefinition theExpectedDataDefinition = this.ExecutionDataName2Definition.get(finalDataName);
 
         if (theExpectedDataDefinition == null) throw new NoMatchingKeyWasFoundException("The key " + finalDataName + "cant be found!");
 
         if (expectedDataType.isAssignableFrom(theExpectedDataDefinition.getType())) {
-            Object aValue = dataValues.get(finalDataName);
+            Object aValue = ExecutionDataValues.get(finalDataName);
 
             return expectedDataType.cast(aValue);
         } else {
@@ -120,17 +122,18 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
     }
     @Override
-    public boolean storeDataValue(String dataName, AbstractDataDefinition value) throws GivenValueTypeDontMatchException{
-        MappingDataDefinition currentStepAndDataNames = new MappingData(new StringData(this.currentStepName),new StringData(dataName));
-        String finalDataName = dataValueName2Alias.get(currentStepAndDataNames);
+    public boolean storeDataValue(String dataName,Object value ,DataDefinitionRegistry datadefinition) throws GivenValueTypeDontMatchException{
+        // use current step name?
+        String finalDataName = dataValueName2Alias.get(dataName);
+
         finalDataName = finalDataName == null ? dataName : finalDataName;
 
         // assuming that from the data name we can get to its data definition
-        DataDefinition theData = dataName2DataDefinition.get(currentStepAndDataNames);
+        DataDefinition theData = ExecutionDataName2Definition.get(finalDataName);
 
         // we have the DD type so we can make sure that its from the same type
-        if (theData.getType().isAssignableFrom(value.getClass())) {
-            dataValues.put(finalDataName, value);
+        if (theData.getType().isAssignableFrom(datadefinition.getType())) {
+            ExecutionDataValues.put(finalDataName, value);
         }
         else {
             throw new GivenValueTypeDontMatchException("Expected type " + theData.getType() + "but " + value.getClass() + "was given.");

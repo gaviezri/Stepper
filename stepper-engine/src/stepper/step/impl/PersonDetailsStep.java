@@ -8,6 +8,8 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
+import javax.xml.crypto.Data;
+
 public class PersonDetailsStep extends AbstractStepDefinition {
 
     public PersonDetailsStep() {
@@ -35,7 +37,7 @@ public class PersonDetailsStep extends AbstractStepDefinition {
         String greeting = "Hello " + firstName.toUpperCase() + " " + lastName.toUpperCase() + "! You were born " + age + " Years ago !";
 
         // add outputs here, somehow
-        context.storeDataValue("DETAILS", new StringData(greeting));
+        context.storeDataValue("DETAILS", greeting, DataDefinitionRegistry.STRING);
 
         // through the context, as part of writing the step's logic I should be able to:
         // 1. add log lines

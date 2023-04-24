@@ -2,8 +2,7 @@ package stepper.dd.impl;
 
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
-import stepper.dd.impl.doublle.DoubleDataDefinition;
-import stepper.dd.impl.mapping.MappingData;
+import stepper.dd.impl.number.DoubleDataDefinition;
 import stepper.dd.impl.mapping.MappingDataDefinition;
 import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.dd.impl.relation.RelationDataDefinition;

@@ -1,7 +1,6 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.list.ListData;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -42,7 +41,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = StepResult.SUCCESS;
         StepResult subResult;
-        ListData filesToRename = (ListData) context.getDataValue("FILES_TO_RENAME", ListData.class);
+        List filesToRename = context.getDataValue("FILES_TO_RENAME", List.class);
 
         List<String> columnsName = new ArrayList<>();
         columnsName.add("Ordinal Number");

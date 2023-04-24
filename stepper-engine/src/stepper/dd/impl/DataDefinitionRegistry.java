@@ -8,15 +8,13 @@ import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.dd.impl.relation.RelationDataDefinition;
 import stepper.dd.impl.string.StringDataDefinition;
 
-public enum DataDefinitionRegistry implements DataDefinition{
+public enum DataDefinitionRegistry implements DataDefinition {
     STRING(new StringDataDefinition()),
     NUMBER(new NumberDataDefinition()),
     DOUBLE(new DoubleDataDefinition()),
     RELATION(new RelationDataDefinition()),
     LIST(new ListDataDefinition()),
     MAPPING(new MappingDataDefinition());
-    ;
-
 
     DataDefinitionRegistry(DataDefinition dataDefinition) {
         this.dataDefinition = dataDefinition;

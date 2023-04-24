@@ -1,5 +1,6 @@
 package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
@@ -34,14 +35,14 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         //outputs
         addOutput(new DataDefinitionDeclarationImpl("DATA", DataNecessity.NA, "Data extraction", DataDefinitionRegistry.RELATION));
     }
-    private String getLineByRowNumber(Integer rowNum, File file) throws IOException {
-        try(Stream<String> lines = Files.lines(file.toPath())){
+    private String getLineByRowNumber(Integer rowNum, FileData file) throws IOException {
+        try(Stream<String> lines = Files.lines(file.getFile().toPath())){
             return lines.skip(rowNum-1).findFirst().get();
         }
     }
 
-    private RelationData createFilesContentRelation(List<File> filesList,AbstractLogger logger, Integer lineNumberToExtract){
-        File curFile;
+    private RelationData createFilesContentRelation(List<FileData> filesList,AbstractLogger logger, Integer lineNumberToExtract){
+        FileData curFile;
         String line;
         RelationData data = new RelationData(COLUMNS_TITLES);
 
@@ -87,27 +88,24 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
     public StepResult invoke(StepExecutionContext context, String finalName) {
         context.tick(finalName);
         AbstractLogger logger = context.getStepLogger(this);
-
+        StepResult result = StepResult.FAILURE;
         try {
-            List<File> filesList = context.getDataValue("FILES_LIST",List.class);
+            List<FileData> filesList = context.getDataValue("FILES_LIST",List.class);
             Integer lineNumberToExtract = context.getDataValue("LINE", Integer.class);
 
-            context.storeDataValue("DATA",createFilesContentRelation(filesList,logger,lineNumberToExtract));
+            context.storeDataValue("DATA",createFilesContentRelation(filesList,logger,lineNumberToExtract),DataDefinitionRegistry.RELATION);
 
             if(filesList.isEmpty()) {
                 logger.addSummaryLine("No files were given!");
             }
             context.tock(finalName);
-            return StepResult.SUCCESS;
+            result = StepResult.SUCCESS;
         }
-        catch(GivenValueTypeDontMatchException e){
+        catch(Exception e){
             logger.addLogLine(e.getMessage());
 
         }
-        catch(NoMatchingKeyWasFoundException e){
-
-        }
-
+        return result;
     }
 
     @Override

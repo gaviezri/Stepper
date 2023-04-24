@@ -32,30 +32,42 @@ public class CSVExporterStep extends AbstractStepDefinition {
 
     @Override
     public StepResult invoke(StepExecutionContext context, String finalName) {
-        RelationData relation = (RelationData) context.getDataValue("SOURCE", RelationDataDefinition.class);
-        AbstractLogger logger = context.getStepLogger(this);
-        StringBuilder CSV = new StringBuilder();
-        StepResult result;
 
-        if (relation == null || relation.getRowSize() == 0) {
-            logger.addLogLine("Relation is Empty or null");
-            result = StepResult.WARNING;
-        }
-        else{
-            int relationSize = relation.getRowSize();
-            int i = 0;
-            logger.addLogLine("About to process " + relation.getRowSize() + " lines of data");
-            for (; i < relationSize - 1; i++) {
+        context.tick(this.getStepName());
+        AbstractLogger logger = context.getStepLogger(this);
+        RelationData relation;
+        StepResult result;
+        try {
+            relation = (RelationData) context.getDataValue("SOURCE", RelationDataDefinition.class);
+
+            StringBuilder CSV = new StringBuilder();
+
+
+            if (relation == null || relation.getRowSize() == 0) {
+                logger.addLogLine("Relation is Empty or null");
+                result = StepResult.WARNING;
+            } else {
+                int relationSize = relation.getRowSize();
+                int i = 0;
+                logger.addLogLine("About to process " + relation.getRowSize() + " lines of data");
+                for (; i < relationSize - 1; i++) {
                     CSV.append(relation.getDataFromRow(i))
                             .append(',');
                 }
-            // last line no comma
-            CSV.append(relation.getDataFromRow(i));
-            //TODO: Get output-name from context if alias is used
-            context.storeDataValue(this.outputs().get(0).getName(), CSV.toString(), DataDefinitionRegistry.STRING);
-            logger.addSummaryLine("relation exported to CSV successfully");
-            result = StepResult.SUCCESS;
+                // last line no comma
+                CSV.append(relation.getDataFromRow(i));
+                //TODO: Get output-name from context if alias is used
+                context.storeDataValue(this.outputs().get(0).getName(), CSV.toString(), DataDefinitionRegistry.STRING);
+                logger.addSummaryLine("relation exported to CSV successfully");
+                result = StepResult.SUCCESS;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.addLogLine("Error while exporting relation to CSV");
+            logger.addLogLine(e.getMessage());
+            return StepResult.FAILURE;
         }
+        context.tock(this.getStepName());
         return result;
     }
 }

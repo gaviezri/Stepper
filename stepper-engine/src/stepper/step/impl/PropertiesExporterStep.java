@@ -29,35 +29,41 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
 
         AbstractLogger logger = context.getStepLogger(this);
         StepResult stepResult = validateInputs(context);
+        RelationData source;
+        try{
+            if (stepResult == StepResult.SUCCESS) {
 
-        if (stepResult == StepResult.SUCCESS) {
-
-            RelationData source = context.getDataValue("SOURCE", RelationData.class);
-            List<String> properties = source.getColumnsNames();
-            List row;
-            StringBuilder result = new StringBuilder();
+                source = context.getDataValue("SOURCE", RelationData.class);
+                List<String> properties = source.getColumnsNames();
+                List row;
+                StringBuilder result = new StringBuilder();
 
 
-            logger.addLogLine("About to process " + source.getRowSize() + " lines of data");
+                logger.addLogLine("About to process " + source.getRowSize() + " lines of data");
 
-            for (int i = 0; i < source.getRowSize(); i++) {
+                for (int i = 0; i < source.getRowSize(); i++) {
 
-                row = source.getDataFromRow(i);
+                    row = source.getDataFromRow(i);
 
-                for (int j = 0; j < row.size(); j++) {
-                    result.append("row-")
-                            .append(i + 1)
-                            .append(".")
-                            .append(properties.get(j))
-                            .append("=")
-                            .append(row.get(j))
-                            .append("\r\n");
+                    for (int j = 0; j < row.size(); j++) {
+                        result.append("row-")
+                                .append(i + 1)
+                                .append(".")
+                                .append(properties.get(j))
+                                .append("=")
+                                .append(row.get(j))
+                                .append("\r\n");
+                    }
                 }
+                logger.addLogLine("Extracted total of " + source.getTotalSize() + " properties");
+                context.storeDataValue("RESULT", result.toString(),DataDefinitionRegistry.STRING);
+            } else {
+                logger.addSummaryLine("Source data is empty\n result is empty");
             }
-            logger.addLogLine("Extracted total of " + source.getTotalSize() + " properties");
-            context.storeDataValue("RESULT", result.toString(),DataDefinitionRegistry.STRING);
-        } else {
-            logger.addSummaryLine("Source data is empty\n result is empty");
+        }catch (Exception e){
+            logger.addSummaryLine("Error occurred during properties export");
+            logger.addSummaryLine(e.getMessage());
+            stepResult = StepResult.FAILURE;
         }
         logger.addSummaryLine("Properties export completed successfully");
         context.tock(finalName);
@@ -66,7 +72,11 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
 
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
-        return context.getDataValue("SOURCE", RelationData.class).getRowSize() != 0 ?
-                StepResult.SUCCESS : StepResult.WARNING;
+        try {
+            return  context.getDataValue("SOURCE", RelationData.class).getRowSize() != 0 ?
+                    StepResult.SUCCESS : StepResult.WARNING;
+        } catch (Exception e) {
+            return StepResult.FAILURE;
+        }
     }
 }

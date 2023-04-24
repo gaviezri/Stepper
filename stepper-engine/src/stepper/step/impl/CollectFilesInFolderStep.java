@@ -9,7 +9,6 @@ import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,24 +37,31 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     public StepResult validateInputs(StepExecutionContext context) {
 
         AbstractLogger logger = context.getStepLogger(this);
-        String folderName = context.getDataValue("FOLDER_NAME", String.class);
-        String filter = context.getDataValue("FILTER", String.class);
+        String folderName;
+        String filter;
         StepResult result;
-        if (FolderNotExist(folderName)) {
-            logger.addLogLine("Folder name is invalid");
-            logger.addSummaryLine("Folder " + folderName + " NOT scanned! it does not exist");
-            result = StepResult.FAILURE;
-        } else if (NotAFolder(folderName)) {
-            logger.addLogLine("Folder name represents a non-folder entity");
-            logger.addSummaryLine("Folder " + folderName + " NOT scanned! it is not a folder");
-            result = StepResult.FAILURE;
+        try {
+            folderName = context.getDataValue("FOLDER_NAME", String.class);
+            filter = context.getDataValue("FILTER", String.class);
+            if (FolderNotExist(folderName)) {
+                logger.addLogLine("Folder name is invalid");
+                logger.addSummaryLine("Folder " + folderName + " NOT scanned! it does not exist");
+                result = StepResult.FAILURE;
+            } else if (NotAFolder(folderName)) {
+                logger.addLogLine("Folder name represents a non-folder entity");
+                logger.addSummaryLine("Folder " + folderName + " NOT scanned! it is not a folder");
+                result = StepResult.FAILURE;
 
-        } else if (FolderIsEmpty(folderName)) {
-            logger.addLogLine("Folder name represents an empty folder");
-            result = StepResult.WARNING;
-        } else{
-            logger.addLogLine("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "none"));
-            result = StepResult.SUCCESS;
+            } else if (FolderIsEmpty(folderName)) {
+                logger.addLogLine("Folder name represents an empty folder");
+                result = StepResult.WARNING;
+            } else{
+                logger.addLogLine("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "none"));
+                result = StepResult.SUCCESS;
+            }
+        } catch (Exception e) {
+            logger.addLogLine("Error while reading inputs: " + e.getMessage());
+            result = StepResult.FAILURE;
         }
         return result;
     }
@@ -82,7 +88,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
 
     @Override
     public StepResult invoke(StepExecutionContext context, String finalName) {
-//        context.tick(this.getStepName());
+        context.tick(this.getStepName());
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = validateInputs(context);
         switch (result) {
@@ -90,21 +96,36 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 result = handleSUCCESS(context);
                 break;
             case WARNING:
-                logger.addSummaryLine("Folder " + context.getDataValue("FOLDER_NAME", String.class) + " scanned successfully but it is empty");
-                context.storeDataValue(this.outputs().get(0).getName(), null, DataDefinitionRegistry.LIST);
-                context.storeDataValue(this.outputs().get(1).getName(), 0, DataDefinitionRegistry.NUMBER);
+                try {
+                    logger.addSummaryLine("Folder " + context.getDataValue("FOLDER_NAME", String.class) + " scanned successfully but it is empty");
+                    context.storeDataValue(this.outputs().get(0).getName(), null, DataDefinitionRegistry.LIST);
+                    context.storeDataValue(this.outputs().get(1).getName(), 0, DataDefinitionRegistry.NUMBER);
+                } catch (Exception e) {
+                    logger.addLogLine("Error while storing data");
+                    logger.addLogLine(e.getMessage());
+                    result = StepResult.FAILURE;
+                }
                 break;
             case FAILURE:
                 break;
         }
+        context.tock(this.getStepName());
         return result;
     }
 
     public StepResult handleSUCCESS(StepExecutionContext context) {
 
         AbstractLogger logger = context.getStepLogger(this);
-        String folderName = context.getDataValue("FOLDER_NAME", String.class);
-        String filter = context.getDataValue("FILTER", String.class);
+        String folderName;
+        String filter;
+        try {
+             folderName = context.getDataValue("FOLDER_NAME", String.class);
+             filter = context.getDataValue("FILTER", String.class);
+        } catch (Exception e) {
+            logger.addLogLine("Error while reading folder name");
+            logger.addLogLine(e.getMessage());
+            return StepResult.FAILURE;
+        }
         List<FileData> filesList = null;
         try {
             // get all files in folder
@@ -135,10 +156,18 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             return StepResult.FAILURE;
         }
         if (filesList != null) {
-            context.storeDataValue(this.outputs().get(0).getName(), filesList,DataDefinitionRegistry.LIST);
-            context.storeDataValue(this.outputs().get(1).getName(), filesList.size(), DataDefinitionRegistry.NUMBER);
-            logger.addSummaryLine("Folder " + folderName + " scanned successfully");
-            return StepResult.SUCCESS;
+            try {
+                context.storeDataValue(this.outputs().get(0).getName(), filesList, DataDefinitionRegistry.LIST);
+                context.storeDataValue(this.outputs().get(1).getName(), filesList.size(), DataDefinitionRegistry.NUMBER);
+                logger.addSummaryLine("Folder " + folderName + " scanned successfully");
+                return StepResult.SUCCESS;
+            }
+            catch (Exception e) {
+                logger.addLogLine("Error while storing data");
+                logger.addLogLine(e.getMessage());
+                return StepResult.FAILURE;
+            }
+
         }
         logger.addSummaryLine("Folder " + folderName + " NOT scanned!\n" + "Unknown error");
         return StepResult.FAILURE;

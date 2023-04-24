@@ -20,7 +20,7 @@ public class FileDumperStep extends AbstractStepDefinition {
 
             //inputs
             addInput(new DataDefinitionDeclarationImpl("CONTENT", DataNecessity.MANDATORY, "Content", DataDefinitionRegistry.STRING));
-            addInput(new DataDefinitionDeclarationImpl("FILENAME", DataNecessity.MANDATORY, "Target file path", DataDefinitionRegistry.STRING));
+            addInput(new DataDefinitionDeclarationImpl("FILE_NAME", DataNecessity.MANDATORY, "Target file path", DataDefinitionRegistry.STRING));
 
             //outputs
             addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "File Creation Result", DataDefinitionRegistry.STRING));
@@ -40,61 +40,74 @@ public class FileDumperStep extends AbstractStepDefinition {
         @Override
         public StepResult validateInputs(StepExecutionContext context) {
             AbstractLogger logger = context.getStepLogger(this);
-            String content = context.getDataValue("CONTENT", String.class);
-            String fileName = context.getDataValue("FILENAME", String.class);
             StepResult result;
-            if (! validateFileName(fileName)) {
-                logger.addLogLine("File name is invalid");
-                logger.addSummaryLine("File " + fileName + " NOT created!");
+            try{
+                String content = context.getDataValue("CONTENT", String.class);
+                String fileName = context.getDataValue("FILE_NAME", String.class);
+
+                if (! validateFileName(fileName)) {
+                    logger.addLogLine("File name is invalid");
+                    logger.addSummaryLine("File " + fileName + " NOT created!");
+                    result = StepResult.FAILURE;
+                }
+                else if (! validateContent(content)) {
+                    logger.addLogLine("Content is empty");
+                    result = StepResult.WARNING;
+                }
+                else{
+                    logger.addLogLine("File name is valid");
+                    logger.addLogLine("About to create file named " + fileName);
+                    result =  StepResult.SUCCESS;
+                }
+            }
+            catch (Exception e){
+                logger.addLogLine("Exception: " + e.getMessage());
                 result = StepResult.FAILURE;
-            }
-            else if (! validateContent(content)) {
-                logger.addLogLine("Content is empty");
-                result = StepResult.WARNING;
-            }
-            else{
-                logger.addLogLine("File name is valid");
-                logger.addLogLine("About to create file named " + fileName);
-                result =  StepResult.SUCCESS;
             }
             return result;
         }
 
         @Override
         public StepResult invoke(StepExecutionContext context, String finalName) {
-            context.tick(this.getStepName());
 
+            context.tick(this.getStepName());
             StepResult result = validateInputs(context);
             AbstractLogger logger = context.getStepLogger(this);
-            String content = context.getDataValue("CONTENT", String.class);
-            String fileName = context.getDataValue("FILENAME", String.class);
+            String content;
+            String fileName = "UNKNOWN";
             String cause = "";
-
-            switch (result){
-                case SUCCESS:
-                case WARNING:
-                    try {
-                        content = context.getDataValue("CONTENT", String.class);
-                        fileName = context.getDataValue("FILENAME", String.class);
-                        createFile(fileName, content);
-                        logger.addSummaryLine("File " + fileName + " created successfully !");
-                    }
-                    catch (IOException e) {
-                        logger.addLogLine(e.getMessage());
+            try {
+                content = context.getDataValue("CONTENT", String.class);
+                fileName = context.getDataValue("FILENAME", String.class);
+                switch (result) {
+                    case SUCCESS:
+                    case WARNING:
+                        try {
+                            content = context.getDataValue("CONTENT", String.class);
+                            fileName = context.getDataValue("FILENAME", String.class);
+                            createFile(fileName, content);
+                            logger.addSummaryLine("File " + fileName + " created successfully !");
+                        } catch (IOException e) {
+                            logger.addLogLine(e.getMessage());
+                            logger.addSummaryLine("File " + fileName + " NOT created!");
+                            result = StepResult.FAILURE;
+                        }
+                        break;
+                    case FAILURE:
+                    default:
+                        cause = "file name is invalid";
+                        logger.addLogLine("Something went wrong");
                         logger.addSummaryLine("File " + fileName + " NOT created!");
-                        result = StepResult.FAILURE;
-                    }
-                    break;
-                case FAILURE:
-                default:
-                    cause = "file name is invalid";
-                    logger.addLogLine("Something went wrong");
-                    logger.addSummaryLine("File " + fileName + " NOT created!");
-                    break;
-            }
+                        break;
+                }
 
-            context.storeDataValue("RESULT",  result +
-                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS"), DataDefinitionRegistry.STRING);
+                context.storeDataValue("RESULT", result +
+                        (result == StepResult.FAILURE ? "FAILURE: " + cause : "SUCCESS"), DataDefinitionRegistry.STRING);
+            } catch (Exception e) {
+                logger.addLogLine(e.getMessage());
+                logger.addSummaryLine("File " + fileName + " NOT created!");
+                result = StepResult.FAILURE;
+            }
             context.tock(finalName);
             return result;
         }
@@ -107,6 +120,9 @@ public class FileDumperStep extends AbstractStepDefinition {
             FileWriter Writer = new FileWriter(filename);
             Writer.write(content);
 
+        }
+        else{
+            throw new IOException("File <" + filename + ">  already exists");
         }
     }
 }

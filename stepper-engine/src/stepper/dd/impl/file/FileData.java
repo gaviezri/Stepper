@@ -59,6 +59,10 @@ public class FileData extends FileDataDefinition{
         }
     }
 
+    public File getFile(){
+        return file;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -59,9 +59,12 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         }
 
         Pair<Integer, Integer> DELETION_STATS = new Pair<>(numberOfFilesToDelete - DELETED_LIST.size(), DELETED_LIST.size());
-        context.storeDataValue("DELETED_LIST", DELETED_LIST, DataDefinitionRegistry.LIST);
-        context.storeDataValue("DELETION_STATS", DELETION_STATS, DataDefinitionRegistry.MAPPING);
-
+        try {
+            context.storeDataValue("DELETED_LIST", DELETED_LIST, DataDefinitionRegistry.LIST);
+            context.storeDataValue("DELETION_STATS", DELETION_STATS, DataDefinitionRegistry.MAPPING);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to store data value", e);
+        }
         if(DELETED_LIST.size() == 0){
             res = StepResult.SUCCESS;
             logger.addSummaryLine(filesListIsEmpty ? "No files? No problem - no files were given so no deletion failed" : "All files deleted successfully!");

@@ -41,54 +41,59 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         AbstractLogger logger = context.getStepLogger(this);
         StepResult result = StepResult.SUCCESS;
         StepResult subResult;
-        List filesToRename = context.getDataValue("FILES_TO_RENAME", List.class);
+        List filesToRename;
+        String prefix;
+        String suffix;
+        try {
+            List<String> columnsName = new ArrayList<>();
+            columnsName.add("Ordinal Number");
+            columnsName.add("Old File Name");
+            columnsName.add("New File Name");
+            RelationData renameResult = new RelationData(columnsName);
+            filesToRename = context.getDataValue("FILES_TO_RENAME", List.class);
+            prefix = context.getDataValue("PREFIX", String.class);
+            prefix = prefix != null && !prefix.isEmpty() ? prefix : "";
+            suffix = context.getDataValue("SUFFIX", String.class);
+            suffix = suffix != null && !suffix.isEmpty() ? suffix : "";
+            int filesToRenameSize = filesToRename.size();
 
-        List<String> columnsName = new ArrayList<>();
-        columnsName.add("Ordinal Number");
-        columnsName.add("Old File Name");
-        columnsName.add("New File Name");
-        RelationData renameResult = new RelationData(columnsName);
+            logger.addLogLine("About to start rename " + filesToRenameSize + " files." +
+                    ( !prefix.equals("") ? (" Adding Prefix: " + prefix + ";") : "") +
+                    ( !suffix.equals("") ? (" Adding Suffix: " + suffix + ";") : ""));
 
-        String prefix = context.getDataValue("PREFIX", String.class);
-        prefix = prefix != null ? prefix : "";
-
-        String suffix = context.getDataValue("SUFFIX", String.class);
-        suffix = suffix != null ? suffix : "";
-        int filesToRenameSize = filesToRename.size();
-
-        logger.addLogLine("About to start rename " + filesToRenameSize + " files." +
-                ( !prefix.equals("") ? (" Adding Prefix: " + prefix + ";") : "") +
-                ( !suffix.equals("") ? (" Adding Suffix: " + suffix + ";") : ""));
-
-        for (int i = 0; i < filesToRenameSize; i++) {
-            String fileName = (String) filesToRename.get(i);
-            String newFileName = prefix + fileName + suffix;
-            subResult = renameFile(fileName, newFileName, logger, renameResult);
-            if (subResult == StepResult.WARNING) {
-                result = StepResult.WARNING;
-            }
-        }
-
-        if (filesToRenameSize == 0) {
-            logger.addSummaryLine("No files to rename hence all files renamed successfully");
-        } else {
-            switch (result) {
-            case SUCCESS:
-                logger.addSummaryLine("All files renamed successfully");
-                break;
-            case WARNING:
-                List<String> filesthatFailed = new ArrayList<>();
-                for (int i = 0; i < renameResult.getRowSize(); i++) {
-                    // if old file name equals new file name then rename failed
-                    if (renameResult.getDataFromRow(i).get(2).equals(renameResult.getDataFromRow(i).get(1))) {
-                        filesthatFailed.add((String) renameResult.getDataFromRow(i).get(1));
-                    }
+            for (int i = 0; i < filesToRenameSize; i++) {
+                String fileName = (String) filesToRename.get(i);
+                String newFileName = prefix + fileName + suffix;
+                subResult = renameFile(fileName, newFileName, logger, renameResult);
+                if (subResult == StepResult.WARNING) {
+                    result = StepResult.WARNING;
                 }
-                logger.addSummaryLine("The following files were not renamed successfully:\n" +
-                        filesthatFailed.stream()
-                                .collect(Collectors.joining("\n")));
-                break;
             }
+
+            if (filesToRenameSize == 0) {
+                logger.addSummaryLine("No files to rename hence all files renamed successfully");
+            } else {
+                switch (result) {
+                case SUCCESS:
+                    logger.addSummaryLine("All files renamed successfully");
+                    break;
+                case WARNING:
+                    List<String> filesthatFailed = new ArrayList<>();
+                    for (int i = 0; i < renameResult.getRowSize(); i++) {
+                        // if old file name equals new file name then rename failed
+                        if (renameResult.getDataFromRow(i).get(2).equals(renameResult.getDataFromRow(i).get(1))) {
+                            filesthatFailed.add((String) renameResult.getDataFromRow(i).get(1));
+                        }
+                    }
+                    logger.addSummaryLine("The following files were not renamed successfully:\n" +
+                            filesthatFailed.stream()
+                                    .collect(Collectors.joining("\n")));
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            logger.addLogLine("Exception occurred: " + e.getMessage());
+            result = StepResult.FAILURE;
         }
         context.tock(finalName);
         return result;

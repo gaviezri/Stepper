@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public enum StepDefinitionRegistry {
     HELLO_WORLD(new HelloWorldStep()),
-    PERSON_DETAILS(new PersonDetailsStep()),
+    //PERSON_DETAILS(new PersonDetailsStep()),
     FILE_DUMPER(new FileDumperStep()),
     CSV_EXPORTER(new CSVExporterStep()),
     SPEND_SOME_TIME(new SpendSomeTimeStep()),
@@ -33,6 +33,11 @@ public enum StepDefinitionRegistry {
                 .map(StepDefinition::getStepName)
                 .collect(Collectors.toSet());
     }
+
+    public static String convertFromUserFriendlyToInternal(String stepOriginalName) {
+        return stepOriginalName.toUpperCase().replace(" ", "_");
+    }
+
     public StepDefinition getStepDefinition() {
         return stepDefinition;
     }

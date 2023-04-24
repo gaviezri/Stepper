@@ -93,8 +93,8 @@ public class FileDumperStep extends AbstractStepDefinition {
                     break;
             }
 
-            context.storeDataValue("RESULT",  new StringData(result +
-                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS")));
+            context.storeDataValue("RESULT",  result +
+                    (result == StepResult.FAILURE ?  "FAILURE: " + cause : "SUCCESS"), DataDefinitionRegistry.STRING);
             context.tock(finalName);
             return result;
         }

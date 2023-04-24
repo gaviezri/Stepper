@@ -7,8 +7,4 @@ public class NumberDataDefinition extends AbstractDataDefinition {
         super("Number", true, Number.class);
     }
 
-    @Override
-    protected String presentToUser() {
-        return null;
-    }
 }

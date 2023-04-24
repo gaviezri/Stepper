@@ -1,9 +1,12 @@
 package stepper.flow.loader;
 
 import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
+import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import stepper.flow.builder.FlowBuilder;
+import stepper.flow.builder.FreshFlowBuilder;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.step.StepDefinitionRegistry;
 
@@ -19,6 +22,7 @@ public class FlowLoader {
     private final DocumentBuilderFactoryImpl documentBuilderFactory;
     // constant path to flows in project_root/flow-definition-repository/flows
     private final Path PATH_TO_FLOWS = Paths.get("flow-definition-repository/flows");
+    private FlowBuilder builder = new FreshFlowBuilder();
 
     private FlowLoader() {
         documentBuilderFactory = new DocumentBuilderFactoryImpl();
@@ -41,21 +45,16 @@ public class FlowLoader {
         if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
             throw new Exception("Invalid file: " + fullFilePath + ".\nFile must be a valid .xml file.");
         }
-
         Document document = documentBuilderFactory.newDocumentBuilder().parse(flowFile);
         document.getDocumentElement().normalize();
-
-        return generateListOfFlowDefinitions(document);
+        builder.reset();
+        initialFlowValidations(document);
+        return builder.buildFlows();
     }
 
-    private List<FlowDefinition> generateListOfFlowDefinitions(Document document) throws Exception{
-
-        if (document == null) {
-            return null;
-        }
+    private void initialFlowValidations(Document document) throws Exception{
 
         // get all flow elements from xml
-        List<FlowDefinition> flowDefinitions = new ArrayList<>();
         NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
         // check if the xml is valid (no duplicate flow names, no step names that don't exist) - V
         // and no occurrences of the following issues:
@@ -68,20 +67,16 @@ public class FlowLoader {
         // 4. aliasing to step/data that doesn't exist in the flow's scope - V
         // 5. flow output contains a data that doesn't exist in the flow's scope
         // 6. numerous mandatory inputs with the same name from different types!
+        // builder will be used to create the flow definitions
+        // and will work along the validations to minimize the number of iterations over the xml
         validateFlowDefinitionsInXML(flowDefinitionsNodeList);
-
-        for (int i = 0; i < flowDefinitionsNodeList.getLength(); i++) {
-          // create flow definitions
-        }
-
-        return flowDefinitions;
     }
     private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) {
 
-         validateFlowsNameUniqueness(flowDefinitionsNodeList);
-         validateStepNameExistence(flowDefinitionsNodeList);
-         validateNoTwoOutputsWithTheSameName(flowDefinitionsNodeList);
-         validateStepAliasing(flowDefinitionsNodeList);
+         validateFlowsNameUniqueness(flowDefinitionsNodeList); // builder gets flow names and descriptions here
+         validateStepNameExistence(flowDefinitionsNodeList); // builder adds to each flow the steps it contains
+         validateNoTwoOutputsWithTheSameName(flowDefinitionsNodeList); // builder sets each flow's formal outputs
+         validateStepAliasing(flowDefinitionsNodeList); // builder gets the aliasing and adds it to the flow
     }
 
     private void validateNoTwoOutputsWithTheSameName(NodeList flowDefinitionsNodeList) {
@@ -99,6 +94,7 @@ public class FlowLoader {
                     }
                     outputNames.add(outputName);
                 }
+                builder.setFlowFormalOutputs(flow.getAttribute("name"), outputNames);
 
             }
         }
@@ -107,28 +103,35 @@ public class FlowLoader {
     private void validateStepAliasing(NodeList flowDefinitionsNodeList) {
 
         for (int i = 0; i < flowDefinitionsNodeList.getLength(); i++) {
+            // iterate flows
             Element flow = (Element) flowDefinitionsNodeList.item(i);
             NodeList stepDefinitionsNodeList = flow.getElementsByTagName("ST-StepInFlow");
-            Set<String> stepNames = new HashSet<>();
+            // iterate steps
             for (int j = 0; j < stepDefinitionsNodeList.getLength(); j++) {
-                Element step = (Element) stepDefinitionsNodeList.item(j);
-                String finalStepName = step.getAttribute("alias").isEmpty() ?
-                        step.getAttribute("name") : step.getAttribute("alias");
-                stepNames.add(finalStepName);
+
+                String stepName = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("name");
+                String stepAlias = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("alias");
+                if (!stepAlias.isEmpty()) {
+
+                    builder.addStepAlias(flow.getAttribute("name"), stepName, stepAlias);
+                }
             }
 
-            NodeList aliasDefinitionsNodeList = flow.getElementsByTagName("ST-FlowLevelAlias");
-            for (int j = 0; j < aliasDefinitionsNodeList.getLength(); j++) {
-                Element alias = (Element) aliasDefinitionsNodeList.item(j);
-                if (!stepNames.contains(alias.getAttribute("step"))) {
-                    throw new RuntimeException("Flow::<" + flow.getAttribute("name") + "> has an alias to a step that doesn't exist: " + alias.getAttribute("step"));
+            List<String> stepNamesList = builder.getFlowSteps(flow.getAttribute("name"));
+            // validate all aliasing is existing steps
+            for (Pair <String, String> step2Alias   : builder.getFlowSpecificStep2AliasByOrder(flow.getAttribute("name"))) {
+                String stepName = step2Alias.getKey();
+                if (!stepNamesList.contains(stepName)) {
+                    throw new RuntimeException("Flow " + flow.getAttribute("name") + " has an aliasing to a step that doesn't exist: " + stepName);
                 }
+
             }
         }
     }
+
     private void validateFlowsNameUniqueness(NodeList flowDefinitionsNodeList) {
 
-        Set<String> flowNames = new HashSet<>();
+        List<String> flowNames = new ArrayList<>();
         for (int i = 0; i < flowDefinitionsNodeList.getLength(); i++) {
             Element flow = (Element) flowDefinitionsNodeList.item(i);
             if ( flow.getAttribute("name").isEmpty()) {
@@ -139,7 +142,9 @@ public class FlowLoader {
                 throw new RuntimeException("Flow name is not unique: " + flowName);
             }
             flowNames.add(flow.getAttribute("name"));
+            builder.setFlowDescription(flow.getElementsByTagName("ST-FlowDescription").item(0).getTextContent());
         }
+        builder.setFlowsNames(flowNames);
     }
     private void validateStepNameExistence(NodeList flowDefinitionsNodeList) {
 
@@ -155,6 +160,7 @@ public class FlowLoader {
                 if (!StepDefinitionRegistry.getStepNames().contains(stepName)) {
                     throw new RuntimeException("Flow " + flow.getAttribute("name") + " has a step that doesn't exist: " + stepName);
                 }
+                builder.addStepToFlow(flow.getAttribute("name"), stepName);
             }
         }
     }

@@ -7,9 +7,4 @@ public class RelationDataDefinition extends AbstractDataDefinition {
         super("Relation", false, RelationData.class);
     }
 
-
-    @Override
-    protected String presentToUser() {
-        return null;
-    }
 }

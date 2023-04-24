@@ -1,5 +1,4 @@
 package stepper.step.impl;
-
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.exception.GivenValueTypeDontMatchException;
@@ -81,6 +80,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         }
 
         return data;
+
     }
 
     @Override
@@ -107,9 +107,6 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         catch(NoMatchingKeyWasFoundException e){
 
         }
-
-
-
 
     }
 

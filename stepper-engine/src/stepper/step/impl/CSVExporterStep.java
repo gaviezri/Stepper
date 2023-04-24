@@ -11,6 +11,8 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
+import javax.xml.crypto.Data;
+
 public class CSVExporterStep extends AbstractStepDefinition {
     public CSVExporterStep() {
         super("CSV Exporter", true);
@@ -50,7 +52,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
             // last line no comma
             CSV.append(relation.getDataFromRow(i));
             //TODO: Get output-name from context if alias is used
-            context.storeDataValue(this.outputs().get(0).getName(), new StringData(CSV.toString()));
+            context.storeDataValue(this.outputs().get(0).getName(), CSV.toString(), DataDefinitionRegistry.STRING);
             logger.addSummaryLine("relation exported to CSV successfully");
             result = StepResult.SUCCESS;
         }

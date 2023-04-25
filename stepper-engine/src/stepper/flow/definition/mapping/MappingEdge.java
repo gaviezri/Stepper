@@ -2,6 +2,7 @@ package stepper.flow.definition.mapping;
 
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.step.api.enums.DataNecessity;
 
 public class MappingEdge {
     private final String sourceStepFinalName;
@@ -9,12 +10,14 @@ public class MappingEdge {
     private final String targetStepFinalName;
     private final String targetDataFinalName;
     private final DataDefinition dataDefinition;
+    private final DataNecessity dataNecessityAtTargetStep;
 
-    public MappingEdge(String sourceStepFinalName, String sourceDataFinalName, String targetStepFinalName, String targetDataFinalName, DataDefinition datadef) {
+    public MappingEdge(String sourceStepFinalName, String sourceDataFinalName, String targetStepFinalName, String targetDataFinalName, DataDefinition datadef, DataNecessity dataNecessityAtTargetStep) {
         this.sourceStepFinalName = sourceStepFinalName;
         this.sourceDataFinalName = sourceDataFinalName;
         this.targetStepFinalName = targetStepFinalName;
         this.targetDataFinalName = targetDataFinalName;
+        this.dataNecessityAtTargetStep = dataNecessityAtTargetStep;
         this.dataDefinition = datadef;
     }
 
@@ -29,6 +32,9 @@ public class MappingEdge {
     }
     public String getTargetDataName() {
         return targetDataFinalName;
+    }
+    public DataNecessity getDataNecessityAtTargetStep() {
+        return dataNecessityAtTargetStep;
     }
     public DataDefinition getDataDefinition() {
         return dataDefinition;

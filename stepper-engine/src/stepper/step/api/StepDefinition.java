@@ -16,4 +16,5 @@ public interface StepDefinition {
     StepResult validateInputs(StepExecutionContext context);
     DataDefinition getResourceDataDefinition(String dataOriginalName);
     DataNecessity getResourceNecessity(String dataOriginalName);
+
 }

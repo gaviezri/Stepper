@@ -1,7 +1,8 @@
 package stepper.flow.definition.api;
 
+import stepper.dd.api.DataDefinition;
 import stepper.step.StepDefinitionRegistry;
-import stepper.step.api.DataDefinitionDeclaration;
+import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public interface FlowDefinition {
     void validateFlowStructure();
 
     public List<StepDefinitionRegistry> getStepDefinitionRegistries();
+
+    void setMandatoryInputs();
 
     void addStep(String stepName);
 
@@ -39,5 +42,17 @@ public interface FlowDefinition {
     void addStepAliasThatCanSkipIfFail(String finalname);
 
     void createMapping();
+    List<String> getStepOutputsFinalNames(String stepFinalName);
+    List<String> getStepInputsFinalNames(String stepFinalName);
 
+    StepUsageDeclaration getStepUsageDeclaration(String sourceStepName);
+    
+    DataDefinition getResourceDataDefinition(String stepFinalName, String dataOriginalName);
+
+
+    List<String> getStepOutputsOriginalNames(String sourceFinalStepName);
+
+    List<String> getStepInputsOriginalNames(String targetFinalStepName);
+
+    DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
 }

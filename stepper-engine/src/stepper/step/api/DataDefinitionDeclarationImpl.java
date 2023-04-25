@@ -36,4 +36,9 @@ public class DataDefinitionDeclarationImpl implements DataDefinitionDeclaration 
     public DataDefinition dataDefinition() {
         return dataDefinition;
     }
+
+    @Override
+    public boolean isUserFriendly() {
+        return dataDefinition.isUserFriendly();
+    }
 }

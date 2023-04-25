@@ -262,7 +262,7 @@ public class FlowLoader {
                 Element step = (Element) stepDefinitionsNodeList.item(j);
                 String stepName = step.getAttribute("name");
                 if (!StepDefinitionRegistry.getStepNames().contains(stepName)) {
-                    throw new RuntimeException("Flow " + flow.getAttribute("name") + " has a step that doesn't exist: " + stepName);
+                    throw new RuntimeException("Flow \"" + flow.getAttribute("name") + "\" has a step that doesn't exist: \"" + stepName + "\"" );
                 }
                 builder.addStepToFlow(flowidx, stepName);
             }
@@ -270,7 +270,7 @@ public class FlowLoader {
     }
     public static void main(String[] args) throws Exception {
         FlowLoader flowLoader = new FlowLoader();
-        flowLoader.loadFlowFromXML("C:\\Users\\gavie\\OneDrive\\Desktop\\MTA\\3rd Year\\semester 2\\Java\\Stepper\\stepper-engine\\flow-definitions-repository\\flows\\ex1.xml");
+        flowLoader.loadFlowFromXML("C:\\Users\\gavie\\OneDrive\\Desktop\\MTA\\3rd Year\\semester 2\\Java\\Stepper\\test-flow-defs\\flow-from-xml\\ex1.xml");
         System.out.println("done");
     }
 

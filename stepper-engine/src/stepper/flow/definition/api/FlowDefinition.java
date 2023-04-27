@@ -49,7 +49,6 @@ public interface FlowDefinition {
     
     DataDefinition getResourceDataDefinition(String stepFinalName, String dataOriginalName);
 
-
     List<String> getStepOutputsOriginalNames(String sourceFinalStepName);
 
     List<String> getStepInputsOriginalNames(String targetFinalStepName);

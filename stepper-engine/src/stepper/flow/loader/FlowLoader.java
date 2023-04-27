@@ -29,14 +29,6 @@ public class FlowLoader {
     private FlowLoader() {
         documentBuilderFactory = new DocumentBuilderFactoryImpl();
     }
-    public Path getFlowFromRepository(String flowName) {
-        // verify that the flowName is a valid .xml file and is present in the flows directory
-        File flowFile = new File(PATH_TO_FLOWS.resolve(flowName).toString());
-        if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
-            return null;
-        }
-        return flowFile.toPath();
-    }
     public List<FlowDefinition> loadFlowFromXML(String fullFilePath) throws Exception {
 
         // verify that the flowName is a valid .xml file and is present in the given path
@@ -69,7 +61,7 @@ public class FlowLoader {
         // and will work along the validations to minimize the number of iterations over the xml
         validateFlowDefinitionsInXML(flowDefinitionsNodeList);
     }
-    private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) {
+    private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) throws Exception {
 
          validateFlowsNameUniqueness(flowDefinitionsNodeList); // builder gets flow names and descriptions here
         // and instantiate number of flow-definitions - V
@@ -80,7 +72,7 @@ public class FlowLoader {
          validateCustomMapping(flowDefinitionsNodeList); // builder gets the custom mapping and adds it to the flow - V
     }
     //TODO: implement
-    private void validateDataAliasing(NodeList flowDefinitionsNodeList) {
+    private void validateDataAliasing(NodeList flowDefinitionsNodeList) throws Exception {
         for (int flowidx = 0; flowidx < flowDefinitionsNodeList.getLength(); flowidx++) {
             // iterate flows
             Element flow = (Element) flowDefinitionsNodeList.item(flowidx);
@@ -95,14 +87,12 @@ public class FlowLoader {
                     throw new RuntimeException("Invalid flow-level aliasing declaration in flow " + flow.getAttribute("name") + ".\n" +
                             "All fields must be set. element No." + aliasing);
                 }
-                try {
-                    boolean found = findAliasingResouce(flowidx, stepName, dataName, dataAlias);
-                    if (!found) {
-                        throw new RuntimeException("Data " + dataName + " doesn't exist in step " + stepName + " in flow " + flow.getAttribute("name"));
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new RuntimeException("Step " + stepName + " doesn't exist in flow " + flow.getAttribute("name"));
+
+                boolean found = findAliasingResouce(flowidx, stepName, dataName, dataAlias);
+                if (!found) {
+                    throw new RuntimeException("Data " + dataName + " doesn't exist in step " + stepName + " in flow " + flow.getAttribute("name"));
                 }
+
             }
         }
 
@@ -270,8 +260,8 @@ public class FlowLoader {
     }
     public static void main(String[] args) throws Exception {
         FlowLoader flowLoader = new FlowLoader();
-        flowLoader.loadFlowFromXML("C:\\Users\\gavie\\OneDrive\\Desktop\\MTA\\3rd Year\\semester 2\\Java\\Stepper\\test-flow-defs\\flow-from-xml\\ex1.xml");
-        System.out.println("done");
+        List<FlowDefinition> flowDefs = flowLoader.loadFlowFromXML("C:\\Users\\gavie\\OneDrive\\Desktop\\MTA\\3rd Year\\semester 2\\Java\\Stepper\\test-flow-defs\\flow-from-xml\\ex1.xml");
+        System.out.println(flowDefs);
     }
 
 }

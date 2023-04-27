@@ -14,16 +14,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionImpl implements FlowDefinition {
-
     private  String name;
     private  String description;
     private List<DataDefinitionDeclaration> allMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> unsatisfiedMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
+    private List<DataDefinitionDeclaration> flowOutputs = new ArrayList<>();
     private  List<String> flowFormalOutputNames = new ArrayList<>();
     private List<String> stepsName = new ArrayList<>();
     private List<String> stepsAliases = new ArrayList<>();
-    //private List<Pair<String,String>> stepAliasXDataName2AliasDataName = new ArrayList<>();
     private DataAliasingManager dataAliasingManager = new DataAliasingManager();
     private  List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
     private  List<String> stepAliasThatCanSkipIfFail = new ArrayList<>();
@@ -48,6 +47,45 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public void validateFlowStructure() {
         validateMissingMandatoryInputsAreUserFriendly();
+        // flow output contains a data that doesn't exist in the flow's scope - V
+        validateFlowOutputsIsInScope();
+        // numerous mandatory inputs with the same name from different types! - V
+        validateMandatoryInputsSameNameSameType();
+    }
+
+    private void validateMandatoryInputsSameNameSameType() {
+        for ( DataDefinitionDeclaration DataDefDecl1: allMandatoryInputs){
+            List<DataDefinitionDeclaration> restOfDataDefDecl = allMandatoryInputs.stream()
+                    .filter(datadefdecl -> ! datadefdecl.equals(DataDefDecl1))
+                    .collect(Collectors.toList());
+            for ( DataDefinitionDeclaration DataDefDecl2: restOfDataDefDecl){
+                if (DataDefDecl1.getName().equals(DataDefDecl2.getName()) && DataDefDecl1.getType().equals(DataDefDecl2.getType())){
+                    throw new RuntimeException("numerous mandatory inputs with the same name from different types!");
+                }
+            }
+        }
+    }
+
+    private void validateFlowOutputsIsInScope() {
+        boolean missing;
+        List<String> formalOutputs = getFlowFormalOutputs();
+        for (String formaloutput : formalOutputs) {
+           missing = true;
+            for (String stepFinalName : mappingGraph.getStepNodes()){
+                // by step's final name get to step final outputs names
+                // by step's final outputs names get to step's final outputs names
+                // and check if formal output is in step's final outputs names
+                List<String> stepFinalOutputsNames = getStepOutputsFinalNames(stepFinalName);
+                missing = ! stepFinalOutputsNames.contains(formaloutput);
+                if (! missing) {
+                    break;
+                }
+            }
+           if (missing){
+               throw new RuntimeException("flow output \"" + formaloutput + "\" is not in flow's scope");
+           }
+        }
+
     }
 
     private void validateMissingMandatoryInputsAreUserFriendly() {
@@ -70,6 +108,7 @@ public class FlowDefinitionImpl implements FlowDefinition {
                         unsatisfiedMandatoryInputs.add(dataDefinitionDeclaration);
                     }
                 }
+                flowInputs.add(dataDefinitionDeclaration);
             }
         }
     }

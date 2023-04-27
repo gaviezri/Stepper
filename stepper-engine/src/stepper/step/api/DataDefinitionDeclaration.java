@@ -9,4 +9,5 @@ public interface DataDefinitionDeclaration {
     String userString();
     DataDefinition dataDefinition();
     boolean isUserFriendly();
+    Class<?> getType();
 }

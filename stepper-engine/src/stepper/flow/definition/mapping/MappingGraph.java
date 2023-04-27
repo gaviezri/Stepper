@@ -49,6 +49,9 @@ public class MappingGraph {
         }
     }
 
+    public List<String> getStepNodes() {
+        return stepNodes;
+    }
     private static void validateCustomMapping(String[] source_data, String[] target_data, int sourceNodeIdx, int targetNodeIdx, String sourceDataOriginalName, String targetDataOriginalName, DataDefinition sourceDataDef, DataDefinition targetDataDef) {
         if (sourceDataDef == null || targetDataDef == null) {
             throw new RuntimeException("Data definition not found for " + sourceDataOriginalName + " or " + targetDataOriginalName);

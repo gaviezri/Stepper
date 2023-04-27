@@ -8,18 +8,13 @@ import java.util.*;
 public class FlowBuilderImpl implements FlowBuilder{
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
 
-    public FlowBuilderImpl() {
-
-    }
-
-
     public List<FlowDefinition> buildFlows() {
         // CHECK THAT:
         // reference from a later step to an earlier step - V
         // attempt to map between two data's that are not of the same type - V
-        // there are mandatory inputs which are not user-friendly - TODO
-        // flow output contains a data that doesn't exist in the flow's scope - TODO
-        // numerous mandatory inputs with the same name from different types! - TODO
+        // there are mandatory inputs which are not user-friendly - V
+        // flow output contains a data that doesn't exist in the flow's scope - V
+        // numerous mandatory inputs with the same name from different types! - V
         // AND THEN OR SIMULTANEOUSLY
         // create list of step usage declaration for each flow in list
         for (FlowDefinition flowDefinition : flowDefinitions) {

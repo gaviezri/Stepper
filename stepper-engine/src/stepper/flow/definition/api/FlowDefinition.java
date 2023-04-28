@@ -1,11 +1,13 @@
 package stepper.flow.definition.api;
 
 import stepper.dd.api.DataDefinition;
+import stepper.flow.definition.aliasing.manager.DataAliasingManager;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FlowDefinition {
     String getName();
@@ -57,4 +59,24 @@ public interface FlowDefinition {
     DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
 
     List<DataDefinitionDeclaration> getUnsatisfiedMandatoryInputs();
+
+    void setAccessibility();
+    Boolean getAccessibility();
+    void setFreeInputs();
+    List<String> getFreeInputsNames();
+
+
+    List<String> getFreeInputsTypes();
+
+    Map<String, List<String>> getFreeInputs2StepsThatUseThem();
+
+    List<String> getFreeInputsNecessity();
+
+    List<String> getAllOutputsNames();
+
+    List<String> getAllOutputsTypes();
+
+    List<String> getFinalStepNamesThatProducedTheOutputs();
+
+    DataAliasingManager getDataAliasingManager();
 }

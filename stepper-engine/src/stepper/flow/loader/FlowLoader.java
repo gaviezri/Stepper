@@ -31,16 +31,16 @@ public class FlowLoader {
     }
     public String validateFilePath(String fullFilePath) throws Exception {
         // verify that the flowName is a valid .xml file and is present in the given path
-        File flowFile = new File(fullFilePath);
-        if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
-            throw new Exception("Invalid file: " + fullFilePath + ".\nFile must be a valid .xml file.");
-        }
+
         return fullFilePath;
     }
-    public List<FlowDefinition> loadFlowFromXML(File flowFile) throws Exception {
+    public List<FlowDefinition> loadFlowFromXML(String flowFileName) throws Exception {
 
         // verify that the flowName is a valid .xml file and is present in the given path
-
+        File flowFile = new File(flowFileName);
+        if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
+            throw new Exception("Invalid file: " + flowFileName + ".\nFile must be a valid .xml file.");
+        }
         Document document = documentBuilderFactory.newDocumentBuilder().parse(flowFile);
         document.getDocumentElement().normalize();
         builder.reset();

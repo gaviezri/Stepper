@@ -3,6 +3,8 @@ package stepper.flow.execution.context;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.*;
+import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
@@ -18,7 +20,8 @@ public class StepExecutionContextImpl implements StepExecutionContext {
      * this dic will maintain all (data_value_name-alias) for data values in a flow.
      * if no alias was given, the dic will hold data_value_name-data_value_name for the step.
      */
-    private Map<String,String>  dataValueName2Alias = new HashMap<>();
+    //private Map<String,String>  dataValueName2Alias = new HashMap<>();
+    private DataAliasingManager dataAliasingManager;
     /**
      * this dic will maintain all concrete data (input/output) of a flow execution.
      * each step can address this data as input if needed and update it for outputs.
@@ -49,12 +52,25 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 //TODO: see if really needed...
     private String currentStepName;
 
-    public StepExecutionContextImpl(List<StepUsageDeclaration> steps, Map<String,String>  dataValueName2Alias) {
+    public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String,String> inputFinalName2StringValue) {
+        //List<StepUsageDeclaration> steps, Map<String,String>  dataValueName2Alias
+
+        List<StepUsageDeclaration> steps = flowDefinition.getFlowSteps();
+        dataAliasingManager = flowDefinition.getDataAliasingManager();
+
         for (StepUsageDeclaration step : steps) {
             step2Manager.put(step.getFinalStepName(),new StepExecutionDataManager(step.getFinalStepName()));
 
         }
-        this.dataValueName2Alias = dataValueName2Alias;
+
+        for (Map.Entry<String, String> entry : inputFinalName2StringValue.entrySet()) {
+            String finalName = entry.getKey();
+            String value = entry.getValue();
+
+            ExecutionDataValues.put(finalName,value);
+        }
+        storeDataValue()
+
     }
 
     @Override
@@ -124,7 +140,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     @Override
     public boolean storeDataValue(String dataName,Object value ,DataDefinitionRegistry datadefinition) throws GivenValueTypeDontMatchException{
         // use current step name?
-        String finalDataName = dataValueName2Alias.get(dataName);
+        String finalDataName = dataAliasingManager.get(dataName);
 
         finalDataName = finalDataName == null ? dataName : finalDataName;
 

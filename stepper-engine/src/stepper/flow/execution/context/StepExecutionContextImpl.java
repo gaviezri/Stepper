@@ -67,9 +67,8 @@ public class StepExecutionContextImpl implements StepExecutionContext {
             String finalName = entry.getKey();
             String value = entry.getValue();
 
-            ExecutionDataValues.put(finalName,value);
+            ExecutionDataValues.put(finalName, value);
         }
-        storeDataValue()
 
     }
 

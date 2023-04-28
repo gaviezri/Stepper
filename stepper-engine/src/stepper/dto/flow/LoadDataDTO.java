@@ -28,9 +28,9 @@ public class LoadDataDTO implements stepper.dto.DTO {
         return path;
     }
 
-    public String getContent() {
-        return content;
-    }
+//    public String getContent() {
+//        return content;
+//    }
 
     @Override
     public boolean getStatus() {

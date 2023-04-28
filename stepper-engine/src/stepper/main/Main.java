@@ -1,37 +1,41 @@
 package stepper.main;
 
+import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.FlowDefinitionImpl;
 import stepper.flow.definition.api.StepUsageDeclarationImpl;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.runner.FlowExecutor;
+import stepper.flow.loader.FlowLoader;
 import stepper.step.StepDefinitionRegistry;
+import stepper.step.api.DataDefinitionDeclaration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Main {
+    public static UUID total_flows = UUID.randomUUID();
     public static void main(String[] args) {
 
-//        FlowDefinition flow1 = new FlowDefinitionImpl("Flow 1", "Hello world");
-//        flow1.getFlowSteps().add(new StepUsageDeclarationImpl(StepDefinitionRegistry.HELLO_WORLD.getStepDefinition()));
-//        flow1.validateFlowStructure();
-//
-//        FlowDefinition flow2 = new FlowDefinitionImpl("Flow 2", "show two person details");
-//        flow2.getFlowSteps().add(new StepUsageDeclarationImpl(StepDefinitionRegistry.HELLO_WORLD.getStepDefinition()));
-//        flow2.getFlowSteps().add(new StepUsageDeclarationImpl(StepDefinitionRegistry.PERSON_DETAILS.getStepDefinition(),
-//                "Person 1 Details"));
-//        flow2.getFlowSteps().add(new StepUsageDeclarationImpl(StepDefinitionRegistry.PERSON_DETAILS.getStepDefinition(),
-//                "Person 2 Details"));
-//        flow2.getFlowFormalOutputs().add("DETAILS");
-//        flow2.validateFlowStructure();
-//
-//        FlowExecutor fLowExecutor = new FlowExecutor();
-//
-//        FlowExecution flow2Execution1 = new FlowExecution("1", flow2);
-//        // collect all user inputs and store them on the flow execution object
-//        fLowExecutor.executeFlow(flow2Execution1);
-//
-//        FlowExecution flow2Execution2 = new FlowExecution("2", flow2);
-//        // collect all user inputs and store them on the flow execution object
-//        fLowExecutor.executeFlow(flow2Execution1);
+
+        List<FlowDefinition> flowDefinitions = new ArrayList<>();
+        FlowLoader flowLoader = new FlowLoader();
+        try {
+            flowDefinitions = flowLoader.loadFlowFromXML(flowLoader.validateFilePath(""));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        for (FlowDefinition flowDefinition : flowDefinitions) {
+            // request missing inputs from user
+
+            }
+            FlowExecutor flowExecutor = new FlowExecutor();
+            flowExecutor.executeFlow(new FlowExecution(total_flows.toString()));
+            total_flows++;
+        }
+
 
     }
 }

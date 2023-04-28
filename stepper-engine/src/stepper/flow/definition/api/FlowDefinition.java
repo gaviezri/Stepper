@@ -2,6 +2,7 @@ package stepper.flow.definition.api;
 
 import stepper.dd.api.DataDefinition;
 import stepper.step.StepDefinitionRegistry;
+import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
@@ -54,4 +55,6 @@ public interface FlowDefinition {
     List<String> getStepInputsOriginalNames(String targetFinalStepName);
 
     DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
+
+    List<DataDefinitionDeclaration> getUnsatisfiedMandatoryInputs();
 }

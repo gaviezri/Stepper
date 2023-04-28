@@ -1,7 +1,23 @@
 import api.UIAbstractDefinition;
-import stepper.flow.execution.runner.FlowExecutor;
+import controller.UIController;
+import stepper.controller.EngineController;
+import stepper.dto.DTO;
 
-public abstract class Controller {
-    private final UIAbstractDefinition ui = null;
+public class Controller {
+    boolean keepAlive = true;
+    private final UIController uiController = null;
+    private final EngineController engineController = new EngineController();
+
+
+    public void start(){
+        while(keepAlive){
+            uiController.
+        }
+    }
+    private void readXML(String path){
+        DTO dto = engineController.readXML(path);
+    }
+
+
 
 }

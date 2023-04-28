@@ -7,5 +7,8 @@ public abstract class UIAbstractDefinition {
     public abstract void PresentMainMenu();
     public abstract int getUsersNumericResponse();
 
-    public String createValidPath() {}
-}
+    public abstract String createValidPath();
+    public abstract void notifyUser(String message);
+
+
+    }

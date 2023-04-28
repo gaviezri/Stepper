@@ -46,6 +46,12 @@ public class ConsoleUI extends UIAbstractDefinition {
 
 
     public String createValidPath() {
+        out.println("Please enter a full-path to the XML file you desire to load: ");
         return scanner.next().replace("\\","\\\\").replace("/","\\\\");
+    }
+
+    @Override
+    public void notifyUser(String message){
+        out.println(message);
     }
 }

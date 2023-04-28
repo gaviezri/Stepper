@@ -278,4 +278,10 @@ public class FlowDefinitionImpl implements FlowDefinition {
         return stepsUsageDecl.get(stepsAliases.indexOf(stepName)).getStepDefinition().getResourceNecessity(dataName);
     }
 
+    @Override
+    public  List<DataDefinitionDeclaration> getUnsatisfiedMandatoryInputs(){
+        return unsatisfiedMandatoryInputs;
+    }
+
+
 }

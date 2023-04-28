@@ -1,5 +1,6 @@
 package stepper.flow.execution.runner;
 
+import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -7,8 +8,16 @@ import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FlowExecutor {
+    List<StepExecutionContext> contexts;
+    List<FlowDefinition> flowDefinitions;
+    List<UUID> flowExecutionIds;
+
+
+
+
 
     public void executeFlow(FlowExecution flowExecution) {
 

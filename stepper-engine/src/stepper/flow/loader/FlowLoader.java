@@ -26,16 +26,21 @@ public class FlowLoader {
     private final Path PATH_TO_FLOWS = Paths.get("flow-definition-repository/flows");
     private FlowBuilder builder = new FlowBuilderImpl();
 
-    private FlowLoader() {
+    public FlowLoader() {
         documentBuilderFactory = new DocumentBuilderFactoryImpl();
     }
-    public List<FlowDefinition> loadFlowFromXML(String fullFilePath) throws Exception {
-
+    public String validateFilePath(String fullFilePath) throws Exception {
         // verify that the flowName is a valid .xml file and is present in the given path
         File flowFile = new File(fullFilePath);
         if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
             throw new Exception("Invalid file: " + fullFilePath + ".\nFile must be a valid .xml file.");
         }
+        return fullFilePath;
+    }
+    public List<FlowDefinition> loadFlowFromXML(File flowFile) throws Exception {
+
+        // verify that the flowName is a valid .xml file and is present in the given path
+
         Document document = documentBuilderFactory.newDocumentBuilder().parse(flowFile);
         document.getDocumentElement().normalize();
         builder.reset();

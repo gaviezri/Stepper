@@ -1,10 +1,7 @@
 import api.UIAbstractDefinition;
 import impl.ConsoleUI;
 import stepper.controller.EngineController;
-import stepper.dto.DTO;
-import stepper.dto.flow.FlowNamesDTO;
-
-import static java.lang.System.out;
+import stepper.dto.flow.LoadDataDTO;
 
 public class Controller {
     boolean keepAlive = true;
@@ -16,11 +13,10 @@ public class Controller {
         while(keepAlive){
             ui.PresentMainMenu();
             handleUsersMainMenuSelection();
-            keepAlive = false;
         }
     }
-    private void readXML(String path){
-        DTO dto = engineController.readXML(path);
+    private LoadDataDTO readXML(String path){
+        return (LoadDataDTO) engineController.readXML(path);
     }
 
     public static void main(String[] args) {
@@ -28,12 +24,13 @@ public class Controller {
         ctl.start();
     }
 
-    public String handleUsersMainMenuSelection() {
-        switch(ui.getUsersNumericResponse()){
+    public void handleUsersMainMenuSelection() {
+        boolean flag = true;
+
+        switch(ui.getUsersNumericResponse(ui.getMenuData().getMainMenu().size())){
             case 1:
-                while(true) {
-                    out.println("Please enter a full-path to the XML file you desire to load: ");
-                    readXML(ui.createValidPath());
+                while(flag) {
+                    flag = loadingNewXmlFile(flag);
                 }
             case 2:
                 break;
@@ -46,7 +43,26 @@ public class Controller {
             case 6:
                 break;
         }
-        return null;
+    }
+
+    private boolean loadingNewXmlFile(boolean flag) {
+        String message;
+        ui.presentMessageToUser("Please enter a full-path to the XML file you desire to load: ");
+        LoadDataDTO loadDataDTO = readXML(ui.createValidPath());
+
+        if(!loadDataDTO.getStatus()){
+            message = "Loading file from path failed\n" +
+                    "please check the path given, make sure no hebrew words are included!\n" +
+                    "The error message received: "+loadDataDTO.getErrorMessage();
+        }
+        else{
+            message ="File loaded successfully!\n returning to main menu for further actions";
+            flag = false;
+        }
+
+        ui.presentMessageToUser(message);
+
+        return flag;
     }
 }
 

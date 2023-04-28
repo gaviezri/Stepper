@@ -24,29 +24,48 @@ public class ConsoleUI extends UIAbstractDefinition {
         }
     }
 
+//    @Override
+//    public int getUsersNumericResponse(Integer max) {
+//        return 0;
+//    }
+
     @Override
-    public int getUserNumericResponse(Integer max){
-        return getUsersNumericResponse(0,max);
-    }
-    @Override
-    public int getUsersNumericResponse(Integer min, Integer max) {
+    public int getUsersNumericResponse(Integer max){
         int userSelectedOption;
 
         while(true) {
             try {
                 userSelectedOption = Integer.parseInt(scanner.next());
-                if (userSelectedOption >= min && userSelectedOption < max) {
+                if (userSelectedOption >= 1 && userSelectedOption < max) {
                     return userSelectedOption;
                 }
-            }
-//            catch (InputMismatchException e) {}
-//            catch (NumberFormatException e)
-            catch (Exception e){
+            }catch (Exception e){
                 out.println("a non-numeric input was given!\n");
             }
             out.println("Please select a number from the options given!");
         }
     }
+
+
+//    @Override
+//    public int getUsersNumericResponse(Integer min, Integer max) {
+//        int userSelectedOption;
+//
+//        while(true) {
+//            try {
+//                userSelectedOption = Integer.parseInt(scanner.next());
+//                if (userSelectedOption >= min && userSelectedOption < max) {
+//                    return userSelectedOption;
+//                }
+//            }
+////            catch (InputMismatchException e) {}
+////            catch (NumberFormatException e)
+//            catch (Exception e){
+//                out.println("a non-numeric input was given!\n");
+//            }
+//            out.println("Please select a number from the options given!");
+//        }
+//    }
 
 
     public String createValidPath() {
@@ -60,4 +79,10 @@ public class ConsoleUI extends UIAbstractDefinition {
             out.println( i+1 + ". " + flowNames.get(i));
         }
     }
+
+    @Override
+    public void presentMessageToUser(String message) {
+        out.println(message);
+    }
 }
+

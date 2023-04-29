@@ -13,15 +13,11 @@ public class Controller {
         while(keepAlive){
             ui.PresentMainMenu();
             handleUsersMainMenuSelection();
+            keepAlive = false;
         }
     }
     private LoadDataDTO readXML(String path){
         return (LoadDataDTO) engineController.readXML(path);
-    }
-
-    public static void main(String[] args) {
-        Controller ctl = new Controller();
-        ctl.start();
     }
 
     public void handleUsersMainMenuSelection() {
@@ -64,5 +60,11 @@ public class Controller {
 
         return flag;
     }
+
+    public static void main(String[] args) {
+        Controller ctl = new Controller();
+        ctl.start();
+    }
+
 }
 

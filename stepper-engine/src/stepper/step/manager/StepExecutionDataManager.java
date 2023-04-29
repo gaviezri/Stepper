@@ -10,6 +10,8 @@ import stepper.step.execution.StepExecutionData;
 import java.util.Optional;
 
 public class StepExecutionDataManager implements DataManager {
+    // manager for each step in the flow
+    // manages a step logger and the step's execution data i.e.
     private AbstractLogger stepLogger;
     private StepExecutionData stepExecutionData;
 

@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
 public class FlowExecutor {
     // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
-    // a list of loaded flows that can be executed
-    List<FlowDefinition> flowDefinitions;
     FlowDefinition activeFlow;
     List<UUID> flowExecutionIds;
 
@@ -25,17 +23,8 @@ public class FlowExecutor {
         flowExecutionIds = null;
         activeFlow = null;
     }
-    public void setFlowDefinitions(List<FlowDefinition> flowDefinitions) {
-        this.flowDefinitions = flowDefinitions;
-    }
 
-    public FlowDefinition getFlowDefinition(Integer idx){
-        try {
-            return flowDefinitions.get(idx);
-        }catch (Exception e){
-            throw new RuntimeException("Flow with index " + idx + " does not exist!");
-        }
-    }
+
     public void executeFlow(FlowExecution flowExecution) {
 
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
@@ -67,12 +56,9 @@ public class FlowExecutor {
         System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
     }
 
-    public List<String> getFlowDefinitionsNames() {
-        return flowDefinitions.stream().map(FlowDefinition::getName).collect(Collectors.toList());
-    }
 
-    public void setActiveFlow(Integer flowIdx) {
-        activeFlow = flowDefinitions.get(flowIdx);
+    public void setActiveFlow(FlowDefinition flowDef) {
+        activeFlow = flowDef;
     }
 
     public void setFlowFreeInputs(Map<String, String> inputFinalName2StringValue) {

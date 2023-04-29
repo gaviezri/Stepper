@@ -69,7 +69,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
 
-        AbstractLogger logger = context.getStepLogger(this);
+        AbstractLogger logger = context.getStepLogger();
         String folderName;
         String filter;
         StepResult result;
@@ -77,7 +77,12 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
 
             // and check if there is a filter
             folderName = context.getDataValue("FOLDER_NAME", String.class);
-            filter = context.getDataValue("FILTER", String.class);
+            try {
+                filter = context.getDataValue("FILTER", String.class);
+            } catch (Exception e) {
+                System.out.println("No filter provided... continuing");
+                filter = null;
+            }
             if (FolderNotExist(folderName)) {
                 // make sure folder exists
                 logger.addLogLine("Folder name is invalid");
@@ -93,7 +98,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 logger.addLogLine("Folder name represents an empty folder");
                 result = StepResult.WARNING;
             } else{
-                logger.addLogLine("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "none"));
+                logger.addLogLine("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "no-filter"));
                 result = StepResult.SUCCESS;
             }
         } catch (Exception e) {
@@ -124,9 +129,10 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
-        context.tick(this.getStepName());
-        AbstractLogger logger = context.getStepLogger(this);
+    public StepResult invoke(StepExecutionContext context) {
+        context.tick();
+        String finalName = context.getCurrentStepName();
+        AbstractLogger logger = context.getStepLogger();
         StepResult result = validateInputs(context);
         switch (result) {
             case SUCCESS:
@@ -146,22 +152,26 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             case FAILURE:
                 break;
         }
-        context.tock(this.getStepName());
+        context.tock();
         return result;
     }
 
     public StepResult handleSUCCESS(StepExecutionContext context) {
 
-        AbstractLogger logger = context.getStepLogger(this);
+        AbstractLogger logger = context.getStepLogger();
         String folderName;
         String filter;
         try {
              folderName = context.getDataValue("FOLDER_NAME", String.class);
-             filter = context.getDataValue("FILTER", String.class);
         } catch (Exception e) {
             logger.addLogLine("Error while reading folder name");
             logger.addLogLine(e.getMessage());
             return StepResult.FAILURE;
+        }
+        try {
+            filter = context.getDataValue("FILTER", String.class);
+        }catch (Exception e){
+            filter = null;
         }
         List<FileData> filesList = null;
         try {

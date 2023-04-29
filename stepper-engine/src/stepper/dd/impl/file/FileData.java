@@ -10,14 +10,10 @@ public class FileData extends FileDataDefinition{
     File file;
     String filePath;
 
-    public FileData(String path) {
-        file = new File(path);
-        filePath = path;
-    }
 
     public FileData(Path path) {
         file = path.toFile();
-        filePath = path.getFileName().toString();
+        filePath = file.getPath();
     }
     public boolean exists(){
         return file.exists();

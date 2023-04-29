@@ -12,7 +12,7 @@ public interface StepDefinition {
     boolean isReadonly();
     List<DataDefinitionDeclaration> inputs();
     List<DataDefinitionDeclaration> outputs();
-    StepResult invoke(StepExecutionContext context, String finalName);
+    StepResult invoke(StepExecutionContext context);
     StepResult validateInputs(StepExecutionContext context);
     DataDefinition getResourceDataDefinition(String dataOriginalName);
     DataNecessity getResourceNecessity(String dataOriginalName);

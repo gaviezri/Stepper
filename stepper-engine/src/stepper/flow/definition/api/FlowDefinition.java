@@ -2,6 +2,7 @@ package stepper.flow.definition.api;
 
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.mapping.MappingGraph;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.enums.DataNecessity;
@@ -79,4 +80,6 @@ public interface FlowDefinition {
     List<String> getFinalStepNamesThatProducedTheOutputs();
 
     DataAliasingManager getDataAliasingManager();
+
+    MappingGraph getMappingGraph();
 }

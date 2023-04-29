@@ -43,15 +43,16 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
             long timeToSleep = context.getDataValue("TIME_TO_SPEND", Number.class).longValue() * 1000;
             return timeToSleep > 0 ? StepResult.SUCCESS : StepResult.FAILURE;
         } catch (Exception e) {
-            context.getStepLogger(StepDefinitionRegistry.valueOf(context.getCurrentStepName()).getStepDefinition())
+            context.getStepLogger()
                     .addSummaryLine("Error while fetching TIME_TO_SPEND from context: " + e.getMessage());
             return StepResult.FAILURE;
         }
     }
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName){
-        context.tick(finalName);
-        AbstractLogger logger = context.getStepLogger(this);
+    public StepResult invoke(StepExecutionContext context){
+        String finalName = context.getCurrentStepName();
+        context.tick();
+        AbstractLogger logger = context.getStepLogger();
         StepResult result = validateInputs(context);
         long timeToSleep = -1;
         if ( result == StepResult.SUCCESS){
@@ -72,7 +73,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
                                   " provided value: " +
                                     timeToSleep);
         }
-        context.tock(finalName);
+        context.tock();
         return result;
     }
 }

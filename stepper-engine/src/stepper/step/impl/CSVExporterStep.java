@@ -53,10 +53,10 @@ public class CSVExporterStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
+    public StepResult invoke(StepExecutionContext context) {
 
-        context.tick(this.getStepName());
-        AbstractLogger logger = context.getStepLogger(this);
+        context.tick();
+        AbstractLogger logger = context.getStepLogger();
         RelationData relation;
         StepResult result;
         try {
@@ -69,15 +69,22 @@ public class CSVExporterStep extends AbstractStepDefinition {
                 logger.addLogLine("Relation is Empty or null");
                 result = StepResult.WARNING;
             } else {
-                int relationSize = relation.getRowSize();
                 int i = 0;
-                logger.addLogLine("About to process " + relation.getRowSize() + " lines of data");
-                for (; i < relationSize - 1; i++) {
-                    CSV.append(relation.getDataFromRow(i))
-                            .append(',');
+                // insert column names
+                for (String columnName : relation.getColumnNames()) {
+                    CSV.append(columnName).append(',');
                 }
-                // last line no comma
-                CSV.append(relation.getDataFromRow(i));
+                // delete last comma and add new line
+                CSV.delete(CSV.length() - 1, CSV.length()).append('\n');
+
+                logger.addLogLine("About to process " + relation.getRowSize() + " lines of data");
+                for (; i < relation.getRowSize(); i++) {
+                    int j = 0;
+                    for (; j < relation.getColSize()-1 ; j++){
+                        CSV.append(relation.getDataFromCell(i, j)).append(',');
+                    }
+                    CSV.append(relation.getDataFromCell(i,j)).append('\n');
+                }
                 //TODO: Get output-name from context if alias is used
                 context.storeDataValue(this.outputs().get(0).getName(), CSV.toString(), DataDefinitionRegistry.STRING);
                 logger.addSummaryLine("relation exported to CSV successfully");
@@ -89,7 +96,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
             logger.addLogLine(e.getMessage());
             return StepResult.FAILURE;
         }
-        context.tock(this.getStepName());
+        context.tock();
         return result;
     }
 }

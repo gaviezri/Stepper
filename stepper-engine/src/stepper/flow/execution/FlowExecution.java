@@ -2,8 +2,8 @@ package stepper.flow.execution;
 
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
+import stepper.step.api.enums.StepResult;
 
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -15,7 +15,7 @@ public class FlowExecution {
 
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
-    private FlowExecutionResult flowExecutionResult = FlowExecutionResult.FAILURE;
+    private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
     private String formattedStartTime;
     private Instant startTimeInstant;
     private Instant endTimeInstant;
@@ -50,8 +50,20 @@ public class FlowExecution {
     public FlowExecutionResult getFlowExecutionResult() {
         return flowExecutionResult;
     }
-    public void setFlowExecutionResult(FlowExecutionResult flowExecutionResult) {
-        this.flowExecutionResult = flowExecutionResult;
+    public void updateExecutionResult(StepResult stepExecResult, Boolean skipIfFail){
+        // the flow initally is success, and will be changed to failure only if a step fails and skipIfFail is false
+        // will change to warning if a step fails and skipIfFail is true or step is warning
+        // once changed to warning, cannot be changed back to success
+        // once changed to failure, cannot be changed back to warning or success
+        if (stepExecResult == StepResult.FAILURE && !skipIfFail){
+            flowExecutionResult = FlowExecutionResult.FAILURE;
+        }
+        else if (stepExecResult == StepResult.FAILURE && skipIfFail){
+            flowExecutionResult = FlowExecutionResult.WARNING;
+        }
+        else if (stepExecResult == StepResult.WARNING && flowExecutionResult == FlowExecutionResult.SUCCESS){
+            flowExecutionResult = FlowExecutionResult.WARNING;
+        }
     }
     public void tock(){
         endTimeInstant = Instant.now();

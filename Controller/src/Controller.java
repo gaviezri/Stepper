@@ -18,10 +18,9 @@ public class Controller {
 
     public void start() {
         try {
-            ui.presentMessageToUser("#####################################################");
+            ui.presentMessageToUser("\n\n#####################################################");
             ui.presentMessageToUser("# Welcome To \"Stepper\" by Omri Shahar & Gal Aviezri #");
             ui.presentMessageToUser("#####################################################\n");
-            Thread.sleep(777);
             while (keepAlive) {
                 ui.PresentMainMenu();
                 handleUsersMainMenuSelection();
@@ -44,7 +43,6 @@ public class Controller {
 
     public void handleUsersMainMenuSelection() {
 
-
         switch(ui.getUsersNumericResponse(1,ui.getMenuData().getMenuItemCount())){
             case 1:
                 loadingNewXmlFile();
@@ -53,17 +51,7 @@ public class Controller {
                 presentFlowDefinitions();
                 break;
             case 3:
-
-                FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
-                Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
-                if(!selectedFlowIndex.equals(-1)){
-                    //TODO: get inputs names list, input neccety list and inputs typeList.
-                    //TODO: get inputs data from user.
-                    //TODO: create a Map<(input_name : input_type), input_value_string>
-                    FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
-                    ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),flowDefinitionDTO.getFreeInputTypes(),flowDefinitionDTO.getFreeInputNecessity());
-//                  engineController.executeFlow(selectedFlowIndex,)
-
+                executeFlow();
                 break;
             case 4:
                 break;
@@ -76,14 +64,34 @@ public class Controller {
         }
     }
 
+    private void executeFlow() {
+        FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
+        Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
+        if(selectedFlowIndex >= 0) {
+            //TODO: get inputs names list, input neccety list and inputs typeList.
+            //TODO: get inputs data from user.
+            //TODO: create a Map<(input_name : input_type), input_value_string>
+            FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
+            Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
+                                                      flowDefinitionDTO.getFreeInputTypes(),
+                                                      flowDefinitionDTO.getFreeInputNecessity());
 
+            DTO result = engineController.executeFlow(selectedFlowIndex, valuesFromUser2valuesDefinition);
+        }
+    }
 
     private void loadingNewXmlFile() {
         boolean flag = true;
         while (flag) {
             String message;
-            ui.presentMessageToUser("Please enter a full-path to the XML file you desire to load: ");
-            LoadDataDTO loadDataDTO = readXML(ui.createValidPath());
+            ui.presentMessageToUser("To go back to main menu, enter a blank string.\n" +
+                            "Please enter a full-path to the XML file you desire to load: ");
+            String path  = ui.createValidPath();
+            if (path.isEmpty()) {
+                flag = false;
+                continue;
+            }
+            LoadDataDTO loadDataDTO = readXML(path);
 
             if (!loadDataDTO.getStatus()) {
                 message = "Loading file from path failed\n" +
@@ -114,7 +122,7 @@ public class Controller {
                 if (selection == 0) {
                     flag = false;
                 } else {
-                    DTO flowDefDTO = engineController.getFlowDefinition(selection-1);
+                    DTO flowDefDTO = engineController.getFlowDefinitionData(selection-1);
 
                     if (flowDefDTO.getClass()==LoadDataDTO.class){
                         ui.presentMessageToUser("Error: " + flowDefDTO.getErrorMessage());
@@ -212,6 +220,7 @@ public class Controller {
         Controller ctl = new Controller();
         ctl.start();
     }
+
 
 }
 

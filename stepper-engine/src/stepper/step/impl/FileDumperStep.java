@@ -63,7 +63,7 @@ public class FileDumperStep extends AbstractStepDefinition {
         }
         @Override
         public StepResult validateInputs(StepExecutionContext context) {
-            AbstractLogger logger = context.getStepLogger(this);
+            AbstractLogger logger = context.getStepLogger();
             StepResult result;
             try{
                 String content = context.getDataValue("CONTENT", String.class);
@@ -92,23 +92,21 @@ public class FileDumperStep extends AbstractStepDefinition {
         }
 
         @Override
-        public StepResult invoke(StepExecutionContext context, String finalName) {
+        public StepResult invoke(StepExecutionContext context) {
 
-            context.tick(this.getStepName());
+            context.tick();
             StepResult result = validateInputs(context);
-            AbstractLogger logger = context.getStepLogger(this);
+            AbstractLogger logger = context.getStepLogger();
             String content;
             String fileName = "UNKNOWN";
             String cause = "";
             try {
-                content = context.getDataValue("CONTENT", String.class);
-                fileName = context.getDataValue("FILENAME", String.class);
                 switch (result) {
                     case SUCCESS:
                     case WARNING:
                         try {
                             content = context.getDataValue("CONTENT", String.class);
-                            fileName = context.getDataValue("FILENAME", String.class);
+                            fileName = context.getDataValue("FILE_NAME", String.class);
                             createFile(fileName, content);
                             logger.addSummaryLine("File " + fileName + " created successfully !");
                         } catch (IOException e) {
@@ -132,7 +130,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                 logger.addSummaryLine("File " + fileName + " NOT created!");
                 result = StepResult.FAILURE;
             }
-            context.tock(finalName);
+            context.tock();
             return result;
         }
 

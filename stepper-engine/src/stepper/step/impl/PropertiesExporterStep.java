@@ -46,10 +46,10 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
-        context.tick(finalName);
+    public StepResult invoke(StepExecutionContext context) {
+        context.tick();
 
-        AbstractLogger logger = context.getStepLogger(this);
+        AbstractLogger logger = context.getStepLogger();
         StepResult stepResult = validateInputs(context);
         RelationData source;
         try{
@@ -74,7 +74,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
                                 .append(properties.get(j))
                                 .append("=")
                                 .append(row.get(j))
-                                .append("\r\n");
+                                .append("\n");
                     }
                 }
                 logger.addLogLine("Extracted total of " + source.getTotalSize() + " properties");
@@ -88,7 +88,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
             stepResult = StepResult.FAILURE;
         }
         logger.addSummaryLine("Properties export completed successfully");
-        context.tock(finalName);
+        context.tock();
         return stepResult;
     }
 

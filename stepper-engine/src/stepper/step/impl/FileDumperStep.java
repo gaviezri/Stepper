@@ -123,7 +123,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                         break;
                 }
 
-                context.storeDataValue("RESULT", result +
+                context.storeDataValue("RESULT",
                         (result == StepResult.FAILURE ? "FAILURE: " + cause : "SUCCESS"), DataDefinitionRegistry.STRING);
             } catch (Exception e) {
                 logger.addLogLine(e.getMessage());
@@ -141,6 +141,7 @@ public class FileDumperStep extends AbstractStepDefinition {
         {
             FileWriter Writer = new FileWriter(filename);
             Writer.write(content);
+            Writer.close();
 
         }
         else{

@@ -29,11 +29,7 @@ public class FlowLoader {
     public FlowLoader() {
         documentBuilderFactory = new DocumentBuilderFactoryImpl();
     }
-    public String validateFilePath(String fullFilePath) throws Exception {
-        // verify that the flowName is a valid .xml file and is present in the given path
 
-        return fullFilePath;
-    }
     public List<FlowDefinition> loadFlowFromXML(String flowFileName) throws Exception {
 
         // verify that the flowName is a valid .xml file and is present in the given path
@@ -97,18 +93,16 @@ public class FlowLoader {
                 if (!found) {
                     throw new RuntimeException("Data " + dataName + " doesn't exist in step " + stepName + " in flow " + flow.getAttribute("name"));
                 }
-
+                // set the aliasing in the relevant flow relevant step dictionary
             }
+
         }
-
-
     }
 
     private boolean findAliasingResouce(int flowidx, String stepName, String dataName, String dataAlias) {
         // check if step exists and if data exists in step's inputs/outputs
         String stepOriginalName = builder.getStepOriginalName(flowidx, stepName);
-        String stepRegistryName = stepOriginalName.toUpperCase().replace(" ", "_");
-        StepDefinition step = StepDefinitionRegistry.valueOf(stepRegistryName).getStepDefinition();
+        StepDefinition step = StepDefinitionRegistry.convertFromUserFriendlyToInternal(stepOriginalName).getStepDefinition();
         List<DataDefinitionDeclaration> inputs = step.inputs();
         List<DataDefinitionDeclaration> outputs = step.outputs();
         boolean found = false;
@@ -165,10 +159,10 @@ public class FlowLoader {
 
     private Pair<Boolean, String> findCustomMappingResouce(int flowidx, String sourceStepName, String sourceDataName, String targetStepName, String targetDataName) {
         // check if step exists and if data exists in step's inputs/outputs
-        String sourceStepFinalName = builder.getStepFinalName(flowidx, sourceStepName, true);
+        String sourceStepFinalName = builder.getStepFinalName(flowidx, sourceStepName);
         String sourceDataFinalName = builder.getResourceFinalName(flowidx, sourceStepFinalName, sourceDataName);
 
-        String targetStepFinalName = builder.getStepFinalName(flowidx, targetStepName, true);
+        String targetStepFinalName = builder.getStepFinalName(flowidx, targetStepName);
         String targetDataFinalName = builder.getResourceFinalName(flowidx, targetStepFinalName, targetDataName);
 
         if  (!sourceStepName.equals(sourceStepFinalName)){
@@ -215,13 +209,13 @@ public class FlowLoader {
             Element flow = (Element) flowDefinitionsNodeList.item(flowidx);
             NodeList stepDefinitionsNodeList = flow.getElementsByTagName("ST-StepInFlow");
             // iterate steps
-            for (int j = 0; j < stepDefinitionsNodeList.getLength(); j++) {
+            for (int stepidx = 0; stepidx < stepDefinitionsNodeList.getLength(); stepidx++) {
 
-                String stepName = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("name");
-                String stepAlias = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("alias");
+                String stepName = ((Element) stepDefinitionsNodeList.item(stepidx)).getAttribute("name");
+                String stepAlias = ((Element) stepDefinitionsNodeList.item(stepidx)).getAttribute("alias");
                 String finalName = stepAlias.isEmpty() ? stepName : stepAlias;
-                String skipIfFail = ((Element) stepDefinitionsNodeList.item(j)).getAttribute("continue-if-failing");
-                builder.addStepAlias(flowidx, finalName, skipIfFail.equals("true"));
+                String skipIfFail = ((Element) stepDefinitionsNodeList.item(stepidx)).getAttribute("continue-if-failing");
+                builder.addStepToFlow(flowidx, stepName, finalName, skipIfFail.equals("true"));
             }
         }
     }
@@ -259,7 +253,6 @@ public class FlowLoader {
                 if (!StepDefinitionRegistry.getStepNames().contains(stepName)) {
                     throw new RuntimeException("Flow \"" + flow.getAttribute("name") + "\" has a step that doesn't exist: \"" + stepName + "\"" );
                 }
-                builder.addStepToFlow(flowidx, stepName);
             }
         }
     }

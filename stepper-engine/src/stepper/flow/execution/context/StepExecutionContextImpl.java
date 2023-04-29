@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 public class StepExecutionContextImpl implements StepExecutionContext {
+    StepUsageDeclaration currentStepUsageDeclaration;
+    private String currentStepName;
     private DataAliasingManager dataAliasingManager;
-    private Map<String, Object> ExecutionDataValues = new HashMap<>();
+    private Map<String, Object> ExecutionDataValues;
     private Map<String, DataDefinition> ExecutionDataName2Definition = new HashMap<>();
     private Map<String, StepExecutionDataManager> step2Manager = new HashMap<>();
     private MappingGraph mappingGraph;
@@ -35,7 +37,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         this.currentStepName = currentStepName;
     }
 
-    private String currentStepName;
+
 
     public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String, Object> inputFinalName2Value, Map<String, String> inputFinalName2Definition, MappingGraph mappingGraph) {
 
@@ -107,15 +109,18 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         theManager.setDuration(System.currentTimeMillis() + theManager.getDuration().longValue());
     }
 
+    @Override
+    public void setCurrentStepUsageDeclaration(StepUsageDeclaration currentStepUsageDeclaration) {
+        this.currentStepUsageDeclaration = currentStepUsageDeclaration;
+        setCurrentStepName(currentStepUsageDeclaration.getFinalStepName());
+    }
+
 
     @Override
     public <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException {
 
-
-        String finalDataName = dataAliasingManager.getAliasDataName(currentStepName, dataName);
-        finalDataName = finalDataName == null ? dataName : finalDataName;
+        String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
         finalDataName = mappingGraph.getResourceNameThatMappedTo(finalDataName);
-        // assuming that from the data name we can get to its data definition
         DataDefinition theExpectedDataDefinition = ExecutionDataName2Definition.get(finalDataName);
 
         if (theExpectedDataDefinition == null)
@@ -135,9 +140,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     @Override
     public void storeDataValue(String dataName, Object value, DataDefinitionRegistry datadefinition)  {
         // use current step name?
-        String finalDataName = dataAliasingManager.getAliasDataName(currentStepName, dataName);
-        finalDataName = finalDataName == null ? dataName : finalDataName;
-
+        String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
         ExecutionDataName2Definition.put(finalDataName,datadefinition);
         ExecutionDataValues.put(finalDataName, value);
     }

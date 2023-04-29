@@ -3,6 +3,7 @@ package stepper.flow.execution.context;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
+import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
@@ -26,4 +27,6 @@ public interface StepExecutionContext {
     public Number getStepDuration(String name);
     void tick();
     public void tock();
+
+    void setCurrentStepUsageDeclaration(StepUsageDeclaration currentStepUsageDeclaration);
 }

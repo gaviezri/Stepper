@@ -85,7 +85,6 @@ public class CSVExporterStep extends AbstractStepDefinition {
                     }
                     CSV.append(relation.getDataFromCell(i,j)).append('\n');
                 }
-                //TODO: Get output-name from context if alias is used
                 context.storeDataValue(this.outputs().get(0).getName(), CSV.toString(), DataDefinitionRegistry.STRING);
                 logger.addSummaryLine("relation exported to CSV successfully");
                 result = StepResult.SUCCESS;

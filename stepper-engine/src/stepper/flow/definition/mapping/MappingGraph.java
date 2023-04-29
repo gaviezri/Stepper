@@ -34,7 +34,6 @@ public class MappingGraph {
             int sourceNodeIdx = this.stepNodes.indexOf(source_data[0]);
             int targetNodeIdx = this.stepNodes.indexOf(target_data[0]);
 
-            // stepUsageDecl.get(sourceNodeIdx).getStepDefinition();
 
             String sourceDataOriginalName = dataAliasingManager.getOriginalDataName(source_data[0], source_data[1]);
             String targetDataOriginalName = dataAliasingManager.getOriginalDataName(target_data[0], target_data[1]);
@@ -154,4 +153,5 @@ public class MappingGraph {
         }
         return wantedDataName;
     }
+
 }

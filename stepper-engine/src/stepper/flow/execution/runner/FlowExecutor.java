@@ -38,7 +38,7 @@ public class FlowExecutor {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
             Boolean skipIfFail = currentStepUsageDeclaration.skipIfFail();
             String finalStepName = currentStepUsageDeclaration.getFinalStepName();
-            context.setCurrentStepName(finalStepName);
+            context.setCurrentStepUsageDeclaration(currentStepUsageDeclaration);
 
             System.out.println("Starting to execute step: " + finalStepName);
             StepResult stepResult = currentStepUsageDeclaration.getStepDefinition().invoke(context);

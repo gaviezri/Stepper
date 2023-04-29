@@ -4,6 +4,7 @@ import stepper.dd.api.AbstractDataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
@@ -28,4 +29,5 @@ public interface StepExecutionContext {
     public void tick(String name);
     public void tock(String name);
 
+    FlowExecutionResult getFlowExecutionResult();
 }

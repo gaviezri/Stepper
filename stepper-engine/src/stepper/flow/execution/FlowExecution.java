@@ -36,6 +36,10 @@ public class FlowExecution {
         return uniqueId;
     }
 
+    public void tick(){
+        startTimeInstant = Instant.now();
+    }
+
     public FlowDefinition getFlowDefinition() {
         return flowDefinition;
     }
@@ -45,5 +49,20 @@ public class FlowExecution {
 
     public FlowExecutionResult getFlowExecutionResult() {
         return flowExecutionResult;
+    }
+    public void setFlowExecutionResult(FlowExecutionResult flowExecutionResult) {
+        this.flowExecutionResult = flowExecutionResult;
+    }
+    public void tock(){
+        endTimeInstant = Instant.now();
+        duration = Duration.between(startTimeInstant, endTimeInstant);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public String getFormattedStartTime() {
+        return formattedStartTime;
     }
 }

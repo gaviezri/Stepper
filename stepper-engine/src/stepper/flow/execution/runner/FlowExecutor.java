@@ -3,6 +3,7 @@ package stepper.flow.execution.runner;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.FlowExecution;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
@@ -30,10 +31,8 @@ public class FlowExecutor {
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
         System.out.println("Starting execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]");
 
-        // To instantiate the context, we need to know the final step name of each step in the flow
-        // populate context with all free inputs (mandatory & optional) that were given from the user
-        // (typically stored on top of the flow execution object)
         boolean breakFlowIfStepFails = false;
+
         // start actual execution
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
@@ -50,9 +49,7 @@ public class FlowExecutor {
                 break;
             }
         }
-
-
-
+        flowExecution.setFlowExecutionResult(context.getFlowExecutionResult());
         System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
     }
 

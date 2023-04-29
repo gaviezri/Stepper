@@ -37,7 +37,7 @@ public class EngineController {
             return new LoadDataDTO("", "", false, e.getMessage());
         }
     }
-    public DTO getFlowDefinitionsNames(){
+    public FlowNamesDTO getFlowDefinitionsNames(){
         try {
             return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
         }catch (Exception e){

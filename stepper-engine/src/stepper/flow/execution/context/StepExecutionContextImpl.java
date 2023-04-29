@@ -6,6 +6,7 @@ import stepper.exception.*;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
@@ -59,14 +60,14 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
         for (StepUsageDeclaration step : steps) {
             step2Manager.put(step.getFinalStepName(),new StepExecutionDataManager(step.getFinalStepName()));
-
         }
 
         for (Map.Entry<String, String> entry : inputFinalName2StringValue.entrySet()) {
-            String finalName = entry.getKey();
-            String value = entry.getValue();
+            String[] inpName_Type = entry.getKey().split(":");
+            String strValue = entry.getValue();
+            Object value = DataDefinitionRegistry.valueOf(inpName_Type[1].toUpperCase()).getType().cast(strValue);
 
-            ExecutionDataValues.put(finalName, value);
+            ExecutionDataValues.put(inpName_Type[0], value);
         }
 
     }
@@ -144,7 +145,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         // assuming that from the data name we can get to its data definition
         DataDefinition theData = ExecutionDataName2Definition.get(finalDataName);
 
-        // we have the DD type so we can make sure that its from the same type
+        // we have the DD type, so we can make sure that its from the same type
         if (theData.getType().isAssignableFrom(datadefinition.getType())) {
             ExecutionDataValues.put(finalDataName, value);
         }
@@ -153,5 +154,24 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         }
 
         return true;
+    }
+
+    @Override
+    public FlowExecutionResult getFlowExecutionResult() {
+        FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
+        for (Map.Entry<String, StepExecutionDataManager> entry : step2Manager.entrySet()) {
+            StepExecutionDataManager stepExecutionDataManager = entry.getValue();
+            StepResult stepResult = stepExecutionDataManager.getStepResult();
+            if (stepResult.equals(StepResult.FAILURE)) {
+                flowExecutionResult = FlowExecutionResult.FAILURE;
+                break;
+            }
+            if (stepResult.equals(StepResult.WARNING)) {
+                flowExecutionResult = FlowExecutionResult.WARNING;
+                break;
+            }
+
+        }
+        return flowExecutionResult;
     }
 }

@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum StepDefinitionRegistry {
-    //HELLO_WORLD(new HelloWorldStep()),
-    //PERSON_DETAILS(new PersonDetailsStep()),
     FILE_DUMPER(new FileDumperStep()),
     CSV_EXPORTER(new CSVExporterStep()),
     SPEND_SOME_TIME(new SpendSomeTimeStep()),

@@ -109,6 +109,7 @@ public class ConsoleUI extends UIAbstractDefinition {
             userInput = scanner.next();
             //TODO: check type and parse if not string. then add to res MAP.
         }
+        return null;
     }
 }
 

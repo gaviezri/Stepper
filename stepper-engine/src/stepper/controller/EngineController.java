@@ -53,6 +53,7 @@ public class EngineController {
         flowExecutor.setFlowFreeInputs(inputFinalNameType2StringValue);
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
+        return null;
     }
 
 }

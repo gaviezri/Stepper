@@ -38,8 +38,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     private Map<String, StepExecutionDataManager> step2Manager = new HashMap<>();
 
     public String getFinalDataName(String name){
-//        return dataValueName2Alias.get(name);
-        return dataAliasingManager.getOriginalDataName(currentStepName,name);
+        return dataAliasingManager.getAliasDataName(currentStepName,name);
     }
     @Override
     public String getCurrentStepName() {
@@ -54,7 +53,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     private String currentStepName;
 
     public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String,String> inputFinalName2StringValue) {
-        //List<StepUsageDeclaration> steps, Map<String,String>  dataValueName2Alias
 
         List<StepUsageDeclaration> steps = flowDefinition.getFlowSteps();
         dataAliasingManager = flowDefinition.getDataAliasingManager();
@@ -119,8 +117,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
     @Override
     public <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException {
-//        String finalDataName = dataValueName2Alias.get(dataName);
-        String finalDataName = dataAliasingManager.getOriginalDataName(currentStepName,dataName);
+        String finalDataName = dataAliasingManager.getAliasDataName(currentStepName,dataName);
         finalDataName = finalDataName == null ? dataName : finalDataName;
 
         // assuming that from the data name we can get to its data definition
@@ -141,8 +138,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     @Override
     public boolean storeDataValue(String dataName,Object value ,DataDefinitionRegistry datadefinition) throws GivenValueTypeDontMatchException{
         // use current step name?
-//        String finalDataName = dataAliasingManager.get(dataName);
-        String finalDataName = dataAliasingManager.getOriginalDataName(currentStepName,dataName);
+        String finalDataName = dataAliasingManager.getAliasDataName(currentStepName,dataName);
         finalDataName = finalDataName == null ? dataName : finalDataName;
 
         // assuming that from the data name we can get to its data definition

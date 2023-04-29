@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuData {
+
+    public Integer getMenuItemCount() {
+        return menus.get(MenuNumber.MAIN_MENU.getId()).size()-1;
+    }
+
     public enum MenuNumber{
         MAIN_MENU(0),
         SUB(1),

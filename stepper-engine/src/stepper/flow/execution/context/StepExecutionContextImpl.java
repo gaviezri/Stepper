@@ -53,7 +53,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 //TODO: see if really needed...
     private String currentStepName;
 
-    public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String,String> inputFinalName2StringValue) {
+    public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String,Object> inputFinalName2Value) {
 
         List<StepUsageDeclaration> steps = flowDefinition.getFlowSteps();
         dataAliasingManager = flowDefinition.getDataAliasingManager();
@@ -61,15 +61,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         for (StepUsageDeclaration step : steps) {
             step2Manager.put(step.getFinalStepName(),new StepExecutionDataManager(step.getFinalStepName()));
         }
-
-        for (Map.Entry<String, String> entry : inputFinalName2StringValue.entrySet()) {
-            String[] inpName_Type = entry.getKey().split(":");
-            String strValue = entry.getValue();
-            Object value = DataDefinitionRegistry.valueOf(inpName_Type[1].toUpperCase()).getType().cast(strValue);
-
-            ExecutionDataValues.put(inpName_Type[0], value);
-        }
-
+        ExecutionDataValues = inputFinalName2Value;
     }
 
     @Override

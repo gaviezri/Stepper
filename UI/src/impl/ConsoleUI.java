@@ -23,53 +23,34 @@ public class ConsoleUI extends UIAbstractDefinition {
             out.println(line);
         }
     }
-
-//    @Override
-//    public int getUsersNumericResponse(Integer max) {
-//        return 0;
-//    }
-
     @Override
-    public int getUsersNumericResponse(Integer max){
+    public int getUsersNumericResponse(Integer min, Integer max) {
         int userSelectedOption;
 
-        while(true) {
+        while (true) {
             try {
-                userSelectedOption = Integer.parseInt(scanner.next());
-                if (userSelectedOption >= 1 && userSelectedOption < max) {
+                userSelectedOption = Integer.parseInt(scanner.nextLine());
+                if (userSelectedOption >= min && userSelectedOption <= max) {
                     return userSelectedOption;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 out.println("a non-numeric input was given!\n");
             }
             out.println("Please select a number from the options given!");
         }
     }
 
+    @Override
+    public int getUsersNumericResponse(Integer max){
+        return getUsersNumericResponse(1,max);
+    }
 
-//    @Override
-//    public int getUsersNumericResponse(Integer min, Integer max) {
-//        int userSelectedOption;
-//
-//        while(true) {
-//            try {
-//                userSelectedOption = Integer.parseInt(scanner.next());
-//                if (userSelectedOption >= min && userSelectedOption < max) {
-//                    return userSelectedOption;
-//                }
-//            }
-////            catch (InputMismatchException e) {}
-////            catch (NumberFormatException e)
-//            catch (Exception e){
-//                out.println("a non-numeric input was given!\n");
-//            }
-//            out.println("Please select a number from the options given!");
-//        }
-//    }
+
 
 
     public String createValidPath() {
-        return scanner.next().replace("\\","\\\\").replace("/","\\\\");
+        String path =  scanner.nextLine();
+        return path.replace("\\","\\\\").replace("/","\\\\").replace("\"","");
     }
 
     @Override
@@ -85,4 +66,3 @@ public class ConsoleUI extends UIAbstractDefinition {
         out.println(message);
     }
 }
-

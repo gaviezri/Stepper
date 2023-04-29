@@ -58,7 +58,7 @@ public class FlowExecutor {
         activeFlow = flowDef;
     }
 
-    public void setFlowFreeInputs(Map<String, String> inputFinalName2StringValue) {
+    public void setFlowFreeInputs(Map<String, Object> inputFinalName2StringValue) {
         context = new StepExecutionContextImpl(activeFlow, inputFinalName2StringValue);
     }
 }

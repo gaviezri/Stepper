@@ -10,6 +10,14 @@ public abstract class UIAbstractDefinition {
     public MenuData getMenuData() {
         return menuData;
     }
+    /** Returns the number of menu items in the main menu
+     * not including the header line
+     * @return int
+     */
+    public int getMenuItemCount(){
+
+        return menuData.getMainMenu().size()-1;
+    }
 
     public abstract void PresentMainMenu();
 
@@ -21,4 +29,5 @@ public abstract class UIAbstractDefinition {
 
     public abstract void presentMessageToUser(String message);
 
+    public abstract int getUsersNumericResponse(Integer min, Integer max);
 }

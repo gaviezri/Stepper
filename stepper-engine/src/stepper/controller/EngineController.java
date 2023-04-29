@@ -30,14 +30,15 @@ public class EngineController {
         }
         return new LoadDataDTO(path, "Flow(s) loaded successfully!", true, "");
     }
-    public DTO getFlowDefinition(Integer flowIdx){
+    public DTO getFlowDefinitionData(Integer flowIdx){
         try {
             return new FlowDefinitionDTO(flowLibrary.getFlowDefinition(flowIdx));
         }catch (Exception e){
             return new LoadDataDTO("", "", false, e.getMessage());
         }
     }
-    public DTO getFlowDefinitionsNames(){
+
+    public FlowNamesDTO getFlowDefinitionsNames(){
         try {
             return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
         }catch (Exception e){
@@ -53,11 +54,11 @@ public class EngineController {
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
         return null;
+
     }
 
-
     public DTO saveSystemState(String path){
-        return null;
+
     }
 
 }

@@ -3,6 +3,7 @@ package impl;
 import api.UIAbstractDefinition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.lang.System.out;
@@ -52,17 +53,43 @@ public class ConsoleUI extends UIAbstractDefinition {
         String path =  scanner.nextLine();
         return path.replace("\\","\\\\").replace("/","\\\\").replace("\"","");
     }
-
     @Override
     public void presentLoadedFlowNames(List<String> flowNames) {
-        out.println("The following flows are defined in the file:");
+        out.println("This are the flows currently loaded in the system\n" +
+                "please choose one by entering the corresponding number:");
         for (int i = 0; i < flowNames.size(); i++){
             out.println( i+1 + ". " + flowNames.get(i));
         }
     }
-
     @Override
     public void presentMessageToUser(String message) {
         out.println(message);
+    }
+
+    @Override
+    public Integer getSelectedFlowIndexFromUser(List<String> flowNames) {
+        Integer userResponse;
+        presentLoadedFlowNames(flowNames);
+        presentBackToMainMenuOption();
+        userResponse = getUsersNumericResponse(flowNames.size());
+        return userResponse-1;
+    }
+
+    @Override
+    public void presentBackToMainMenuOption() {
+        out.println("0. Back to main menu");
+    }
+
+    @Override
+    public Map<String, Object> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity) {
+        String userInput;
+        out.println("Please enter the following inputs.\nThe inputs will be presented one by one, after filling the" +
+                " corresponding data press enter for the next one to appear.\n");
+        for(int i = 0; i < freeInputsFinalNames.size(); ++i){
+            out.print(freeInputsFinalNames.get(i)+ ": ");
+            userInput = scanner.next();
+            //TODO: check type and parse if not string. then add to res MAP.
+        }
+        return null;
     }
 }

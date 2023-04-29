@@ -10,9 +10,7 @@ import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionImpl implements FlowDefinition {
@@ -21,17 +19,13 @@ public class FlowDefinitionImpl implements FlowDefinition {
     private List<DataDefinitionDeclaration> allMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> unsatisfiedMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
-    private List<DataDefinitionDeclaration> flowFreeInputs = new ArrayList<>();
-    private List<DataDefinitionDeclaration> flowOutputs = new ArrayList<>();
-
+    private List<Pair<DataDefinitionDeclaration,List<StepUsageDeclaration>>> flowFreeInputs2StepsThatUseThem = new ArrayList<>();
     private  List<String> flowFormalOutputNames = new ArrayList<>();
-    private List<String> stepsName = new ArrayList<>();
-    private List<String> stepsAliases = new ArrayList<>();
+    private List<String> stepsFinalNames = new ArrayList<>();
     private DataAliasingManager dataAliasingManager = new DataAliasingManager();
     private  List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
     private  List<String> stepAliasThatCanSkipIfFail = new ArrayList<>();
     private  List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
-
     private MappingGraph mappingGraph;
     private boolean isReadOnly;
 
@@ -47,8 +41,10 @@ public class FlowDefinitionImpl implements FlowDefinition {
     }
 
     @Override
-    public void addStepAlias(String finalname) {
-        stepsAliases.add(finalname);
+    public void addFinalizedStep(String name, String finalName, boolean skipIfFail) {
+        StepDefinition stepDef = StepDefinitionRegistry.convertFromUserFriendlyToInternal(name).getStepDefinition();
+        stepsUsageDecl.add( new StepUsageDeclarationImpl(stepDef, skipIfFail, finalName));
+        stepsFinalNames.add(finalName);
     }
     @Override
     public void validateFlowStructure() {
@@ -118,11 +114,6 @@ public class FlowDefinitionImpl implements FlowDefinition {
             }
         }
     }
-    @Override
-    public void addStep(String stepName) {
-        stepsName.add(stepName);
-    }
-
 
     @Override
     public String getName() {
@@ -152,23 +143,22 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public void addFlowLevelAlias(String stepFinalName, String sourceDataName, String sourceDataAlias) {
         dataAliasingManager.putAliasDataName(stepFinalName, sourceDataName, sourceDataAlias);
-    }
-
-    @Override
-    public String getStepFinalName(String stepName, boolean fromAlias) {
-        try {
-            if (fromAlias) {
-                return stepsAliases.get(stepsAliases.indexOf(stepName));
+        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+            if (stepusgdecl.getFinalStepName().equals(stepFinalName)){
+                stepusgdecl.putResource2FinalName(sourceDataName, sourceDataAlias);
+                return;
             }
-            return stepsAliases.get(stepsName.indexOf(stepName));
-        } catch (Exception e) {
-            throw new RuntimeException("Step " + stepName + " not found in flow " + name);
         }
     }
 
     @Override
-    public String getStepOriginalName(String aliasName) {
-        return stepsName.get(stepsAliases.indexOf(aliasName));
+    public String getStepOriginalName(String stepFinalName) {
+        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+            if (stepusgdecl.getFinalStepName().equals(stepFinalName)){
+                return stepusgdecl.getStepDefinition().getStepName();
+            }
+        }
+        return null;
     }
 
     public List<StepDefinitionRegistry> getStepDefinitionRegistries() {
@@ -185,42 +175,17 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public String getResourceFinalName(String stepFinalName, String dataName) {
 
-        if (dataAliasingManager.isAnAlias(stepFinalName, dataName)) {
-            return dataName;
-        }
-
-        StepDefinition theStep = StepDefinitionRegistry.convertFromUserFriendlyToInternal(getStepOriginalName(stepFinalName))
-                .getStepDefinition();
-
-        for (DataDefinitionDeclaration dataDef : theStep.inputs()) {
-            if (dataDef.getName().equals(dataName)) {
-                return dataName;
+        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+            if (stepusgdecl.getFinalStepName().equals(stepFinalName)){
+                return stepusgdecl.getResourceFinalName(dataName);
             }
         }
-
-        for (DataDefinitionDeclaration dataDef : theStep.outputs()) {
-            if (dataDef.getName().equals(dataName)) {
-                return dataName;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void addStepAliasThatCanSkipIfFail(String stepName) {
-        stepAliasThatCanSkipIfFail.add(stepName);
+        return dataName;
     }
 
     @Override
     public void createMapping(){
-        for (int stepidx = 0; stepidx < stepsName.size(); ++stepidx ) {
 
-            StepDefinition stepDef = StepDefinitionRegistry.convertFromUserFriendlyToInternal(stepsName.get(stepidx)).getStepDefinition();
-            String alias = stepsAliases.get(stepidx);
-            boolean canSkipIfFail = stepAliasThatCanSkipIfFail.contains(alias);
-            stepsUsageDecl.add(new StepUsageDeclarationImpl(stepDef,canSkipIfFail, alias));
-
-        }
         mappingGraph = new MappingGraph(stepsUsageDecl, rawSourceStepData2TargetStepDataMapping, dataAliasingManager);
         createAutomaticMapping();
         setMandatoryInputs();
@@ -258,35 +223,49 @@ public class FlowDefinitionImpl implements FlowDefinition {
         return inputFinalNames;
     }
     @Override
-    public StepUsageDeclaration getStepUsageDeclaration(String stepName) {
-        return stepsUsageDecl.get(stepsAliases.indexOf(stepName));
-    }
-
-    @Override
     public DataDefinition getResourceDataDefinition(String stepName, String dataName) {
-        return stepsUsageDecl.get(stepsAliases.indexOf(stepName)).getStepDefinition().getResourceDataDefinition(dataName);
+        return stepsUsageDecl.stream()
+                .filter(x -> x.getFinalStepName().equals(stepName))
+                .findFirst()
+                .get()
+                .getStepDefinition()
+                .getResourceDataDefinition(dataName);
     }
     @Override
     public List<String> getStepInputsOriginalNames(String stepName) {
-        return stepsUsageDecl.get(stepsAliases.indexOf(stepName)).getStepDefinition().inputs().stream()
-                .map(DataDefinitionDeclaration::getName)
+        return stepsUsageDecl.stream()
+                .filter(x-> x.getFinalStepName().equals(stepName))
+                .findFirst()
+                .get()
+                .getStepDefinition()
+                .inputs()
+                .stream()
+                .map(x-> x.getName())
                 .collect(Collectors.toList());
+
     }
     @Override
     public List<String> getStepOutputsOriginalNames(String stepName) {
-        return stepsUsageDecl.get(stepsAliases.indexOf(stepName)).getStepDefinition().outputs().stream()
-                .map(DataDefinitionDeclaration::getName)
+        return stepsUsageDecl.stream()
+                .filter(x-> x.getFinalStepName().equals(stepName))
+                .findFirst()
+                .get()
+                .getStepDefinition()
+                .outputs()
+                .stream()
+                .map(x-> x.getName())
                 .collect(Collectors.toList());
     }
     @Override
     public DataNecessity getResourceDataNecessity(String stepName, String dataName) {
-        return stepsUsageDecl.get(stepsAliases.indexOf(stepName)).getStepDefinition().getResourceNecessity(dataName);
+        return stepsUsageDecl.stream()
+                .filter(x-> x.getFinalStepName().equals(stepName))
+                .findFirst()
+                .get()
+                .getStepDefinition()
+                .getResourceNecessity(dataName);
     }
 
-    @Override
-    public  List<DataDefinitionDeclaration> getUnsatisfiedMandatoryInputs(){
-        return unsatisfiedMandatoryInputs;
-    }
 
     @Override
     public void setAccessibility(){
@@ -300,46 +279,53 @@ public class FlowDefinitionImpl implements FlowDefinition {
     public void setFreeInputs(){
        for (DataDefinitionDeclaration input : flowInputs){
           if (!mappingGraph.isSatisfied(input.getName())) {
-              flowFreeInputs.add(input);
+              List<StepUsageDeclaration> StepsNames = getStepsThatUsesInput(input.getName(), stepsUsageDecl);
+              flowFreeInputs2StepsThatUseThem.add(new Pair<>(input, StepsNames));
           }
        }
     }
+
+    private List<StepUsageDeclaration> getStepsThatUsesInput(String inputName, List<StepUsageDeclaration> stepsUsageDecl) {
+        List<StepUsageDeclaration> stepsThatUsesInput = new ArrayList<>();
+        for (StepUsageDeclaration stepUsageDeclaration : stepsUsageDecl){
+            if(stepUsageDeclaration.containsResource(inputName)){
+                stepsThatUsesInput.add(stepUsageDeclaration);
+            }
+        }
+        return stepsThatUsesInput;
+    }
+
     @Override
     public List<String> getFreeInputsNames() {
-        return flowFreeInputs.stream()
-                .map(x -> dataAliasingManager.getAliasDataName(x.getName()))
-                .collect(Collectors.toList());
+        List<String> freeInputsNames = new ArrayList<>();
+        for (Pair<DataDefinitionDeclaration, List<StepUsageDeclaration>> pair : flowFreeInputs2StepsThatUseThem){
+            for (StepUsageDeclaration stepUsageDeclaration : pair.getValue()){
+                if (freeInputsNames.contains(stepUsageDeclaration.getInput2FinalName(pair.getKey().getName()))){
+                    continue;
+                }
+                freeInputsNames.add(stepUsageDeclaration.getInput2FinalName(pair.getKey().getName()));
+            }
+        }
+        return freeInputsNames;
     }
     @Override
     public List<String> getFreeInputsTypes() {
-        return flowFreeInputs.stream()
-                .map(DataDefinitionDeclaration::getType)
-                //.map(Class::toString)
-                .map(Class::getSimpleName)
+        return flowFreeInputs2StepsThatUseThem.stream()
+                .map(x-> x.getKey().getType().getSimpleName())
                 .collect(Collectors.toList());
     }
     @Override
-    public Map<String, List<String>> getFreeInputs2StepsThatUseThem(){
-        Map<String,List<String>> freeInputs2StepsThatUseThem = new LinkedHashMap<>();
-        for (DataDefinitionDeclaration input : flowFreeInputs){
-            List<String> stepsThatUseIt = getStepsThatUseInput(input.getName());
-            freeInputs2StepsThatUseThem.put(input.getName(),stepsThatUseIt);
+    public List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem(){
+        List<Pair<String, List<String>>> convertedToStrings = new ArrayList<>();
+        for (Pair<DataDefinitionDeclaration,List<StepUsageDeclaration>> input2steps : flowFreeInputs2StepsThatUseThem){
+            convertedToStrings.add(new Pair<>(input2steps.getKey().getName(), input2steps.getValue().stream().map(x-> x.getFinalStepName()).collect(Collectors.toList())));
         }
-        return freeInputs2StepsThatUseThem;
-    }
-    private List<String> getStepsThatUseInput(String inputName){
-        List<String> stepsThatUseIt = new ArrayList<>();
-        for (StepUsageDeclaration step : stepsUsageDecl){
-            if (step.getStepDefinition().inputs().stream().anyMatch(input -> dataAliasingManager.getOriginalDataName(step.getFinalStepName(),input.getName()).equals(inputName))){
-                stepsThatUseIt.add(step.getFinalStepName());
-            }
-        }
-        return stepsThatUseIt;
+        return convertedToStrings;
     }
     @Override
     public List<String> getFreeInputsNecessity(){
-        return flowFreeInputs.stream()
-                .map(DataDefinitionDeclaration::necessity)
+        return flowFreeInputs2StepsThatUseThem.stream()
+                .map(x-> x.getKey().necessity())
                 .map(DataNecessity::toString)
                 .collect(Collectors.toList());
     }
@@ -381,5 +367,17 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public MappingGraph getMappingGraph(){
         return mappingGraph;
+    }
+
+    @Override
+    public String getStepFinalName(String stepFinalName){
+        try {
+            return stepsUsageDecl.stream()
+                    .filter(x -> x.getFinalStepName().equals(stepFinalName))
+                    .findFirst().get().getFinalStepName();
+        }catch (Exception e){
+            return stepFinalName;
+        }
+
     }
 }

@@ -43,7 +43,7 @@ public class Controller {
 
     public void handleUsersMainMenuSelection() {
 
-        switch(ui.getUsersNumericResponse(1,ui.getMenuData().getMenuItemCount())){
+        switch(ui.getUsersNumericResponse(1,ui.getMenuData().getMenuItemCount())) {
             case 1:
                 loadingNewXmlFile();
                 break;
@@ -65,16 +65,21 @@ public class Controller {
     }
 
     private void executeFlow() {
+        if (engineController.isLoaded()){
+            handlePossibleExecution();
+        }
+        else{
+            ui.presentMessageToUser("Error: No Flows Loaded Yet!\nreturning to main menu for further actions");
+        }
+    }
+    private void handlePossibleExecution(){
         FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
         Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
         if(selectedFlowIndex >= 0) {
-            //TODO: get inputs names list, input neccety list and inputs typeList.
-            //TODO: get inputs data from user.
-            //TODO: create a Map<(input_name : input_type), input_value_string>
             FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
             Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
-                                                      flowDefinitionDTO.getFreeInputTypes(),
-                                                      flowDefinitionDTO.getFreeInputNecessity());
+                    flowDefinitionDTO.getFreeInputTypes(),
+                    flowDefinitionDTO.getFreeInputNecessity());
 
             DTO result = engineController.executeFlow(selectedFlowIndex, valuesFromUser2valuesDefinition);
         }
@@ -130,7 +135,6 @@ public class Controller {
                     }else {
                        presentDefinition(flowDefDTO);
                     }
-                    ui.presentMessageToUser("\nreturning to main menu for further actions");
                 }
             }
         }
@@ -169,13 +173,13 @@ public class Controller {
     private void presentFreeInputs(FlowDefinitionDTO flowDefinitionDTO) {
         List<String> freeInputs = flowDefinitionDTO.getFreeInputsFinalNames();
         List<String> freeInputTypes = flowDefinitionDTO.getFreeInputTypes();
-        Map<String,List<String>> stepsThatUseFreeInputs = flowDefinitionDTO.getFreeInputs2StepsThatUseThem();
+        List<Pair<String,List<String>>> stepsThatUseFreeInputs = flowDefinitionDTO.getFreeInputs2StepsThatUseThem();
         List<String> freeInputsNecessity = flowDefinitionDTO.getFreeInputNecessity();
         for (int i = 0; i < freeInputs.size(); i++) {
             String name = freeInputs.get(i);
             String presentation = freeInputPresentation(name,
                                                         freeInputTypes.get(i),
-                                                        stepsThatUseFreeInputs.get(name),
+                                                        stepsThatUseFreeInputs.get(i).getValue(),
                                                         freeInputsNecessity.get(i));
             ui.presentMessageToUser((i+1)+". " + presentation);
         }

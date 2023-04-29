@@ -9,4 +9,13 @@ public interface StepUsageDeclaration {
     boolean skipIfFail();
 
     StepDefinitionRegistry getStepDefinitionRegistry();
+
+    String getInput2FinalName(String inputName);
+    String getOutput2FinalName(String outputName);
+
+    void putResource2FinalName(String resourceName, String finalName);
+
+    String getResourceFinalName(String dataName);
+
+    Boolean containsResource(String dataName);
 }

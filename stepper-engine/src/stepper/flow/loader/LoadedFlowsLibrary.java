@@ -23,4 +23,11 @@ public class LoadedFlowsLibrary {
                 .map(FlowDefinition::getName)
                 .collect(java.util.stream.Collectors.toList());
     }
+
+    public boolean isLoaded() {
+        if(loadedflowDefinitions == null)
+            return false;
+
+        return !loadedflowDefinitions.isEmpty();
+    }
 }

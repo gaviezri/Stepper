@@ -62,4 +62,7 @@ public class EngineController {
         return null;
     }
 
+    public boolean isLoaded() {
+        return flowLibrary.isLoaded();
+    }
 }

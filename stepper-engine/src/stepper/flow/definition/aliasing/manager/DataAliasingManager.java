@@ -1,13 +1,10 @@
 package stepper.flow.definition.aliasing.manager;
 
-import javafx.util.Pair;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class DataAliasingManager {
-    Map<String,String> stepFinalNameXDataName2AliasDataName = new HashMap<>();
+    Map<String,String> stepFinalNameXDataName2AliasDataName = new LinkedHashMap<>();
 
     public void putAliasDataName(String stepFinalName, String dataName, String aliasDataName) {
         stepFinalNameXDataName2AliasDataName.put(stepFinalName + ":" + dataName, aliasDataName);
@@ -31,18 +28,6 @@ public class DataAliasingManager {
             }
         }
         return dataName;
-    }
-    public boolean isAliased(String stepFinalName, String dataName) {
-        return stepFinalNameXDataName2AliasDataName.containsKey(stepFinalName + ":" + dataName);
-    }
-
-    public boolean isAnAlias(String stepFinalName, String dataName) {
-        for (Map.Entry<String, String> entry : stepFinalNameXDataName2AliasDataName.entrySet()) {
-            if (entry.getValue().equals(dataName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

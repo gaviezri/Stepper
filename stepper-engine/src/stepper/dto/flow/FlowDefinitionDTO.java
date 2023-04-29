@@ -24,7 +24,7 @@ public class FlowDefinitionDTO implements DTO {
 
     /* 6.1 */ List<String> freeInputsFinalNames;
     /* 6.2 */ List<String> freeInputTypes;
-    /* 6.3 */ Map<String,List<String>> freeInputs2StepsThatUseThem;
+    /* 6.3 */ List<Pair<String,List<String>>> freeInputs2StepsThatUseThem;
     /* 6.4 */ List<String> freeInputNecessity;
 
     // ---OUTPUTS--- //
@@ -88,7 +88,7 @@ public class FlowDefinitionDTO implements DTO {
         return freeInputTypes;
     }
 
-    public Map<String, List<String>> getFreeInputs2StepsThatUseThem() {
+    public List<Pair<String,List<String>>> getFreeInputs2StepsThatUseThem() {
         return freeInputs2StepsThatUseThem;
     }
 

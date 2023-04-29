@@ -1,14 +1,13 @@
 package stepper.flow.definition.api;
 
+import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
 import stepper.flow.definition.mapping.MappingGraph;
-import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface FlowDefinition {
     String getName();
@@ -23,19 +22,13 @@ public interface FlowDefinition {
 
     void validateFlowStructure();
 
-    public List<StepDefinitionRegistry> getStepDefinitionRegistries();
-
     void setMandatoryInputs();
 
-    void addStep(String stepName);
-
-    void addStepAlias(String finalname);
+    void addFinalizedStep(String name, String finalName, boolean skipIfFail);
 
     void setDescription(String s);
 
     void addFlowLevelAlias(String stepFinalName, String sourceDataName, String sourceDataAlias);
-
-    String getStepFinalName(String stepName, boolean fromAlias);
 
     String getStepOriginalName(String stepName);
 
@@ -43,14 +36,10 @@ public interface FlowDefinition {
 
     String getResourceFinalName(String stepFinalName, String dataName);
 
-    void addStepAliasThatCanSkipIfFail(String finalname);
-
     void createMapping();
     List<String> getStepOutputsFinalNames(String stepFinalName);
     List<String> getStepInputsFinalNames(String stepFinalName);
 
-    StepUsageDeclaration getStepUsageDeclaration(String sourceStepName);
-    
     DataDefinition getResourceDataDefinition(String stepFinalName, String dataOriginalName);
 
     List<String> getStepOutputsOriginalNames(String sourceFinalStepName);
@@ -59,17 +48,14 @@ public interface FlowDefinition {
 
     DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
 
-    List<DataDefinitionDeclaration> getUnsatisfiedMandatoryInputs();
-
     void setAccessibility();
     Boolean getAccessibility();
     void setFreeInputs();
     List<String> getFreeInputsNames();
 
-
     List<String> getFreeInputsTypes();
 
-    Map<String, List<String>> getFreeInputs2StepsThatUseThem();
+    List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
 
     List<String> getFreeInputsNecessity();
 
@@ -82,4 +68,7 @@ public interface FlowDefinition {
     DataAliasingManager getDataAliasingManager();
 
     MappingGraph getMappingGraph();
+
+    String getStepFinalName(String sourceStepName);
+
 }

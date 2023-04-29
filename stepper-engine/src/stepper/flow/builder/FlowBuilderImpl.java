@@ -39,17 +39,9 @@ public class FlowBuilderImpl implements FlowBuilder{
         }
     }
     @Override
-    public void addStepAlias(int flowidx, String finalname, boolean skipIfFail) {
-        flowDefinitions.get(flowidx).addStepAlias(finalname);
-        if (skipIfFail) {
-            flowDefinitions.get(flowidx).addStepAliasThatCanSkipIfFail(finalname);
-        }
+    public void addStepToFlow(int flowidx, String name, String finalname, boolean skipIfFail) {
+        flowDefinitions.get(flowidx).addFinalizedStep(name, finalname, skipIfFail);
     }
-    @Override
-    public void addStepToFlow(int flowidx, String stepName) {
-        flowDefinitions.get(flowidx).addStep(stepName);
-    }
-
 
     @Override
     public void setFlowFormalOutputs(int flowidx, Set<String> flowFormalOutputs) {
@@ -72,10 +64,6 @@ public class FlowBuilderImpl implements FlowBuilder{
     }
 
     @Override
-    public String getStepFinalName(int flowidx, String stepName, boolean fromAlias){
-        return flowDefinitions.get(flowidx).getStepFinalName(stepName, fromAlias);
-    }
-    @Override
     public String getStepOriginalName(int flowidx, String stepName){
         return flowDefinitions.get(flowidx).getStepOriginalName(stepName);
     }
@@ -88,4 +76,10 @@ public class FlowBuilderImpl implements FlowBuilder{
     public String getResourceFinalName(int flowidx, String StepFinalName, String DataName) {
         return flowDefinitions.get(flowidx).getResourceFinalName(StepFinalName, DataName);
     }
+
+    @Override
+    public String getStepFinalName(int flowidx, String sourceStepName) {
+            return flowDefinitions.get(flowidx).getStepFinalName(sourceStepName);
+    }
+
 }

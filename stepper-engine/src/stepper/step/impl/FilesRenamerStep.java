@@ -2,6 +2,7 @@ package stepper.step.impl;
 
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -11,6 +12,9 @@ import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,13 +68,14 @@ public class FilesRenamerStep extends AbstractStepDefinition {
     }
 
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
-        context.tick(finalName);
-
-        AbstractLogger logger = context.getStepLogger(this);
+    public StepResult invoke(StepExecutionContext context) {
+        String finalName = context.getCurrentStepName();
+        context.tick();
+        RelationData renameResult = null;
+        AbstractLogger logger = context.getStepLogger();
         StepResult result = StepResult.SUCCESS;
         StepResult subResult;
-        List filesToRename;
+        List<FileData> filesToRename;
         String prefix;
         String suffix;
         try {
@@ -78,12 +83,18 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             columnsName.add("Ordinal Number");
             columnsName.add("Old File Name");
             columnsName.add("New File Name");
-            RelationData renameResult = new RelationData(columnsName);
+            renameResult = new RelationData(columnsName);
             filesToRename = context.getDataValue("FILES_TO_RENAME", List.class);
-            prefix = context.getDataValue("PREFIX", String.class);
-            prefix = prefix != null && !prefix.isEmpty() ? prefix : "";
-            suffix = context.getDataValue("SUFFIX", String.class);
-            suffix = suffix != null && !suffix.isEmpty() ? suffix : "";
+            try {
+                prefix = context.getDataValue("PREFIX", String.class);
+            } catch (Exception e) {
+                prefix = "";
+            }
+            try {
+                suffix = context.getDataValue("SUFFIX", String.class);
+            } catch (Exception e) {
+                suffix = "";
+            }
             int filesToRenameSize = filesToRename.size();
 
             logger.addLogLine("About to start rename " + filesToRenameSize + " files." +
@@ -91,9 +102,12 @@ public class FilesRenamerStep extends AbstractStepDefinition {
                     ( !suffix.equals("") ? (" Adding Suffix: " + suffix + ";") : ""));
 
             for (int i = 0; i < filesToRenameSize; i++) {
-                String fileName = (String) filesToRename.get(i);
-                String newFileName = prefix + fileName + suffix;
-                subResult = renameFile(fileName, newFileName, logger, renameResult);
+                String oldName = filesToRename.get(i).getName();
+                Path oldFileFullPath = Paths.get(filesToRename.get(i).getPath());
+                String filenameNoExtenstion = oldName.substring(0, oldName.lastIndexOf('.'));
+                String extension = oldName.substring(oldName.lastIndexOf('.'));
+                Path newFileFullPath = oldFileFullPath.resolveSibling(prefix + filenameNoExtenstion + suffix + extension);
+                subResult = renameFile(oldFileFullPath, newFileFullPath, logger, renameResult);
                 if (subResult == StepResult.WARNING) {
                     result = StepResult.WARNING;
                 }
@@ -124,27 +138,27 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             logger.addLogLine("Exception occurred: " + e.getMessage());
             result = StepResult.FAILURE;
         }
-        context.tock(finalName);
+        context.storeDataValue("RENAME_RESULT", renameResult ,DataDefinitionRegistry.RELATION);
+        context.tock();
         return result;
     }
 
-    private StepResult renameFile(String fileName, String newFileName, AbstractLogger logger, RelationData renameResult) {
-        File fileToRename = new File(fileName);
-        File newName = new File(newFileName);
+    private StepResult renameFile(Path oldPath, Path newPath, AbstractLogger logger, RelationData renameResult) {
+
         List<String> data = new ArrayList<>();
-
+        StepResult result = StepResult.SUCCESS;
         data.add(Integer.toString(renameResult.getRowSize() + 1));
-        data.add(fileName);
+        data.add(oldPath.getName(oldPath.getNameCount() - 1).toString());
 
-        if (fileToRename.renameTo(newName)) {
-            data.add(newFileName);
-            renameResult.addRow(data);
-            return StepResult.SUCCESS;
-        } else {
-            data.add(fileName);
-            renameResult.addRow(data);
-            logger.addLogLine("Problem renaming file: " + fileName);
-            return StepResult.WARNING;
+        try {
+            Files.move(oldPath, newPath);
+            data.add(newPath.getName(newPath.getNameCount() - 1).toString());
+        }catch (Exception e) {
+            data.add(oldPath.getName(oldPath.getNameCount() - 1).toString());
+            logger.addLogLine("Problem renaming file: " + oldPath.getName(oldPath.getNameCount() - 1));
+            result = StepResult.WARNING;
         }
+        renameResult.addRow(data);
+        return result;
     }
 }

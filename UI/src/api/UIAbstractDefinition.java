@@ -1,6 +1,7 @@
 package api;
 
 import api.menu.MenuData;
+import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,6 @@ public abstract class UIAbstractDefinition {
      * output:
      * Map<"input_name : type" , object>
      * */
-    public abstract Map<String,Object> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity);
+    public abstract Pair<Map,Map> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity);
 
 }

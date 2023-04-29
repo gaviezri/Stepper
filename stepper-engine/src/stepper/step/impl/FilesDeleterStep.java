@@ -52,9 +52,9 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
-        context.tick(finalName);
-
+    public StepResult invoke(StepExecutionContext context) {
+        String finalName = context.getCurrentStepName();
+        context.tick();
         /**
          * goes through the given list and tries to delete each file
          * then log the actions made and return operation result
@@ -62,7 +62,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         List<File> FILES_LIST = new ArrayList<>(); //context.getDataValue("FILES_LIST",List.class) TODO: the previous command is the correct one but needs to write getDataValue properly
         List<String> DELETED_LIST = new ArrayList<>();
         StepResult res;
-        AbstractLogger logger = context.getStepLogger(this);
+        AbstractLogger logger = context.getStepLogger();
         boolean filesListIsEmpty =  FILES_LIST.isEmpty();
         int numberOfFilesToDelete = FILES_LIST.size();
 
@@ -101,7 +101,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
             res = StepResult.FAILURE;
             logger.addLogLine("FAILURE: No files where deleted! check yourself before you wreck yourself");
         }
-        context.tock(finalName);
+        context.tock();
         return res;
     }
 

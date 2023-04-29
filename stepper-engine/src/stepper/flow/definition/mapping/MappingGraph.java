@@ -133,16 +133,6 @@ public class MappingGraph {
         }
     }
 
-    public void validateMandatoryInputs() {
-        // there are mandatory inputs which are not user-friendly - TODO
-        // numerous mandatory inputs with the same name from different types! - TODO
-    }
-
-    public void addEdge(MappingEdge edge) {
-        int sourceNodeIdx = this.stepNodes.indexOf(edge.getSourceStepName());
-        edges.get(sourceNodeIdx).add(edge);
-    }
-
     public boolean isSatisfied(String name) {
         for (List<MappingEdge> edges : this.edges) {
             for (MappingEdge edge : edges) {
@@ -152,5 +142,16 @@ public class MappingGraph {
             }
         }
         return false;
+    }
+
+    public String getResourceNameThatMappedTo(String wantedDataName) {
+        for (List<MappingEdge> edges : this.edges) {
+            for (MappingEdge edge : edges) {
+                if (edge.getTargetDataName().equals(wantedDataName)) {
+                    return edge.getSourceDataName();
+                }
+            }
+        }
+        return wantedDataName;
     }
 }

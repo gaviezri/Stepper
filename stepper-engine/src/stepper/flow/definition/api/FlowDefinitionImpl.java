@@ -9,7 +9,6 @@ import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -308,14 +307,15 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public List<String> getFreeInputsNames() {
         return flowFreeInputs.stream()
-                .map(DataDefinitionDeclaration::getName)
+                .map(x -> dataAliasingManager.getAliasDataName(x.getName()))
                 .collect(Collectors.toList());
     }
     @Override
     public List<String> getFreeInputsTypes() {
         return flowFreeInputs.stream()
                 .map(DataDefinitionDeclaration::getType)
-                .map(Class::toString)
+                //.map(Class::toString)
+                .map(Class::getSimpleName)
                 .collect(Collectors.toList());
     }
     @Override
@@ -376,5 +376,10 @@ public class FlowDefinitionImpl implements FlowDefinition {
     @Override
     public DataAliasingManager getDataAliasingManager(){
         return dataAliasingManager;
+    }
+
+    @Override
+    public MappingGraph getMappingGraph(){
+        return mappingGraph;
     }
 }

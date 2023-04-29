@@ -111,9 +111,9 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public StepResult invoke(StepExecutionContext context, String finalName) {
-        context.tick(finalName);
-        AbstractLogger logger = context.getStepLogger(this);
+    public StepResult invoke(StepExecutionContext context) {
+        context.tick();
+        AbstractLogger logger = context.getStepLogger();
         StepResult result = StepResult.FAILURE;
         try {
             List<FileData> filesList = context.getDataValue("FILES_LIST",List.class);
@@ -124,7 +124,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
             if(filesList.isEmpty()) {
                 logger.addSummaryLine("No files were given!");
             }
-            context.tock(finalName);
+            context.tock();
             result = StepResult.SUCCESS;
         }
         catch(Exception e){

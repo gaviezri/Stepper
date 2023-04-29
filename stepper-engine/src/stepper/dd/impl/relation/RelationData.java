@@ -8,7 +8,7 @@ public class RelationData extends RelationDataDefinition{
 
     private List<String> columnsNames;
     private List<SingleRow> rows = new ArrayList<>();
-    private Map<String,List<String>> columns = new HashMap<>();
+    private Map<String,List<String>> columns = new LinkedHashMap<>();
 
     int rowSize = 0;
     int colSize = 0;
@@ -18,7 +18,8 @@ public class RelationData extends RelationDataDefinition{
     public RelationData(List<String> columnsNames) {
         this.columnsNames = columnsNames;
         columnsNames.forEach(columnName -> columns.put(columnName, new ArrayList<>()));
-        rowSize = colSize = totalSize = 0;
+        rowSize = totalSize = 0;
+        colSize = columnsNames.size();
     }
 
     public List<String> getColumnsNames() {
@@ -28,23 +29,30 @@ public class RelationData extends RelationDataDefinition{
 
         List<String> dataFromRow = new ArrayList<>();
         for (String columnName : columnsNames) {
-            dataFromRow.add(columns.get(columnName).get(index));
+            dataFromRow.add(rows.get(index).getData(columnName));
         }
         return dataFromRow;
+    }
+
+    public List<String> getColumnNames(){
+        return columnsNames;
     }
     public List getDataFromColumn(String columnName){
         return columns.get(columnName);
     }
-    public String getDataFromCell(int rowIndex, String columnName){
-        return columns.get(columnName).get(rowIndex);
+    public String getDataFromCell(int rowIndex, int columnIndex){
+        List<String> column = columns.get(columnsNames.get(columnIndex));
+        return column.get(rowIndex);
     }
     public void addRow(List<String> row){
-
+        SingleRow singleRow = new SingleRow();
         for (int i = 0; i < row.size(); i++) {
             columns.get(columnsNames.get(i)).add(row.get(i));
-            totalSize +=  row.size();
-            rowSize += row.size();
+            singleRow.addData(columnsNames.get(i), row.get(i));
+            totalSize++;
         }
+        rows.add(singleRow);
+        rowSize ++;
     }
     public void addColumn(String columnName, List<String> column){
 
@@ -65,7 +73,6 @@ public class RelationData extends RelationDataDefinition{
         return totalSize;
     }
 
-    //TODO: ?? DELETE ??
 
     private static class SingleRow {
 
@@ -77,6 +84,9 @@ public class RelationData extends RelationDataDefinition{
 
         public void addData(String columnName, String value) {
             data.put(columnName, value);
+        }
+        public String getData(String columnName) {
+            return data.get(columnName);
         }
     }
 

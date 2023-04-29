@@ -1,5 +1,6 @@
 package stepper.controller;
 
+import javafx.util.Pair;
 import stepper.dto.DTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
@@ -46,11 +47,11 @@ public class EngineController {
         }
     }
 
-    public DTO exectueFlow(Integer flowIdx, Map<String,Object> inputFinalNameType2StringValue){
+    public DTO executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
 
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinition(flowIdx);
         flowExecutor.setActiveFlow(flowToExecute);
-        flowExecutor.setFlowFreeInputs(inputFinalNameType2StringValue);
+        flowExecutor.setFlowFreeInputs(valName2valType);
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
         return null;
@@ -58,7 +59,7 @@ public class EngineController {
     }
 
     public DTO saveSystemState(String path){
-
+        return null;
     }
 
 }

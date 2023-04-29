@@ -36,7 +36,7 @@ public class ConsoleUI extends UIAbstractDefinition {
         while(true) {
             try {
                 userSelectedOption = Integer.parseInt(scanner.next());
-                if (userSelectedOption >= 1 && userSelectedOption < max) {
+                if (userSelectedOption >= 0 && userSelectedOption < max) {
                     return userSelectedOption;
                 }
             }catch (Exception e){
@@ -71,18 +71,31 @@ public class ConsoleUI extends UIAbstractDefinition {
     public String createValidPath() {
         return scanner.next().replace("\\","\\\\").replace("/","\\\\");
     }
-
     @Override
     public void presentLoadedFlowNames(List<String> flowNames) {
-        out.println("The following flows are defined in the file:");
+        out.println("This are the flows currently loaded in the system\n" +
+                "please choose one by entering the corresponding number:");
         for (int i = 0; i < flowNames.size(); i++){
             out.println( i+1 + ". " + flowNames.get(i));
         }
     }
-
     @Override
     public void presentMessageToUser(String message) {
         out.println(message);
+    }
+
+    @Override
+    public Integer getSelectedFlowIndexFromUser(List<String> flowNames) {
+        Integer userResponse;
+        presentLoadedFlowNames(flowNames);
+        presentBackToMainMenuOption();
+        userResponse = getUsersNumericResponse(flowNames.size());
+        return userResponse-1;
+    }
+
+    @Override
+    public void presentBackToMainMenuOption() {
+        out.println("0. Back to main menu");
     }
 }
 

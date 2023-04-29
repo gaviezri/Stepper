@@ -4,12 +4,10 @@ import stepper.dto.DTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
-import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
 
 import java.util.Map;
-import java.util.Stack;
 
 public class EngineController {
     //Stack<FlowExecution> flowExecutionStack = new Stack<>();
@@ -32,18 +30,19 @@ public class EngineController {
             return new LoadDataDTO("", "", false, e.getMessage());
         }
     }
-    public DTO getFlowDefinitionsNames(){
+    public FlowNamesDTO getFlowDefinitionsNames(){
         try {
             return new FlowNamesDTO(flowExecutor.getFlowDefinitionsNames());
         }catch (Exception e){
             return new FlowNamesDTO(null, false, e.getMessage());
         }
     }
-//    public DTO executeFlow(Integer flowIdx, Map<String,String> inputFinalName2StringValue){
+    public DTO executeFlow(Integer flowIdx, Map<String,String> inputFinalName2StringValue){
 //        flowExecutor.setActiveFlow(flowIdx);
 //        flowExecutor.setFlowFreeInputs(inputFinalName2StringValue);
 //        flowExecutor.executeFlow();
-//    }
+        return null;
+    }
 
 
 }

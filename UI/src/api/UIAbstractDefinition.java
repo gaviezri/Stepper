@@ -3,6 +3,7 @@ package api;
 import api.menu.MenuData;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class UIAbstractDefinition {
     protected MenuData menuData = MenuData.getInstance();
@@ -25,6 +26,17 @@ public abstract class UIAbstractDefinition {
      * if the user response is 0 (back to main menu) -1 will be the output of the function*/
     public abstract Integer getSelectedFlowIndexFromUser(List<String> flowNamesDTO);
     public abstract void presentBackToMainMenuOption();
-
-    public abstract void getInputsFromUser();
+    /** inputs:
+     * 1. final names of free inputs
+     * 2. types of the inputs  expected
+     * 3. necessity of the inputs (mandatory\optional)
+     * all inputs correspond by index.
+     *
+     * the UI will present the free inputs one by one,mandatory first, and get data from user.
+     * when all mandatory inputs are received the user will be presented with an 'Execute option'
+     *
+     * output:
+     * Map<"input_name : type" , object>
+     * */
+    public abstract Map<String,Object> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity);
 }

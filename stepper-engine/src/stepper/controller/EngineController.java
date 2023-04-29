@@ -30,13 +30,14 @@ public class EngineController {
         }
         return new LoadDataDTO(path, "Flow(s) loaded successfully!", true, "");
     }
-    public DTO getFlowDefinition(Integer flowIdx){
+    public DTO getFlowDefinitionData(Integer flowIdx){
         try {
             return new FlowDefinitionDTO(flowLibrary.getFlowDefinition(flowIdx));
         }catch (Exception e){
             return new LoadDataDTO("", "", false, e.getMessage());
         }
     }
+
     public FlowNamesDTO getFlowDefinitionsNames(){
         try {
             return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());

@@ -3,6 +3,7 @@ package impl;
 import api.UIAbstractDefinition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.lang.System.out;
@@ -96,6 +97,18 @@ public class ConsoleUI extends UIAbstractDefinition {
     @Override
     public void presentBackToMainMenuOption() {
         out.println("0. Back to main menu");
+    }
+
+    @Override
+    public Map<String, Object> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity) {
+        String userInput;
+        out.println("Please enter the following inputs.\nThe inputs will be presented one by one, after filling the" +
+                " corresponding data press enter for the next one to appear.\n");
+        for(int i = 0; i < freeInputsFinalNames.size(); ++i){
+            out.print(freeInputsFinalNames.get(i)+ ": ");
+            userInput = scanner.next();
+            //TODO: check type and parse if not string. then add to res MAP.
+        }
     }
 }
 

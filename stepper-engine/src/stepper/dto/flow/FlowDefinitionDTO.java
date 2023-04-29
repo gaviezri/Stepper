@@ -54,6 +54,7 @@ public class FlowDefinitionDTO implements DTO {
         outputsFinalNames = flowDef.getAllOutputsNames();
         outputTypes =  flowDef.getAllOutputsTypes();
         finalStepNameThatProducedTheOutput = flowDef.getFinalStepNamesThatProducedTheOutputs();
+
     }
 
     public List<String> getOutputsFinalNames() {

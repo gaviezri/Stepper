@@ -1,7 +1,11 @@
 import api.UIAbstractDefinition;
 import impl.ConsoleUI;
 import stepper.controller.EngineController;
+import stepper.dto.flow.FlowDefinitionDTO;
+import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
+
+import java.util.List;
 
 public class Controller {
     boolean keepAlive = true;
@@ -31,7 +35,16 @@ public class Controller {
             case 2:
                 break;
             case 3:
-
+                FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
+                Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
+                if(!selectedFlowIndex.equals(-1)){
+                    //TODO: get inputs names list, input neccety list and inputs typeList.
+                    //TODO: get inputs data from user.
+                    //TODO: create a Map<(input_name : input_type), input_value_string>
+                    FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
+                    ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),flowDefinitionDTO.getFreeInputTypes(),flowDefinitionDTO.getFreeInputNecessity());
+//                    engineController.executeFlow(selectedFlowIndex,)
+                }
                 break;
             case 4:
                 break;

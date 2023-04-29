@@ -13,7 +13,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FlowExecutor {
+    // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
+    // a list of loaded flows that can be executed
     List<FlowDefinition> flowDefinitions;
     FlowDefinition activeFlow;
     List<UUID> flowExecutionIds;

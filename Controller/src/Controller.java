@@ -31,6 +31,7 @@ public class Controller {
             case 2:
                 break;
             case 3:
+
                 break;
             case 4:
                 break;
@@ -48,11 +49,11 @@ public class Controller {
 
         if(!loadDataDTO.getStatus()){
             message = "Loading file from path failed\n" +
-                    "please check the path given, make sure no hebrew words are included!\n" +
-                    "The error message received: "+loadDataDTO.getErrorMessage();
+                    "please check the path given, make sure no hebrew words are included!\n";
+            message = loadDataDTO.getErrorMessage().isEmpty() ? message : message + "Error message: "+loadDataDTO.getErrorMessage();
         }
         else{
-            message ="File loaded successfully!\n returning to main menu for further actions";
+            message = loadDataDTO.getMessage() + "\nreturning to main menu for further actions";
             flag = false;
         }
 

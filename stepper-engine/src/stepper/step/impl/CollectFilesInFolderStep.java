@@ -74,13 +74,17 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
         String filter;
         StepResult result;
         try {
+
+            // and check if there is a filter
             folderName = context.getDataValue("FOLDER_NAME", String.class);
             filter = context.getDataValue("FILTER", String.class);
             if (FolderNotExist(folderName)) {
+                // make sure folder exists
                 logger.addLogLine("Folder name is invalid");
                 logger.addSummaryLine("Folder " + folderName + " NOT scanned! it does not exist");
                 result = StepResult.FAILURE;
             } else if (NotAFolder(folderName)) {
+                // make sure exists and also a directory
                 logger.addLogLine("Folder name represents a non-folder entity");
                 logger.addSummaryLine("Folder " + folderName + " NOT scanned! it is not a folder");
                 result = StepResult.FAILURE;

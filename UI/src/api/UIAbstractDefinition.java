@@ -11,6 +11,14 @@ public abstract class UIAbstractDefinition {
     public MenuData getMenuData() {
         return menuData;
     }
+    /** Returns the number of menu items in the main menu
+     * not including the header line
+     * @return int
+     */
+    public int getMenuItemCount(){
+
+        return menuData.getMainMenu().size()-1;
+    }
 
     public abstract void PresentMainMenu();
     /** gets inputs from user and validate that it is in range 0 (back to main menu fixed option) - max option index
@@ -22,6 +30,9 @@ public abstract class UIAbstractDefinition {
     public abstract void presentLoadedFlowNames(List<String> flowNames);
     /** a function that gets a message and present it to the user in the way the UI works*/
     public abstract void presentMessageToUser(String message);
+
+    public abstract int getUsersNumericResponse(Integer min, Integer max);
+
     /** show the user all flows names and gets response. then subtracts 1 so that the index will fit.
      * if the user response is 0 (back to main menu) -1 will be the output of the function*/
     public abstract Integer getSelectedFlowIndexFromUser(List<String> flowNamesDTO);
@@ -39,4 +50,5 @@ public abstract class UIAbstractDefinition {
      * Map<"input_name : type" , object>
      * */
     public abstract Map<String,Object> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity);
+
 }

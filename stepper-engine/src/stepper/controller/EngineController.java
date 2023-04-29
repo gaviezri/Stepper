@@ -42,11 +42,11 @@ public class EngineController {
         try {
             return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
         }catch (Exception e){
-            return new FlowNamesDTO(null, false, e.getMessage());
+            return new FlowNamesDTO(null, false, "No Flows Loaded Yet!");
         }
     }
 
-    public DTO exectueFlow(Integer flowIdx, Map<String,String> inputFinalNameType2StringValue){
+    public DTO exectueFlow(Integer flowIdx, Map<String,Object> inputFinalNameType2StringValue){
 
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinition(flowIdx);
         flowExecutor.setActiveFlow(flowToExecute);

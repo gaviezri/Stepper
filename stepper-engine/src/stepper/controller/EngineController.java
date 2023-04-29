@@ -54,6 +54,11 @@ public class EngineController {
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
         return null;
+
+    }
+
+    public DTO saveSystemState(String path){
+
     }
 
 }

@@ -2,6 +2,9 @@ package stepper.flow.execution.archive;
 
 import stepper.flow.execution.FlowExecution;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class ExecutionArchive {
@@ -27,4 +30,15 @@ public class ExecutionArchive {
         return flowExecutionStack.get(index);
     }
 
+    public boolean executionOccurred() {
+        return !flowExecutionStack.isEmpty();
+    }
+
+    public List<Map<String, String>> getExecutedFlowHeaders() {
+        List<Map<String,String>> headers = new ArrayList<>();
+        for (FlowExecution flowExecution : flowExecutionStack) {
+            headers.add(flowExecution.getFlowHeader());
+        }
+        return headers;
+    }
 }

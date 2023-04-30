@@ -3,12 +3,15 @@ package stepper.flow.execution;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class FlowExecution {
@@ -20,6 +23,9 @@ public class FlowExecution {
     private Instant startTimeInstant;
     private Instant endTimeInstant;
     private Duration duration;
+    private Map<String,String> freeInputContent = new HashMap<>();
+
+    Map<String, StepExecutionDataManager> stepsManagers;
 
 
     // lots more data that needed to be stored while flow is being executed...
@@ -39,12 +45,13 @@ public class FlowExecution {
     public void tick(){
         startTimeInstant = Instant.now();
     }
+    public void tock(){
+        endTimeInstant = Instant.now();
+        duration = Duration.between(startTimeInstant, endTimeInstant);
+    }
 
     public FlowDefinition getFlowDefinition() {
         return flowDefinition;
-    }
-    public List<StepUsageDeclaration> getFlowSteps() {
-        return flowDefinition.getFlowSteps();
     }
 
     public FlowExecutionResult getFlowExecutionResult() {
@@ -65,10 +72,7 @@ public class FlowExecution {
             flowExecutionResult = FlowExecutionResult.WARNING;
         }
     }
-    public void tock(){
-        endTimeInstant = Instant.now();
-        duration = Duration.between(startTimeInstant, endTimeInstant);
-    }
+
 
     public Duration getDuration() {
         return duration;
@@ -77,4 +81,32 @@ public class FlowExecution {
     public String getFormattedStartTime() {
         return formattedStartTime;
     }
+
+    public Map<String, String> getFlowHeader() {
+        Map<String,String> flowHeader = new HashMap<>();
+        flowHeader.put("ID", uniqueId.toString());
+        flowHeader.put("Name", flowDefinition.getName());
+        flowHeader.put("Time", formattedStartTime);
+        return flowHeader;
+    }
+
+    public String  getFreeInputContent(String key) {
+        return freeInputContent.get(key);
+    }
+    public void setFreeInputContent(Map<String,String> freeInputContent) {
+        this.freeInputContent = freeInputContent;
+    }
+
+    public List<String> getStepsNamesWithAlias() {
+        return flowDefinition.getStepsNamesWithAlias();
+    }
+
+    public List<String> getStepsDurationInMillis() {
+        return null;
+    }
+
+    public void setStepsManagers( Map<String, StepExecutionDataManager> stepsManagers) {
+        this.stepsManagers = stepsManagers;
+    }
+
 }

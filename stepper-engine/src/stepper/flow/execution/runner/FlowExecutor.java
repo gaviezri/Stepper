@@ -26,14 +26,16 @@ public class FlowExecutor {
     }
 
 
-    public void executeFlow(FlowExecution flowExecution) {
+    public FlowExecution executeFlow(FlowExecution flowExecution) {
 
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
         System.out.println("Starting execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]");
 
         boolean breakFlowIfStepFails = false;
-
+        flowExecution.setFreeInputContent(context.getExecutionData());
+        flowExecution.setStepsManagers(context.getStepsManagers());
         // start actual execution
+        flowExecution.tick();
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
             Boolean skipIfFail = currentStepUsageDeclaration.skipIfFail();
@@ -50,7 +52,9 @@ public class FlowExecutor {
                 break;
             }
         }
+        flowExecution.tock();
         System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
+        return flowExecution;
     }
 
     public void updateExecutionResult(FlowExecution execution, StepResult stepresult ,Boolean skipIfFail){

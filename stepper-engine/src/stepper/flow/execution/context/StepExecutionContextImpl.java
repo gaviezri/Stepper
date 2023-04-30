@@ -66,26 +66,26 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         theManager.setStepResult(stepResult);
     }
 
-    @Override
-    public StepResult getStepResult(String name) {
-        // assuming that from the step we can get to its data manager
-        StepExecutionDataManager theManager = step2Manager.get(name);
-        return theManager.getStepResult();
-    }
-
-    @Override
-    public void setStepDuration(String name, Number duration) {
-        // assuming that from the step we can get to its data manager
-        StepExecutionDataManager theManager = step2Manager.get(name);
-        theManager.setDuration(duration);
-    }
-
-    @Override
-    public Number getStepDuration(String name) {
-        // assuming that from the step we can get to its data manager
-        StepExecutionDataManager theManager = step2Manager.get(name);
-        return theManager.getDuration();
-    }
+//    @Override
+//    public StepResult getStepResult(String name) {
+//        // assuming that from the step we can get to its data manager
+//        StepExecutionDataManager theManager = step2Manager.get(name);
+//        return theManager.getStepResult();
+//    }
+//
+//    @Override
+//    public void setStepDuration(String name, Number duration) {
+//        // assuming that from the step we can get to its data manager
+//        StepExecutionDataManager theManager = step2Manager.get(name);
+//        theManager.setDuration(duration);
+//    }
+//
+//    @Override
+//    public Number getStepDuration(String name) {
+//        // assuming that from the step we can get to its data manager
+//        StepExecutionDataManager theManager = step2Manager.get(name);
+//        return theManager.getDuration();
+//    }
 
     @Override
     public AbstractLogger getStepLogger() {
@@ -143,5 +143,15 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
         ExecutionDataName2Definition.put(finalDataName,datadefinition);
         ExecutionDataValues.put(finalDataName, value);
+    }
+
+    @Override
+    public Map getExecutionData() {
+        return ExecutionDataValues;
+    }
+
+    @Override
+    public  Map<String, StepExecutionDataManager> getStepsManagers() {
+        return step2Manager;
     }
 }

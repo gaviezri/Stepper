@@ -1,13 +1,13 @@
 package stepper.dto.flow;
 
 import javafx.util.Pair;
-import stepper.dto.DTO;
+import stepper.dto.AbstractDTO;
 import stepper.flow.definition.api.FlowDefinition;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FlowDefinitionDTO implements DTO {
+public class FlowDefinitionDTO extends AbstractDTO {
     /* see command definition in word document pg 19 */
     Class<?> Type = this.getClass();
     /* 1 */ String flowName;
@@ -59,6 +59,10 @@ public class FlowDefinitionDTO implements DTO {
         outputTypes =  flowDef.getAllOutputsTypes();
         finalStepNameThatProducedTheOutput = flowDef.getFinalStepNamesThatProducedTheOutputs();
 
+    }
+
+    public FlowDefinitionDTO(String errmessage) {
+        super(errmessage);
     }
 
     public List<String> getOutputsFinalNames() {
@@ -120,18 +124,4 @@ public class FlowDefinitionDTO implements DTO {
         return flowName;
     }
 
-    @Override
-    public boolean getStatus() {
-        return true;
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return null;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return this.getType();
-    }
 }

@@ -77,4 +77,6 @@ public interface FlowDefinition {
     String getStepFinalName(String sourceStepName);
 
     List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
+
+    List<String> getStepsNamesWithAlias();
 }

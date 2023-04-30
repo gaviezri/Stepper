@@ -43,8 +43,10 @@ public class MenuData {
         menus.get(MenuNumber.MAIN_MENU.getId()).add("3. Execute flow\n");           // unfold loaded flows names list for the user to choose from,
         // 0 to return to main menu and another to load a new file
         menus.get(MenuNumber.MAIN_MENU.getId()).add("4. Show full details of past flow execution\n"); // show a sorted last-to-be-executed to first list of numbered executed flows
-        menus.get(MenuNumber.MAIN_MENU.getId()).add("5. Get flows statistics\n");
-        menus.get(MenuNumber.MAIN_MENU.getId()).add("6. Exit\n");
+        menus.get(MenuNumber.MAIN_MENU.getId()).add("5. Get flows' statistics\n");
+        menus.get(MenuNumber.MAIN_MENU.getId()).add("6. Save system snapshot\n");
+        menus.get(MenuNumber.MAIN_MENU.getId()).add("7. Load system from snapshot\n");
+        menus.get(MenuNumber.MAIN_MENU.getId()).add("8. Exit\n");
     }
 
     // this function is for options 3 & 4 -> need to add a 'back to main menu' option and 'load new file' option.

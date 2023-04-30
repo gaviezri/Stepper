@@ -17,4 +17,6 @@ public interface StepDefinition {
     DataDefinition getResourceDataDefinition(String dataOriginalName);
     DataNecessity getResourceNecessity(String dataOriginalName);
 
+    String getResourceUserString(String resource);
+
 }

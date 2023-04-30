@@ -42,4 +42,22 @@ public abstract class AbstractStepDefinition implements StepDefinition {
     public List<DataDefinitionDeclaration> outputs() {
         return outputs;
     }
+
+    @Override
+    public String getResourceUserString(String resource) {
+        for (DataDefinitionDeclaration datadef : inputs) {
+            if (datadef.getName().equals(resource)) {
+                return datadef.userString();
+            }
+        }
+        for (DataDefinitionDeclaration datadef : outputs) {
+            if (datadef.getName().equals(resource)) {
+                return datadef.userString();
+            }
+        }
+        return resource;
+    }
+
+
+
 }

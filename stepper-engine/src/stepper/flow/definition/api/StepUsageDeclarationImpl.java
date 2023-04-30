@@ -71,12 +71,16 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
     public String getResourceFinalName(String dataName) {
 
         for (DataDefinitionDeclaration datadefdecl : stepDefinition.inputs()){
+            String finalName = inputs2finalNames.get(dataName);
+            finalName = finalName == null ? dataName : finalName;
             if (datadefdecl.getName().equals(dataName)){
                 String finalDataName = inputs2finalNames.get(dataName);
                 return finalDataName == null ? dataName : finalDataName;
             }
         }
         for (DataDefinitionDeclaration datadefdecl : stepDefinition.outputs()){
+            String finalName = outputs2finalNames.get(dataName);
+            finalName = finalName == null ? dataName : finalName;
             if (datadefdecl.getName().equals(dataName)){
                 String finalDataName = outputs2finalNames.get(dataName);
                 return finalDataName == null ? dataName : finalDataName;
@@ -86,13 +90,15 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration {
     }
     @Override
     public Boolean containsResource(String dataName){
+
         for (DataDefinitionDeclaration datadefdecl : stepDefinition.inputs()){
-            if (datadefdecl.getName().equals(dataName)){
+
+            if (dataName.equals(inputs2finalNames.get(datadefdecl.getName())) || dataName.equals(datadefdecl.getName())){
                 return true;
             }
         }
         for (DataDefinitionDeclaration datadefdecl : stepDefinition.outputs()){
-            if (datadefdecl.getName().equals(dataName)){
+            if (dataName.equals(outputs2finalNames.get(datadefdecl.getName())) || dataName.equals(datadefdecl.getName())){
                 return true;
             }
         }

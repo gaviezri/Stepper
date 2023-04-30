@@ -40,7 +40,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
     @Override
     public StepResult validateInputs(StepExecutionContext context){
         try {
-            long timeToSleep = context.getDataValue("TIME_TO_SPEND", Number.class).longValue() * 1000;
+            Integer timeToSleep = context.getDataValue("TIME_TO_SPEND", Integer.class);
             return timeToSleep > 0 ? StepResult.SUCCESS : StepResult.FAILURE;
         } catch (Exception e) {
             context.getStepLogger()

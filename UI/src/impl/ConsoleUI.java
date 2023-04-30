@@ -6,7 +6,6 @@ import javafx.util.Pair;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 import static java.lang.System.out;
 
@@ -83,7 +82,7 @@ public class ConsoleUI extends UIAbstractDefinition {
     }
 
     @Override
-    public Pair<Map,Map> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity) {
+    public Pair<Map,Map> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity, List<String> freeInputUserStrings) {
         Map<String, Object> valueResult = new java.util.HashMap<>();
         Map<String, String> typeResult = new java.util.HashMap<>();
         List<Boolean> mandatoryInputsMask = freeInputNecessity.stream()
@@ -108,71 +107,77 @@ public class ConsoleUI extends UIAbstractDefinition {
                         .map(x -> freeInputTypes.get(freeInputsFinalNames.indexOf(x)))
                         .collect(java.util.stream.Collectors.toList());
 
+        List<String> mandatoryInputsUserString = freeInputUserStrings.stream()
+                        .filter(x -> mandatoryInputsMask.get(freeInputUserStrings.indexOf(x)))
+                        .collect(java.util.stream.Collectors.toList());
+
+        List<String> optionalInputsUserString = freeInputUserStrings.stream()
+                        .filter(x -> !mandatoryInputsMask.get(freeInputUserStrings.indexOf(x)))
+                        .collect(java.util.stream.Collectors.toList());
+
         out.println("The inputs will be presented one by one.\n after filling the" +
-                " corresponding data press enter for the next one to appear.\n");
-        out.println("Mandatory inputs:");
-        getMandatoryInputs(valueResult, typeResult, mandatoryInputs, mandatoryInputsTypes);
-        out.println("Optional inputs:");
-        getOptionalInputs(valueResult, typeResult, optionalInputs, optionalInputsTypes);
+                " corresponding data press enter for the next one to appear.\nTo exit the flow creation process enter \"EXIT\".");
+        try {
+            out.println("Mandatory inputs\n-----------------");
+            getFreeInputs(valueResult, typeResult, mandatoryInputs, mandatoryInputsTypes, mandatoryInputsUserString, true);
+            out.println("Optional inputs\n-----------------");
+            getFreeInputs(valueResult, typeResult, optionalInputs, optionalInputsTypes,  optionalInputsUserString, false);
+        } catch (Exception e){;
+            return null;
+        }
         return new Pair<>(valueResult, typeResult);
     }
 
-    private void getOptionalInputs(Map<String, Object> valueRes, Map<String,String> typeRes, List<String> optionalInputs, List<String> optionalInputsTypes) {
-        out.println("If you wish to skip an optional input, just press enter without entering any data.");
-        for(int i = 0; i < optionalInputs.size(); ++i){
-            if(valueRes.containsKey(optionalInputs.get(i))){
-                continue;
-            }
-            out.print(optionalInputs.get(i)+ ": ");
-            String userInput = scanner.nextLine();
-            if (userInput.equals("")){
-                continue;
-            }
-            if (optionalInputsTypes.get(i).equals("Integer")){
-                try{
-                    valueRes.put(optionalInputs.get(i), Integer.parseInt(userInput));
-                    typeRes.put(optionalInputs.get(i), "Integer");
-                } catch (Exception e){
-                    out.println("The input you entered is not an integer, please try again.");
-                    --i;
-                }
-            } else if (optionalInputsTypes.get(i).equals("String")){
-                valueRes.put(optionalInputs.get(i), userInput);
-                typeRes.put(optionalInputs.get(i), "String");
-            } else if (optionalInputsTypes.get(i).equals("Path")){
-                valueRes.put(optionalInputs.get(i), createValidPath(userInput));
-                typeRes.put(optionalInputs.get(i), "Path");
-            }
+    private void getFreeInputs(Map<String, Object> valueRes, Map<String,String> typeRes, List<String> Inputs, List<String> InputsTypes, List<String> InputsUserString, Boolean isMandatory) throws Exception {
+        if (!isMandatory){
+            out.println("If you wish to skip an optional input, just press enter without entering any data.");
         }
-    }
 
-    private void getMandatoryInputs(Map<String, Object> valueRes, Map<String,String> typeRes,List<String> mandatoryInputs, List<String> mandatoryInputsTypes) {
-        for(int i = 0; i < mandatoryInputs.size(); ++i){
-            if(valueRes.containsKey(mandatoryInputs.get(i))){
+        for(int i = 0; i < Inputs.size(); ++i){
+
+            if(valueRes.containsKey(Inputs.get(i))){
                 continue;
             }
-            out.print(mandatoryInputs.get(i)+ ": ");
+            out.print("(" + Inputs.get(i) + ") " + InputsUserString.get(i)+ ": ");
             String userInput = scanner.nextLine();
-            if (userInput.equals("")){
+            if (userInput.equals("") && isMandatory){
                 out.println("This input is mandatory, please enter a valid input.");
                 --i;
                 continue;
             }
-            if (mandatoryInputsTypes.get(i).equals("Integer")){
+            if(userInput.equals("EXIT")){
+                throw new Exception();
+            }
+            if (userInput.equals("")){
+                continue;
+            }
+            if (InputsTypes.get(i).equals("Double")){
                 try{
-                    valueRes.put(mandatoryInputs.get(i), Integer.parseInt(userInput));
-                    typeRes.put(mandatoryInputs.get(i), "Integer");
+                    valueRes.put(Inputs.get(i), Double.parseDouble(userInput));
+                    typeRes.put(Inputs.get(i), "Double");
                 } catch (Exception e){
                     out.println("The input you entered is not an integer, please try again.");
                     --i;
                 }
-            } else if (mandatoryInputsTypes.get(i).equals("String")){
-                valueRes.put(mandatoryInputs.get(i), userInput);
-                typeRes.put(mandatoryInputs.get(i), "String");
-            } else if (mandatoryInputsTypes.get(i).equals("Path")){
-                valueRes.put(mandatoryInputs.get(i), createValidPath(userInput));
-                typeRes.put(mandatoryInputs.get(i), "Path");
+            }
+            else if (InputsTypes.get(i).equals("Integer")){
+                try{
+                    valueRes.put(Inputs.get(i), Integer.parseInt(userInput));
+                    typeRes.put(Inputs.get(i), "Number");
+                } catch (Exception e){
+                    out.println("The input you entered is not an integer, please try again.");
+                    --i;
+                }
+            }
+            else if (InputsTypes.get(i).equals("String")){
+                valueRes.put(Inputs.get(i), userInput);
+                typeRes.put(Inputs.get(i), "String");
+            }
+            else if (InputsTypes.get(i).equals("Path")){
+                valueRes.put(Inputs.get(i), createValidPath(userInput));
+                typeRes.put(Inputs.get(i), "Path");
             }
         }
+        out.println("-----------------");
     }
 }

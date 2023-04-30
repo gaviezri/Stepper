@@ -3,6 +3,7 @@ package stepper.step.impl;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.file.FileData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -53,16 +54,17 @@ public class FilesDeleterStep extends AbstractStepDefinition {
     }
     @Override
     public StepResult invoke(StepExecutionContext context) {
-        String finalName = context.getCurrentStepName();
         context.tick();
-        /**
-         * goes through the given list and tries to delete each file
-         * then log the actions made and return operation result
-         */
-        List<File> FILES_LIST = new ArrayList<>(); //context.getDataValue("FILES_LIST",List.class) TODO: the previous command is the correct one but needs to write getDataValue properly
+        List<FileData> FILES_LIST = new ArrayList<>();
         List<String> DELETED_LIST = new ArrayList<>();
         StepResult res;
         AbstractLogger logger = context.getStepLogger();
+        try {
+            FILES_LIST = context.getDataValue("FILES_LIST",List.class);
+        }catch (Exception e){
+            logger.addLogLine("Failed to get files list");
+            res = StepResult.FAILURE;
+        }
         boolean filesListIsEmpty =  FILES_LIST.isEmpty();
         int numberOfFilesToDelete = FILES_LIST.size();
 
@@ -70,7 +72,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
             logger.addLogLine("About to start delete " + numberOfFilesToDelete + " files");
 
             DELETED_LIST = FILES_LIST.stream()
-                    .filter(File::exists)
+                    .filter(FileData::exists)
                     .filter(file -> {
                         boolean deletedSuccessfully = file.delete();
                         if (!deletedSuccessfully) {
@@ -78,7 +80,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
                         }
                         return !deletedSuccessfully;
                     })
-                    .map(File::getName)
+                    .map(FileData::getName)
                     .collect(Collectors.toList());
         }
 

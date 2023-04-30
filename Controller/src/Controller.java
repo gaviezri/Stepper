@@ -79,8 +79,11 @@ public class Controller {
             FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
             Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
                     flowDefinitionDTO.getFreeInputTypes(),
-                    flowDefinitionDTO.getFreeInputNecessity());
-
+                    flowDefinitionDTO.getFreeInputNecessity(),
+                    flowDefinitionDTO.getFreeInputUserString());
+            if (valuesFromUser2valuesDefinition == null) {
+                return;
+            }
             DTO result = engineController.executeFlow(selectedFlowIndex, valuesFromUser2valuesDefinition);
         }
     }

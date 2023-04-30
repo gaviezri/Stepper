@@ -24,8 +24,8 @@ public class FileData extends FileDataDefinition{
     public String getPath(){
         return file.getPath();
     }
-    public String getAbsolutePath(){
-        return file.getAbsolutePath();
+    public Boolean delete(){
+        return file.delete();
     }
     public String getExtension(){
         String name = file.getName();

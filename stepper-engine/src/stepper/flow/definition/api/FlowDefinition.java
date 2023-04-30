@@ -4,12 +4,13 @@ import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
 import stepper.flow.definition.mapping.MappingGraph;
-import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FlowDefinition {
+
     String getName();
 
     String getDescription();
@@ -17,6 +18,10 @@ public interface FlowDefinition {
     List<StepUsageDeclaration> getFlowSteps();
 
     List<String> getFlowFormalOutputs();
+
+    static Map<String,String> getStepInput2UserString() {
+        return null;
+    };
 
     void setFlowFormalOutputs(List<String> flowFormalOutputs);
 
@@ -51,11 +56,11 @@ public interface FlowDefinition {
     void setAccessibility();
     Boolean getAccessibility();
     void setFreeInputs();
-    List<String> getFreeInputsNames();
+    List<String> getFreeInputsFinalNames();
+
+    List<String> getFreeInputsUserString();
 
     List<String> getFreeInputsTypes();
-
-    List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
 
     List<String> getFreeInputsNecessity();
 
@@ -71,4 +76,5 @@ public interface FlowDefinition {
 
     String getStepFinalName(String sourceStepName);
 
+    List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
 }

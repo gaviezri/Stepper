@@ -3,8 +3,8 @@ package stepper.dto.flow;
 import javafx.util.Pair;
 import stepper.dto.DTO;
 import stepper.flow.definition.api.FlowDefinition;
+
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionDTO implements DTO {
@@ -25,12 +25,15 @@ public class FlowDefinitionDTO implements DTO {
     /* 6.1 */ List<String> freeInputsFinalNames;
     /* 6.2 */ List<String> freeInputTypes;
     /* 6.3 */ List<Pair<String,List<String>>> freeInputs2StepsThatUseThem;
+    List<String> freeInputUserString;
     /* 6.4 */ List<String> freeInputNecessity;
 
     // ---OUTPUTS--- //
     /* 7.1 */ List<String> outputsFinalNames;
     /* 7.2 */ List<String> outputTypes;
     /* 7.3 */ List<String> finalStepNameThatProducedTheOutput;
+
+
 
 
 
@@ -47,8 +50,9 @@ public class FlowDefinitionDTO implements DTO {
                                 .stream()
                                 .map(stepusgdecl -> stepusgdecl.getStepDefinition().isReadonly())
                                 .collect(Collectors.toList());
-        freeInputsFinalNames = flowDef.getFreeInputsNames();
+        freeInputsFinalNames = flowDef.getFreeInputsFinalNames();
         freeInputTypes = flowDef.getFreeInputsTypes();
+        freeInputUserString = flowDef.getFreeInputsUserString();
         freeInputs2StepsThatUseThem = flowDef.getFreeInputs2StepsThatUseThem();
         freeInputNecessity = flowDef.getFreeInputsNecessity();
         outputsFinalNames = flowDef.getAllOutputsNames();
@@ -90,6 +94,10 @@ public class FlowDefinitionDTO implements DTO {
 
     public List<Pair<String,List<String>>> getFreeInputs2StepsThatUseThem() {
         return freeInputs2StepsThatUseThem;
+    }
+
+    public List<String> getFreeInputUserString() {
+        return freeInputUserString;
     }
 
     public List<String> getFreeInputNecessity() {

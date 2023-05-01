@@ -9,6 +9,9 @@ import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
 import stepper.statistics.StatisticsManager;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,13 +62,65 @@ public class Controller {
             case 5:
                 break;
             case 6:
+                saveSystemState();
                 break;
             case 7:
+                loadSystemState();
                 break;
             case 8:
                 keepAlive = false;
                 break;
         }
+    }
+
+    private void loadSystemState() {
+        ui.presentMessageToUser("Attention! loading a system from file will overwrite its current state.");
+        ui.presentMessageToUser("to load system state from file, enter the \"stepper.ser\" path to load the system state from:");
+        String ser_path  = ui.createValidPath(false);
+        while(!Files.exists(Paths.get(ser_path))){
+            ui.presentMessageToUser("Error: file does not exist! please enter a valid path to a file or \'EXIT\' to go back to main menu:");
+            ser_path  = ui.createValidPath(false);
+            if (ser_path.equals("EXIT")){
+                return;
+            }
+        }
+        loadSystemStateFromPath(ser_path);
+    }
+
+    private void loadSystemStateFromPath(String serPath) {
+        try {
+            FileInputStream FileInStream = new FileInputStream(serPath + "\\stepper.ser");
+            ObjectInputStream ObjectInStream = new ObjectInputStream(FileInStream);
+            ObjectInStream.readObject();
+            ObjectInStream.close();
+            FileInStream.close();
+            ui.presentMessageToUser("System state loaded successfully from " + serPath + "\\stepper.ser");
+        }catch (Exception e){
+            ui.presentMessageToUser("Error: " + e.getMessage());
+            ui.presentMessageToUser("System state could not be loaded!");
+        }
+    }
+
+    private void saveSystemState() {
+        ui.presentMessageToUser("To save system state, enter Directory path to save the system state at:");
+        String dirpath  = ui.createValidPath(true);
+        saveSystemStateToPath(dirpath);
+    }
+
+    private void saveSystemStateToPath(String dirpath) {
+        try {
+            FileOutputStream FileOutStream = new FileOutputStream(dirpath + "\\stepper.ser");
+            ObjectOutputStream ObjectOutStream = new ObjectOutputStream(FileOutStream);
+            ObjectOutStream.writeObject(engineController);
+            ObjectOutStream.close();
+            FileOutStream.close();
+            ui.presentMessageToUser("System state saved successfully @ " + dirpath + "\\stepper.ser");
+        }catch (Exception e){
+            ui.presentMessageToUser("Error: " + e.getMessage());
+            ui.presentMessageToUser("System state was not saved!");
+        }
+
+
     }
 
     private void presentFlowExecutionDetails() {
@@ -216,7 +271,7 @@ public class Controller {
             String message;
             ui.presentMessageToUser("To go back to main menu, enter a blank string.\n" +
                             "Please enter a full-path to the XML file you desire to load: ");
-            String path  = ui.createValidPath();
+            String path  = ui.createValidPath(false);
             if (path.isEmpty()) {
                 flag = false;
                 continue;

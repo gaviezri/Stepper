@@ -2,12 +2,13 @@ package stepper.flow.execution.archive;
 
 import stepper.flow.execution.FlowExecution;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class ExecutionArchive {
+public class ExecutionArchive implements Serializable {
     private Stack<FlowExecution> flowExecutionStack;
 
     public ExecutionArchive() {

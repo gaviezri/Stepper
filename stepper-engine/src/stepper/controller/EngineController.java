@@ -13,10 +13,11 @@ import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class EngineController {
+public class EngineController implements Serializable {
 
     ExecutionArchive executionArchive = new ExecutionArchive();
     FlowLoader flowLoader = new FlowLoader();
@@ -28,6 +29,7 @@ public class EngineController {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
             flowExecutor.reset();
+            // executionArchive.StaleOldExecutions();
         }catch (Exception e){
             return new LoadDataDTO(path, "", false, e.getMessage());
         }
@@ -61,8 +63,8 @@ public class EngineController {
         return executionArchive.getExecutedFlowHeaders();
 
     }
-    public AbstractDTO saveSystemState(String path){
-        return null;
+    public void saveSystemState(String path){
+
     }
 
     public boolean isLoaded() {

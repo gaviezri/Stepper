@@ -13,6 +13,7 @@ import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -20,7 +21,7 @@ import java.util.*;
 
 //TODO: if errors occured throw exception to be caught and transmitted into UI instead of nulls
 
-public class FlowLoader {
+public class FlowLoader implements Serializable {
     private final DocumentBuilderFactoryImpl documentBuilderFactory;
     // constant path to flows in project_root/flow-definition-repository/flows
     private final Path PATH_TO_FLOWS = Paths.get("flow-definition-repository/flows");

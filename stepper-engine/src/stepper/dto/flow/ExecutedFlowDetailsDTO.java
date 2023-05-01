@@ -32,7 +32,7 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
 
         flowExecutionId = headers.get("ID");
         flowName = headers.get("Name");
-        executionTimeInMillis = flowExecution.getDuration().toString();
+        executionTimeInMillis = flowExecution.getDurationInMillis().toString();
         flowExecutionResult = String.valueOf(flowExecution.getFlowExecutionResult());
         freeInputsFinalNames = flowExecution.getFlowDefinition().getFreeInputsFinalNames();
         freeInputsTypes = flowExecution.getFlowDefinition().getFreeInputsTypes();

@@ -27,7 +27,7 @@ public abstract class UIAbstractDefinition {
      * received as input for this function*/
     public abstract int getUsersNumericResponse(Integer max);
 
-    public abstract String createValidPath();
+    public abstract String createValidPath(Boolean isDir);
     /** the names of flows are presented to user by their index+1*/
     public abstract void presentLoadedFlowNames(List<String> flowNames);
     /** a function that gets a message and present it to the user in the way the UI works*/

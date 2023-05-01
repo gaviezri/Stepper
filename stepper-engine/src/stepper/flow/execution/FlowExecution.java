@@ -90,6 +90,11 @@ public class FlowExecution {
     public Duration getDuration() {
         return duration;
     }
+    
+    public Long getDurationInMillis() {
+        return duration.toMillis();
+
+    }
 
     public String getFormattedStartTime() {
         return formattedStartTime;

@@ -2,9 +2,10 @@ package stepper.flow.loader;
 
 import stepper.flow.definition.api.FlowDefinition;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class LoadedFlowsLibrary {
+public class LoadedFlowsLibrary implements Serializable {
     private List<FlowDefinition> loadedflowDefinitions;
 
     public void setLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {

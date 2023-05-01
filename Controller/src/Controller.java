@@ -8,7 +8,6 @@ import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
 import stepper.statistics.StatisticsManager;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,8 +32,8 @@ public class Controller {
             } catch (Exception e) {
                 ui.presentMessageToUser("Error: " + e.getMessage());
             }
-            ui.presentMessageToUser("\n\nGoodbye!\n");
         }
+        ui.presentMessageToUser("\n\nGoodbye!\n");
     }
 
     private LoadDataDTO readXML(String path){

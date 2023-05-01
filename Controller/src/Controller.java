@@ -10,6 +10,7 @@ import stepper.dto.flow.LoadDataDTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Controller {
     boolean keepAlive = true;
@@ -92,6 +93,41 @@ public class Controller {
     }
 
     private void presentExtensiveExecutionDetails(ExecutedFlowDetailsDTO executedFlowDetailsDTO){
+        ui.presentMessageToUser("Flow Unique ID: " + executedFlowDetailsDTO.getFlowExecutionId());
+        ui.presentMessageToUser("Flow Name: " + executedFlowDetailsDTO.getFlowName());
+        ui.presentMessageToUser("Flow Execution Result: " + executedFlowDetailsDTO.getFlowExecutionResult());
+        ui.presentMessageToUser("Flow Execution Duration: " + executedFlowDetailsDTO.getExecutionTimeInMillis());
+        List<String> freeInputsFinalNames = executedFlowDetailsDTO.getFreeInputsFinalNames();
+        List<String> freeInputsValues = executedFlowDetailsDTO.getFreeInputsContent();
+        List<String> freeInputsTypes = executedFlowDetailsDTO.getFreeInputsTypes();
+        List<String> freeInputsNecessity = executedFlowDetailsDTO.getFreeInputsNecessity();
+        List<Boolean> isMandatory = executedFlowDetailsDTO.getFreeInputsNecessity().stream().map(x -> x.equals("MANDATORY")).collect(Collectors.toList());
+        ui.presentMessageToUser("Free Inputs:\n-------------------------------------\n");
+        // print mandatory first
+        for (int i = 0; i < freeInputsFinalNames.size(); i++) {
+            if(isMandatory.get(i)) {
+                ui.printResource(freeInputsFinalNames.get(i), freeInputsValues.get(i), freeInputsTypes.get(i));
+                ui.presentMessageToUser("Necessity: " + freeInputsNecessity.get(i));
+                ui.presentMessageToUser("\n");
+            }
+        }
+        // and then optional
+        for (int i = 0; i < freeInputsFinalNames.size(); i++) {
+            if(!isMandatory.get(i)) {
+                ui.printResource(freeInputsFinalNames.get(i), freeInputsValues.get(i), freeInputsTypes.get(i));
+                ui.presentMessageToUser("Necessity: " + freeInputsNecessity.get(i));
+                ui.presentMessageToUser("\n");
+            }
+        }
+        List<String> outputsFinalNames = executedFlowDetailsDTO.getOutputsFinalNames();
+        List<String> outputsValues = executedFlowDetailsDTO.getOutputsContent();
+        List<String> outputsTypes = executedFlowDetailsDTO.getOutputsTypes();
+        ui.presentMessageToUser("Outputs:\n-------------------------------------\n");
+        for(int i = 0; i < outputsFinalNames.size(); i++){
+
+        }
+
+
 
 
     }
@@ -132,7 +168,7 @@ public class Controller {
         FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
         Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
         if(selectedFlowIndex >= 0) {
-            FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
+            FlowDefinitionDTO flowDefinitionDTO = engineController.getFlowDefinitionData(selectedFlowIndex);
             Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
                     flowDefinitionDTO.getFreeInputTypes(),
                     flowDefinitionDTO.getFreeInputNecessity(),

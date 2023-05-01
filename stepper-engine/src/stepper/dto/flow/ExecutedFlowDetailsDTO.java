@@ -42,11 +42,78 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         });
 
         freeInputsNecessity = flowExecution.getFlowDefinition().getFreeInputsNecessity();
-        // outputsFinalNames = formal outputs or all outputs?
-        // outputsTypes
-        // outputsContent
+        outputsFinalNames = flowExecution.getFlowDefinition().getAllOutputsNames();
+        outputsTypes = flowExecution.getFlowDefinition().getAllOutputsTypes();
+        outputsContent = flowExecution.getAllOutputsContent();
         stepsNamesWithAlias = flowExecution.getStepsNamesWithAlias();
         stepsDurationInMillis = flowExecution.getStepsDurationInMillis();
+        stepsResult = flowExecution.getStepsResult();
+        stepsSummaryLine = flowExecution.getStepsSummaryLine();
+        stepsLogs2TimeStamp = flowExecution.getStepsLogs2TimeStamp();
+
     }
 
+    public String getFlowName() {
+        return flowName;
+    }
+
+    public String getFlowExecutionResult() {
+        return flowExecutionResult;
+    }
+
+    public String getExecutionTimeInMillis() {
+        return executionTimeInMillis;
+    }
+
+    public List<String> getFreeInputsFinalNames() {
+        return freeInputsFinalNames;
+    }
+
+    public List<String> getFreeInputsTypes() {
+        return freeInputsTypes;
+    }
+
+    public List<String> getFreeInputsContent() {
+        return freeInputsContent;
+    }
+
+    public List<String> getFreeInputsNecessity() {
+        return freeInputsNecessity;
+    }
+
+    public List<String> getOutputsFinalNames() {
+        return outputsFinalNames;
+    }
+
+    public List<String> getOutputsTypes() {
+        return outputsTypes;
+    }
+
+    public List<String> getOutputsContent() {
+        return outputsContent;
+    }
+
+    public List<String> getStepsNamesWithAlias() {
+        return stepsNamesWithAlias;
+    }
+
+    public List<String> getStepsDurationInMillis() {
+        return stepsDurationInMillis;
+    }
+
+    public List<String> getStepsResult() {
+        return stepsResult;
+    }
+
+    public List<String> getStepsSummaryLine() {
+        return stepsSummaryLine;
+    }
+
+    public List<List<Pair<String, String>>> getStepsLogs2TimeStamp() {
+        return stepsLogs2TimeStamp;
+    }
+
+    public String getFlowExecutionId() {
+        return flowExecutionId;
+    }
 }

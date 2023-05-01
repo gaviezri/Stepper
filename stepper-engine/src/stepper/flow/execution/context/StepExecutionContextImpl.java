@@ -154,4 +154,9 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     public  Map<String, StepExecutionDataManager> getStepsManagers() {
         return step2Manager;
     }
+
+    @Override
+    public Map<String,Object> getExecutionDataValues() {
+        return ExecutionDataValues;
+    }
 }

@@ -156,7 +156,7 @@ public class ConsoleUI extends UIAbstractDefinition {
                     valueRes.put(Inputs.get(i), Double.parseDouble(userInput));
                     typeRes.put(Inputs.get(i), "Double");
                 } catch (Exception e){
-                    out.println("The input you entered is not an integer, please try again.");
+                    out.println("The input you entered is not an Double, please try again.");
                     --i;
                 }
             }
@@ -165,7 +165,7 @@ public class ConsoleUI extends UIAbstractDefinition {
                     valueRes.put(Inputs.get(i), Integer.parseInt(userInput));
                     typeRes.put(Inputs.get(i), "Number");
                 } catch (Exception e){
-                    out.println("The input you entered is not an integer, please try again.");
+                    out.println("The input you entered is not an Integer, please try again.");
                     --i;
                 }
             }
@@ -179,5 +179,11 @@ public class ConsoleUI extends UIAbstractDefinition {
             }
         }
         out.println("-----------------");
+    }
+    @Override
+    public void printResource(String name, String value, String type){
+        presentMessageToUser("Name: " + name);
+        presentMessageToUser("Value: " + value);
+        presentMessageToUser("Type: " + type);
     }
 }

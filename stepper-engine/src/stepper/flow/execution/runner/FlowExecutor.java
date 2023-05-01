@@ -8,6 +8,7 @@ import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,9 @@ public class FlowExecutor {
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
         System.out.println("Starting execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]");
 
-        boolean breakFlowIfStepFails = false;
+        boolean breakFlowIfStepFails;
         flowExecution.setFreeInputContent(context.getExecutionData());
-        flowExecution.setStepsManagers(context.getStepsManagers());
+        flowExecution.setStepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
         flowExecution.tick();
         for (int i = 0; i < stepsList.size(); i++) {
@@ -53,6 +54,7 @@ public class FlowExecutor {
             }
         }
         flowExecution.tock();
+        flowExecution.setExecutionOutputs(context.getExecutionDataValues());
         System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
         return flowExecution;
     }

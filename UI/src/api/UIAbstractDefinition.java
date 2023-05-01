@@ -50,6 +50,6 @@ public abstract class UIAbstractDefinition {
      * output:
      * Map<"input_name : type" , object>
      * */
-
+    public abstract void printResource(String name, String value, String type);
     public abstract Pair<Map,Map> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity, List<String> freeInputUserStrings);
 }

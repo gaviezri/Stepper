@@ -26,4 +26,6 @@ public interface StepExecutionContext {
     Map getExecutionData();
 
     Object getStepsManagers();
+
+    Map<String, Object> getExecutionDataValues();
 }

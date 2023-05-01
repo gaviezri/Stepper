@@ -22,14 +22,8 @@ import java.util.*;
 //TODO: if errors occured throw exception to be caught and transmitted into UI instead of nulls
 
 public class FlowLoader implements Serializable {
-    private final DocumentBuilderFactoryImpl documentBuilderFactory;
-    // constant path to flows in project_root/flow-definition-repository/flows
-    private final Path PATH_TO_FLOWS = Paths.get("flow-definition-repository/flows");
-    private FlowBuilder builder = new FlowBuilderImpl();
 
-    public FlowLoader() {
-        documentBuilderFactory = new DocumentBuilderFactoryImpl();
-    }
+    private FlowBuilder builder = new FlowBuilderImpl();
 
     public List<FlowDefinition> loadFlowFromXML(String flowFileName) throws Exception {
 
@@ -38,7 +32,7 @@ public class FlowLoader implements Serializable {
         if (!flowFile.exists() || !flowFile.isFile() || !flowFile.getName().endsWith(".xml")) {
             throw new Exception("Invalid file: " + flowFileName + ".\nFile must be a valid .xml file.");
         }
-        Document document = documentBuilderFactory.newDocumentBuilder().parse(flowFile);
+        Document document = new DocumentBuilderFactoryImpl().newDocumentBuilder().parse(flowFile);
         document.getDocumentElement().normalize();
         builder.reset();
         initialFlowValidations(document);

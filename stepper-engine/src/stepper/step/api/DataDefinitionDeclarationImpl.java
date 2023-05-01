@@ -3,9 +3,10 @@ package stepper.step.api;
 import stepper.dd.api.DataDefinition;
 import stepper.step.api.enums.DataNecessity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DataDefinitionDeclarationImpl implements DataDefinitionDeclaration {
+public class DataDefinitionDeclarationImpl implements DataDefinitionDeclaration, Serializable {
 
     private final String name;
     private final DataNecessity necessity;

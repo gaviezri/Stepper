@@ -9,13 +9,14 @@ import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FlowDefinitionImpl implements FlowDefinition {
+public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private  String name;
     private  String description;
     private List<DataDefinitionDeclaration> allMandatoryInputs = new ArrayList<>();

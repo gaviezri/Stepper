@@ -5,13 +5,14 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class FlowExecution {
+public class FlowExecution implements Serializable {
 
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;

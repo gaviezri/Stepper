@@ -4,10 +4,11 @@ import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class StepUsageDeclarationImpl implements StepUsageDeclaration {
+public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializable {
     private Map<String,String> inputs2finalNames = new LinkedHashMap<>();
     private Map<String,String> outputs2finalNames = new LinkedHashMap<>();
     private final StepDefinition stepDefinition;

@@ -52,8 +52,15 @@ public class ConsoleUI extends UIAbstractDefinition {
     public String createValidPath(String path) {
         return path.replace("\\","\\\\").replace("/","\\\\").replace("\"","");
     }
-    public String createValidPath() {
+    public String createValidPath(Boolean isDir) {
         String path =  scanner.nextLine();
+        if (isDir) {
+           while(path.lastIndexOf('\\') < path.lastIndexOf('.')){
+                out.println("Please enter a valid path to a directory!");
+                path = scanner.nextLine();
+           }
+
+        }
         return path.replace("\\","\\\\").replace("/","\\\\").replace("\"","");
     }
     @Override

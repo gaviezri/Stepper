@@ -10,11 +10,12 @@ import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class FlowExecutor {
+public class FlowExecutor implements Serializable {
     // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
     FlowDefinition activeFlow;

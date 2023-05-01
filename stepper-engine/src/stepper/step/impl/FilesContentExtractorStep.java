@@ -23,7 +23,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
     private final List<String> COLUMNS_TITLES = new ArrayList<>(3);
 
     public FilesContentExtractorStep() {
-        super("File content extractor", true);
+        super("Files Content Extractor", true);
 
         COLUMNS_TITLES.add("Num.");
         COLUMNS_TITLES.add("File Name");

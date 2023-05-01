@@ -405,8 +405,14 @@ public class Controller {
     }
 
     public void presentStatistics(){
-        statisticsManager.collectStatistics();
-        ui.presentStatisticsToUser(this.statisticsManager.getFlowStatistics(),this.statisticsManager.getStepStatistics());
+        if (engineController.executionOccurred()){
+            statisticsManager.collectStatistics();
+            ui.presentStatisticsToUser(this.statisticsManager.getFlowStatistics(),this.statisticsManager.getStepStatistics());
+        }
+        else{
+            ui.presentMessageToUser("Error: No Flows Executed Yet!\nreturning to main menu for further actions");
+        }
+
     }
 
 }

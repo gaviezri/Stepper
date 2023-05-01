@@ -6,6 +6,6 @@ public interface AbstractLogger {
 
     public void addLogLine(String logLine);
     public void addSummaryLine(String summaryLine);
-    public List getLogs();
+    public List<LogLine> getLogs();
     public LogLine getSummaryLine();
 }

@@ -8,6 +8,7 @@ import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
 import java.util.List;
 import java.util.Map;
@@ -26,14 +27,16 @@ public class FlowExecutor {
     }
 
 
-    public void executeFlow(FlowExecution flowExecution) {
+    public FlowExecution executeFlow(FlowExecution flowExecution) {
 
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
         System.out.println("Starting execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]");
 
-        boolean breakFlowIfStepFails = false;
-
+        boolean breakFlowIfStepFails;
+        flowExecution.setFreeInputContent(context.getExecutionData());
+        flowExecution.setStepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
+        flowExecution.tick();
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
             Boolean skipIfFail = currentStepUsageDeclaration.skipIfFail();
@@ -50,7 +53,10 @@ public class FlowExecutor {
                 break;
             }
         }
+        flowExecution.tock();
+        flowExecution.setExecutionOutputs(context.getExecutionDataValues());
         System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
+        return flowExecution;
     }
 
     public void updateExecutionResult(FlowExecution execution, StepResult stepresult ,Boolean skipIfFail){

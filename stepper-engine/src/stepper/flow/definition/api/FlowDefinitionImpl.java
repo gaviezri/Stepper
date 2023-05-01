@@ -129,7 +129,7 @@ public class FlowDefinitionImpl implements FlowDefinition {
             if (! unsatisfiedMandatoryInputs.isEmpty()){
                 for (DataDefinitionDeclaration unsatisfiedMandatoryInput : unsatisfiedMandatoryInputs) {
                     if (! unsatisfiedMandatoryInput.isUserFriendly()){
-                        throw new RuntimeException("missing mandatory input \"" + unsatisfiedMandatoryInput.getName() + "\" is not user friendly");
+                        throw new RuntimeException("missing mandatory input \"" + unsatisfiedMandatoryInput.getName() + "\" is not accessible by user.");
                 }
             }
         }
@@ -431,6 +431,15 @@ public class FlowDefinitionImpl implements FlowDefinition {
         }catch (Exception e){
             return stepFinalName;
         }
-
+    }
+    @Override
+    public List<String> getStepsNamesWithAlias(){
+        return stepsUsageDecl.stream()
+                .map(x-> {
+                    String finalName = x.getFinalStepName();
+                    String originalName = x.getStepDefinition().getStepName();
+                    return finalName.equals(originalName) ? finalName : finalName + " (" + originalName + ")";
+                })
+                .collect(Collectors.toList());
     }
 }

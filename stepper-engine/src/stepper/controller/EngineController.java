@@ -1,7 +1,8 @@
 package stepper.controller;
 
 import javafx.util.Pair;
-import stepper.dto.DTO;
+import stepper.dto.AbstractDTO;
+import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
@@ -12,6 +13,7 @@ import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
 
+import java.util.List;
 import java.util.Map;
 
 public class EngineController {
@@ -22,7 +24,7 @@ public class EngineController {
     FlowExecutor flowExecutor = new FlowExecutor();
 
 
-    public DTO readXML(String path) {
+    public LoadDataDTO readXML(String path) {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
             flowExecutor.reset();
@@ -31,11 +33,11 @@ public class EngineController {
         }
         return new LoadDataDTO(path, "Flow(s) loaded successfully!", true, "");
     }
-    public DTO getFlowDefinitionData(Integer flowIdx){
+    public FlowDefinitionDTO getFlowDefinitionData(Integer flowIdx){
         try {
             return new FlowDefinitionDTO(flowLibrary.getFlowDefinition(flowIdx));
         }catch (Exception e){
-            return new LoadDataDTO("", "", false, e.getMessage());
+            return new FlowDefinitionDTO(e.getMessage());
         }
     }
 
@@ -43,26 +45,36 @@ public class EngineController {
         try {
             return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
         }catch (Exception e){
-            return new FlowNamesDTO(null, false, "No Flows Loaded Yet!");
+            return new FlowNamesDTO("No Flows Loaded Yet!");
         }
     }
 
-    public DTO executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
+    public void executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
 
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinition(flowIdx);
         flowExecutor.setActiveFlow(flowToExecute);
         flowExecutor.setFlowFreeInputs(valName2valType);
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
-        return null;
+    }
+    public List<Map<String,String>> getExecutedFlowHeaders() {
+        return executionArchive.getExecutedFlowHeaders();
 
     }
-
-    public DTO saveSystemState(String path){
+    public AbstractDTO saveSystemState(String path){
         return null;
     }
 
     public boolean isLoaded() {
         return flowLibrary.isLoaded();
+    }
+
+
+    public boolean executionOccurred() {
+        return executionArchive.executionOccurred();
+    }
+
+    public ExecutedFlowDetailsDTO getExecutedFlowDetails(int flowIdx) {
+        return new ExecutedFlowDetailsDTO(executionArchive.get(flowIdx));
     }
 }

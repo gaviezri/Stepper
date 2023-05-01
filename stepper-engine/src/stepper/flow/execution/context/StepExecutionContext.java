@@ -8,25 +8,24 @@ import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
 
+import java.util.Map;
+
 public interface StepExecutionContext {
     <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException;
     void storeDataValue(String dataName, Object data, DataDefinitionRegistry value);
-
-    // some more utility methods:
-    // allow step to store log lines
-    // allow steps to declare their summary line
-
     String getCurrentStepName();
-
-    public void setCurrentStepName(String currentStepName);
-
-    public AbstractLogger getStepLogger();
-    public void setStepResult(String name, StepResult stepResult);
-    public StepResult getStepResult(String name);
-    public void setStepDuration(String name, Number duration);
-    public Number getStepDuration(String name);
+    void setCurrentStepName(String currentStepName);
+    AbstractLogger getStepLogger();
+    void setStepResult(String name, StepResult stepResult);
+//    StepResult getStepResult(String name);
+//    void setStepDuration(String name, Number duration);
+//    Number getStepDuration(String name);
     void tick();
-    public void tock();
-
+    void tock();
     void setCurrentStepUsageDeclaration(StepUsageDeclaration currentStepUsageDeclaration);
+    Map getExecutionData();
+
+    Object getStepsManagers();
+
+    Map<String, Object> getExecutionDataValues();
 }

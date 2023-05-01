@@ -2,13 +2,15 @@ import api.UIAbstractDefinition;
 import impl.ConsoleUI;
 import javafx.util.Pair;
 import stepper.controller.EngineController;
-import stepper.dto.DTO;
+import stepper.dto.AbstractDTO;
+import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Controller {
     boolean keepAlive = true;
@@ -35,10 +37,10 @@ public class Controller {
         }
     }
     private LoadDataDTO readXML(String path){
-        return (LoadDataDTO) engineController.readXML(path);
+        return  engineController.readXML(path);
     }
     private FlowNamesDTO getFlowDefinitionsNames(){
-        return (FlowNamesDTO) engineController.getFlowDefinitionsNames();
+        return engineController.getFlowDefinitionsNames();
     }
 
     public void handleUsersMainMenuSelection() {
@@ -54,14 +56,104 @@ public class Controller {
                 executeFlow();
                 break;
             case 4:
+                presentFlowExecutionDetails();
                 break;
             case 5:
                 break;
             case 6:
+                break;
+            case 7:
+                break;
+            case 8:
                 keepAlive = false;
                 break;
+        }
+    }
+
+    private void presentFlowExecutionDetails() {
+        if (engineController.executionOccurred()){
+            handlePresentationOfExecutionDetails();
+        }
+        else{
+            ui.presentMessageToUser("Error: No Flows Executed Yet! Maybe execute a flow and try again...\nreturning to main menu for further actions");
+        }
+
+    }
+
+    private void handlePresentationOfExecutionDetails() {
+        while(true) {
+            int choice = presentExecutionDetailsHeaders(engineController.getExecutedFlowHeaders());
+            if (choice == 0){
+                break;
+            }
+            else{
+               presentExtensiveExecutionDetails(engineController.getExecutedFlowDetails(choice-1));
+            }
+        }
+    }
+
+    private void presentExtensiveExecutionDetails(ExecutedFlowDetailsDTO executedFlowDetailsDTO){
+        ui.presentMessageToUser("Flow Unique ID: " + executedFlowDetailsDTO.getFlowExecutionId());
+        ui.presentMessageToUser("Flow Name: " + executedFlowDetailsDTO.getFlowName());
+        ui.presentMessageToUser("Flow Execution Result: " + executedFlowDetailsDTO.getFlowExecutionResult());
+        ui.presentMessageToUser("Flow Execution Duration: " + executedFlowDetailsDTO.getExecutionTimeInMillis());
+        List<String> freeInputsFinalNames = executedFlowDetailsDTO.getFreeInputsFinalNames();
+        List<String> freeInputsValues = executedFlowDetailsDTO.getFreeInputsContent();
+        List<String> freeInputsTypes = executedFlowDetailsDTO.getFreeInputsTypes();
+        List<String> freeInputsNecessity = executedFlowDetailsDTO.getFreeInputsNecessity();
+        List<Boolean> isMandatory = executedFlowDetailsDTO.getFreeInputsNecessity().stream().map(x -> x.equals("MANDATORY")).collect(Collectors.toList());
+        ui.presentMessageToUser("Free Inputs:\n-------------------------------------\n");
+        // print mandatory first
+        for (int i = 0; i < freeInputsFinalNames.size(); i++) {
+            if(isMandatory.get(i)) {
+                ui.printResource(freeInputsFinalNames.get(i), freeInputsValues.get(i), freeInputsTypes.get(i));
+                ui.presentMessageToUser("Necessity: " + freeInputsNecessity.get(i));
+                ui.presentMessageToUser("\n");
+            }
+        }
+        // and then optional
+        for (int i = 0; i < freeInputsFinalNames.size(); i++) {
+            if(!isMandatory.get(i)) {
+                ui.printResource(freeInputsFinalNames.get(i), freeInputsValues.get(i), freeInputsTypes.get(i));
+                ui.presentMessageToUser("Necessity: " + freeInputsNecessity.get(i));
+                ui.presentMessageToUser("\n");
+            }
+        }
+        List<String> outputsFinalNames = executedFlowDetailsDTO.getOutputsFinalNames();
+        List<String> outputsValues = executedFlowDetailsDTO.getOutputsContent();
+        List<String> outputsTypes = executedFlowDetailsDTO.getOutputsTypes();
+        ui.presentMessageToUser("Outputs:\n-------------------------------------\n");
+        for(int i = 0; i < outputsFinalNames.size(); i++){
 
         }
+
+
+
+
+    }
+
+    private int presentExecutionDetailsHeaders(List<Map<String, String>> executedFlowHeaders) {
+
+        for (int i = 0; i < executedFlowHeaders.size(); i++) {
+            presentHeader(executedFlowHeaders, i);
+        }
+        ui.presentMessageToUser("-----------------------------------------");
+        ui.presentMessageToUser("0. Return to main menu");
+        ui.presentMessageToUser("Please select a the number corresponding to the flow\nthat you wish view its extended execution details:");
+        int choice = ui.getUsersNumericResponse(0, executedFlowHeaders.size());
+        if (choice == 0){
+            return 0;
+        }
+        else{
+            //presentExecutionHistory(executedFlowHeaders.get(choice-1));
+            return choice;
+        }
+
+    }
+
+    private void presentHeader(List<Map<String, String>> executedFlowHeaders, int i) {
+        ui.presentMessageToUser("-----------------------------------------");
+        ui.presentMessageToUser((i +1) + ". " + "Name: " + executedFlowHeaders.get(i).get("Name") + "\nUUID: " + executedFlowHeaders.get(i).get("ID") + "\nExecution Time: " + executedFlowHeaders.get(i).get("Time"));
     }
 
     private void executeFlow() {
@@ -76,7 +168,7 @@ public class Controller {
         FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
         Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
         if(selectedFlowIndex >= 0) {
-            FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) engineController.getFlowDefinitionData(selectedFlowIndex);
+            FlowDefinitionDTO flowDefinitionDTO = engineController.getFlowDefinitionData(selectedFlowIndex);
             Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
                     flowDefinitionDTO.getFreeInputTypes(),
                     flowDefinitionDTO.getFreeInputNecessity(),
@@ -84,7 +176,7 @@ public class Controller {
             if (valuesFromUser2valuesDefinition == null) {
                 return;
             }
-            DTO result = engineController.executeFlow(selectedFlowIndex, valuesFromUser2valuesDefinition);
+           engineController.executeFlow(selectedFlowIndex, valuesFromUser2valuesDefinition);
         }
     }
 
@@ -102,9 +194,8 @@ public class Controller {
             LoadDataDTO loadDataDTO = readXML(path);
 
             if (!loadDataDTO.getStatus()) {
-                message = "Loading file from path failed\n" +
-                        "please check the path given, make sure no hebrew words are included!\n";
-                message = loadDataDTO.getErrorMessage().isEmpty() ? message : message + "Error message: " + loadDataDTO.getErrorMessage();
+                message = "Error while loading file: ";
+                message = loadDataDTO.getErrorMessage().isEmpty() ? "please check the path given, make sure no hebrew words are included!" : message  + loadDataDTO.getErrorMessage();
             } else {
                 message = loadDataDTO.getMessage() + "\nreturning to main menu for further actions";
                 flag = false;
@@ -130,7 +221,7 @@ public class Controller {
                 if (selection == 0) {
                     flag = false;
                 } else {
-                    DTO flowDefDTO = engineController.getFlowDefinitionData(selection-1);
+                    AbstractDTO flowDefDTO = engineController.getFlowDefinitionData(selection-1);
 
                     if (flowDefDTO.getClass()==LoadDataDTO.class){
                         ui.presentMessageToUser("Error: " + flowDefDTO.getErrorMessage());
@@ -143,7 +234,7 @@ public class Controller {
         }
     }
 
-    private void presentDefinition(DTO flowDefDTO) {
+    private void presentDefinition(AbstractDTO flowDefDTO) {
         FlowDefinitionDTO flowDefinitionDTO = (FlowDefinitionDTO) flowDefDTO;
         ui.presentMessageToUser("\nFlow Name: " + flowDefinitionDTO.getFlowName());
         ui.presentMessageToUser("Description: " + flowDefinitionDTO.getDescription());

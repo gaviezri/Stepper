@@ -50,4 +50,8 @@ public class ExecutionArchive implements Serializable {
     public Integer getNumOfFlowExecutions(){
         return flowExecutionStack.size();
     }
+
+    public void clear() {
+        flowExecutionStack.clear();
+    }
 }

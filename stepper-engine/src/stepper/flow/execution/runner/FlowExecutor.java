@@ -18,11 +18,9 @@ public class FlowExecutor implements Serializable {
     // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
     FlowDefinition activeFlow;
-    List<UUID> flowExecutionIds;
 
     public void reset(){
         context = null;
-        flowExecutionIds = null;
         activeFlow = null;
     }
 

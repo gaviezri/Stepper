@@ -1,7 +1,6 @@
 package stepper.controller;
 
 import javafx.util.Pair;
-import stepper.dto.AbstractDTO;
 import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
@@ -28,8 +27,7 @@ public class EngineController implements Serializable {
     public LoadDataDTO readXML(String path) {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
-            flowExecutor.reset();
-            // executionArchive.StaleOldExecutions();
+            executionArchive.clear();
         }catch (Exception e){
             return new LoadDataDTO(path, "", false, e.getMessage());
         }
@@ -58,6 +56,7 @@ public class EngineController implements Serializable {
         flowExecutor.setFlowFreeInputs(valName2valType);
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.executeFlow(executionArchive.peek());
+        flowExecutor.reset();
     }
     public List<Map<String,String>> getExecutedFlowHeaders() {
         return executionArchive.getExecutedFlowHeaders();

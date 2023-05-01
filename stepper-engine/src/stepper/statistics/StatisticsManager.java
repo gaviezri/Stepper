@@ -41,7 +41,7 @@ public class StatisticsManager {
         String curOriginalStepName;
         Duration curDuration = null;
 
-        for (int i = 0; i < this.executionArchive.getNumOfFlowExecutionsFromLastFileLoaded(); ++i) {
+        for (int i = 0; i < this.executionArchive.getNumOfFlowExecutions(); ++i) {
             curFlowExecution = this.executionArchive.getFlowExecutionByIndex(i);
 
             curFlowName = curFlowExecution.getFlowDefinition().getName();

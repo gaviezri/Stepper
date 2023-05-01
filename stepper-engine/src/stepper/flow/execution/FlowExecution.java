@@ -15,7 +15,6 @@ public class FlowExecution {
 
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
-    private boolean isFromLastFile;
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
     private String formattedStartTime;
     private Instant startTimeInstant;
@@ -26,13 +25,7 @@ public class FlowExecution {
 
     Map<String, StepExecutionDataManager> finalStepName2stepsManagers;
 
-    public boolean isFromLastFile() {
-        return isFromLastFile;
-    }
 
-    public void setFromLastFile(boolean fromLastFile) {
-        isFromLastFile = fromLastFile;
-    }
 
     public Set<String> getFinalStepsName(){
         return finalStepName2stepsManagers.keySet();

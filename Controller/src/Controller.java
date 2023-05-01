@@ -7,6 +7,7 @@ import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
+import stepper.statistics.StatisticsManager;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class Controller {
     boolean keepAlive = true;
     private final UIAbstractDefinition ui = new ConsoleUI();
     private final EngineController engineController = new EngineController();
-
+    private StatisticsManager statisticsManager = new StatisticsManager(engineController.getArchive());
 
     public void start() {
         ui.presentMessageToUser("\n\n#####################################################");
@@ -348,6 +349,10 @@ public class Controller {
         ctl.start();
     }
 
+    public void presentStatisticsToUser(){
+        statisticsManager.collectStatistics();
+        ui.presentStatisticsToUser(this.statisticsManager.getFlowStatistics(),this.statisticsManager.getStepStatistics());
+    }
 
 }
 

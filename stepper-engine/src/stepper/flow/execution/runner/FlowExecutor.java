@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.FlowExecution;
-import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
@@ -34,7 +33,7 @@ public class FlowExecutor {
 
         boolean breakFlowIfStepFails;
         flowExecution.setFreeInputContent(context.getExecutionData());
-        flowExecution.setStepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
+        flowExecution.setFinalStepName2stepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
         flowExecution.tick();
         for (int i = 0; i < stepsList.size(); i++) {

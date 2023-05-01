@@ -3,6 +3,7 @@ package api;
 import api.menu.MenuData;
 import javafx.util.Pair;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -52,4 +53,6 @@ public abstract class UIAbstractDefinition {
      * */
     public abstract void printResource(String name, String value, String type);
     public abstract Pair<Map,Map> getInputsFromUser(List<String> freeInputsFinalNames, List<String> freeInputTypes, List<String> freeInputNecessity, List<String> freeInputUserStrings);
+
+    public abstract void presentStatisticsToUser(Map<String, Pair<Integer, Duration>> flowStatistics, Map<String, Pair<Integer, Duration>> stepStatistics);
 }

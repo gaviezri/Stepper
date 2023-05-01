@@ -3,6 +3,7 @@ package impl;
 import api.UIAbstractDefinition;
 import javafx.util.Pair;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -74,6 +75,24 @@ public class ConsoleUI extends UIAbstractDefinition {
         presentLoadedFlowNames(flowNames);
         presentBackToMainMenuOption();
         return getUsersNumericResponse(0,flowNames.size()) - 1;
+    }
+
+    @Override
+    public void presentStatisticsToUser(Map<String, Pair<Integer, Duration>> flowStatistics, Map<String, Pair<Integer, Duration>> stepStatistics) {
+        out.println("statistics for flows from recent loaded files that had occurred so far:\n");
+        out.println("FLOWS STATISTICS:\n");
+        for (String flowName:flowStatistics.keySet()){
+            printStatisticsLineToConsole("Flow",flowName,flowStatistics.get(flowName).getKey(),flowStatistics.get(flowName).getValue());
+        }
+        out.println("\nSTEPS STATISTICS:\n");
+        for (String stepName:stepStatistics.keySet()){
+            printStatisticsLineToConsole("Flow",stepName,flowStatistics.get(stepName).getKey(),flowStatistics.get(stepName).getValue());
+        }
+    }
+
+    private void printStatisticsLineToConsole(String typeName, String name, int occurrencesCounter, Duration totalDuration){
+        String.format("%s name: %s, number of executions: %d , average duration: %f.4 ms",
+                typeName,name,occurrencesCounter,totalDuration.toMillis()/occurrencesCounter);
     }
 
     @Override

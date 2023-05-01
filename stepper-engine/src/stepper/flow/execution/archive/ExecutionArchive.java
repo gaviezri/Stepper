@@ -41,4 +41,18 @@ public class ExecutionArchive {
         }
         return headers;
     }
+
+    public FlowExecution getFlowExecutionByIndex(int i){
+        return flowExecutionStack.get(i);
+    }
+
+    public Integer getNumOfFlowExecutionsFromLastFileLoaded(){
+        int size = 0;
+
+        for (FlowExecution flowExecution: flowExecutionStack) {
+            size += flowExecution.isFromLastFile() ? 1 : 0;
+        }
+
+        return size;
+    }
 }

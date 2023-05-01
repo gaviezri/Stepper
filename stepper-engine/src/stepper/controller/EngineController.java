@@ -77,4 +77,8 @@ public class EngineController {
     public ExecutedFlowDetailsDTO getExecutedFlowDetails(int flowIdx) {
         return new ExecutedFlowDetailsDTO(executionArchive.get(flowIdx));
     }
+
+    public ExecutionArchive getArchive() {
+        return this.executionArchive;
+    }
 }

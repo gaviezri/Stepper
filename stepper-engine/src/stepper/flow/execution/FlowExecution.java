@@ -72,7 +72,10 @@ public class FlowExecution {
     }
 
 
-    public Long getDuration() {
+    public Duration getDuration() {
+        return duration;
+    }
+    public Long getDurationInMillis() {
         return duration.toMillis();
     }
 

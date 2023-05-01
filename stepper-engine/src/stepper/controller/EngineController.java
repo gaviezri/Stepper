@@ -62,9 +62,6 @@ public class EngineController implements Serializable {
         return executionArchive.getExecutedFlowHeaders();
 
     }
-    public void saveSystemState(String path){
-
-    }
 
     public boolean isLoaded() {
         return flowLibrary.isLoaded();

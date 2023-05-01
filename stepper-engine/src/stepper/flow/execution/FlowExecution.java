@@ -21,7 +21,7 @@ public class FlowExecution {
     private Instant startTimeInstant;
     private Instant endTimeInstant;
     private Duration duration;
-    private Map<String,String> freeInputContent = new HashMap<>();
+    private Map<String,Object> freeInputContent = new HashMap<>();
     private Map<String,String> executionOutputs = new HashMap<>();
     Map<String, StepExecutionDataManager> stepsManagers;
 
@@ -72,8 +72,8 @@ public class FlowExecution {
     }
 
 
-    public Duration getDuration() {
-        return duration;
+    public Long getDuration() {
+        return duration.toMillis();
     }
 
     public String getFormattedStartTime() {
@@ -89,9 +89,10 @@ public class FlowExecution {
     }
 
     public String  getFreeInputContent(String key) {
-        return freeInputContent.get(key);
+        return freeInputContent.get(key).toString();
     }
-    public void setFreeInputContent(Map<String,String> freeInputContent) {
+
+    public void setFreeInputContent(Map<String,Object> freeInputContent) {
         this.freeInputContent = freeInputContent;
     }
 
@@ -104,7 +105,11 @@ public class FlowExecution {
         for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
             String stepName = entry.getKey();
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            stepsDurationInMillis.add(stepExecutionDataManager.getDuration().toString());
+            try {
+                stepsDurationInMillis.add(String.valueOf(stepExecutionDataManager.getDuration().toMillis()));
+            } catch (NullPointerException e) {
+                stepsDurationInMillis.add("0");
+            }
         }
         return stepsDurationInMillis;
     }
@@ -125,7 +130,11 @@ public class FlowExecution {
         List<String> stepsResult = new ArrayList<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            stepsResult.add(stepExecutionDataManager.getStepResult().toString());
+            try {
+                stepsResult.add(stepExecutionDataManager.getStepResult().toString());
+            } catch (NullPointerException e) {
+                stepsResult.add("step did not run.");
+            }
         }
         return stepsResult;
     }
@@ -134,7 +143,11 @@ public class FlowExecution {
         List<String> stepsSummaryLine = new ArrayList<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            stepsSummaryLine.add(stepExecutionDataManager.getStepSummaryLine());
+            try {
+                stepsSummaryLine.add(stepExecutionDataManager.getStepSummaryLine());
+            } catch (NullPointerException e) {
+                stepsSummaryLine.add("step did not run.");
+            }
         }
         return stepsSummaryLine;
     }
@@ -143,7 +156,11 @@ public class FlowExecution {
         List<List<Pair<String, String>>> stepsLogs2TimeStamp = new ArrayList<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            stepsLogs2TimeStamp.add(stepExecutionDataManager.getLogs2TimeStamp());
+            try {
+                stepsLogs2TimeStamp.add(stepExecutionDataManager.getLogs2TimeStamp());
+            } catch (NullPointerException e) {
+                stepsLogs2TimeStamp.add(null);
+            }
         }
         return stepsLogs2TimeStamp;
     }

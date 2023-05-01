@@ -8,10 +8,10 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.definition.mapping.MappingGraph;
 import stepper.flow.execution.logger.AbstractLogger;
-import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,14 +99,14 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         // assuming that from the step we can get to its data manager
         // begin timing
         StepExecutionDataManager theManager = step2Manager.get(currentStepName);
-        theManager.setDuration(System.currentTimeMillis() * -1);
+        theManager.startTimer();
     }
 
     public void tock() {
         // assuming that from the step we can get to its data manager
         // end timing
         StepExecutionDataManager theManager = step2Manager.get(currentStepName);
-        theManager.setDuration(System.currentTimeMillis() + theManager.getDuration().longValue());
+        theManager.stopTimer();
     }
 
     @Override

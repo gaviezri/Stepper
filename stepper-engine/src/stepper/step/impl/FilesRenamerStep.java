@@ -107,6 +107,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
                 String filenameNoExtenstion = oldName.substring(0, oldName.lastIndexOf('.'));
                 String extension = oldName.substring(oldName.lastIndexOf('.'));
                 Path newFileFullPath = oldFileFullPath.resolveSibling(prefix + filenameNoExtenstion + suffix + extension);
+
                 subResult = renameFile(oldFileFullPath, newFileFullPath, logger, renameResult);
                 if (subResult == StepResult.WARNING) {
                     result = StepResult.WARNING;

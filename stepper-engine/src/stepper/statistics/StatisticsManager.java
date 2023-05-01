@@ -50,9 +50,10 @@ public class StatisticsManager {
 
             for (String finalStepName : curFlowExecution.getFinalStepsName()) {
                 curDuration = curFlowExecution.getStepDurationByFinalName(finalStepName);
-                curOriginalStepName = curFlowExecution.getFlowDefinition().getStepOriginalName(finalStepName);
-
-                addStepToStatisticsByOriginalName(curOriginalStepName, curDuration);
+                if(curDuration!=null) {
+                    curOriginalStepName = curFlowExecution.getFlowDefinition().getStepOriginalName(finalStepName);
+                    addStepToStatisticsByOriginalName(curOriginalStepName, curDuration);
+                }
             }
         }
     }

@@ -86,20 +86,25 @@ public class ConsoleUI extends UIAbstractDefinition {
 
     @Override
     public void presentStatisticsToUser(Map<String, Pair<Integer, Duration>> flowStatistics, Map<String, Pair<Integer, Duration>> stepStatistics) {
-        out.println("statistics for flows from recent loaded files that had occurred so far:\n");
+        out.println("Statistics for flows from recent loaded files that had occurred so far:\n");
         out.println("FLOWS STATISTICS:\n");
+        out.println("-----------------\n");
+
         for (String flowName:flowStatistics.keySet()){
             printStatisticsLineToConsole("Flow",flowName,flowStatistics.get(flowName).getKey(),flowStatistics.get(flowName).getValue());
         }
         out.println("\nSTEPS STATISTICS:\n");
+        out.println("-----------------\n");
+
         for (String stepName:stepStatistics.keySet()){
-            printStatisticsLineToConsole("Flow",stepName,flowStatistics.get(stepName).getKey(),flowStatistics.get(stepName).getValue());
+            printStatisticsLineToConsole("Step",stepName,stepStatistics.get(stepName).getKey(),stepStatistics.get(stepName).getValue());
         }
+        out.println("\n");
     }
 
     private void printStatisticsLineToConsole(String typeName, String name, int occurrencesCounter, Duration totalDuration){
-        String.format("%s name: %s, number of executions: %d , average duration: %f.4 ms",
-                typeName,name,occurrencesCounter,totalDuration.toMillis()/occurrencesCounter);
+        out.println(String.format("%s name: %s, number of executions: %d , average duration: %d ms\n",
+                typeName,name,occurrencesCounter,totalDuration.toMillis()/occurrencesCounter));
     }
 
     @Override

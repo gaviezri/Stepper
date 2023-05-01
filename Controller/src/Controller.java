@@ -226,14 +226,7 @@ public class Controller {
         ui.presentMessageToUser("-----------------------------------------");
         ui.presentMessageToUser("0. Return to main menu");
         ui.presentMessageToUser("Please select a the number corresponding to the flow\nthat you wish view its extended execution details:");
-        int choice = ui.getUsersNumericResponse(0, executedFlowHeaders.size());
-        if (choice == 0){
-            return 0;
-        }
-        else{
-            return choice;
-        }
-
+        return ui.getUsersNumericResponse(0, executedFlowHeaders.size());
     }
 
     private void presentHeader(List<Map<String, String>> executedFlowHeaders, int i) {

@@ -36,10 +36,13 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         flowExecutionResult = String.valueOf(flowExecution.getFlowExecutionResult());
         freeInputsFinalNames = flowExecution.getFlowDefinition().getFreeInputsFinalNames();
         freeInputsTypes = flowExecution.getFlowDefinition().getFreeInputsTypes();
-
-        freeInputsFinalNames.forEach( freeInputName -> {
-            freeInputsContent.add(flowExecution.getFreeInputContent(freeInputName));
-        });
+        for (String freeInputName : freeInputsFinalNames){
+            try {
+                freeInputsContent.add(flowExecution.getFreeInputContent(freeInputName));
+            } catch (Exception e) {
+                freeInputsContent.add("N/A");
+            }
+        }
 
         freeInputsNecessity = flowExecution.getFlowDefinition().getFreeInputsNecessity();
         outputsFinalNames = flowExecution.getFlowDefinition().getAllOutputsNames();

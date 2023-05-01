@@ -18,11 +18,9 @@ public class FlowExecutor implements Serializable {
     // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
     FlowDefinition activeFlow;
-    List<UUID> flowExecutionIds;
 
     public void reset(){
         context = null;
-        flowExecutionIds = null;
         activeFlow = null;
     }
 
@@ -55,8 +53,24 @@ public class FlowExecutor implements Serializable {
         }
         flowExecution.tock();
         flowExecution.setExecutionOutputs(context.getExecutionDataValues());
-        System.out.println("End execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
+        presentEndOfExecutionSummary(flowExecution);
         return flowExecution;
+    }
+
+    private void presentEndOfExecutionSummary(FlowExecution flowExecution) {
+        System.out.println("End execution of flow \"" + flowExecution.getFlowDefinition().getName() + "\" [ID: " + flowExecution.getUniqueId() + "]. Status: " + flowExecution.getFlowExecutionResult());
+        for (String formalOutputName : flowExecution.getFlowDefinition().getFlowFormalOutputs()){
+            String value = null;
+            try {
+                value = context.getExecutionData().get(formalOutputName).toString();
+                value = value == null ? "Not Created Due To Failure" : value;
+            } catch (Exception e) {
+                value = "Not Created Due To Failure";
+            }
+            finally {
+                System.out.println("Output: " + value + " = " + "Not Created Due To Failure");
+            }
+        }
     }
 
     public void updateExecutionResult(FlowExecution execution, StepResult stepresult ,Boolean skipIfFail){

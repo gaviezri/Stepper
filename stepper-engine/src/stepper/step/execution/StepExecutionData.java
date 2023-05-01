@@ -4,11 +4,12 @@ import stepper.dd.api.AbstractDataDefinition;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
-public class StepExecutionData {
+public class StepExecutionData implements Serializable {
     private StepResult stepResult;
     private Instant start;
     private Duration totalDuration;

@@ -5,12 +5,13 @@ import stepper.flow.execution.logger.LogLine;
 import stepper.step.api.StepDefinition;
 import sun.rmi.runtime.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StepExecutionLoggerImpl implements AbstractLogger {
+public class StepExecutionLoggerImpl implements AbstractLogger, Serializable {
     private List<LogLine> logs = new ArrayList<>();
     private LogLine summaryLine;
     private final String step;

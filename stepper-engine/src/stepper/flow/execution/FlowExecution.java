@@ -2,7 +2,6 @@ package stepper.flow.execution;
 
 import javafx.util.Pair;
 import stepper.flow.definition.api.FlowDefinition;
-import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
@@ -16,6 +15,7 @@ public class FlowExecution {
 
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
+    private boolean isFromLastFile;
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
     private String formattedStartTime;
     private Instant startTimeInstant;
@@ -23,9 +23,24 @@ public class FlowExecution {
     private Duration duration;
     private Map<String,Object> freeInputContent = new HashMap<>();
     private Map<String,String> executionOutputs = new HashMap<>();
-    Map<String, StepExecutionDataManager> stepsManagers;
 
+    Map<String, StepExecutionDataManager> finalStepName2stepsManagers;
 
+    public boolean isFromLastFile() {
+        return isFromLastFile;
+    }
+
+    public void setFromLastFile(boolean fromLastFile) {
+        isFromLastFile = fromLastFile;
+    }
+
+    public Set<String> getFinalStepsName(){
+        return finalStepName2stepsManagers.keySet();
+    }
+
+    public Duration getStepDurationByFinalName(String finalName){
+        return finalStepName2stepsManagers.get(finalName).getDuration();
+    }
     // lots more data that needed to be stored while flow is being executed...
 
     public FlowExecution(FlowDefinition flowDefinition) {
@@ -75,8 +90,10 @@ public class FlowExecution {
     public Duration getDuration() {
         return duration;
     }
+    
     public Long getDurationInMillis() {
         return duration.toMillis();
+
     }
 
     public String getFormattedStartTime() {
@@ -105,7 +122,7 @@ public class FlowExecution {
 
     public List<String> getStepsDurationInMillis() {
         List<String> stepsDurationInMillis = new ArrayList<>();
-        for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
+        for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
             String stepName = entry.getKey();
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
@@ -117,8 +134,8 @@ public class FlowExecution {
         return stepsDurationInMillis;
     }
 
-    public void setStepsManagers( Map<String, StepExecutionDataManager> stepsManagers) {
-        this.stepsManagers = stepsManagers;
+    public void setFinalStepName2stepsManagers(Map<String, StepExecutionDataManager> finalStepName2stepsManagers) {
+        this.finalStepName2stepsManagers = finalStepName2stepsManagers;
     }
 
     public void setExecutionOutputs(Map<String, Object> executionOutputs) {
@@ -131,7 +148,7 @@ public class FlowExecution {
 
     public List<String> getStepsResult() {
         List<String> stepsResult = new ArrayList<>();
-        for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
+        for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
                 stepsResult.add(stepExecutionDataManager.getStepResult().toString());
@@ -144,7 +161,7 @@ public class FlowExecution {
 
     public List<String> getStepsSummaryLine() {
         List<String> stepsSummaryLine = new ArrayList<>();
-        for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
+        for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
                 stepsSummaryLine.add(stepExecutionDataManager.getStepSummaryLine());
@@ -157,7 +174,7 @@ public class FlowExecution {
 
     public List<List<Pair<String, String>>> getStepsLogs2TimeStamp() {
         List<List<Pair<String, String>>> stepsLogs2TimeStamp = new ArrayList<>();
-        for (Map.Entry<String, StepExecutionDataManager> entry : stepsManagers.entrySet()) {
+        for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
                 stepsLogs2TimeStamp.add(stepExecutionDataManager.getLogs2TimeStamp());

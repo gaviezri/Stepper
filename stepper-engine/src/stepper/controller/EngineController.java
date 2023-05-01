@@ -28,6 +28,7 @@ public class EngineController {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
             flowExecutor.reset();
+            // executionArchive.StaleOldExecutions();
         }catch (Exception e){
             return new LoadDataDTO(path, "", false, e.getMessage());
         }

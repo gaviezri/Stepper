@@ -59,6 +59,7 @@ public class Controller {
                 presentFlowExecutionDetails();
                 break;
             case 5:
+                presentStatistics();
                 break;
             case 6:
                 saveSystemState();
@@ -403,7 +404,7 @@ public class Controller {
         ctl.start();
     }
 
-    public void presentStatisticsToUser(){
+    public void presentStatistics(){
         statisticsManager.collectStatistics();
         ui.presentStatisticsToUser(this.statisticsManager.getFlowStatistics(),this.statisticsManager.getStepStatistics());
     }

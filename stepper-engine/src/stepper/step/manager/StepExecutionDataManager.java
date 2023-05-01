@@ -5,13 +5,12 @@ import stepper.flow.execution.logger.AbstractLogger;
 import stepper.flow.execution.logger.LogLine;
 import stepper.flow.execution.logger.step.StepExecutionLoggerImpl;
 import stepper.manager.api.DataManager;
-import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.StepResult;
 import stepper.step.execution.StepExecutionData;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class StepExecutionDataManager implements DataManager {
     // manager for each step in the flow
@@ -28,11 +27,14 @@ public class StepExecutionDataManager implements DataManager {
         return stepLogger;
     }
 
-    public Number getDuration() {
+    public Duration getDuration() {
         return stepExecutionData.getDuration();
     }
-    public void setDuration(Number duration) {
-        stepExecutionData.setDuration(duration);
+    public void startTimer() {
+        stepExecutionData.start();
+    }
+    public void stopTimer() {
+        stepExecutionData.stop();
     }
     public StepResult getStepResult() {
         return stepExecutionData.getStepResult();
@@ -52,5 +54,6 @@ public class StepExecutionDataManager implements DataManager {
         }
         return logs2TimeStamp;
     }
+
 
 }

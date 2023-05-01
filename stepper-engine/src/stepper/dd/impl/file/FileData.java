@@ -10,7 +10,10 @@ public class FileData extends FileDataDefinition{
     File file;
     String filePath;
 
-
+    @Override
+    public String toString(){
+        return file.getName();
+    }
     public FileData(Path path) {
         file = path.toFile();
         filePath = file.getPath();

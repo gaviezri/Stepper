@@ -395,7 +395,7 @@ public class FlowDefinitionImpl implements FlowDefinition {
         List<String> allOutputsNames = new ArrayList<>();
         for (StepUsageDeclaration step : stepsUsageDecl){
             for (DataDefinitionDeclaration output : step.getStepDefinition().outputs()){
-                allOutputsNames.add(output.getType().toString());
+                allOutputsNames.add(output.getType().getSimpleName());
             }
         }
         return allOutputsNames;

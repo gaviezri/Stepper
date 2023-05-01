@@ -30,7 +30,7 @@ public class ConsoleUI extends UIAbstractDefinition {
         int userSelectedOption;
 
         while (true) {
-            try {
+                try {
                 userSelectedOption = Integer.parseInt(scanner.nextLine());
                 if (userSelectedOption >= min && userSelectedOption <= max) {
                     return userSelectedOption;
@@ -73,7 +73,7 @@ public class ConsoleUI extends UIAbstractDefinition {
     public Integer getSelectedFlowIndexFromUser(List<String> flowNames) {
         presentLoadedFlowNames(flowNames);
         presentBackToMainMenuOption();
-        return getUsersNumericResponse(flowNames.size()) - 1;
+        return getUsersNumericResponse(0,flowNames.size()) - 1;
     }
 
     @Override

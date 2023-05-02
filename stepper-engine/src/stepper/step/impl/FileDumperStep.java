@@ -112,6 +112,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                             logger.log(e.getMessage());
                             logger.addSummaryLine("File " + fileName + " NOT created!");
                             result = StepResult.FAILURE;
+                            cause = "file name is invalid";
                         }
                         break;
                     case FAILURE:

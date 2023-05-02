@@ -13,6 +13,7 @@ import stepper.step.manager.StepExecutionDataManager;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     private DataAliasingManager dataAliasingManager;
     private Map<String, Object> ExecutionDataValues;
     private Map<String, DataDefinition> ExecutionDataName2Definition = new HashMap<>();
-    private Map<String, StepExecutionDataManager> step2Manager = new HashMap<>();
+    private Map<String, StepExecutionDataManager> step2Manager = new LinkedHashMap<>();
     private MappingGraph mappingGraph;
     public String getFinalDataName(String name) {
         return dataAliasingManager.getAliasDataName(currentStepName, name);

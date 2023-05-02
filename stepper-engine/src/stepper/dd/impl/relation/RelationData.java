@@ -1,10 +1,11 @@
 package stepper.dd.impl.relation;
 
+import java.io.Serializable;
 import java.text.CollationKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RelationData extends RelationDataDefinition{
+public class RelationData extends RelationDataDefinition implements Serializable {
 
     private List<String> columnsNames;
     private List<SingleRow> rows = new ArrayList<>();
@@ -21,7 +22,17 @@ public class RelationData extends RelationDataDefinition{
         rowSize = totalSize = 0;
         colSize = columnsNames.size();
     }
-
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("RelationData: \n");
+        sb.append("Columns names: ");
+        columnsNames.forEach(columnName -> sb.append("\"" + columnName + "\"").append(" | "));
+        sb.append("\n");
+        sb.append("Number of rows: " + rowSize + "\n");
+        rows.forEach(row -> sb.append(row.toString()).append("\n"));
+        return sb.toString();
+    }
     public List<String> getColumnsNames() {
         return columnsNames;
     }
@@ -74,12 +85,18 @@ public class RelationData extends RelationDataDefinition{
     }
 
 
-    private static class SingleRow {
+    private static class SingleRow implements Serializable{
 
         private Map<String, String> data;
 
         public SingleRow() {
             data = new HashMap<>();
+        }
+        @Override
+        public String toString(){
+            StringBuilder sb = new StringBuilder();
+            data.forEach((columnName, value) -> sb.append("\"" + columnName + "\"").append(" : ").append("\"" + value + "\"").append(" | "));
+            return sb.toString();
         }
 
         public void addData(String columnName, String value) {

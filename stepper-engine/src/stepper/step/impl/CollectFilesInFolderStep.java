@@ -97,7 +97,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 logger.log("Folder name represents an empty folder");
                 result = StepResult.WARNING;
             } else{
-                logger.log("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "no-filter"));
+                logger.log("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : ""));
                 result = StepResult.SUCCESS;
             }
         } catch (Exception e) {
@@ -172,10 +172,9 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
         }catch (Exception e){
             filter = null;
         }
-        List<FileData> filesList = null;
+        List<FileData> filesList;
         try {
             // get all files in folder that are not directories
-            logger.log("Reading folder " + folderName + " content" + (filter != null ? " with filter: " + filter : ""));
             filesList = Files.list(Paths.get(folderName))
                     .filter(f-> !Files.isDirectory(f))
                     .map(FileData::new)

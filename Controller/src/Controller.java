@@ -172,6 +172,7 @@ public class Controller {
             for (Pair<String,String> step2timestamp : stepsLogs.get(i)){
                 ui.presentMessageToUser(step2timestamp.getValue()+ ": " + step2timestamp.getKey());
             }
+            ui.presentMessageToUser("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         }
     }
 

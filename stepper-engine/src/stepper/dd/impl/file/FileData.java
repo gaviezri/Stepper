@@ -3,10 +3,11 @@ package stepper.dd.impl.file;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class FileData extends FileDataDefinition{
+public class FileData extends FileDataDefinition implements Serializable {
     File file;
     String filePath;
 

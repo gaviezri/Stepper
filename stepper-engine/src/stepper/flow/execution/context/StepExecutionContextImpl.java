@@ -66,26 +66,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         theManager.setStepResult(stepResult);
     }
 
-//    @Override
-//    public StepResult getStepResult(String name) {
-//        // assuming that from the step we can get to its data manager
-//        StepExecutionDataManager theManager = step2Manager.get(name);
-//        return theManager.getStepResult();
-//    }
-//
-//    @Override
-//    public void setStepDuration(String name, Number duration) {
-//        // assuming that from the step we can get to its data manager
-//        StepExecutionDataManager theManager = step2Manager.get(name);
-//        theManager.setDuration(duration);
-//    }
-//
-//    @Override
-//    public Number getStepDuration(String name) {
-//        // assuming that from the step we can get to its data manager
-//        StepExecutionDataManager theManager = step2Manager.get(name);
-//        return theManager.getDuration();
-//    }
 
     @Override
     public AbstractLogger getStepLogger() {

@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
@@ -11,9 +10,10 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FilesDeleterStep extends AbstractStepDefinition {
@@ -62,21 +62,21 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         try {
             FILES_LIST = context.getDataValue("FILES_LIST",List.class);
         }catch (Exception e){
-            logger.addLogLine("Failed to get files list");
+            logger.log("Failed to get files list");
             res = StepResult.FAILURE;
         }
         boolean filesListIsEmpty =  FILES_LIST.isEmpty();
         int numberOfFilesToDelete = FILES_LIST.size();
 
         if(!filesListIsEmpty) {
-            logger.addLogLine("About to start delete " + numberOfFilesToDelete + " files");
+            logger.log("About to start delete " + numberOfFilesToDelete + " files");
 
             DELETED_LIST = FILES_LIST.stream()
                     .filter(FileData::exists)
                     .filter(file -> {
                         boolean deletedSuccessfully = file.delete();
                         if (!deletedSuccessfully) {
-                            logger.addLogLine("Failed to delete file " + file.getName());
+                            logger.log("Failed to delete file " + file.getName());
                         }
                         return !deletedSuccessfully;
                     })
@@ -84,7 +84,9 @@ public class FilesDeleterStep extends AbstractStepDefinition {
                     .collect(Collectors.toList());
         }
 
-        Pair<Integer, Integer> DELETION_STATS = new Pair<>(numberOfFilesToDelete - DELETED_LIST.size(), DELETED_LIST.size());
+        Map<String, String> DELETION_STATS =  new HashMap<>();
+        DELETION_STATS.put("DELETED", String.valueOf(numberOfFilesToDelete - DELETED_LIST.size()));
+        DELETION_STATS.put("FAILED", String.valueOf(DELETED_LIST.size()));
         try {
             context.storeDataValue("DELETED_LIST", DELETED_LIST, DataDefinitionRegistry.LIST);
             context.storeDataValue("DELETION_STATS", DELETION_STATS, DataDefinitionRegistry.MAPPING);
@@ -97,11 +99,11 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         }
         else if(DELETED_LIST.size() != numberOfFilesToDelete){
             res = StepResult.WARNING;
-            logger.addLogLine("WARNING: Only " + DELETION_STATS.getKey() + "/" + numberOfFilesToDelete + " files where deleted!");
+            logger.log("WARNING: Only " + DELETION_STATS.get("DELETED") + "/" + numberOfFilesToDelete + " files where deleted!");
         }
         else{
             res = StepResult.FAILURE;
-            logger.addLogLine("FAILURE: No files where deleted! check yourself before you wreck yourself");
+            logger.log("FAILURE: No files where deleted! check yourself before you wreck yourself");
         }
         context.tock();
         return res;

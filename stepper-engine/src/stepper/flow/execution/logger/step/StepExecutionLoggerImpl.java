@@ -2,14 +2,10 @@ package stepper.flow.execution.logger.step;
 
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.flow.execution.logger.LogLine;
-import stepper.step.api.StepDefinition;
-import sun.rmi.runtime.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StepExecutionLoggerImpl implements AbstractLogger, Serializable {
     private List<LogLine> logs = new ArrayList<>();
@@ -26,7 +22,7 @@ public class StepExecutionLoggerImpl implements AbstractLogger, Serializable {
     }
 
     @Override
-    public void addLogLine(String line) {
+    public void log(String line) {
         logs.add(new LogLine(line));
     }
     @Override

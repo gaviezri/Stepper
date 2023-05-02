@@ -9,7 +9,6 @@
 				<ST-StepInFlow name="Files Renamer"/>
 				<ST-StepInFlow name="CSV Exporter"/>
 				<ST-StepInFlow name="File Dumper" alias="CSV File Dumper" continue-if-failing="true"/>
-				<ST-StepInFlow name="Files Content Extractor"/>
 				<ST-StepInFlow name="Properties Exporter"/>
 				<ST-StepInFlow name="File Dumper" alias="Properties File Dumper" continue-if-failing="true"/>
 			</ST-StepsInFlow>

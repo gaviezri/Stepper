@@ -3,7 +3,6 @@ package stepper.step.impl;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.number.NumberDataDefinition;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -11,11 +10,11 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -85,24 +84,24 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             }
             if (FolderNotExist(folderName)) {
                 // make sure folder exists
-                logger.addLogLine("Folder name is invalid");
+                logger.log("Folder name is invalid");
                 logger.addSummaryLine("Folder " + folderName + " NOT scanned! it does not exist");
                 result = StepResult.FAILURE;
             } else if (NotAFolder(folderName)) {
                 // make sure exists and also a directory
-                logger.addLogLine("Folder name represents a non-folder entity");
+                logger.log("Folder name represents a non-folder entity");
                 logger.addSummaryLine("Folder " + folderName + " NOT scanned! it is not a folder");
                 result = StepResult.FAILURE;
 
             } else if (FolderIsEmpty(folderName)) {
-                logger.addLogLine("Folder name represents an empty folder");
+                logger.log("Folder name represents an empty folder");
                 result = StepResult.WARNING;
             } else{
-                logger.addLogLine("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "no-filter"));
+                logger.log("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : "no-filter"));
                 result = StepResult.SUCCESS;
             }
         } catch (Exception e) {
-            logger.addLogLine("Error while reading inputs: " + e.getMessage());
+            logger.log("Error while reading inputs: " + e.getMessage());
             result = StepResult.FAILURE;
         }
         return result;
@@ -141,11 +140,11 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             case WARNING:
                 try {
                     logger.addSummaryLine("Folder " + context.getDataValue("FOLDER_NAME", String.class) + " scanned successfully but it is empty");
-                    context.storeDataValue(this.outputs().get(0).getName(), null, DataDefinitionRegistry.LIST);
+                    context.storeDataValue(this.outputs().get(0).getName(), new ArrayList<>(), DataDefinitionRegistry.LIST);
                     context.storeDataValue(this.outputs().get(1).getName(), 0, DataDefinitionRegistry.NUMBER);
                 } catch (Exception e) {
-                    logger.addLogLine("Error while storing data");
-                    logger.addLogLine(e.getMessage());
+                    logger.log("Error while storing data");
+                    logger.log(e.getMessage());
                     result = StepResult.FAILURE;
                 }
                 break;
@@ -164,8 +163,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
         try {
              folderName = context.getDataValue("FOLDER_NAME", String.class);
         } catch (Exception e) {
-            logger.addLogLine("Error while reading folder name");
-            logger.addLogLine(e.getMessage());
+            logger.log("Error while reading folder name");
+            logger.log(e.getMessage());
             return StepResult.FAILURE;
         }
         try {
@@ -175,15 +174,17 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
         }
         List<FileData> filesList = null;
         try {
-            // get all files in folder
-            logger.addLogLine("Reading folder " + folderName + " content" + (filter != null ? " with filter: " + filter : ""));
+            // get all files in folder that are not directories
+            logger.log("Reading folder " + folderName + " content" + (filter != null ? " with filter: " + filter : ""));
             filesList = Files.list(Paths.get(folderName))
+                    .filter(f-> !Files.isDirectory(f))
                     .map(FileData::new)
                     .collect(Collectors.toList());
-            logger.addLogLine("Found " + filesList.size() + " files in folder" + (filter != null ? " matching filter: " + filter : ""));
+
+            logger.log("Found " + filesList.size() + " files in folder" + (filter != null ? " matching filter: " + filter : ""));
         } catch (IOException e) {
-            logger.addLogLine("Error while reading folder content");
-            logger.addLogLine(e.getMessage());
+            logger.log("Error while reading folder content");
+            logger.log(e.getMessage());
             return StepResult.FAILURE;
         }
 
@@ -198,8 +199,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             }
 
         } catch (Exception e) {
-            logger.addLogLine("Error while reading folder content");
-            logger.addLogLine(e.getMessage());
+            logger.log("Error while reading folder content");
+            logger.log(e.getMessage());
             return StepResult.FAILURE;
         }
         if (filesList != null) {
@@ -210,8 +211,8 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 return StepResult.SUCCESS;
             }
             catch (Exception e) {
-                logger.addLogLine("Error while storing data");
-                logger.addLogLine(e.getMessage());
+                logger.log("Error while storing data");
+                logger.log(e.getMessage());
                 return StepResult.FAILURE;
             }
 

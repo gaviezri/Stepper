@@ -2,7 +2,6 @@ package stepper.step.impl;
 
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -70,22 +69,22 @@ public class FileDumperStep extends AbstractStepDefinition {
                 String fileName = context.getDataValue("FILE_NAME", String.class);
 
                 if (! validateFileName(fileName)) {
-                    logger.addLogLine("File name is invalid");
+                    logger.log("File name is invalid");
                     logger.addSummaryLine("File " + fileName + " NOT created!");
                     result = StepResult.FAILURE;
                 }
                 else if (! validateContent(content)) {
-                    logger.addLogLine("Content is empty");
+                    logger.log("Content is empty");
                     result = StepResult.WARNING;
                 }
                 else{
-                    logger.addLogLine("File name is valid");
-                    logger.addLogLine("About to create file named " + fileName);
+                    logger.log("File name is valid");
+                    logger.log("About to create file named " + fileName);
                     result =  StepResult.SUCCESS;
                 }
             }
             catch (Exception e){
-                logger.addLogLine("Exception: " + e.getMessage());
+                logger.log("Exception: " + e.getMessage());
                 result = StepResult.FAILURE;
             }
             return result;
@@ -110,7 +109,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                             createFile(fileName, content);
                             logger.addSummaryLine("File " + fileName + " created successfully !");
                         } catch (IOException e) {
-                            logger.addLogLine(e.getMessage());
+                            logger.log(e.getMessage());
                             logger.addSummaryLine("File " + fileName + " NOT created!");
                             result = StepResult.FAILURE;
                         }
@@ -118,7 +117,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                     case FAILURE:
                     default:
                         cause = "file name is invalid";
-                        logger.addLogLine("Something went wrong");
+                        logger.log("Something went wrong");
                         logger.addSummaryLine("File " + fileName + " NOT created!");
                         break;
                 }
@@ -126,7 +125,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                 context.storeDataValue("RESULT",
                         (result == StepResult.FAILURE ? "FAILURE: " + cause : "SUCCESS"), DataDefinitionRegistry.STRING);
             } catch (Exception e) {
-                logger.addLogLine(e.getMessage());
+                logger.log(e.getMessage());
                 logger.addSummaryLine("File " + fileName + " NOT created!");
                 result = StepResult.FAILURE;
             }

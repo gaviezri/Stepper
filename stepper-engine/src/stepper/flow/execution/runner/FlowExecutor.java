@@ -68,7 +68,7 @@ public class FlowExecutor implements Serializable {
                 value = "Not Created Due To Failure";
             }
             finally {
-                System.out.println("Output: " + value + " = " + "Not Created Due To Failure");
+                System.out.println("Output: " + formalOutputName + " = " + value);
             }
         }
     }

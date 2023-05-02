@@ -3,7 +3,6 @@ package stepper.step.impl;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
-import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -61,7 +60,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
                 StringBuilder result = new StringBuilder();
 
 
-                logger.addLogLine("About to process " + source.getRowSize() + " lines of data");
+                logger.log("About to process " + source.getRowSize() + " lines of data");
 
                 for (int i = 0; i < source.getRowSize(); i++) {
 
@@ -77,7 +76,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
                                 .append("\n");
                     }
                 }
-                logger.addLogLine("Extracted total of " + source.getTotalSize() + " properties");
+                logger.log("Extracted total of " + source.getTotalSize() + " properties");
                 context.storeDataValue("RESULT", result.toString(),DataDefinitionRegistry.STRING);
             } else {
                 logger.addSummaryLine("Source data is empty\n result is empty");

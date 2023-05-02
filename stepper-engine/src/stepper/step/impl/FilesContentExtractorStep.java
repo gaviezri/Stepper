@@ -3,8 +3,6 @@ import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
-import stepper.exception.GivenValueTypeDontMatchException;
-import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -12,7 +10,6 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -66,14 +63,14 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
                     line = getLineByRowNumber(lineNumberToExtract, curFile);
                     row.add(line.isEmpty() ? "Not such line" : line);
                 } catch (SecurityException e) {
-                    logger.addLogLine("Problem extracting line number " + i + "from file " + curFile.getName() + "-> no read access to the file");
+                    logger.log("Problem extracting line number " + i + "from file " + curFile.getName() + "-> no read access to the file");
                     row.add("File not found");
                 } catch (IOException e) {
-                    logger.addLogLine("An an I/O error occurs opening file  " + curFile.getName());
+                    logger.log("An an I/O error occurs opening file  " + curFile.getName());
                 }
             }
             else {
-                logger.addLogLine("Problem extracting line number " + i + "from file " + curFile.getName() + "file dont exists!");
+                logger.log("Problem extracting line number " + i + "from file " + curFile.getName() + "file dont exists!");
                         row.add("File not found");
                 row.add("File not found");
             }
@@ -128,7 +125,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
             result = StepResult.SUCCESS;
         }
         catch(Exception e){
-            logger.addLogLine(e.getMessage());
+            logger.log(e.getMessage());
 
         }
         return result;

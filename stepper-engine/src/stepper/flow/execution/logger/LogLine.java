@@ -1,6 +1,8 @@
 package stepper.flow.execution.logger;
 
-public class LogLine {
+import java.io.Serializable;
+
+public class LogLine implements Serializable {
     final String line;
     final Long timeStamp;
 

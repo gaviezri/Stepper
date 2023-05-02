@@ -5,13 +5,14 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class FlowExecution {
+public class FlowExecution implements Serializable {
 
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
@@ -116,7 +117,6 @@ public class FlowExecution {
     public List<String> getStepsDurationInMillis() {
         List<String> stepsDurationInMillis = new ArrayList<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
-            String stepName = entry.getKey();
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
                 stepsDurationInMillis.add(String.valueOf(stepExecutionDataManager.getDuration().toMillis()));

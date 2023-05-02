@@ -8,11 +8,12 @@ import stepper.manager.api.DataManager;
 import stepper.step.api.enums.StepResult;
 import stepper.step.execution.StepExecutionData;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepExecutionDataManager implements DataManager {
+public class StepExecutionDataManager implements DataManager, Serializable {
     // manager for each step in the flow
     // manages a step logger and the step's execution data i.e.
     private AbstractLogger stepLogger;

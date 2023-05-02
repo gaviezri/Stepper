@@ -4,10 +4,8 @@ import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
-import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
-import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
@@ -59,9 +57,9 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
 
             try {
                 timeToSleep = context.getDataValue("TIME_TO_SPEND", Number.class).longValue() * 1000;
-                logger.addLogLine("About to sleep for " + timeToSleep + " seconds...");
+                logger.log("About to sleep for " + timeToSleep + " seconds...");
                 Thread.sleep(timeToSleep);
-                logger.addLogLine("Done sleeping...");
+                logger.log("Done sleeping...");
                 logger.addSummaryLine("Slept for " + timeToSleep + " seconds, successfully");
             } catch (Exception e) {
                 logger.addSummaryLine("Sleeping interrupted:" + e.getMessage());

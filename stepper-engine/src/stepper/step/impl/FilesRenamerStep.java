@@ -11,7 +11,6 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,7 +68,6 @@ public class FilesRenamerStep extends AbstractStepDefinition {
 
     @Override
     public StepResult invoke(StepExecutionContext context) {
-        String finalName = context.getCurrentStepName();
         context.tick();
         RelationData renameResult = null;
         AbstractLogger logger = context.getStepLogger();
@@ -97,14 +95,19 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             }
             int filesToRenameSize = filesToRename.size();
 
-            logger.addLogLine("About to start rename " + filesToRenameSize + " files." +
+            logger.log("About to start rename " + filesToRenameSize + " files." +
                     ( !prefix.equals("") ? (" Adding Prefix: " + prefix + ";") : "") +
                     ( !suffix.equals("") ? (" Adding Suffix: " + suffix + ";") : ""));
 
             for (int i = 0; i < filesToRenameSize; i++) {
                 String oldName = filesToRename.get(i).getName();
                 Path oldFileFullPath = Paths.get(filesToRename.get(i).getPath());
-                String filenameNoExtenstion = oldName.substring(0, oldName.lastIndexOf('.'));
+                String filenameNoExtenstion = "";
+                try {
+                    filenameNoExtenstion = oldName.substring(0, oldName.lastIndexOf('.'));
+                } catch (Exception e) {
+                    logger.log("File: " + oldName + " has no extension");
+                }
                 String extension = oldName.substring(oldName.lastIndexOf('.'));
                 Path newFileFullPath = oldFileFullPath.resolveSibling(prefix + filenameNoExtenstion + suffix + extension);
 
@@ -136,7 +139,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
                 }
             }
         } catch (Exception e) {
-            logger.addLogLine("Exception occurred: " + e.getMessage());
+            logger.log("Exception occurred: " + e.getMessage());
             result = StepResult.FAILURE;
         }
         context.storeDataValue("RENAME_RESULT", renameResult ,DataDefinitionRegistry.RELATION);
@@ -156,7 +159,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             data.add(newPath.getName(newPath.getNameCount() - 1).toString());
         }catch (Exception e) {
             data.add(oldPath.getName(oldPath.getNameCount() - 1).toString());
-            logger.addLogLine("Problem renaming file: " + oldPath.getName(oldPath.getNameCount() - 1));
+            logger.log("Problem renaming file: " + oldPath.getName(oldPath.getNameCount() - 1));
             result = StepResult.WARNING;
         }
         renameResult.addRow(data);

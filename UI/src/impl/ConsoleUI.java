@@ -213,8 +213,8 @@ public class ConsoleUI extends UIAbstractDefinition {
     }
     @Override
     public void printResource(String name, String value, String type){
-        presentMessageToUser("Name: " + name);
+        presentMessageToUser("\nName: " + name);
         presentMessageToUser("Value: " + value);
-        presentMessageToUser("Type: " + type);
+        presentMessageToUser("Type: " + type + "\n");
     }
 }

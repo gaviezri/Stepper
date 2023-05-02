@@ -9,13 +9,14 @@ import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FlowDefinitionImpl implements FlowDefinition {
+public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private  String name;
     private  String description;
     private List<DataDefinitionDeclaration> allMandatoryInputs = new ArrayList<>();
@@ -312,19 +313,16 @@ public class FlowDefinitionImpl implements FlowDefinition {
     }
     @Override
     public void setFreeInputs(){
-       for (DataDefinitionDeclaration input : flowInputs){
-          if (!mappingGraph.isSatisfied(input.getName())) {
-              freeInputNames.add(input.getName());
-              List<StepUsageDeclaration> StepsNames = getStepsThatUsesInput(input.getName(), stepsUsageDecl);
-              flowFreeInputs2StepsThatUseThem.add(new Pair<>(input, StepsNames));
-              for (StepUsageDeclaration stepUsageDeclaration : StepsNames){
-                  String candidate = stepUsageDeclaration.getResourceFinalName(input.getName());
-                  if (!freeInputFinalNames.contains(candidate)){
-                      freeInputFinalNames.add(stepUsageDeclaration.getResourceFinalName(input.getName()));
-                  }
-              }
-
-          }
+        for (StepUsageDeclaration stepUsgDecl : stepsUsageDecl){
+            for (DataDefinitionDeclaration dataDefDecl : stepUsgDecl.getStepDefinition().inputs()){
+                String finalName = stepUsgDecl.getResourceFinalName(dataDefDecl.getName());
+                if (!mappingGraph.isSatisfied(finalName)){
+                    freeInputFinalNames.add(finalName);
+                    freeInputNames.add(dataDefDecl.getName());
+                    List<StepUsageDeclaration> StepsNames = getStepsThatUsesInput(finalName, stepsUsageDecl);
+                    flowFreeInputs2StepsThatUseThem.add(new Pair<>(dataDefDecl, StepsNames));
+                }
+            }
        }
     }
 

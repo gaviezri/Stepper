@@ -7,13 +7,14 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.api.enums.DataNecessity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
 
-public class MappingGraph {
+public class MappingGraph implements Serializable {
     private final List<String> stepNodes;
     private List<List<MappingEdge>> edges;
 

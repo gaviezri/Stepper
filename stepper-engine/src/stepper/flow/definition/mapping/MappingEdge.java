@@ -4,7 +4,9 @@ import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.step.api.enums.DataNecessity;
 
-public class MappingEdge {
+import java.io.Serializable;
+
+public class MappingEdge implements Serializable {
     private final String sourceStepFinalName;
     private final String sourceDataFinalName;
     private final String targetStepFinalName;

@@ -3,9 +3,10 @@ package stepper.flow.builder;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.FlowDefinitionImpl;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class FlowBuilderImpl implements FlowBuilder{
+public class FlowBuilderImpl implements FlowBuilder, Serializable {
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
 
     public List<FlowDefinition> buildFlows() {

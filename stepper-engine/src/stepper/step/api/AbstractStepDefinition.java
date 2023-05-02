@@ -1,9 +1,10 @@
 package stepper.step.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractStepDefinition implements StepDefinition {
+public abstract class AbstractStepDefinition implements StepDefinition, Serializable {
 
     private final String stepName;
     private final boolean readonly;

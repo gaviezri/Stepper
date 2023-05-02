@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Controller {
     boolean keepAlive = true;
     private final UIAbstractDefinition ui = new ConsoleUI();
-    private final EngineController engineController = new EngineController();
+    private EngineController engineController = new EngineController();
     private StatisticsManager statisticsManager = new StatisticsManager(engineController.getArchive());
 
     public void start() {
@@ -91,7 +91,7 @@ public class Controller {
         try {
             FileInputStream FileInStream = new FileInputStream(serPath + "\\stepper.ser");
             ObjectInputStream ObjectInStream = new ObjectInputStream(FileInStream);
-            ObjectInStream.readObject();
+            engineController = (EngineController) ObjectInStream.readObject();
             ObjectInStream.close();
             FileInStream.close();
             ui.presentMessageToUser("System state loaded successfully from " + serPath + "\\stepper.ser");
@@ -172,6 +172,7 @@ public class Controller {
             for (Pair<String,String> step2timestamp : stepsLogs.get(i)){
                 ui.presentMessageToUser(step2timestamp.getValue()+ ": " + step2timestamp.getKey());
             }
+            ui.presentMessageToUser("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         }
     }
 

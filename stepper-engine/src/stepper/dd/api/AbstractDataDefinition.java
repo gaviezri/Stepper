@@ -1,8 +1,9 @@
 package stepper.dd.api;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class AbstractDataDefinition implements DataDefinition {
+public abstract class AbstractDataDefinition implements DataDefinition, Serializable {
     private final String name;
     private final boolean userFriendly;
     private final Class<?> type;

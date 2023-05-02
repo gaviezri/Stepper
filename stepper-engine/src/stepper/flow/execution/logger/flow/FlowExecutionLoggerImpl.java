@@ -22,7 +22,7 @@ public class FlowExecutionLoggerImpl implements AbstractLogger {
         return logs;
     }
     @Override
-    public void addLogLine(String line) {
+    public void log(String line) {
         logs.add(new LogLine(line));
     }
     @Override

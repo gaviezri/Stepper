@@ -4,15 +4,12 @@ import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.relation.RelationDataDefinition;
-import stepper.dd.impl.string.StringData;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
-
-import javax.xml.crypto.Data;
 
 public class CSVExporterStep extends AbstractStepDefinition {
     public CSVExporterStep() {
@@ -66,7 +63,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
 
 
             if (relation == null || relation.getRowSize() == 0) {
-                logger.addLogLine("Relation is Empty or null");
+                logger.log("Relation is Empty or null");
                 result = StepResult.WARNING;
             } else {
                 int i = 0;
@@ -77,7 +74,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
                 // delete last comma and add new line
                 CSV.delete(CSV.length() - 1, CSV.length()).append('\n');
 
-                logger.addLogLine("About to process " + relation.getRowSize() + " lines of data");
+                logger.log("About to process " + relation.getRowSize() + " lines of data");
                 for (; i < relation.getRowSize(); i++) {
                     int j = 0;
                     for (; j < relation.getColSize()-1 ; j++){
@@ -91,8 +88,8 @@ public class CSVExporterStep extends AbstractStepDefinition {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.addLogLine("Error while exporting relation to CSV");
-            logger.addLogLine(e.getMessage());
+            logger.log("Error while exporting relation to CSV");
+            logger.log(e.getMessage());
             return StepResult.FAILURE;
         }
         context.tock();

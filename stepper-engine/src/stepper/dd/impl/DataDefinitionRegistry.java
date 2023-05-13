@@ -1,6 +1,7 @@
 package stepper.dd.impl;
 
 import stepper.dd.api.DataDefinition;
+import stepper.dd.impl.enumeration.EnumerationDataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
 import stepper.dd.impl.number.DoubleDataDefinition;
 import stepper.dd.impl.mapping.MappingDataDefinition;
@@ -14,7 +15,8 @@ public enum DataDefinitionRegistry implements DataDefinition {
     DOUBLE(new DoubleDataDefinition()),
     RELATION(new RelationDataDefinition()),
     LIST(new ListDataDefinition()),
-    MAPPING(new MappingDataDefinition());
+    MAPPING(new MappingDataDefinition()),
+    ENUMERATION(new EnumerationDataDefinition());
 
     DataDefinitionRegistry(DataDefinition dataDefinition) {
         this.dataDefinition = dataDefinition;

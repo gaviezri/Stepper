@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="stepper-engine" />
     <orderEntry type="module" module-name="UI" />
+    <orderEntry type="module" module-name="GUI" />
   </component>
 </module>

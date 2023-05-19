@@ -8,6 +8,7 @@ import stepper.dto.flow.LoadDataDTO;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.archive.ExecutionArchive;
+import stepper.flow.execution.runner.FlowExecutorsManager;
 import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
@@ -21,12 +22,13 @@ public class EngineController implements Serializable {
     ExecutionArchive executionArchive = new ExecutionArchive();
     FlowLoader flowLoader = new FlowLoader();
     LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
-    FlowExecutor flowExecutor = new FlowExecutor();
+    FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
 
 
     public LoadDataDTO readXML(String path) {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
+            //flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){
             return new LoadDataDTO(path, "", false, e.getMessage());
@@ -52,11 +54,13 @@ public class EngineController implements Serializable {
     public void executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
 
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinition(flowIdx);
+        FlowExecutor flowExecutor = new FlowExecutor();
         flowExecutor.setActiveFlow(flowToExecute);
         flowExecutor.setFlowFreeInputs(valName2valType);
         executionArchive.push(new FlowExecution(flowToExecute));
-        flowExecutor.executeFlow(executionArchive.peek());
-        flowExecutor.reset();
+        flowExecutor.setFlowExecution(executionArchive.peek());
+
+        flowsExecutorsManager.executeFlow(flowExecutor);
     }
     public List<Map<String,String>> getExecutedFlowHeaders() {
         return executionArchive.getExecutedFlowHeaders();

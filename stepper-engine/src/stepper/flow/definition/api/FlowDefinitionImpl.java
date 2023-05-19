@@ -29,40 +29,9 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private  List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
     private MappingGraph mappingGraph;
     private boolean isReadOnly;
-
-    private static final Map<String,String> stepInput2UserString = new HashMap<>();
-    private static final Map<String,String> stepOutput2UserString = new HashMap<>();
-
-    /** EX2 additional data members */
     private Map<String,Object> initialInputName2Value = new Hashtable<>();
     private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
 
-    static {
-        ///////////////////////////////// INPUTS ///////////////////////////////////////////
-        stepInput2UserString.put("SPEND_SOME_TIME:TIME_TO_SPEND","Total sleeping time (sec)");
-        stepInput2UserString.put("COLLECT_FILES_IN_FOLDER:FOLDER_NAME","Folder name to scan");
-        stepInput2UserString.put("COLLECT_FILES_IN_FOLDER:FILTER","Filter only these files");
-        stepInput2UserString.put("FILES_DELETER:FILE_LIST","Files to delete");
-        stepInput2UserString.put("FILES_RENAMER:FILES_TO_RENAME","Files to rename");
-        stepInput2UserString.put("FILES_RENAMER:PREFIX","Add this prefix");
-        stepInput2UserString.put("FILES_RENAMER:SUFFIX","Append this suffix");
-        stepInput2UserString.put("FILES_CONTENT_EXTRACTOR:FILES_LIST","Files to extract");
-        stepInput2UserString.put("FILES_RENAMER:LINE","Line number to extract");
-        stepInput2UserString.put("CSV_EXPORTER:SOURCE","Source data");
-        stepInput2UserString.put("PROPERTIES_EXPORTER:SOURCE","Source data");
-        stepInput2UserString.put("FILE_DUMPER:CONTENT","Content");
-        stepInput2UserString.put("FILE_DUMPER:FILE_NAME","Target file path");
-        //////////////////////////////// OUTPUTS ///////////////////////////////////////////
-        stepOutput2UserString.put("COLLECT_FILES_IN_FOLDER:FILE_LIST","Files list");
-        stepOutput2UserString.put("COLLECT_FILES_IN_FOLDER:TOTAL_FOUND","Total files found");
-        stepOutput2UserString.put("FILES_DELETER:DELETED_LIST","Files failed to be deleted");
-        stepOutput2UserString.put("FILES_DELETER:DELETION_STATS","Deletion summary results");
-        stepOutput2UserString.put("FILES_RENAMER:RENAME_RESULT","Rename operation summary");
-        stepOutput2UserString.put("FILES_RENAMER:DATA","Data extraction");
-        stepOutput2UserString.put("CSV_EXPORTER:RESULT","CSV export result");
-        stepOutput2UserString.put("PROPERTIES_EXPORTER:RESULT","Properties export result");
-        stepOutput2UserString.put("FILE_DUMPER:RESULT","File creation result");
-    }
 
     @Override
     public List<String> getAllInputsFinalNames(){
@@ -81,10 +50,6 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
 
     public FlowDefinitionImpl(String name) {
         this.name = name;
-    }
-
-    public static Map<String,String> getStepInput2UserString() {
-        return stepInput2UserString;
     }
 
     @Override

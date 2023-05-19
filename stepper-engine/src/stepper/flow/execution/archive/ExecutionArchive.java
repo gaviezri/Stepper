@@ -15,7 +15,7 @@ public class ExecutionArchive implements Serializable {
         flowExecutionStack = new Stack<>();
     }
 
-    public void push(FlowExecution flowExecution) {
+    public synchronized void push(FlowExecution flowExecution) {
         flowExecutionStack.push(flowExecution);
     }
 

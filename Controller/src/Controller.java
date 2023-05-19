@@ -19,7 +19,7 @@ public class Controller {
     boolean keepAlive = true;
     private final UIAbstractDefinition ui = new ConsoleUI();
     private EngineController engineController = new EngineController();
-    private StatisticsManager statisticsManager = new StatisticsManager(engineController.getArchive());
+    private  StatisticsManager statisticsManager = new StatisticsManager(engineController.getArchive());
 
     public void start() {
         ui.presentMessageToUser("\n\n#####################################################");

@@ -17,9 +17,6 @@ public interface StepExecutionContext {
     void setCurrentStepName(String currentStepName);
     AbstractLogger getStepLogger();
     void setStepResult(String name, StepResult stepResult);
-//    StepResult getStepResult(String name);
-//    void setStepDuration(String name, Number duration);
-//    Number getStepDuration(String name);
     void tick();
     void tock();
     void setCurrentStepUsageDeclaration(StepUsageDeclaration currentStepUsageDeclaration);

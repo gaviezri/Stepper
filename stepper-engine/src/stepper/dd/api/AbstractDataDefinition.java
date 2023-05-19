@@ -7,7 +7,6 @@ public abstract class AbstractDataDefinition implements DataDefinition, Serializ
     private final String name;
     private final boolean userFriendly;
     private final Class<?> type;
-    // protected abstract <T> T toDTO(Class<T> dtoType, Object data);
 
     @Override
     public String toString() {

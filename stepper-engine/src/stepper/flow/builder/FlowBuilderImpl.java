@@ -1,13 +1,35 @@
 package stepper.flow.builder;
 
+import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.FlowDefinitionImpl;
+import stepper.flow.definition.api.StepUsageDeclaration;
+import stepper.step.api.StepDefinition;
+import stepper.step.impl.ZipperStep;
 
 import java.io.Serializable;
 import java.util.*;
 
 public class FlowBuilderImpl implements FlowBuilder, Serializable {
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
+    private Map<String,List<Enum>> enumInputName2InputVal = new HashMap<>();
+
+    public FlowBuilderImpl(){
+        /** EVERY STEP WITH ENUM-INPUT NEEDS TO BE MAPPED HERE FOR FUTURE VALIDATION!*/
+        List<Enum> curEnum = new ArrayList<>();
+
+        curEnum.add(ZipperStep.OperationType.ZIP);
+        curEnum.add(ZipperStep.OperationType.UNZIP);
+        enumInputName2InputVal.put("OPERATION", new ArrayList<>(curEnum));
+
+        curEnum.clear();
+//         TODO: add enum formal types
+//        curEnum.add("GET");
+//        curEnum.add("PUT");
+//        curEnum.add("POST");
+//        curEnum.add("DELETE");
+//        enumInputName2InputVal.put("METHOD", new ArrayList<>(curEnum));
+    }
 
     public List<FlowDefinition> buildFlows() {
         // CHECK THAT:
@@ -23,14 +45,23 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
             flowDefinition.validateFlowStructure();
             flowDefinition.setAccessibility();
             flowDefinition.setFreeInputs();
+//            flowDefinition.setInitialInputs();
         }
         return flowDefinitions;
     }
 
+    @Override
+    public List<String> getAllFlowsInputsFinalNamesByIndex(int flowInd){
+        return flowDefinitions.get(flowInd).getAllInputsFinalNames();
+    }
 
     public void reset() {
-        //TODO: reset all fields
         flowDefinitions.clear();
+    }
+
+    @Override
+    public void addFlowsInitialInputValues(String inputName, Object initialValue, int flowInd, DataDefinition curDD){
+        flowDefinitions.get(flowInd).addFlowsInitialInputValues(inputName,initialValue, curDD);
     }
 
     @Override
@@ -83,4 +114,41 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
             return flowDefinitions.get(flowidx).getStepFinalName(sourceStepName);
     }
 
+    @Override
+    public DataDefinition getCorespondingDataDef(String inputName, int flowInd) {
+        /** returns the corresponding DataDefinition according to input name*/
+        String orgInputName = flowDefinitions.get(flowInd).getDataDefOriginalName(inputName);
+
+        if(orgInputName == null){ //    no such input name in any of the current flow steps
+           throw new IllegalArgumentException("No step in the current flow has an input with final name: \"" + inputName + "\" ");
+        }
+
+        DataDefinition resDD = null;
+
+        List<StepUsageDeclaration> curFlowSteps = flowDefinitions.get(flowInd).getFlowSteps();
+        StepDefinition curStp;
+
+        for (StepUsageDeclaration stp : curFlowSteps) {
+            resDD = stp.getDataDefByName(orgInputName);
+            if (resDD != null){break;}
+        }
+
+        return resDD;
+    }
+
+    @Override
+    public Enum isValidEnumInputNameAndValue(String name, String value){
+        List<Enum> curEnumList;
+        for (String inputName:enumInputName2InputVal.keySet()) {
+            if(inputName.equals(name)){
+                curEnumList = enumInputName2InputVal.get(inputName);
+                for (Enum e:curEnumList){
+                    if(e.toString().equals(value)){
+                        return e;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.FlowExecution;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
 import stepper.step.api.enums.StepResult;
@@ -13,11 +14,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
-public class FlowExecutor implements Serializable {
+public class FlowExecutor implements Serializable, Callable<FlowExecutionResult> {
     // context will hold the flow-execution data in the process. will be reset between flows.
     StepExecutionContext context;
     FlowDefinition activeFlow;
+    FlowExecution flowExecution;
+    FlowExecutorsManager flowExecutorsManager;
 
     public void reset(){
         context = null;
@@ -25,10 +29,9 @@ public class FlowExecutor implements Serializable {
     }
 
 
-    public FlowExecution executeFlow(FlowExecution flowExecution) {
-
+    public FlowExecutionResult call () {
+        System.out.println("Starting execution of flow " + activeFlow.getName() + " [ID: " + flowExecution.getUniqueId()  + "] By Thread: " + Thread.currentThread().getName());
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
-        System.out.println("Starting execution of flow " + flowExecution.getFlowDefinition().getName() + " [ID: " + flowExecution.getUniqueId() + "]");
 
         boolean breakFlowIfStepFails;
         flowExecution.setFreeInputContent(context.getExecutionData());
@@ -54,7 +57,7 @@ public class FlowExecutor implements Serializable {
         flowExecution.tock();
         flowExecution.setExecutionOutputs(context.getExecutionDataValues());
         presentEndOfExecutionSummary(flowExecution);
-        return flowExecution;
+        return flowExecution.getFlowExecutionResult();
     }
 
     private void presentEndOfExecutionSummary(FlowExecution flowExecution) {
@@ -75,7 +78,6 @@ public class FlowExecutor implements Serializable {
 
     public void updateExecutionResult(FlowExecution execution, StepResult stepresult ,Boolean skipIfFail){
         execution.updateExecutionResult(stepresult, skipIfFail);
-
     }
     public void setActiveFlow(FlowDefinition flowDef) {
         activeFlow = flowDef;
@@ -83,5 +85,13 @@ public class FlowExecutor implements Serializable {
 
     public void setFlowFreeInputs(Pair<Map,Map> valMap2typeMap) {
         context = new StepExecutionContextImpl(activeFlow, valMap2typeMap.getKey(), valMap2typeMap.getValue(), activeFlow.getMappingGraph());
+    }
+
+    public void setFlowExecution(FlowExecution flowExecution) {
+        this.flowExecution = flowExecution;
+    }
+
+    public UUID getFlowUUID() {
+        return flowExecution.getUniqueId();
     }
 }

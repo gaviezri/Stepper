@@ -17,7 +17,8 @@ public enum StepDefinitionRegistry {
     FILES_DELETER(new FilesDeleterStep()),
     PROPERTIES_EXPORTER(new PropertiesExporterStep()),
     FILES_CONTENT_EXTRACTOR(new FilesContentExtractorStep()),
-    ZIPPER(new ZipperStep())
+    ZIPPER(new ZipperStep()),
+    COMMAND_LINE(new CommandLineStep())
     ;
 
     private final StepDefinition stepDefinition;

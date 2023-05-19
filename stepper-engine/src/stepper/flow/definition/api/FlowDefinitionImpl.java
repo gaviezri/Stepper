@@ -10,16 +10,13 @@ import stepper.step.api.StepDefinition;
 import stepper.step.api.enums.DataNecessity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private  String name;
     private  String description;
-    private List<DataDefinitionDeclaration> allMandatoryInputs = new ArrayList<>();
+    private List<Pair<String,Class>> allMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> unsatisfiedMandatoryInputs = new ArrayList<>();
     private List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
     private List<String> freeInputNames = new ArrayList<>();
@@ -35,6 +32,11 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
 
     private static final Map<String,String> stepInput2UserString = new HashMap<>();
     private static final Map<String,String> stepOutput2UserString = new HashMap<>();
+
+    /** EX2 additional data members */
+    private Map<String,Object> initialInputName2Value = new Hashtable<>();
+    private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
+
     static {
         ///////////////////////////////// INPUTS ///////////////////////////////////////////
         stepInput2UserString.put("SPEND_SOME_TIME:TIME_TO_SPEND","Total sleeping time (sec)");
@@ -62,6 +64,20 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         stepOutput2UserString.put("FILE_DUMPER:RESULT","File creation result");
     }
 
+    @Override
+    public List<String> getAllInputsFinalNames(){
+        List<String> allInputs = new ArrayList<>();
+        for (StepUsageDeclaration stp : stepsUsageDecl) {
+            allInputs.addAll(stp.getAllInputsFinalNames());
+        }
+        return allInputs;
+    }
+
+    @Override
+    public void addFlowsInitialInputValues(String inputName, Object initialValue, DataDefinition curDD){
+        initialInputName2Value.put(inputName,initialValue);
+        initialInputName2DataDef.put(inputName,curDD);
+    }
 
     public FlowDefinitionImpl(String name) {
         this.name = name;
@@ -92,12 +108,12 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     }
 
     private void validateMandatoryInputsSameNameSameType() {
-        for ( DataDefinitionDeclaration DataDefDecl1: allMandatoryInputs){
-            List<DataDefinitionDeclaration> restOfDataDefDecl = allMandatoryInputs.stream()
-                    .filter(datadefdecl -> ! datadefdecl.equals(DataDefDecl1))
+        for ( Pair<String,Class> curInput: allMandatoryInputs){
+            List<Pair<String,Class>> restOfDataDefDecl = allMandatoryInputs.stream()
+                    .filter(otherInput -> ! otherInput.equals(curInput))
                     .collect(Collectors.toList());
-            for ( DataDefinitionDeclaration DataDefDecl2: restOfDataDefDecl){
-                if (DataDefDecl1.getName().equals(DataDefDecl2.getName()) && DataDefDecl1.getType().equals(DataDefDecl2.getType())){
+            for ( Pair<String,Class> curInput2: restOfDataDefDecl){
+                if (curInput.getKey().equals(curInput2.getKey()) && !curInput.getValue().equals(curInput2.getValue())){
                     throw new RuntimeException("numerous mandatory inputs with the same name from different types!");
                 }
             }
@@ -138,12 +154,15 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
 
     @Override
     public void setMandatoryInputs() {
+        Pair<String,Class> curNameAndClass;
         for (StepUsageDeclaration stepUsageDeclaration : stepsUsageDecl) {
             for (DataDefinitionDeclaration dataDefinitionDeclaration : stepUsageDeclaration.getStepDefinition().inputs()) {
                 if (dataDefinitionDeclaration.necessity() == DataNecessity.MANDATORY){
-                    allMandatoryInputs.add(dataDefinitionDeclaration);
+                    curNameAndClass = new Pair<>(stepUsageDeclaration.getFinalInputNameByOrg(dataDefinitionDeclaration.getName()),dataDefinitionDeclaration.getType());
+                    allMandatoryInputs.add(curNameAndClass);
                     if (! mappingGraph.isSatisfied(dataDefinitionDeclaration.getName())){
                         unsatisfiedMandatoryInputs.add(dataDefinitionDeclaration);
+//                        TODO: check if satisfied through INITIAL INPUT VALUES!
                     }
                 }
                 flowInputs.add(dataDefinitionDeclaration);
@@ -439,5 +458,16 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
                     return finalName.equals(originalName) ? finalName : finalName + " (" + originalName + ")";
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getDataDefOriginalName(String inputName) {
+        String orgName = null;
+
+        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+            orgName = stepusgdecl.getInputOrgNameByFinalName(inputName);
+            if (orgName != null){break;}
+        }
+        return orgName;
     }
 }

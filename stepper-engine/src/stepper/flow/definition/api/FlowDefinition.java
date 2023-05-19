@@ -19,6 +19,10 @@ public interface FlowDefinition {
 
     List<String> getFlowFormalOutputs();
 
+    List<String> getAllInputsFinalNames();
+
+    void addFlowsInitialInputValues(String inputName, Object initialValue, DataDefinition curDD);
+
     static Map<String,String> getStepInput2UserString() {
         return null;
     };
@@ -79,4 +83,6 @@ public interface FlowDefinition {
     List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
 
     List<String> getStepsNamesWithAlias();
+
+    String getDataDefOriginalName(String inputName);
 }

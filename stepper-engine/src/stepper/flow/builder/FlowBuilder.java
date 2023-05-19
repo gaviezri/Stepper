@@ -1,12 +1,18 @@
 package stepper.flow.builder;
 
+import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.api.FlowDefinition;
 
 import java.util.List;
 import java.util.Set;
 
 public interface FlowBuilder {
+    List<String> getAllFlowsInputsFinalNamesByIndex(int flowInd);
+
     void reset();
+
+    void addFlowsInitialInputValues(String inputName, Object initialValue, int flowInd, DataDefinition curDD);
+
     void instantiateFlowsAndSetNames(List<String> flowNames);
     void setFlowFormalOutputs(int flowidx, Set<String> flowFormalOutputs);
     void setFlowDescription(List<String> descriptions);
@@ -19,4 +25,7 @@ public interface FlowBuilder {
 
     String getStepFinalName(int flowidx, String sourceStepName);
 
+    DataDefinition getCorespondingDataDef(String inputName, int flowInd);
+
+    Enum isValidEnumInputNameAndValue(String inputName, String inputValue);
 }

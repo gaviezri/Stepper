@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ConsoleApp {
     boolean keepAlive = true;
     private final UIAbstractDefinition ui = new ConsoleUI();
-    private EngineController engineController = new EngineController();
+    private EngineController engineController = EngineController.getInstance();
     private  StatisticsManager statisticsManager = new StatisticsManager(engineController.getArchive());
 
 

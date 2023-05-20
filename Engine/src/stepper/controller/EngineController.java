@@ -25,7 +25,17 @@ public class EngineController implements Serializable {
     LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
     FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
 
+    private static EngineController instance = null;
 
+    private EngineController() {
+    }
+
+    public static EngineController getInstance() {
+        if (instance == null) {
+            instance = new EngineController();
+        }
+        return instance;
+    }
     public LoadDataDTO readXML(String path) {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));

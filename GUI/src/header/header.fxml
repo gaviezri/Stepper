@@ -15,7 +15,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="topBanner" prefHeight="70.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="header.HeaderController">
+<GridPane fx:id="topBanner" prefHeight="70.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -49,7 +49,7 @@
                     </textFill>
                 </Label>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Loaded Flow(s) File:" />
-                <TextField id="xmlpath" fx:id="pathTextField" prefHeight="29.0" prefWidth="529.0">
+                <TextField id="xmlpath" fx:id="pathTextField" editable="false" prefHeight="29.0" prefWidth="529.0">
                     <padding>
                         <Insets top="5.0" />
                     </padding>

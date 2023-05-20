@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane fx:id="mainTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="1000.0" tabMaxWidth="1000.0" BorderPane.alignment="CENTER"
+         xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171"
+         fx:controller="body.BodyController">
+    <tabs>
+        <fx:include fx:id="flowDefTab" source="definition/definitionTab.fxml" />
+        <!--include exeuctionTab-->
+        <!-- include history-->
+        <!-- include statistics-->
+    </tabs>
+</TabPane>

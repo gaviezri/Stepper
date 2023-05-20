@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Controller {
+public class ConsoleApp {
     boolean keepAlive = true;
     private final UIAbstractDefinition ui = new ConsoleUI();
     private EngineController engineController = new EngineController();
@@ -395,7 +395,7 @@ public class Controller {
     }
 
     public static void main(String[] args) {
-        Controller ctl = new Controller();
+        ConsoleApp ctl = new ConsoleApp();
         ctl.start();
     }
 

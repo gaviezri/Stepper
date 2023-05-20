@@ -1,8 +1,10 @@
-package stepper.flow.definition.api;
+package stepper.flow.definition.impl;
 
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.api.FlowDefinition;
+import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.definition.mapping.MappingGraph;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;

@@ -1,6 +1,7 @@
-package stepper.flow.definition.api;
+package stepper.flow.definition.impl;
 
 import stepper.dd.api.DataDefinition;
+import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;

@@ -2,7 +2,7 @@ package stepper.flow.builder;
 
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.api.FlowDefinition;
-import stepper.flow.definition.api.FlowDefinitionImpl;
+import stepper.flow.definition.impl.FlowDefinitionImpl;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.api.StepDefinition;
 import stepper.step.impl.ZipperStep;

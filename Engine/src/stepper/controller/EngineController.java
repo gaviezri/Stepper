@@ -13,6 +13,8 @@ import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,7 @@ public class EngineController implements Serializable {
     private EngineController() {
     }
 
-    public static EngineController getInstance() {
+    public synchronized static EngineController getInstance() {
         if (instance == null) {
             instance = new EngineController();
         }
@@ -93,5 +95,14 @@ public class EngineController implements Serializable {
 
     public ExecutionArchive getArchive() {
         return this.executionArchive;
+    }
+
+
+    public void prepareForSerialization() {
+        this.flowsExecutorsManager.prepareForSerialization();
+    }
+
+    public void wakeUp() {
+        this.flowsExecutorsManager.wakeUp();
     }
 }

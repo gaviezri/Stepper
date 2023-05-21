@@ -3,17 +3,28 @@ package app;
 import body.BodyController;
 import header.HeaderController;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import stepper.controller.EngineController;
+import stepper.dto.flow.FlowNamesDTO;
+import stepper.dto.flow.LoadDataDTO;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 
-public class AppController {
+public class AppController implements Initializable {
     @FXML
     private HeaderController headerController;
     @FXML
     private BodyController bodyController;
+
     private EngineController engineController;
 
     @FXML
@@ -22,7 +33,14 @@ public class AppController {
     @FXML
     private BorderPane sceneMainPane;
 
-    public void initialize() {
+    @FXML
+    private GridPane headerComponent;
+
+    @FXML
+    private TabPane bodyComponent;
+
+    @Override
+    public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         engineController = EngineController.getInstance();
     }
 
@@ -36,7 +54,6 @@ public class AppController {
     }
 
     public void setBodyController(BodyController bodyController) {
-
         this.bodyController = bodyController;
         bodyController.setMainController(this);
     }
@@ -44,4 +61,20 @@ public class AppController {
     public Window getPrimaryStage() {
         return sceneMainPane.getScene().getWindow();
     }
+
+    public BodyController getBodyController() {
+        return bodyController;
+    }
+    public HeaderController getHeaderController() {
+        return headerController;
+    }
+
+    public LoadDataDTO readXML(String path) {
+        return engineController.readXML(path);
+    }
+    public FlowNamesDTO getFlowNames() {
+        return engineController.getFlowDefinitionsNames();
+    }
+
+
 }

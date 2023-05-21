@@ -6,6 +6,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import stepper.controller.EngineController;
 import stepper.statistics.StatisticsManager;
@@ -20,16 +24,24 @@ public class App extends Application {
     private AppController appController;
     @Override
     public void start(Stage primaryStage) throws Exception {
+        utils.Utils.whoRunsMe(new Object(){}.getClass().getEnclosingMethod().getName());
         FXMLLoader Apploader = new FXMLLoader(AppController.class.getResource("app.fxml"));
-        FXMLLoader BodyLoader = new FXMLLoader(HeaderController.class.getResource("header.fxml"));
-        FXMLLoader HeaderLoader = new FXMLLoader(BodyController.class.getResource("body.fxml"));
+        FXMLLoader HeaderLoader = new FXMLLoader(HeaderController.class.getResource("header.fxml"));
+        FXMLLoader BodyLoader = new FXMLLoader(BodyController.class.getResource("body.fxml"));
 
-        Parent root = Apploader.load();
+
+        ScrollPane root = Apploader.load();
         appController = Apploader.getController();
+        GridPane header = HeaderLoader.load();
+        HeaderController headerController = HeaderLoader.getController();
+        TabPane body = BodyLoader.load();
+        BodyController bodyController = BodyLoader.getController();
 
-        appController.setHeaderController(BodyLoader.getController());
-        appController.setBodyController(HeaderLoader.getController());
+        BorderPane.class.cast(root.getContent()).setTop(header);
+        BorderPane.class.cast(root.getContent()).setCenter(body);
 
+        appController.setBodyController(bodyController);
+        appController.setHeaderController(headerController);
 
 
 

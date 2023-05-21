@@ -58,14 +58,17 @@
             </children>
         </FlowPane>
         <MenuBar>
+            <padding>
+                <Insets top="5.0" />
+            </padding>
             <GridPane.margin>
-                <Insets top="3.0" />
+                <Insets top="5.0" />
             </GridPane.margin>
             <menus>
                 <Menu fx:id="systemMenu" mnemonicParsing="false" text="System">
                     <items>
-                        <MenuItem fx:id="saveSnapshot" mnemonicParsing="false" text="Save snapshot" />
-                        <MenuItem fx:id="loadSnapshot" mnemonicParsing="false" text="Load snapshot" />
+                        <MenuItem fx:id="saveSnapshot"   onAction="#SaveSystemSnapshotPressed" mnemonicParsing="false" text="Save snapshot" />
+                        <MenuItem fx:id="loadSnapshot"  onAction="#LoadSystemSnapshotPressed" mnemonicParsing="false" text="Load snapshot" />
                     </items>
                 </Menu>
                 <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme">

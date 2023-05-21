@@ -43,16 +43,16 @@ public class FlowLoader implements Serializable {
             threadCount = document.getElementsByTagName("ST-ThreadPool").item(0).getTextContent();
             this.threadCount = validateThreadCount(threadCount);
         } catch (NullPointerException e) {
-            throw new RuntimeException("Element \"ST-ThreadPool\" is not in the given XML file! Stepper will work synchronized");
+            throw new RuntimeException("Element \"ST-ThreadPool\" is not in the given XML file!");
         }
 
         // builder will be used to create the flow definitions
         // and will work along the validations to minimize the number of iterations over the xml
-        finally{
+
             // get all flow elements from xml
-            NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
-            validateFlowDefinitionsInXML(flowDefinitionsNodeList);
-        }
+        NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
+        validateFlowDefinitionsInXML(flowDefinitionsNodeList);
+
     }
     private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) throws Exception {
 

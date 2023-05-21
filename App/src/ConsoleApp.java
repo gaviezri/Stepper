@@ -120,8 +120,6 @@ public class ConsoleApp {
             ui.presentMessageToUser("Error: " + e.getMessage());
             ui.presentMessageToUser("System state was not saved!");
         }
-
-
     }
 
     private void presentFlowExecutionDetails() {

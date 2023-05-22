@@ -1,8 +1,9 @@
 package header;
 
 import app.AppController;
-import body.definition.DefinitionController;
-import javafx.application.Platform;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -57,6 +58,8 @@ public class HeaderController {
     @FXML
     private MenuItem themeItem2;
 
+    private final StringProperty loadedXMLPath = new SimpleStringProperty();
+
     @FXML
     void BrowseBtnMouseEnter(MouseEvent event) {
 
@@ -80,27 +83,18 @@ public class HeaderController {
             String path = chosenFile.getAbsolutePath();
             LoadDataDTO ldDTO =  mainController.readXML(path);
             if(ldDTO.getStatus()){
-                renderFlowDefinitionData(path);
+                loadedXMLPath.set(path);
             } else {
-                showLoadErrorModal(ldDTO);
+               utils.Utils.ShowError("Error","Error while loading flow(s)", ldDTO.getErrorMessage());
             }
         }
     }
 
-    private void renderFlowDefinitionData(String path) {
-        pathTextField.setText(path);
-        DefinitionController flowDefController = mainController.getBodyController().getFlowDefinitionController();
-        flowDefController.showFlowNames(mainController.getFlowNames());
-        // some more logic...
+    public void initialize() {
+        pathTextField.textProperty().bind(loadedXMLPath);
+
     }
 
-    private static void showLoadErrorModal(LoadDataDTO ldDTO) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Error while loading flow(s)");
-        alert.setContentText(ldDTO.getErrorMessage());
-        alert.showAndWait();
-    }
 
     public void setMainController(AppController appController) {
         this.mainController = appController;
@@ -140,7 +134,6 @@ public class HeaderController {
 
     public void LoadSystemSnapshotPressed(ActionEvent actionEvent) {
         loadEngineController();
-        //presentUI
     }
 
     private void loadEngineController() {
@@ -162,5 +155,9 @@ public class HeaderController {
         }catch (Exception e){
             ShowError("Error", "System state could not be loaded!", e.getMessage());
         }
+    }
+
+    public StringProperty getLoadedPath() {
+        return loadedXMLPath;
     }
 }

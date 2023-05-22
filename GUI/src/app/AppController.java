@@ -3,7 +3,6 @@ package app;
 import body.BodyController;
 import header.HeaderController;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -13,17 +12,12 @@ import stepper.controller.EngineController;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-
-public class AppController implements Initializable {
+public class AppController {
     @FXML
-    private HeaderController headerController;
+    private HeaderController headerComponentController;
     @FXML
-    private BodyController bodyController;
+    private BodyController bodyComponentController;
 
     private EngineController engineController;
 
@@ -39,34 +33,29 @@ public class AppController implements Initializable {
     @FXML
     private TabPane bodyComponent;
 
-    @Override
-    public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
+    public void initialize(){
         engineController = EngineController.getInstance();
+        bodyComponentController.setMainController(this);
+        headerComponentController.setMainController(this);
+        bodyComponentController.bindDefinitionTabComponents();
+
     }
+
 
     public EngineController getEngineController() {
         return engineController;
     }
 
-    public void setHeaderController(HeaderController headerController) {
-        this.headerController = headerController;
-        headerController.setMainController(this);
-    }
-
-    public void setBodyController(BodyController bodyController) {
-        this.bodyController = bodyController;
-        bodyController.setMainController(this);
-    }
 
     public Window getPrimaryStage() {
         return sceneMainPane.getScene().getWindow();
     }
 
     public BodyController getBodyController() {
-        return bodyController;
+        return bodyComponentController;
     }
     public HeaderController getHeaderController() {
-        return headerController;
+        return headerComponentController;
     }
 
     public LoadDataDTO readXML(String path) {
@@ -75,6 +64,4 @@ public class AppController implements Initializable {
     public FlowNamesDTO getFlowNames() {
         return engineController.getFlowDefinitionsNames();
     }
-
-
 }

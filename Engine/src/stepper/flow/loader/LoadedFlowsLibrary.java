@@ -25,6 +25,10 @@ public class LoadedFlowsLibrary implements Serializable {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+    public int getCountOfLoadedFlows(){
+        return loadedflowDefinitions.size();
+    }
+
     public boolean isLoaded() {
         if(loadedflowDefinitions == null)
             return false;

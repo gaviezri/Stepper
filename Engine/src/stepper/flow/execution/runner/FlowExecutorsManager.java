@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 public class FlowExecutorsManager implements Serializable {
 
     private int workersCount;
-    ExecutorService executorService = null;
+    private ExecutorService executorService = null;
     public void prepareForSerialization() {
         if (executorService != null) {
             executorService.shutdown();

@@ -16,6 +16,7 @@ import stepper.flow.loader.FlowLoader;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,17 @@ public class EngineController implements Serializable {
             return new FlowDefinitionDTO(flowLibrary.getFlowDefinition(flowIdx));
         }catch (Exception e){
             return new FlowDefinitionDTO(e.getMessage());
+        }
+    }
+    public List<FlowDefinitionDTO> getAllFlowDefinitionsData(){
+        try {
+            List<FlowDefinitionDTO> allDTOS = new ArrayList<>();
+            for (int i = 0; i < flowLibrary.getCountOfLoadedFlows(); ++i){
+                allDTOS.add(getFlowDefinitionData(i));
+            }
+            return allDTOS;
+        }catch (Exception e){
+            return null;
         }
     }
 

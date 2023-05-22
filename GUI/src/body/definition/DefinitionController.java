@@ -1,12 +1,14 @@
 package body.definition;
 import app.AppController;
 import body.BodyController;
+import body.BodyControllerComponent;
 import header.HeaderController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
@@ -19,11 +21,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class DefinitionController {
+public class DefinitionController extends BodyControllerComponent {
 
-
-
-    BodyController bodyController;
 
     @FXML private ListView<String> flowDefAvailableFlowsList;
     @FXML private AnchorPane flowPresentationAnchorPane;
@@ -42,9 +41,17 @@ public class DefinitionController {
     private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
     private  List<List<String>> flowStepsFullNameByFlowIdx = new ArrayList<>();
+    private void clearAllData() {
+        flowDefAvailableFlowsList.getItems().clear();
+        flowDescriptionsProperty.clear();
+        flowFormalOutputsProperty.clear();
+        flowStepsFullNameByFlowIdx.clear();
 
+    }
+    // --WIRINGS--
     public void initialize() {
-        //wirings
+        // set button photo
+        initializeExecuteButton();
         //hide steps in flow label until first flow is selected
         executeFlowButton.visibleProperty().set(false);
         flowInformationAccordion.visibleProperty().set(false);
@@ -78,15 +85,20 @@ public class DefinitionController {
 
 
     }
-    public void setBodyController(BodyController bodyController) {
-        this.bodyController = bodyController;
-    }
 
-    private String stepPresentationFormat(String name, String alias ,Boolean readonly) {;
-        boolean gotAlias = !name.equals(alias);
-        return alias +
-                (gotAlias ? " - (" + name + ")" : "") +
-                 (readonly ? " [Readonly]" : "");
+    private void initializeExecuteButton() {
+        ImageView iv = new ImageView(getClass().getResource("start-button.png").toString());
+        iv.setFitHeight(160);
+        iv.setFitWidth(160);
+        iv.setPreserveRatio(true);
+        executeFlowButton.setGraphic(iv);
+        executeFlowButton.backgroundProperty().set(null);
+        executeFlowButton.setOnMousePressed(event -> {
+            executeFlowButton.translateYProperty().set(3);
+        });
+        executeFlowButton.setOnMouseReleased(event -> {
+            executeFlowButton.translateYProperty().set(-3);
+        });
     }
 
     public void bindDefinitionTabComponents() {
@@ -101,14 +113,64 @@ public class DefinitionController {
                     setFlowsHeadersData(dto);
                     setFlowsStepsData(dto);
                     setFlowInputsData(dto);
+                    setFlowOutputsData(dto);
 
 
                 }
-
             }
         });
     }
+    // --FLOW HEADERS--
+    private void setFlowsHeadersData(FlowDefinitionDTO dto) {
+        flowDefAvailableFlowsList.getItems().add(dto.getFlowName());
+        flowDescriptionsProperty.add(dto.getDescription());
+        flowFormalOutputsProperty.addAll(dto.getFormalOutputs().stream()
+                .map(SimpleStringProperty::new)
+                .collect(Collectors.toList()));
+    }
+    // -- STEPS --
+    private void setFlowsStepsData(FlowDefinitionDTO dto) {
+        List<Boolean> stepsReadonly = dto.getIsStepReadonly();
+        List<Pair<String,String>> step2alias = dto.getStep2alias();
+        List<String> currentFlowStepsPresentations = new ArrayList<>();
+        for (int i = 0; i<stepsReadonly.size(); ++i){
+            Pair<String,String> s2a = step2alias.get(i);
+            currentFlowStepsPresentations.add(stepPresentationFormat(s2a.getKey(),s2a.getValue(),stepsReadonly.get(i)));
+        }
+        flowStepsFullNameByFlowIdx.add(currentFlowStepsPresentations);
+    }
+    private String stepPresentationFormat(String name, String alias ,Boolean readonly) {;
+        boolean gotAlias = !name.equals(alias);
+        return alias +
+                (gotAlias ? " - (" + name + ")" : "") +
+                (readonly ? " [Readonly]" : "");
+    }
+    // --OUTPUTS--
+    private void setFlowOutputsData(FlowDefinitionDTO dto) {
+        List<String> outputs = dto.getOutputsFinalNames();
+        List<String> outputTypes = dto.getOutputTypes();
+        List<String> stepsThatUseOutputs = dto.getFinalStepNameThatProducedTheOutput();
+        VBox content = new VBox();
+        for (int i = 0; i < outputs.size(); i++) {
+            content.getChildren().add(createOutputPane(outputs.get(i),
+                    outputTypes.get(i),
+                    stepsThatUseOutputs.get(i)));
+        }
+        outputsTitledPane.setContent(content);
+    }
+    private TitledPane createOutputPane(String name, String type, String stepProducedBy) {
+        TitledPane outputPane = new TitledPane();
+        outputPane.setText(name);
+        outputPane.setExpanded(false);
 
+        VBox content = new VBox();
+        outputPane.setContent(content);
+        Label typeLabel = new Label("Type: " + type);
+        Label stepProducedByLabel = new Label("Produced by (Step): " + stepProducedBy);
+        content.getChildren().addAll(typeLabel,stepProducedByLabel);
+        return outputPane;
+    }
+    // --INPUTS--
     private void setFlowInputsData(FlowDefinitionDTO dto) {
 
         List<String> freeInputs = dto.getFreeInputsFinalNames();
@@ -123,60 +185,34 @@ public class DefinitionController {
                 continue;
             }
             usedNames.add(name);
-            TitledPane presentation = createFreeInputPane(name,
-                    freeInputTypes.get(i),
-                    stepsThatUseFreeInputs.get(i).getValue(),
-                    freeInputsNecessity.get(i));
+            TitledPane presentation = createFreeInputPane(name, freeInputTypes.get(i),
+                                                            stepsThatUseFreeInputs.get(i).getValue(),freeInputsNecessity.get(i));
             content.getChildren().add(presentation);
         }
-        inputsTitledPane.setContent(new ScrollPane(content));
+        inputsTitledPane.setContent(content);
     }
-
-    private void setFlowsStepsData(FlowDefinitionDTO dto) {
-        List<Boolean> stepsReadonly = dto.getIsStepReadonly();
-        List<Pair<String,String>> step2alias = dto.getStep2alias();
-        List<String> currentFlowStepsPanes = new ArrayList<>();
-        for (int i = 0; i<stepsReadonly.size(); ++i){
-            Pair<String,String> s2a = step2alias.get(i);
-            currentFlowStepsPanes.add(stepPresentationFormat(s2a.getKey(),s2a.getValue(),stepsReadonly.get(i)));
-        }
-        flowStepsFullNameByFlowIdx.add(currentFlowStepsPanes);
-    }
-
-    private void setFlowsHeadersData(FlowDefinitionDTO dto) {
-        flowDefAvailableFlowsList.getItems().add(dto.getFlowName());
-        flowDescriptionsProperty.add(dto.getDescription());
-        flowFormalOutputsProperty.addAll(dto.getFormalOutputs().stream()
-                .map(SimpleStringProperty::new)
-                .collect(Collectors.toList()));
-    }
-
-    private void clearAllData() {
-        flowDefAvailableFlowsList.getItems().clear();
-        flowDescriptionsProperty.clear();
-        flowFormalOutputsProperty.clear();
-        flowStepsFullNameByFlowIdx.clear();
-
-    }
-
     private TitledPane createFreeInputPane(String name, String type, List<String> stepsThatUseMe, String Necessity) {
         TitledPane inputPane = new TitledPane();
         inputPane.setText(name);
         inputPane.setExpanded(false);
 
         VBox content = new VBox();
-        ScrollPane contentScrollPane = new ScrollPane();
-        contentScrollPane.setContent(content);
 
-        Label necessityLabel = new Label("Necessity: " + Necessity.toLowerCase());
-        Label typeLabel = new Label("Type: " + type.toLowerCase());
         TitledPane usedBy = new TitledPane();
         usedBy.setText("Used by (steps)");
-        usedBy.setContent(new ListView<>(FXCollections.observableArrayList(stepsThatUseMe)));
+        usedBy.setExpanded(false);
 
-        inputPane.setContent(contentScrollPane);
-        content.getChildren().addAll(typeLabel, necessityLabel, usedBy);
+        List<Label> stepsThatUseMeLabels = stepsThatUseMe.stream().map(Label::new).collect(Collectors.toList());
+        VBox stepsThatUseMeVBox = new VBox();
+        stepsThatUseMeVBox.getChildren().addAll(stepsThatUseMeLabels);
+        usedBy.setContent(stepsThatUseMeVBox);
+
+        inputPane.setContent(content);
+        content.getChildren().addAll( new Label("Type: " + type.toLowerCase()),
+                                        new Label("Necessity: " + Necessity.toLowerCase()),
+                                            usedBy);
 
         return inputPane;
     }
+
 }

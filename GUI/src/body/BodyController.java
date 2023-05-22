@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
 public class BodyController {
@@ -15,7 +16,7 @@ public class BodyController {
     @FXML private DefinitionController flowDefComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowDefTab;
-    @FXML private GridPane flowDefComponent;
+    @FXML private AnchorPane flowDefComponent;
 
 
 

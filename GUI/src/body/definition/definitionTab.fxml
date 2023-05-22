@@ -8,59 +8,36 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="392.0" prefWidth="986.0" style="-fx-alignment: center;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.definition.DefinitionController">
-    <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" percentWidth="0.0" prefWidth="210.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints maxHeight="81.0" minHeight="0.0" prefHeight="81.0" />
-        <RowConstraints maxHeight="392.0" minHeight="311.0" prefHeight="311.0" />
-      <RowConstraints />
-    </rowConstraints>
-    <children>
-      <AnchorPane GridPane.rowSpan="3">
+
+<AnchorPane prefHeight="384.0" prefWidth="1270.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.definition.DefinitionController">
+   <children>
+      <AnchorPane fx:id="flowPresentationAnchorPane">
          <children>
             <ListView fx:id="flowDefAvailableFlowsList" layoutX="7.0" layoutY="31.0" prefHeight="329.0" prefWidth="197.0" />
          </children>
       </AnchorPane>
-    <AnchorPane fx:id="flowPresentationAnchorPane" GridPane.columnIndex="1" GridPane.rowSpan="2">
-         <children>
-              <Label fx:id="selectedFlowNameLabel" contentDisplay="CENTER" layoutX="23.0" layoutY="14.0" prefHeight="51.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-padding-top: 10px; -fx-wrap-text: true;">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <Label fx:id="selectedFlowDescriptionLabel" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="31.0" layoutY="101.0" prefHeight="190.0" prefWidth="235.0" style="-fx-wrap-text: true;" />
-            <Button fx:id="executeFlowButton" layoutX="42.0" layoutY="329.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="197.0" text="execute selected flow" />
-            <ScrollPane fx:id="flowDataScrollPane" layoutX="344.0" layoutY="14.0" prefHeight="329.0" prefWidth="417.0">
-               <content>
-                  <Accordion fx:id="flowInformationAccordion" prefHeight="322.0" prefWidth="413.0">
-                    <panes>
-                      <TitledPane fx:id="stepsTitledPane" animated="false" text="Steps">
-                           <content>
-                              <ListView fx:id="stepsListView" prefHeight="0.0" prefWidth="406.0" />
-                           </content>
-                      </TitledPane>
-                      <TitledPane fx:id="inputsTitledPane" animated="false" text="Inputs">
-                           <content>
-                              <TitledPane animated="false" text="untitled">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                </content>
-                              </TitledPane>
-                           </content>
-                      </TitledPane>
-                      <TitledPane fx:id="outputsTitledPane" animated="false" text="Outputs" />
-                    </panes>
-                  </Accordion>
-               </content>
-            </ScrollPane>
-         </children>
-      </AnchorPane>
-    </children>
-</GridPane>
+      <Button fx:id="executeFlowButton" layoutX="1062.0" layoutY="165.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="13.0" />
+      <ScrollPane fx:id="flowDataScrollPane" layoutX="241.0" layoutY="32.0" prefHeight="329.0" prefWidth="417.0">
+         <content>
+            <Accordion fx:id="flowInformationAccordion" prefHeight="322.0" prefWidth="413.0">
+              <panes>
+                <TitledPane fx:id="stepsTitledPane" animated="false" text="Steps">
+                     <content>
+                        <ListView fx:id="stepsListView" prefHeight="0.0" prefWidth="406.0" />
+                     </content>
+                </TitledPane>
+                <TitledPane fx:id="inputsTitledPane" animated="false" text="Inputs" />
+                <TitledPane fx:id="outputsTitledPane" animated="false" text="Outputs" />
+              </panes>
+            </Accordion>
+         </content>
+      </ScrollPane>
+      <Label fx:id="selectedFlowDescriptionLabel" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="674.0" layoutY="171.0" prefHeight="190.0" prefWidth="291.0" style="-fx-wrap-text: true;" />
+        <Label fx:id="selectedFlowNameLabel" contentDisplay="CENTER" layoutX="702.0" layoutY="32.0" prefHeight="51.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-padding-top: 10px; -fx-wrap-text: true;">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Label>
+   </children>
+</AnchorPane>

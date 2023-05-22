@@ -8,11 +8,14 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import stepper.dto.flow.FlowDefinitionDTO;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -24,7 +27,7 @@ public class DefinitionController {
 
     @FXML private ListView<String> flowDefAvailableFlowsList;
     @FXML private AnchorPane flowPresentationAnchorPane;
-
+    @FXML private ScrollPane flowDataScrollPane;
     @FXML private Label selectedFlowNameLabel;
     @FXML private Label selectedFlowDescriptionLabel;
 
@@ -33,9 +36,7 @@ public class DefinitionController {
     @FXML private TitledPane stepsTitledPane;
     @FXML private ListView<String> stepsListView;
     @FXML private TitledPane inputsTitledPane;
-    @FXML private ListView<String> inputsListView;
     @FXML private TitledPane outputsTitledPane;
-    @FXML private ListView<String> outputsListView;
 
     private  SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -47,6 +48,7 @@ public class DefinitionController {
         //hide steps in flow label until first flow is selected
         executeFlowButton.visibleProperty().set(false);
         flowInformationAccordion.visibleProperty().set(false);
+        flowDataScrollPane.visibleProperty().set(false);
         // flow name label is binded to selected flow name
         selectedFlowNameLabel.textProperty().bind(Bindings.select(flowDefAvailableFlowsList.getSelectionModel().selectedItemProperty()));
         // selected flow index is binded to the index of the selected item in the list
@@ -62,6 +64,9 @@ public class DefinitionController {
                 }
                 if(!flowInformationAccordion.isVisible()) {
                     flowInformationAccordion.visibleProperty().set(true);
+                }
+                if(!flowDataScrollPane.isVisible()) {
+                    flowDataScrollPane.visibleProperty().set(true);
                 }
 
                 selectedFlowDescriptionLabel.textProperty().set(flowDescriptionsProperty.get(newValue.intValue()));
@@ -95,12 +100,36 @@ public class DefinitionController {
                 for(FlowDefinitionDTO dto : allDTOs){
                     setFlowsHeadersData(dto);
                     setFlowsStepsData(dto);
+                    setFlowInputsData(dto);
 
 
                 }
 
             }
         });
+    }
+
+    private void setFlowInputsData(FlowDefinitionDTO dto) {
+
+        List<String> freeInputs = dto.getFreeInputsFinalNames();
+        List<String> freeInputTypes = dto.getFreeInputTypes();
+        List<Pair<String,List<String>>> stepsThatUseFreeInputs = dto.getFreeInputs2StepsThatUseThem();
+        List<String> freeInputsNecessity = dto.getFreeInputNecessity();
+        Set<String> usedNames = new HashSet<>();
+        VBox content = new VBox();
+        for (int i = 0; i < freeInputs.size(); i++) {
+            String name = freeInputs.get(i);
+            if (usedNames.contains(name)) {
+                continue;
+            }
+            usedNames.add(name);
+            TitledPane presentation = createFreeInputPane(name,
+                    freeInputTypes.get(i),
+                    stepsThatUseFreeInputs.get(i).getValue(),
+                    freeInputsNecessity.get(i));
+            content.getChildren().add(presentation);
+        }
+        inputsTitledPane.setContent(new ScrollPane(content));
     }
 
     private void setFlowsStepsData(FlowDefinitionDTO dto) {
@@ -127,5 +156,27 @@ public class DefinitionController {
         flowDescriptionsProperty.clear();
         flowFormalOutputsProperty.clear();
         flowStepsFullNameByFlowIdx.clear();
+
+    }
+
+    private TitledPane createFreeInputPane(String name, String type, List<String> stepsThatUseMe, String Necessity) {
+        TitledPane inputPane = new TitledPane();
+        inputPane.setText(name);
+        inputPane.setExpanded(false);
+
+        VBox content = new VBox();
+        ScrollPane contentScrollPane = new ScrollPane();
+        contentScrollPane.setContent(content);
+
+        Label necessityLabel = new Label("Necessity: " + Necessity.toLowerCase());
+        Label typeLabel = new Label("Type: " + type.toLowerCase());
+        TitledPane usedBy = new TitledPane();
+        usedBy.setText("Used by (steps)");
+        usedBy.setContent(new ListView<>(FXCollections.observableArrayList(stepsThatUseMe)));
+
+        inputPane.setContent(contentScrollPane);
+        content.getChildren().addAll(typeLabel, necessityLabel, usedBy);
+
+        return inputPane;
     }
 }

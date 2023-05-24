@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FlowExecution implements Serializable {
-
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
@@ -188,4 +187,5 @@ public class FlowExecution implements Serializable {
     private String getOutputContent(String outputName) {
         return executionOutputs.get(outputName);
     }
+
 }

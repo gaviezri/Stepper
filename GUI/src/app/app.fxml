@@ -3,7 +3,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<ScrollPane fx:id="sceneScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.AppController">
+<ScrollPane fx:id="sceneScrollPane" maxHeight="680.0" maxWidth="1250.0" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.AppController">
     <BorderPane>
         <BorderPane fx:id="sceneMainPane" prefHeight="756.0" prefWidth="1200.0" style="-fx-font-family: Corbel;" />
             <top>

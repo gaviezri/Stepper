@@ -1,7 +1,6 @@
-package body.definition;
+package body.library.definition;
 import app.AppController;
-import body.BodyController;
-import body.BodyControllerComponent;
+import body.library.LibraryControllerComponent;
 import header.HeaderController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -9,8 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Pair;
 import stepper.dto.flow.FlowDefinitionDTO;
 
@@ -21,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class DefinitionController extends BodyControllerComponent {
+public class DefinitionController extends LibraryControllerComponent {
 
 
     @FXML private ListView<String> flowDefAvailableFlowsList;
@@ -30,13 +28,13 @@ public class DefinitionController extends BodyControllerComponent {
     @FXML private Label selectedFlowNameLabel;
     @FXML private Label selectedFlowDescriptionLabel;
 
-    @FXML private Button executeFlowButton;
+    @FXML private Button selectFlowButton;
     @FXML private Accordion flowInformationAccordion;
     @FXML private TitledPane stepsTitledPane;
     @FXML private ListView<String> stepsListView;
     @FXML private TitledPane inputsTitledPane;
     @FXML private TitledPane outputsTitledPane;
-
+    private List<FlowDefinitionDTO> flowDefinitionDTOList = new ArrayList<>();
     private  SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
@@ -51,9 +49,9 @@ public class DefinitionController extends BodyControllerComponent {
     // --WIRINGS--
     public void initialize() {
         // set button photo
-        initializeExecuteButton();
+        initializeSelectButton();
         //hide steps in flow label until first flow is selected
-        executeFlowButton.visibleProperty().set(false);
+        selectFlowButton.visibleProperty().set(false);
         flowInformationAccordion.visibleProperty().set(false);
         flowDataScrollPane.visibleProperty().set(false);
         // flow name label is binded to selected flow name
@@ -66,8 +64,8 @@ public class DefinitionController extends BodyControllerComponent {
         selectedFlowIdx.addListener(((observable, oldValue, newValue) -> {
             if(newValue!=null){
 
-                if(!executeFlowButton.isVisible()) {
-                    executeFlowButton.visibleProperty().set(true);
+                if(!selectFlowButton.isVisible()) {
+                    selectFlowButton.visibleProperty().set(true);
                 }
                 if(!flowInformationAccordion.isVisible()) {
                     flowInformationAccordion.visibleProperty().set(true);
@@ -86,36 +84,34 @@ public class DefinitionController extends BodyControllerComponent {
 
     }
 
-    private void initializeExecuteButton() {
-        ImageView iv = new ImageView(getClass().getResource("start-button.png").toString());
+    private void initializeSelectButton() {
+        ImageView iv = new ImageView(getClass().getResource("select-button.png").toString());
         iv.setFitHeight(160);
         iv.setFitWidth(160);
         iv.setPreserveRatio(true);
-        executeFlowButton.setGraphic(iv);
-        executeFlowButton.backgroundProperty().set(null);
-        executeFlowButton.setOnMousePressed(event -> {
-            executeFlowButton.translateYProperty().set(3);
+        selectFlowButton.setGraphic(iv);
+        selectFlowButton.backgroundProperty().set(null);
+        selectFlowButton.setOnMousePressed(event -> {
+            selectFlowButton.translateYProperty().set(3);
         });
-        executeFlowButton.setOnMouseReleased(event -> {
-            executeFlowButton.translateYProperty().set(-3);
+        selectFlowButton.setOnMouseReleased(event -> {
+            selectFlowButton.translateYProperty().set(-3);
         });
     }
 
     public void bindDefinitionTabComponents() {
-        AppController mainController = this.bodyController.getMainController();
+        AppController mainController = this.libraryController.getBodyController().getMainController();
         HeaderController headerController = mainController.getHeaderController();
         headerController.getLoadedPath().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 clearAllData();
-                List<FlowDefinitionDTO> allDTOs = mainController.getEngineController().getAllFlowDefinitionsData();
+                flowDefinitionDTOList = mainController.getEngineController().getAllFlowDefinitionsData();
 
-                for(FlowDefinitionDTO dto : allDTOs){
+                for(FlowDefinitionDTO dto : flowDefinitionDTOList){
                     setFlowsHeadersData(dto);
                     setFlowsStepsData(dto);
                     setFlowInputsData(dto);
                     setFlowOutputsData(dto);
-
-
                 }
             }
         });
@@ -198,21 +194,26 @@ public class DefinitionController extends BodyControllerComponent {
 
         VBox content = new VBox();
 
-        TitledPane usedBy = new TitledPane();
-        usedBy.setText("Used by (steps)");
-        usedBy.setExpanded(false);
+        Label usedBy = new Label();
+        usedBy.setText("Used by (steps):");
+        usedBy.setUnderline(true);
 
         List<Label> stepsThatUseMeLabels = stepsThatUseMe.stream().map(Label::new).collect(Collectors.toList());
-        VBox stepsThatUseMeVBox = new VBox();
-        stepsThatUseMeVBox.getChildren().addAll(stepsThatUseMeLabels);
-        usedBy.setContent(stepsThatUseMeVBox);
 
         inputPane.setContent(content);
         content.getChildren().addAll( new Label("Type: " + type.toLowerCase()),
                                         new Label("Necessity: " + Necessity.toLowerCase()),
                                             usedBy);
+        content.getChildren().addAll(stepsThatUseMeLabels);
 
         return inputPane;
     }
 
+    public void bindInputPaneEnablementToSelectButton(AnchorPane inputPane, AnchorPane definitionPane) {
+        selectFlowButton.setOnMouseClicked(event -> {
+                inputPane.setVisible(true);
+                definitionPane.setVisible(false);
+                this.libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()));
+        });
+    }
 }

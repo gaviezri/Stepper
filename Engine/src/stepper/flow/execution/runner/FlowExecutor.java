@@ -7,6 +7,7 @@ import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.context.StepExecutionContextImpl;
+import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
@@ -30,20 +31,25 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
 
 
     public FlowExecutionResult call () {
-        System.out.println("Starting execution of flow " + activeFlow.getName() + " [ID: " + flowExecution.getUniqueId()  + "] By Thread: " + Thread.currentThread().getName());
+        UUID flowUUID = flowExecution.getUniqueId();
+        System.out.println("Starting execution of flow " + LastExecutedDataCenter.setLastExecutedFlowName(activeFlow.getName(),flowUUID) + " [ID: " + flowUUID  + "] By Thread: " + Thread.currentThread().getName());
         List<StepUsageDeclaration> stepsList = flowExecution.getFlowDefinition().getFlowSteps();
-
         boolean breakFlowIfStepFails;
+
+        LastExecutedDataCenter.setStepsCount(stepsList.size(),flowUUID);
+
+
         flowExecution.setFreeInputContent(context.getExecutionData());
         flowExecution.setFinalStepName2stepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
         flowExecution.tick();
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
+            LastExecutedDataCenter.setCurrentStepIdx(i,flowUUID);
+            LastExecutedDataCenter.setCurrentStepName(currentStepUsageDeclaration.getFinalStepName(),flowUUID);
             Boolean skipIfFail = currentStepUsageDeclaration.skipIfFail();
             String finalStepName = currentStepUsageDeclaration.getFinalStepName();
             context.setCurrentStepUsageDeclaration(currentStepUsageDeclaration);
-
             System.out.println("Starting to execute step: " + finalStepName);
             StepResult stepResult = currentStepUsageDeclaration.getStepDefinition().invoke(context);
             System.out.println("Done executing step: " + finalStepName + ". Result: " + stepResult);

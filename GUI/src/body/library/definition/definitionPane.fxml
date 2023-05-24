@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="384.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.library.definition.DefinitionController">
+   <children>
+      <AnchorPane fx:id="flowDefinitionAnchorPane" prefHeight="384.0" prefWidth="1250.0">
+         <children>
+            <AnchorPane fx:id="flowPresentationAnchorPane">
+               <children>
+                  <ListView fx:id="flowDefAvailableFlowsList" layoutX="7.0" layoutY="31.0" prefHeight="329.0" prefWidth="197.0" />
+               </children>
+            </AnchorPane>
+            <Button fx:id="selectFlowButton" layoutX="1062.0" layoutY="165.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="13.0" />
+            <ScrollPane fx:id="flowDataScrollPane" layoutX="241.0" layoutY="32.0" prefHeight="329.0" prefWidth="417.0">
+               <content>
+                  <Accordion fx:id="flowInformationAccordion" prefHeight="322.0" prefWidth="413.0">
+                    <panes>
+                      <TitledPane fx:id="stepsTitledPane" animated="false" text="Steps">
+                           <content>
+                              <ListView fx:id="stepsListView" prefHeight="0.0" prefWidth="406.0" />
+                           </content>
+                      </TitledPane>
+                      <TitledPane fx:id="inputsTitledPane" animated="false" text="Inputs" />
+                      <TitledPane fx:id="outputsTitledPane" animated="false" text="Outputs" />
+                    </panes>
+                  </Accordion>
+               </content>
+            </ScrollPane>
+            <Label fx:id="selectedFlowDescriptionLabel" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="674.0" layoutY="171.0" prefHeight="190.0" prefWidth="291.0" style="-fx-wrap-text: true;" />
+              <Label fx:id="selectedFlowNameLabel" contentDisplay="CENTER" layoutX="702.0" layoutY="32.0" prefHeight="51.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-padding-top: 10px; -fx-wrap-text: true;">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

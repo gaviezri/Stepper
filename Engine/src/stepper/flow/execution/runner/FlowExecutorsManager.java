@@ -1,6 +1,7 @@
 package stepper.flow.execution.runner;
 
 import stepper.flow.execution.FlowExecutionResult;
+import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -50,7 +51,9 @@ public class FlowExecutorsManager implements Serializable {
     }
 
     public void executeFlow(FlowExecutor flowExecutor) {
-            UUID2Execution.put(flowExecutor.getFlowUUID(), executorService.submit(flowExecutor));
+        UUID latestUUID = flowExecutor.getFlowUUID();
+        LastExecutedDataCenter.setLastExecutedFlowUUID(latestUUID);
+        UUID2Execution.put(latestUUID, executorService.submit(flowExecutor));
     }
 
     public FlowExecutionStatus getFlowExecutionStatus(UUID flowUUID) {

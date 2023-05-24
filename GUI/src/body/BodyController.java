@@ -1,22 +1,22 @@
 package body;
 
 import app.AppController;
-import body.definition.DefinitionController;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.StringProperty;
+import body.library.LibraryController;
+import body.execution.ExecutionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 
 public class BodyController {
-    AppController mainController;
-    @FXML private DefinitionController flowDefComponentController;
+    private AppController mainController;
+    @FXML private LibraryController flowLibComponentController;
+    @FXML private ExecutionController flowExecComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowDefTab;
-    @FXML private AnchorPane flowDefComponent;
+    @FXML private AnchorPane flowLibComponent;
+    @FXML private Tab flowExecTab;
+    @FXML private AnchorPane flowExecComponent;
 
 
 
@@ -26,18 +26,21 @@ public class BodyController {
     }
 
     public void initialize() throws Exception{
-        flowDefComponentController.setBodyController(this);
-
+        flowExecTab.setDisable(true);
+        flowLibComponentController.setBodyController(this);
+        flowExecComponentController.setBodyController(this);
+        flowLibComponentController.bindInputPaneEnablementToSelectButton();
+        flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
     }
 
     public void bindDefinitionTabComponents() {
-        flowDefComponentController.bindDefinitionTabComponents();
-    }
-
-    public DefinitionController getFlowDefinitionController() {
-        return flowDefComponentController;
+        flowLibComponentController.bindLibraryTabComponents();
     }
     public AppController getMainController() {
         return mainController;
     }
+    public ExecutionController getFlowExecutionController() {return flowExecComponentController;}
+
+
+
 }

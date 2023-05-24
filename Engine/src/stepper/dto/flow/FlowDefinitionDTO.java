@@ -33,8 +33,9 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 7.2 */ List<String> outputTypes;
     /* 7.3 */ List<String> finalStepNameThatProducedTheOutput;
 
-
-
+    public List<String> freeInputUserString() {
+        return freeInputUserString;
+    }
 
 
     public FlowDefinitionDTO(FlowDefinition flowDef){

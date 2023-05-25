@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import stepper.controller.EngineController;
 
 public class BodyController {
     private AppController mainController;
@@ -31,6 +32,15 @@ public class BodyController {
         flowExecComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
+        bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
+    }
+
+    private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
+        flowLibComponentController.getInputComponentController().getInputExecuteButton().setOnAction(event -> {
+            flowExecTab.setDisable(false);
+            mainTabPane.getSelectionModel().select(flowExecTab);
+            EngineController.getInstance().executeFlow(flowLibComponentController.getDefinitionController().getSelectedFlowIndex(), flowLibComponentController.getInputComponentController().getValName2ValType());
+        });
     }
 
     public void bindDefinitionTabComponents() {

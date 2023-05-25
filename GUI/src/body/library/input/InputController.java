@@ -1,6 +1,8 @@
 package body.library.input;
 
 import body.library.LibraryControllerComponent;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -12,62 +14,134 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import stepper.dto.flow.FlowDefinitionDTO;
-import javafx.scene.control.TextFormatter.Change;
-import java.util.function.UnaryOperator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class InputController extends LibraryControllerComponent {
+
+    public Button getInputExecuteButton() {
+        return executeFlowButton;
+    }
+
+    public Pair<Map, Map> getValName2ValType() {
+        // TODO
+        throw new UnsupportedOperationException();
+    }
 
     public class InputField {
         private String name;
         private String type;
         private String userString;
+        private List<String> stepNames;
         private BooleanProperty satisfied;
-        private Node InputFieldElement;
+        private Node inputFieldElement;
 
-        public InputField(String name, String type, List<String> stepNames, String userString) {
+
+        public InputField(String name, String type, String userString, List<String> stepNames) {
             this.name = name;
             this.type = type;
+            this.userString = userString;
             satisfied = new SimpleBooleanProperty(false);
+            this.stepNames = stepNames;
         }
         private void createElement()
         {
             switch(type){
                 case "String":
-                    InputFieldElement = new TextField();
-                    ((TextField)InputFieldElement).setPromptText(userString);
+                case "List":
+                    setStringInputField();
                     break;
-                case "Number":
+                case "Integer":
+                    setNumericTextField(createIntegerFormatter());
+                    break;
                 case "Double":
-                    Pattern pattern = Pattern.compile("[0-9]*\\.?[0-9]*");
-                    UnaryOperator<Change> filter = change -> {
-                        String newText = change.getControlNewText();
-                        if (pattern.matcher(newText).matches()) {
-                            return change;
-                        }
-                        return null;
-                    };
-                    TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-                    InputFieldElement = new TextField();
-                    ((TextField)InputFieldElement).setTextFormatter(textFormatter);
-                    ((TextField)InputFieldElement).setPromptText(userString);
+                    setNumericTextField(createDoubleFormatter());
                     break;
                 case "Enum":
-                    InputFieldElement = new ComboBox();
-
+                    setEnumComboBox();
                     break;
                 case "Json":
-                    InputFieldElement = new TextArea();
+                    setJsonTextArea();
                     // or
                     break;
             }
+
+
         }
+
+        public BooleanProperty getSatisfied() {
+            return satisfied;
+        }
+        private void setJsonTextArea() {
+            inputFieldElement = new TextArea();
+            ((TextArea) inputFieldElement).setPromptText(setTextualPrompt("|"));
+            satisfied.bind(((TextArea) inputFieldElement).textProperty().isNotEmpty());
+        }
+
+        private void setEnumComboBox() {
+            inputFieldElement = new ComboBox();
+            ((ComboBox) inputFieldElement).setPromptText(userString);
+            ((ComboBox) inputFieldElement).getItems().addAll(createEnumOptions());
+            satisfied.bind(((ComboBox) inputFieldElement).valueProperty().isNotNull());
+        }
+
+        private TextFormatter<Double> createDoubleFormatter() {
+            return new TextFormatter<>(new DoubleStringConverter(), 0.0, change -> {
+                String newText = change.getControlNewText();
+                if (newText.matches("-?\\d*(\\.\\d*)?")) {
+                    return change;
+                }
+                return null;
+            });
+        }
+
+        private TextFormatter<Integer> createIntegerFormatter() {
+            return new TextFormatter<>(new IntegerStringConverter(), 0, change -> {
+                String newText = change.getControlNewText();
+                if (newText.matches("\\d*")) {
+                    return change;
+                }
+                return null;
+            });
+        }
+        private void setNumericTextField(TextFormatter filter) {
+            inputFieldElement = new TextField();
+            ((TextField) inputFieldElement).setTextFormatter(filter);
+            ((TextField) inputFieldElement).setPromptText(setTextualPrompt(" |"));
+            ((TextField) inputFieldElement).setText("");
+            satisfied.bind(((TextField) inputFieldElement).textProperty().isNotEmpty());
+        }
+
+        private void setStringInputField() {
+            inputFieldElement = new TextField();
+            ((TextField) inputFieldElement).setPromptText(setTextualPrompt("|"));
+            satisfied.bind(((TextField) inputFieldElement).textProperty().isNotEmpty());
+        }
+
+        private String setTextualPrompt(String replacement) {
+            return userString + " Used By: " + stepNames.toString().replace(",", replacement);
+        }
+
+        private List<String> createEnumOptions() {
+            if (userString == "Operation type") {
+                List<String> zipOptions = new LinkedList<>();
+                zipOptions.add("ZIP");
+                zipOptions.add("UNZIP");
+                return zipOptions;
+            }
+//                if (stepName.toLowerCase().contains())
+
+            return null;
+        }
+
         public Node getInputFieldElement() {
-            return InputFieldElement;
+            return inputFieldElement;
         }
 
     }
@@ -81,11 +155,10 @@ public class InputController extends LibraryControllerComponent {
     @FXML Label inputsLabel;
     @FXML ScrollPane inputsScrollPane;
     @FXML VBox inputsVBox;
-    @FXML Button executeFlowButton;
     @FXML Tooltip executeFlowToolTip;
+    @FXML Button executeFlowButton;
     @FXML Button backToDefinitionButton;
     @FXML Pane buttonWrapperForToolTip;
-    @FXML Accordion inputsAccordion;
 
     BooleanProperty allMandatorySatisfied = new SimpleBooleanProperty(false);
 
@@ -93,6 +166,8 @@ public class InputController extends LibraryControllerComponent {
         executeFlowButton.setDisable(true);
         initializeButtonToolTip();
         initializeExecuteButton();
+        inputsVBox.setAlignment(javafx.geometry.Pos.TOP_CENTER);
+        inputsVBox.setSpacing(15);
     }
 
     private void initializeButtonToolTip(){
@@ -155,7 +230,6 @@ public class InputController extends LibraryControllerComponent {
     }
 
     public void setInputsToSelectedFlow(FlowDefinitionDTO dto) {
-        allMandatorySatisfied.set(false);
         System.out.println("Setting inputs to selected flow");
         inputsVBox.getChildren().clear();
         inputsLabel.setText("Inputs for " + dto.getFlowName());
@@ -166,20 +240,36 @@ public class InputController extends LibraryControllerComponent {
 
 
         if (mandatoryFields.get(INPUT_FIELDS.NAME).size() != 0) {
-            TitledPane mandatoryInputsTitledPane = new TitledPane("Mandatory Inputs", new VBox());
-            inputsAccordion.getPanes().add(mandatoryInputsTitledPane);
-
-            for (int i = 0; i < mandatoryFields.get(INPUT_FIELDS.NAME).size(); i++) {
-                String mandatoryInput = (String) mandatoryFields.get(INPUT_FIELDS.NAME).get(i);
-                String mandatoryInputType = (String) mandatoryFields.get(INPUT_FIELDS.TYPE).get(i);
-                String userString = (String) mandatoryFields.get(INPUT_FIELDS.USER_STRING).get(i);
-                List<String> stepNames = mandatoryFields.get(INPUT_FIELDS.USED_BY);
-
-                InputField mandatoryInputElement = new InputField(mandatoryInput, mandatoryInputType, stepNames, userString);
-//                mandatoryInputElement.setMandatorySatisfiedProperty(allMandatorySatisfied);
-                inputsVBox.getChildren().add(mandatoryInputElement.getInputFieldElement());
-            }
+            setInputFieldElements(mandatoryFields, true);
         }
+        if (optionalFields.get(INPUT_FIELDS.NAME).size() != 0) {
+            setInputFieldElements(optionalFields, false);
+        }
+    }
+
+    private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory) {
+        VBox internalInputFieldVBox = new VBox();
+        TitledPane InputsTitledPane = new TitledPane((mandatory ? "Mandatory Fields" : "Optional Fields"),internalInputFieldVBox);
+        InputsTitledPane.setExpanded(false);
+        inputsVBox.getChildren().add(InputsTitledPane);
+        internalInputFieldVBox.setSpacing(15);
+        List<InputField> allFields = new LinkedList<>();
+        for (int i = 0; i < fields.get(INPUT_FIELDS.NAME).size(); i++) {
+            String inputName = (String) fields.get(INPUT_FIELDS.NAME).get(i);
+            String inputType = (String) fields.get(INPUT_FIELDS.TYPE).get(i);
+            String userString = (String) fields.get(INPUT_FIELDS.USER_STRING).get(i);
+            Pair<String,List<String>> stepNames =(Pair) fields.get(INPUT_FIELDS.USED_BY).get(i);
+
+            InputField inputElement = new InputField(inputName, inputType, userString, stepNames.getValue());
+            inputElement.createElement();
+            allFields.add(inputElement);
+            internalInputFieldVBox.getChildren().add(inputElement.getInputFieldElement());
+        }
+        if (mandatory){
+            allMandatorySatisfied.bind(Bindings.createBooleanBinding(() ->
+                    allFields.stream().allMatch(x -> x.satisfied.get()), allFields.stream().map(x -> x.satisfied).collect(Collectors.toList()).toArray(new BooleanProperty[0])));
+        }
+
     }
 
     private static  Pair<Map<INPUT_FIELDS,List>,Map<INPUT_FIELDS,List>> createMandatoryAndOptionalFieldMaps(FlowDefinitionDTO dto) {
@@ -214,8 +304,9 @@ public class InputController extends LibraryControllerComponent {
                 .filter(x -> mandatoryInputsMask.get(freeInputUserStrings.indexOf(x)))
                 .collect(java.util.stream.Collectors.toList());
 
-        List<String> optionalInputsUserString = freeInputUserStrings.stream()
-                .filter(x -> !mandatoryInputsMask.get(freeInputUserStrings.indexOf(x)))
+        List<String> optionalInputsUserString = freeInputsFinalNames.stream()
+                .filter(x -> !mandatoryInputsMask.get(freeInputsFinalNames.indexOf(x)))
+                .map(x -> freeInputUserStrings.get(freeInputsFinalNames.indexOf(x)))
                 .collect(java.util.stream.Collectors.toList());
 
         List<Pair<String,List<String>>> mandatoryInputsStepNames = freeInputStepNames.stream()

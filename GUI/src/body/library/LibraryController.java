@@ -34,4 +34,8 @@ public class LibraryController extends body.BodyControllerComponent{
     public InputController getInputComponentController() {
         return this.inputComponentController;
     }
+
+    public DefinitionController getDefinitionController() {
+        return this.definitionComponentController;
+    }
 }

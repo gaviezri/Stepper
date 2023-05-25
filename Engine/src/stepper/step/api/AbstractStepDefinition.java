@@ -56,7 +56,7 @@ public abstract class AbstractStepDefinition implements StepDefinition, Serializ
                 return datadef.userString();
             }
         }
-        return resource;
+        return null;
     }
 
 

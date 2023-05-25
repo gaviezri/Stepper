@@ -216,4 +216,8 @@ public class DefinitionController extends LibraryControllerComponent {
                 this.libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()));
         });
     }
+
+    public int getSelectedFlowIndex() {
+        return flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex();
+    }
 }

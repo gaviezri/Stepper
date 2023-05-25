@@ -302,11 +302,11 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         for (StepUsageDeclaration stepUsgDecl : stepsUsageDecl){
             for (DataDefinitionDeclaration dataDefDecl : stepUsgDecl.getStepDefinition().inputs()){
                 String finalName = stepUsgDecl.getResourceFinalName(dataDefDecl.getName());
-                if (!mappingGraph.isSatisfied(finalName)){
-                    freeInputFinalNames.add(finalName);
-                    freeInputNames.add(dataDefDecl.getName());
-                    List<StepUsageDeclaration> StepsNames = getStepsThatUsesInput(finalName, stepsUsageDecl);
-                    flowFreeInputs2StepsThatUseThem.add(new Pair<>(dataDefDecl, StepsNames));
+                if (!mappingGraph.isSatisfied(finalName)&& !freeInputFinalNames.contains(finalName)){
+                        freeInputFinalNames.add(finalName);
+                        freeInputNames.add(dataDefDecl.getName());
+                        List<StepUsageDeclaration> StepsNames = getStepsThatUsesInput(finalName, stepsUsageDecl);
+                        flowFreeInputs2StepsThatUseThem.add(new Pair<>(dataDefDecl, StepsNames));
                 }
             }
        }
@@ -330,11 +330,14 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     @Override
     public List<String> getFreeInputsUserString() {
         List<String> freeInputsUserString = new ArrayList<>();
-        List<String> freeInputsFinalNames = getFreeInputsFinalNames();
-        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
-            for(int i = 0; i < freeInputsFinalNames.size(); i++) {
-                if (stepusgdecl.containsResource(freeInputsFinalNames.get(i))) {
-                    freeInputsUserString.add(stepusgdecl.getStepDefinition().getResourceUserString(freeInputNames.get(i)));
+        List<String> freeInputsFinalNames = freeInputFinalNames;
+        for(int i = 0; i < freeInputsFinalNames.size(); i++) {
+            for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+
+                String userString = stepusgdecl.getStepDefinition().getResourceUserString(freeInputNames.get(i));
+                if (userString != null) {
+                    freeInputsUserString.add(userString);
+                    break;
                 }
             }
         }

@@ -3,6 +3,7 @@ package stepper.flow.definition.api;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.continuation.Continuation;
 import stepper.flow.definition.mapping.MappingGraph;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
@@ -28,9 +29,30 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private  List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
     private  List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
     private MappingGraph mappingGraph;
+    final private Continuation continuation = new Continuation();
     private boolean isReadOnly;
     private Map<String,Object> initialInputName2Value = new Hashtable<>();
     private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
+
+
+    @Override
+    public Continuation getContinuation() {
+        return continuation;
+    }
+    @Override
+    public boolean isOutputOfFlow(String dataName)
+    {
+        return getFlowOutputsNames().contains(dataName);
+    }
+
+    @Override
+    public boolean isInputOfFlow(String dataName)
+    {
+        return this.flowInputs.stream().
+        map(x->x.getName()).
+                collect(Collectors.toList()).
+                contains(dataName);
+    }
 
 
     @Override
@@ -252,6 +274,18 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
                 .getResourceDataDefinition(dataName);
     }
     @Override
+    public Set<String> getFlowOutputsNames(){
+        Set<String> allFormalInputs = new HashSet<>();
+
+        stepsFinalNames.stream().
+                map(this::getStepOutputsFinalNames).  // get list of original inputs names
+                map(curOutList-> curOutList.stream(). // for each original input name
+                            map(allFormalInputs::add)   // add name to set
+                        );
+        return  allFormalInputs;
+    }
+
+    @Override
     public List<String> getStepInputsOriginalNames(String stepName) {
         return stepsUsageDecl.stream()
                 .filter(x-> x.getFinalStepName().equals(stepName))
@@ -404,8 +438,9 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         return mappingGraph;
     }
 
+
     @Override
-    public String getStepFinalName(String stepFinalName){
+    public String doesThisFinalStepNameExists(String stepFinalName){
         try {
             return stepsUsageDecl.stream()
                     .filter(x -> x.getFinalStepName().equals(stepFinalName))
@@ -414,6 +449,8 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
             return stepFinalName;
         }
     }
+
+
     @Override
     public List<String> getStepsNamesWithAlias(){
         return stepsUsageDecl.stream()

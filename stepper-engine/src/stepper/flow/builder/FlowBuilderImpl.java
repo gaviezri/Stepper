@@ -1,5 +1,6 @@
 package stepper.flow.builder;
 
+import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.FlowDefinitionImpl;
@@ -13,6 +14,7 @@ import java.util.*;
 public class FlowBuilderImpl implements FlowBuilder, Serializable {
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
     private Map<String,List<Enum>> enumInputName2InputVal = new HashMap<>();
+
 
     public FlowBuilderImpl(){
         /** EVERY STEP WITH ENUM-INPUT NEEDS TO BE MAPPED HERE FOR FUTURE VALIDATION!*/
@@ -48,6 +50,32 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
 //            flowDefinition.setInitialInputs();
         }
         return flowDefinitions;
+    }
+    @Override
+    public boolean doesThisFlowExist(String flowName){
+        return flowDefinitions.stream().map(FlowDefinition::getName).anyMatch(fn -> fn.equals(flowName));
+    }
+
+    @Override
+    public boolean isInputOfFlow(int flowInd, String dataName){
+        /** checks if this ORIGINAL name an input of the flow in index 'flowInd'*/
+        return flowDefinitions.get(flowInd).isInputOfFlow(dataName);
+    }
+
+    @Override
+    public boolean isOutputOfFlow(int flowInd, String dataName){
+        /** checks if this ORIGINAL name an output of the flow in index 'flowInd'*/
+        return flowDefinitions.get(flowInd).isOutputOfFlow((dataName));
+    }
+
+    @Override
+    public void addTargetFlowToFlowsContinuation(int srcFlowInd, String targetFlowName){
+        flowDefinitions.get(srcFlowInd).getContinuation().addTargetFlow(targetFlowName);
+    }
+
+    @Override
+    public void addSrc2DataToFlowContinuationByTargetFlowsName(int srcFlowInd, String targetFlowName, String srcData, String targetData){
+        flowDefinitions.get(srcFlowInd).getContinuation().addDataMappingPairToCurTargetFlow(new Pair<>(srcData,targetData));
     }
 
     @Override
@@ -109,9 +137,10 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
         return flowDefinitions.get(flowidx).getResourceFinalName(StepFinalName, DataName);
     }
 
+
     @Override
     public String getStepFinalName(int flowidx, String sourceStepName) {
-            return flowDefinitions.get(flowidx).getStepFinalName(sourceStepName);
+            return flowDefinitions.get(flowidx).doesThisFinalStepNameExists(sourceStepName);
     }
 
     @Override
@@ -150,5 +179,10 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
             }
         }
         return null;
+    }
+
+    @Override
+    public String getFlowNameByInd(int flowInd){
+        return flowDefinitions.get(flowInd).getName();
     }
 }

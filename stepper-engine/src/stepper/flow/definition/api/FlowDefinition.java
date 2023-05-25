@@ -3,11 +3,13 @@ package stepper.flow.definition.api;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.definition.aliasing.manager.DataAliasingManager;
+import stepper.flow.definition.continuation.Continuation;
 import stepper.flow.definition.mapping.MappingGraph;
 import stepper.step.api.enums.DataNecessity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface FlowDefinition {
 
@@ -18,6 +20,12 @@ public interface FlowDefinition {
     List<StepUsageDeclaration> getFlowSteps();
 
     List<String> getFlowFormalOutputs();
+
+    Continuation getContinuation();
+
+    boolean isOutputOfFlow(String dataName);
+
+    boolean isInputOfFlow(String dataName);
 
     List<String> getAllInputsFinalNames();
 
@@ -53,6 +61,8 @@ public interface FlowDefinition {
 
     List<String> getStepOutputsOriginalNames(String sourceFinalStepName);
 
+    Set<String> getFlowOutputsNames();
+
     List<String> getStepInputsOriginalNames(String targetFinalStepName);
 
     DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
@@ -78,7 +88,7 @@ public interface FlowDefinition {
 
     MappingGraph getMappingGraph();
 
-    String getStepFinalName(String sourceStepName);
+    String doesThisFinalStepNameExists(String sourceStepName);
 
     List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem();
 

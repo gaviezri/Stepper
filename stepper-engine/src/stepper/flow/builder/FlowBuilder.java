@@ -7,6 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 public interface FlowBuilder {
+    boolean doesThisFlowExist(String flowName);
+
+    boolean isInputOfFlow(int flowInd, String dataName);
+
+    boolean isOutputOfFlow(int flowInd, String dataName);
+
+    void addTargetFlowToFlowsContinuation(int srcFlowInd, String targetFlowName);
+
+    void addSrc2DataToFlowContinuationByTargetFlowsName(int srcFlowInd, String targetFlowName, String srcData, String targetData);
+
     List<String> getAllFlowsInputsFinalNamesByIndex(int flowInd);
 
     void reset();
@@ -28,4 +38,6 @@ public interface FlowBuilder {
     DataDefinition getCorespondingDataDef(String inputName, int flowInd);
 
     Enum isValidEnumInputNameAndValue(String inputName, String inputValue);
+
+    String getFlowNameByInd(int flowInd);
 }

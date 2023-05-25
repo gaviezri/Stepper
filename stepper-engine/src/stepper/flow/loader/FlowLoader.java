@@ -24,6 +24,8 @@ public class FlowLoader implements Serializable {
 
     private FlowBuilder builder = new FlowBuilderImpl();
     private Integer threadCount = 1;
+
+
     public List<FlowDefinition> loadFlowFromXML(String flowFileName) throws Exception {
 
         // verify that the flowName is a valid .xml file and is present in the given path
@@ -54,6 +56,7 @@ public class FlowLoader implements Serializable {
             validateFlowDefinitionsInXML(flowDefinitionsNodeList);
         }
     }
+
     private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) throws Exception {
 
          validateFlowsNameUniqueness(flowDefinitionsNodeList); // builder gets flow names and descriptions here
@@ -64,6 +67,59 @@ public class FlowLoader implements Serializable {
          validateDataAliasing(flowDefinitionsNodeList); // builder gets the flow aliasing and adds it to the flow - V
          validateCustomMapping(flowDefinitionsNodeList); // builder gets the custom mapping and adds it to the flow - V
          validateInitialInputValues(flowDefinitionsNodeList);
+         validateContinuation(flowDefinitionsNodeList);
+    }
+
+    private void validateContinuation(NodeList flowDefinitionsNodeList) {
+        String targetFlow = null;
+        String sourceData = null;
+        String targetData = null;
+        Element continuation = null;
+        Element curContinuationMapping = null;
+
+        for (int srcFlowInd = 0; srcFlowInd < flowDefinitionsNodeList.getLength(); srcFlowInd++) {
+            Element flow = (Element) flowDefinitionsNodeList.item(srcFlowInd);
+
+            if (flow.getElementsByTagName("ST-Continuations").getLength() != 0) {   // this is an optional attribute
+                NodeList flowContinuations = flow.getElementsByTagName("ST-Continuation");
+                for (int targetFlowInd = 0; targetFlowInd < flowContinuations.getLength(); targetFlowInd++) {
+                    continuation = (Element) flowContinuations.item(targetFlowInd);
+                    targetFlow = continuation.getAttribute("target-flow");
+                    this.validateTargetFlowNameAndAddToBuilder(srcFlowInd, targetFlow);
+
+                    NodeList curTargetFlowsContinuationsMapping = continuation.getElementsByTagName("ST-Continuation-Mapping");
+                    for (int t = 0; t < curTargetFlowsContinuationsMapping.getLength(); t++) {
+                        curContinuationMapping = (Element) curTargetFlowsContinuationsMapping.item(t);
+                        sourceData = curContinuationMapping.getAttribute("source-data");
+                        targetFlow = curContinuationMapping.getAttribute("target-data");
+                        validateDataAndAddToBuilder(srcFlowInd, sourceData, targetFlowInd, targetFlow, targetFlow, builder.getFlowNameByInd(srcFlowInd));
+                    }
+                }
+            }
+        }
+    }
+
+    private void validateDataAndAddToBuilder(int srcFlowInd, String srcDataName, int targetFlowInd, String targetDataName, String targetFlowName, String srcFlowName){
+        /** we check for Inputs in the Target Flow and for Outputs in the Source flow*/
+
+        if(!builder.isInputOfFlow(targetFlowInd,targetDataName)){
+             throw(new IllegalArgumentException("Target Flow " + targetFlowName + " has no input with name " + targetDataName + "."));
+        }
+        else if(!builder.isOutputOfFlow(srcFlowInd,srcDataName)){
+            throw(new IllegalArgumentException("Target Flow " + srcFlowName + " has no input with name " + srcDataName + "."));
+        }
+        else{
+            builder.addSrc2DataToFlowContinuationByTargetFlowsName(srcFlowInd,targetFlowName,srcDataName,targetDataName);
+        }
+    }
+
+    private void validateTargetFlowNameAndAddToBuilder(int srcFlowInd, String flowName){
+        if(this.builder.doesThisFlowExist(flowName)){
+            this.builder.addTargetFlowToFlowsContinuation(srcFlowInd, flowName);
+        }
+        else{
+            throw(new IllegalArgumentException("No flow with name " + flowName + " does not exist!"));
+        }
     }
 
     private Integer validateThreadCount(String threadCountStr) {
@@ -79,8 +135,6 @@ public class FlowLoader implements Serializable {
         return threadCountInt;
     }
 
-
-    //TODO: implement
     private void validateDataAliasing(NodeList flowDefinitionsNodeList) throws Exception {
         for (int flowidx = 0; flowidx < flowDefinitionsNodeList.getLength(); flowidx++) {
             // iterate flows
@@ -153,7 +207,7 @@ public class FlowLoader implements Serializable {
                             "All fields must be set. element No." + mapping);
                 }
                 try {
-                    Pair<Boolean, String> found = findCustomMappingResouce(flowidx, stepName, dataName, targetStepName, targetDataName);
+                    Pair<Boolean, String> found = findCustomMappingResource(flowidx, stepName, dataName, targetStepName, targetDataName);
                     if (!found.getKey()) {
                         throw new RuntimeException("Data " + found.getValue() + " doesn't exist in step " + stepName + " in flow " + flow.getAttribute("name"));
                     }
@@ -165,7 +219,7 @@ public class FlowLoader implements Serializable {
         }
     }
 
-    private Pair<Boolean, String> findCustomMappingResouce(int flowidx, String sourceStepName, String sourceDataName, String targetStepName, String targetDataName) {
+    private Pair<Boolean, String> findCustomMappingResource(int flowidx, String sourceStepName, String sourceDataName, String targetStepName, String targetDataName) {
         // check if step exists and if data exists in step's inputs/outputs
         String sourceStepFinalName = builder.getStepFinalName(flowidx, sourceStepName);
         String sourceDataFinalName = builder.getResourceFinalName(flowidx, sourceStepFinalName, sourceDataName);
@@ -271,7 +325,6 @@ public class FlowLoader implements Serializable {
                     initialValue = initialInputValue.getAttribute("initial-value");
 //                  this function validates the initial input received from the XML file and assign them to the corresponding data definition
                     validateInputNameAndValueAndAddToFlowDef(inputName, initialValue,i,flow.getAttribute("name"));
-
                 }
             }
         }

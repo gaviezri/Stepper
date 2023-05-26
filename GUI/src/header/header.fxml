@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="44.0" minHeight="1.0" prefHeight="34.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" layoutY="15.0" prefHeight="31.0" prefWidth="1250.0" spacing="50.0">
+               <children>
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Loaded Flow(s) File:" />
+                      <TextField id="xmlpath" fx:id="pathTextField" editable="false" prefHeight="29.0" prefWidth="529.0">
+                          <padding>
+                              <Insets top="5.0" />
+                          </padding>
+                      </TextField>
+                      <Button fx:id="browseBtn" mnemonicParsing="false" onMouseEntered="#BrowseBtnMouseEnter" onMouseExited="#BrowseBtnMouseLeave" onMousePressed="#BrowseBtnMousePress" prefHeight="28.0" prefWidth="91.0" text="Browse" />
+               </children>
+            </HBox>
+                <Label prefHeight="31.0" prefWidth="168.0" style="-fx-font-size: 35;" text="Stepper">
+                    <padding>
+                        <Insets bottom="5.0" left="20.0" />
+                    </padding>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <textFill>
+                  <RadialGradient centerX="0.4772727272727273" centerY="0.558252427184466" cycleMethod="REFLECT" focusAngle="-127.09" focusDistance="0.29268292682926833" radius="0.5365853658536586">
+                     <stops>
+                        <Stop color="#ee4343" />
+                        <Stop color="#ee4343" offset="0.007246376811594203" />
+                        <Stop color="#ed4545" offset="0.20872406933788012" />
+                        <Stop color="BLACK" offset="0.7355072463768116" />
+                        <Stop color="BLACK" offset="1.0" />
+                     </stops>
+                  </RadialGradient>
+                    </textFill>
+                </Label>
+         </children>
+      </AnchorPane>
+        <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <padding>
+                <Insets top="5.0" />
+            </padding>
+            <menus>
+                <Menu fx:id="systemMenu" mnemonicParsing="false" text="System">
+                    <items>
+                        <MenuItem fx:id="saveSnapshot" mnemonicParsing="false" onAction="#SaveSystemSnapshotPressed" text="Save snapshot" />
+                        <MenuItem fx:id="loadSnapshot" mnemonicParsing="false" onAction="#LoadSystemSnapshotPressed" text="Load snapshot" />
+                    </items>
+                </Menu>
+                <Menu fx:id="themeMenu" mnemonicParsing="false" text="Theme">
+                    <items>
+                        <Menu fx:id="changeThemeMenu" mnemonicParsing="false" text="Change theme">
+                            <items>
+                                <MenuItem fx:id="themeItem1" mnemonicParsing="false" text="theme 1" />
+                                <MenuItem fx:id="themeItem2" mnemonicParsing="false" text="theme 2" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </children>
+</GridPane>

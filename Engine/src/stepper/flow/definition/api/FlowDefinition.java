@@ -21,6 +21,8 @@ public interface FlowDefinition {
 
     List<String> getFlowFormalOutputs();
 
+    Integer getContinuationsCount();
+
     Continuation getContinuation();
 
     boolean isOutputOfFlow(String dataName);

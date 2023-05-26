@@ -36,7 +36,10 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private Map<String,Object> initialInputName2Value = new Hashtable<>();
     private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
 
-
+    @Override
+    public Integer getContinuationsCount(){
+        return continuation.getContinuationsCount();
+    }
     @Override
     public Continuation getContinuation() {
         return continuation;

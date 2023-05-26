@@ -95,4 +95,6 @@ public interface FlowDefinition {
     List<String> getStepsNamesWithAlias();
 
     String getDataDefOriginalName(String inputName);
+
+    StepUsageDeclaration getStepUsageDeclarationByFinalName(String sourceStepName);
 }

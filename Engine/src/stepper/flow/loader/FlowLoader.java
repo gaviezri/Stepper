@@ -9,6 +9,7 @@ import stepper.dd.api.DataDefinition;
 import stepper.flow.builder.FlowBuilder;
 import stepper.flow.builder.FlowBuilderImpl;
 import stepper.flow.definition.api.FlowDefinition;
+import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
@@ -21,6 +22,22 @@ import java.util.*;
 //TODO: if errors occured throw exception to be caught and transmitted into UI instead of nulls
 
 public class FlowLoader implements Serializable {
+    public class StepNameExistenceException extends Exception {
+        public StepNameExistenceException(String flowName, String StepName) {
+            super(StepName + " step does not exist in flow: " + flowName);
+        }
+    }
+    public class ResourceNameExistenceException extends Exception {
+        public ResourceNameExistenceException(String StepName, String ResourceName)
+        {
+            super(ResourceName + " does not exist in step: " + StepName);
+        }
+    }
+    public class MappingOrderException extends Exception {
+        public MappingOrderException(String flowName, String Source, String Target){
+            super("Step " + Source + " is mapped to step " + Target + " but " + Target + " is executed before " + Source + " in flow: " + flowName);
+        }
+    }
 
     private FlowBuilder builder = new FlowBuilderImpl();
     private Integer threadCount = 1;
@@ -54,7 +71,6 @@ public class FlowLoader implements Serializable {
             // get all flow elements from xml
         NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
         validateFlowDefinitionsInXML(flowDefinitionsNodeList);
-
     }
 
     private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) throws Exception {
@@ -189,7 +205,6 @@ public class FlowLoader implements Serializable {
         return found;
     }
 
-    //TODO: implement
     private void validateCustomMapping(NodeList flowDefinitionsNodeList) {
         for (int flowidx = 0; flowidx < flowDefinitionsNodeList.getLength(); flowidx++) {
             // iterate flows
@@ -207,40 +222,43 @@ public class FlowLoader implements Serializable {
                             "All fields must be set. element No." + mapping);
                 }
                 try {
-                    Pair<Boolean, String> found = findCustomMappingResource(flowidx, stepName, dataName, targetStepName, targetDataName);
-                    if (!found.getKey()) {
-                        throw new RuntimeException("Data " + found.getValue() + " doesn't exist in step " + stepName + " in flow " + flow.getAttribute("name"));
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new RuntimeException("Step " + stepName + " doesn't exist in flow " + flow.getAttribute("name"));
+                    findCustomMappingResource(flowidx, stepName, dataName, targetStepName, targetDataName);
+                } catch (StepNameExistenceException e) {
+                    throw new RuntimeException(e.getMessage());
+                } catch (ResourceNameExistenceException e) {
+                    throw new RuntimeException(e.getMessage());
+                } catch (MappingOrderException e ) {
+                    throw new RuntimeException(e.getMessage());
+                } catch (Exception e) {
+                    throw new RuntimeException("Custom Mapping is invalid - please check it.\n" + e.getMessage());
                 }
                 builder.addCustomMapping(flowidx, stepName, dataName, targetStepName, targetDataName);
             }
         }
     }
 
-    private Pair<Boolean, String> findCustomMappingResource(int flowidx, String sourceStepName, String sourceDataName, String targetStepName, String targetDataName) {
-        // check if step exists and if data exists in step's inputs/outputs
-        String sourceStepFinalName = builder.getStepFinalName(flowidx, sourceStepName);
-        String sourceDataFinalName = builder.getResourceFinalName(flowidx, sourceStepFinalName, sourceDataName);
-
-        String targetStepFinalName = builder.getStepFinalName(flowidx, targetStepName);
-        String targetDataFinalName = builder.getResourceFinalName(flowidx, targetStepFinalName, targetDataName);
-
-        if  (!sourceStepName.equals(sourceStepFinalName)){
-            return new Pair<>(false, sourceStepName);
-
-        } else if (! sourceDataName.equals(sourceDataFinalName)) {
-            return new Pair<>(false, sourceDataName);
-
-        } else if (! targetStepName.equals(targetStepFinalName)) {
-            return new Pair<>(false, targetStepName);
-
-        } else if (! targetDataName.equals(targetDataFinalName)) {
-            return new Pair<>(false, targetDataName);
-
-        } else {
-            return new Pair<>(true, null);
+    private void findCustomMappingResource(int flowidx, String sourceStepName, String sourceDataName, String targetStepName, String targetDataName) throws Exception {
+        StepUsageDeclaration sourceStepUsage = builder.getFlowByInd(flowidx).getStepUsageDeclarationByFinalName(sourceStepName);
+        StepUsageDeclaration targetStepUsage = builder.getFlowByInd(flowidx).getStepUsageDeclarationByFinalName(targetStepName);
+        // validate source step exists in flow
+        if (sourceStepUsage == null) {
+            throw new StepNameExistenceException(builder.getFlowByInd(flowidx).getName(),sourceStepName);
+        }
+        // validate target step exists in flow
+        if (targetStepUsage == null) {
+            throw new StepNameExistenceException(builder.getFlowByInd(flowidx).getName(),targetStepName);
+        }
+        // validate source data exists in step
+        if  (sourceStepUsage.getResourceFinalName(sourceDataName) == null){
+            throw new ResourceNameExistenceException(sourceStepName, sourceDataName);
+        }
+        // validate target data exists in step
+        if  (targetStepUsage.getResourceFinalName(targetDataName) == null){
+            throw new ResourceNameExistenceException(targetStepName, targetDataName);
+        }
+        // validate source step comes before target step
+        if (sourceStepUsage.getStepOrder() > targetStepUsage.getStepOrder()) {
+            throw new MappingOrderException(builder.getFlowByInd(flowidx).getName(),sourceStepName, targetStepName);
         }
     }
 

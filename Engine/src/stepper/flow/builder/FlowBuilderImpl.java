@@ -185,4 +185,9 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
     public String getFlowNameByInd(int flowInd){
         return flowDefinitions.get(flowInd).getName();
     }
+
+    @Override
+    public FlowDefinition getFlowByInd(int flowidx) {
+        return flowDefinitions.get(flowidx);
+    }
 }

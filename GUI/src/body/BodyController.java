@@ -36,7 +36,7 @@ public class BodyController {
     }
 
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
-        flowLibComponentController.getInputComponentController().getInputExecuteButton().setOnAction(event -> {
+        flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
             flowExecTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
             EngineController.getInstance().executeFlow(flowLibComponentController.getDefinitionController().getSelectedFlowIndex(), flowLibComponentController.getInputComponentController().getValName2ValType());

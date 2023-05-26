@@ -81,7 +81,7 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     @Override
     public void addFinalizedStep(String name, String finalName, boolean skipIfFail) {
         StepDefinition stepDef = StepDefinitionRegistry.convertFromUserFriendlyToInternal(name).getStepDefinition();
-        stepsUsageDecl.add( new StepUsageDeclarationImpl(stepDef, skipIfFail, finalName));
+        stepsUsageDecl.add( new StepUsageDeclarationImpl(stepDef, skipIfFail, finalName, stepsUsageDecl.size()));
         stepsFinalNames.add(finalName);
     }
     @Override
@@ -474,5 +474,15 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
             if (orgName != null){break;}
         }
         return orgName;
+    }
+
+    @Override
+    public StepUsageDeclaration getStepUsageDeclarationByFinalName(String StepFinalName){
+        for (StepUsageDeclaration stepusgdecl : stepsUsageDecl){
+            if (stepusgdecl.getFinalStepName().equals(StepFinalName)){
+                return stepusgdecl;
+            }
+        }
+        return null;
     }
 }

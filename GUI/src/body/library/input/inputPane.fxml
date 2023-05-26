@@ -18,9 +18,9 @@
       </ScrollPane>
       <Pane fx:id="buttonWrapperForToolTip" layoutX="720.0" layoutY="177.0">
          <children>
-            <Button fx:id="executeFlowButton" ellipsisString="" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0">
+            <Button fx:id="startFlowButton" ellipsisString="" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0">
                <tooltip>
-                  <Tooltip fx:id="executeFlowToolTip" text="In order to start fill atleast the mandatory inputs." />
+                  <Tooltip fx:id="startFlowToolTip" text="In order to start fill atleast the mandatory inputs." />
                </tooltip>
             </Button>
          </children>

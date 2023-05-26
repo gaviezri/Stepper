@@ -27,7 +27,7 @@ public class DefinitionController extends LibraryControllerComponent {
     @FXML private ScrollPane flowDataScrollPane;
     @FXML private Label selectedFlowNameLabel;
     @FXML private Label selectedFlowDescriptionLabel;
-
+    @FXML private Label continuationsLabel;
     @FXML private Button selectFlowButton;
     @FXML private Accordion flowInformationAccordion;
     @FXML private TitledPane stepsTitledPane;

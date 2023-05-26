@@ -40,4 +40,6 @@ public interface FlowBuilder {
     Enum isValidEnumInputNameAndValue(String inputName, String inputValue);
 
     String getFlowNameByInd(int flowInd);
+
+    FlowDefinition getFlowByInd(int flowidx);
 }

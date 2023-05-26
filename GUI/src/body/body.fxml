@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<TabPane fx:id="mainTabPane" prefHeight="600.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="40.0" tabMaxWidth="300.0" tabMinHeight="40.0" tabMinWidth="200.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
+    <tabs>
+        <Tab fx:id="flowDefTab" text="Library">
+            <styleClass>
+                <String fx:value="flowtab" />
+                <String fx:value="clickable" />
+            </styleClass>
+            <content>
+                <fx:include fx:id="flowLibComponent" source="library/libraryTab.fxml" />
+            </content>
+        </Tab>
+      <Tab fx:id="flowExecTab" text="Execution">
+        <content>
+            <fx:include  fx:id="flowExecComponent" source="execution/executionTab.fxml" />
+        </content>
+      </Tab>
+
+        <!--include exeuctionTab-->
+        <!-- include history-->
+        <!-- include statistics-->
+    </tabs>
+</TabPane>

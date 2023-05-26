@@ -36,4 +36,7 @@ public class Continuation {
         return targetFlowName2DataMappings.get(flowName);
     }
 
+    public Integer getContinuationsCount(){
+        return targetFlowName2DataMappings.size();
+    }
 }

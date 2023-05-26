@@ -14,6 +14,7 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 2 */ String description;
     /* 3 */ List<String> formalOutputs;
     /* 4 */ Boolean isFlowReadonly;
+    /* 5 */ Integer continuationsCount;
 
     // ---STEPS--- //
 
@@ -59,7 +60,7 @@ public class FlowDefinitionDTO extends AbstractDTO {
         outputsFinalNames = flowDef.getAllOutputsNames();
         outputTypes =  flowDef.getAllOutputsTypes();
         finalStepNameThatProducedTheOutput = flowDef.getFinalStepNamesThatProducedTheOutputs();
-
+        continuationsCount = flowDef.getContinuationsCount();
     }
 
     public FlowDefinitionDTO(String errmessage) {

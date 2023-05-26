@@ -40,6 +40,7 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
 
 
         flowExecution.setFreeInputContent(context.getExecutionData());
+//        flowExecution.setInitialValuesContent();
         flowExecution.setFinalStepName2stepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
         flowExecution.tick();

@@ -12,20 +12,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import stepper.dto.flow.FlowDefinitionDTO;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class InputController extends LibraryControllerComponent {
     // NESTED CLASS INPUTFIELD
     // holds all the data needed to create an input field, and the input field itself
-    public class InputField {
+    public static class InputField {
+        private static Map<Node,InputField> Node2InputField = new HashMap<>();
         private String name;
         private String type;
         private String userString;
@@ -41,6 +40,37 @@ public class InputController extends LibraryControllerComponent {
             satisfied = new SimpleBooleanProperty(false);
             this.stepNames = stepNames;
         }
+
+        public static void clearInputFields() {
+            Node2InputField.clear();
+        }
+        public static InputField getInputFieldOfElement(Node node){
+            return  Node2InputField.get(node);
+        }
+        public String getName() {
+            return name;
+        }
+        public String getType() {
+            return type;
+        }
+
+        public String getContent(){
+            switch(type){
+                case "String":
+                case "List":
+                    return ((TextField) inputFieldElement).getText();
+                case "Integer":
+                    return ((TextField) inputFieldElement).getText();
+                case "Double":
+                    return ((TextField) inputFieldElement).getText();
+                case "Enum":
+                    return ((ComboBox) inputFieldElement).getValue().toString();
+                case "Json":
+                    return ((TextArea) inputFieldElement).getText();
+            }
+            return null;
+        }
+
         private void createElement()
         {
             switch(type){
@@ -62,6 +92,7 @@ public class InputController extends LibraryControllerComponent {
                     // or
                     break;
             }
+            Node2InputField.put(inputFieldElement,this);
         }
 
         public BooleanProperty getSatisfied() {
@@ -169,16 +200,19 @@ public class InputController extends LibraryControllerComponent {
     private void initializeButtonToolTip(){
         startFlowToolTip.setWrapText(true);
         startFlowToolTip.setFont(javafx.scene.text.Font.font("System", javafx.scene.text.FontWeight.BOLD, 14));
-        startFlowToolTip.setHideDelay(Duration.millis(1000));
-        buttonWrapperForToolTip.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+        buttonWrapperForToolTip.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             if(allMandatorySatisfied.get()){
                 startFlowToolTip.setText("Click to start the flow");
             }else{
                 startFlowToolTip.setText("To start, fill the mandatory inputs.\n" +
                         "If you want, optional inputs can be provided but are optional ;-)");
             }
-            startFlowToolTip.show(startFlowButton, event.getScreenX(), event.getScreenY());
+            startFlowToolTip.show(buttonWrapperForToolTip, event.getScreenX(), event.getScreenY());
         });
+        buttonWrapperForToolTip.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            startFlowToolTip.hide();
+        });
+
     }
 
     public void initializeBackButton(AnchorPane inputPane, AnchorPane definitionPane){
@@ -343,24 +377,16 @@ public class InputController extends LibraryControllerComponent {
                 internalVBox.getChildren().forEach(y -> {
 
                     System.out.println(y.getClass().getSimpleName());
-                    switch (y.getClass().getSimpleName()){
-                        case "TextField":
-                            TextField textField = (TextField) y;
-                            Name2Val.put(textField.getId(), textField.getText());
-                            Name2Type.put(textField.getId(), "String");
-                            break;
-
-                        case "ComboBox":
-                            ComboBox comboBox = (ComboBox) y;
-                            Name2Val.put(comboBox.getId(), comboBox.getValue().toString());
-                            Name2Type.put(comboBox.getId(), "Enumeration");
-                            break;
-
-                        case "TextArea":
-                            TextArea textArea = (TextArea) y;
-                            Name2Val.put(textArea.getId(), textArea.getText());
-                            Name2Type.put(textArea.getId(), "String");
-                            break;
+                    InputField inputField = InputField.getInputFieldOfElement(y);
+                    String content = inputField.getContent();
+                    if(! content.equals("")) {
+                        String inputName = inputField.getName();
+                        String inputType = inputField.getType();
+                        if (inputType.equals("Enum")){
+                            inputType = "Enumeration";
+                        }
+                        Name2Val.put(inputName, content);
+                        Name2Type.put(inputName, inputType);
                     }
                 });
             }

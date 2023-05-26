@@ -14,6 +14,11 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 2 */ String description;
     /* 3 */ List<String> formalOutputs;
     /* 4 */ Boolean isFlowReadonly;
+
+    public Integer getContinuationsCount() {
+        return continuationsCount;
+    }
+
     /* 5 */ Integer continuationsCount;
 
     // ---STEPS--- //

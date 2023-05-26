@@ -34,9 +34,13 @@
                   </Accordion>
                </content>
             </ScrollPane>
-            <Label fx:id="selectedFlowDescriptionLabel" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="674.0" layoutY="171.0" prefHeight="190.0" prefWidth="291.0" style="-fx-wrap-text: true;" />
-            <Label fx:id="selectedFlowNameLabel" contentDisplay="CENTER" layoutX="702.0" layoutY="32.0" prefHeight="51.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-padding-top: 10px; -fx-wrap-text: true;"/>
-             <Label fx:id="continuationsLabel" contentDisplay="CENTER" layoutX="674.0" layoutY="132.0" prefHeight="17.0" prefWidth="291.0" text="Continuations" />
+            <Label fx:id="selectedFlowDescriptionLabel" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="674.0" layoutY="165.0" prefHeight="190.0" prefWidth="291.0" style="-fx-wrap-text: true;" />
+              <Label fx:id="selectedFlowNameLabel" contentDisplay="CENTER" layoutX="702.0" layoutY="32.0" prefHeight="51.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-padding-top: 10px; -fx-wrap-text: true;">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+            <Label fx:id="continuationsLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="730.0" layoutY="113.0" prefHeight="31.0" prefWidth="179.0" />
          </children>
       </AnchorPane>
    </children>

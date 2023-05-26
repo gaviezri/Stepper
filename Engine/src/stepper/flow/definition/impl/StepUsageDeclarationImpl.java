@@ -5,6 +5,7 @@ import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.StepDefinitionRegistry;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
+import stepper.step.api.enums.DataNecessity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -19,12 +20,21 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
     private String stepName;
 
     @Override
-    public Collection<String> getAllInputsFinalNames(){ return inputs2finalNames.values();}
+    public Boolean isInputMandatory(String inputFinalName){
+        String orgName = getInputOrgNameByFinalName(inputFinalName);
+        DataDefinitionDeclaration dataDefDec= stepDefinition.getInputDataDefDecByInputOrgName(orgName);
+        return dataDefDec.necessity().equals(DataNecessity.MANDATORY);
+    }
 
+    @Override
+    public Collection<String> getAllInputsFinalNames(){ return inputs2finalNames.values();}
+    @Override
+    public Collection<String> getAllOutputsFinalNames(){ return outputs2finalNames.values();}
     @Override
     public String getFinalInputNameByOrg(String org){
         return inputs2finalNames.get(org);
     }
+
     public StepUsageDeclarationImpl(StepDefinition stepDefinition, boolean skipIfFail, String stepName) {
         this.stepDefinition = stepDefinition;
         this.skipIfFail = skipIfFail;
@@ -43,16 +53,15 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
         }
         return orgName;
     }
+
     @Override
     public String getFinalStepName() {
         return stepName;
     }
-
     @Override
     public StepDefinition getStepDefinition() {
         return stepDefinition;
     }
-
     @Override
     public boolean skipIfFail() {
         return skipIfFail;

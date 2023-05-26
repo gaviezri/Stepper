@@ -7,6 +7,8 @@ import stepper.step.api.StepDefinition;
 import java.util.Collection;
 
 public interface StepUsageDeclaration {
+    Boolean isInputMandatory(String inputFinalName);
+
     Collection<String> getAllInputsFinalNames();
 
     String getFinalStepName();
@@ -25,6 +27,8 @@ public interface StepUsageDeclaration {
     Boolean containsResource(String dataName);
 
     DataDefinition getDataDefByName(String orgInputName);
+
+    Collection<String> getAllOutputsFinalNames();
 
     String getFinalInputNameByOrg(String org);
 

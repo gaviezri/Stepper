@@ -11,7 +11,7 @@ public class MappingEdge implements Serializable {
     private final String sourceDataFinalName;
     private final String targetStepFinalName;
     private final String targetDataFinalName;
-    private final DataDefinition dataDefinition;
+    private final DataDefinition dataDefinition; // both datas must be of same type
     private final DataNecessity dataNecessityAtTargetStep;
 
     public MappingEdge(String sourceStepFinalName, String sourceDataFinalName, String targetStepFinalName, String targetDataFinalName, DataDefinition datadef, DataNecessity dataNecessityAtTargetStep) {

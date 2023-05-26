@@ -8,7 +8,7 @@
 
 <TabPane fx:id="mainTabPane" prefHeight="600.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="40.0" tabMaxWidth="300.0" tabMinHeight="40.0" tabMinWidth="200.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
     <tabs>
-        <Tab fx:id="flowDefTab" text="Library">
+        <Tab fx:id="flowLibTab" text="Library">
             <styleClass>
                 <String fx:value="flowtab" />
                 <String fx:value="clickable" />

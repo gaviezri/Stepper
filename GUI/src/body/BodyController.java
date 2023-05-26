@@ -14,7 +14,7 @@ public class BodyController {
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
     @FXML private TabPane mainTabPane;
-    @FXML private Tab flowDefTab;
+    @FXML private Tab flowLibTab;
     @FXML private AnchorPane flowLibComponent;
     @FXML private Tab flowExecTab;
     @FXML private AnchorPane flowExecComponent;

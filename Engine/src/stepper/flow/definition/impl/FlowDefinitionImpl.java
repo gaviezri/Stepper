@@ -50,10 +50,7 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     @Override
     public boolean isInputOfFlow(String dataName)
     {
-        return this.flowInputs.stream().
-        map(x->x.getName()).
-                collect(Collectors.toList()).
-                contains(dataName);
+        return this.getAllInputsFinalNames().contains(dataName);
     }
 
 
@@ -279,11 +276,12 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     public Set<String> getFlowOutputsNames(){
         Set<String> allFormalInputs = new HashSet<>();
 
-        stepsFinalNames.stream().
-                map(this::getStepOutputsFinalNames).  // get list of original inputs names
-                map(curOutList-> curOutList.stream(). // for each original input name
-                            map(allFormalInputs::add)   // add name to set
-                        );
+
+        for (String stepFinalName:stepsFinalNames) {  // get list of original inputs names
+            for(String outputData:getStepOutputsFinalNames(stepFinalName)){  // for each input name
+                allFormalInputs.add(outputData);  // add name to set
+            }
+        }
         return  allFormalInputs;
     }
 

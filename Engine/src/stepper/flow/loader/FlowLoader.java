@@ -82,8 +82,8 @@ public class FlowLoader implements Serializable {
 
             if (flow.getElementsByTagName("ST-Continuations").getLength() != 0) {   // this is an optional attribute
                 NodeList flowContinuations = flow.getElementsByTagName("ST-Continuation");
-                for (int targetFlowInd = 0; targetFlowInd < flowContinuations.getLength(); targetFlowInd++) {
-                    continuation = (Element) flowContinuations.item(targetFlowInd);
+                for (int curContinuationInd = 0; curContinuationInd < flowContinuations.getLength(); curContinuationInd++) {
+                    continuation = (Element) flowContinuations.item(curContinuationInd);
                     targetFlow = continuation.getAttribute("target-flow");
                     this.validateTargetFlowNameAndAddToBuilder(srcFlowInd, targetFlow);
 
@@ -91,22 +91,22 @@ public class FlowLoader implements Serializable {
                     for (int t = 0; t < curTargetFlowsContinuationsMapping.getLength(); t++) {
                         curContinuationMapping = (Element) curTargetFlowsContinuationsMapping.item(t);
                         sourceData = curContinuationMapping.getAttribute("source-data");
-                        targetFlow = curContinuationMapping.getAttribute("target-data");
-                        validateDataAndAddToBuilder(srcFlowInd, sourceData, targetFlowInd, targetFlow, targetFlow, builder.getFlowNameByInd(srcFlowInd));
+                        targetData = curContinuationMapping.getAttribute("target-data");
+                        validateDataAndAddToBuilder(srcFlowInd, sourceData, targetData, targetFlow, builder.getFlowNameByInd(srcFlowInd));
                     }
                 }
             }
         }
     }
 
-    private void validateDataAndAddToBuilder(int srcFlowInd, String srcDataName, int targetFlowInd, String targetDataName, String targetFlowName, String srcFlowName){
+    private void validateDataAndAddToBuilder(int srcFlowInd, String srcDataName, String targetDataName, String targetFlowName, String srcFlowName){
         /** we check for Inputs in the Target Flow and for Outputs in the Source flow*/
 
-        if(!builder.isInputOfFlow(targetFlowInd,targetDataName)){
-             throw(new IllegalArgumentException("Target Flow " + targetFlowName + " has no input with name " + targetDataName + "."));
+        if(!builder.isInputOfFlow(targetFlowName,targetDataName)){
+             throw(new IllegalArgumentException("Target Flow \"" + targetFlowName + "\" has no input with name " + targetDataName + "."));
         }
-        else if(!builder.isOutputOfFlow(srcFlowInd,srcDataName)){
-            throw(new IllegalArgumentException("Target Flow " + srcFlowName + " has no input with name " + srcDataName + "."));
+        else if(!builder.isOutputOfFlow(srcFlowName,srcDataName)){
+            throw(new IllegalArgumentException("Source Flow \"" + srcFlowName + "\" has no output with name " + srcDataName + "."));
         }
         else{
             builder.addSrc2DataToFlowContinuationByTargetFlowsName(srcFlowInd,targetFlowName,srcDataName,targetDataName);

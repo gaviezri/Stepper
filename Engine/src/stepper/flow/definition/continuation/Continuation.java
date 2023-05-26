@@ -1,6 +1,8 @@
 package stepper.flow.definition.continuation;
 
 import javafx.util.Pair;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,9 @@ public class Continuation {
     String curTargetFlow;
     public void addTargetFlow(String targetFlowName){
         curTargetFlow = targetFlowName;
+        if(!targetFlowName2DataMappings.containsKey(curTargetFlow)){
+            targetFlowName2DataMappings.put(targetFlowName,new ArrayList<Pair<String,String>>());
+        }
     }
 
     public void addDataMappingPairToCurTargetFlow(Pair<String,String> src2TargetData){

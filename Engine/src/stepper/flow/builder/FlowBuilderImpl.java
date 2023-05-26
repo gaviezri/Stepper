@@ -33,6 +33,17 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
 //        enumInputName2InputVal.put("METHOD", new ArrayList<>(curEnum));
     }
 
+    public FlowDefinition getFlowByName(String name){
+        FlowDefinition res = null;
+        if(this.doesThisFlowExist(name)){
+            for (int i=0;i<flowDefinitions.size();++i){
+                if(name.equals(flowDefinitions.get(i).getName())){
+                    res = flowDefinitions.get(i);
+                }
+            }
+        }
+        return res;
+    }
     public List<FlowDefinition> buildFlows() {
         // CHECK THAT:
         // reference from a later step to an earlier step - V
@@ -57,15 +68,15 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
     }
 
     @Override
-    public boolean isInputOfFlow(int flowInd, String dataName){
+    public boolean isInputOfFlow(String flowName, String dataName){
         /** checks if this ORIGINAL name an input of the flow in index 'flowInd'*/
-        return flowDefinitions.get(flowInd).isInputOfFlow(dataName);
+        return this.getFlowByName(flowName).isInputOfFlow(dataName);
     }
 
     @Override
-    public boolean isOutputOfFlow(int flowInd, String dataName){
+    public boolean isOutputOfFlow(String flowName, String dataName){
         /** checks if this ORIGINAL name an output of the flow in index 'flowInd'*/
-        return flowDefinitions.get(flowInd).isOutputOfFlow((dataName));
+        return this.getFlowByName(flowName).isOutputOfFlow((dataName));
     }
 
     @Override

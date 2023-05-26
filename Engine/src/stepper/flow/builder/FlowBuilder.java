@@ -9,9 +9,9 @@ import java.util.Set;
 public interface FlowBuilder {
     boolean doesThisFlowExist(String flowName);
 
-    boolean isInputOfFlow(int flowInd, String dataName);
+    boolean isInputOfFlow(String flowName, String dataName);
 
-    boolean isOutputOfFlow(int flowInd, String dataName);
+    boolean isOutputOfFlow(String flowName, String dataName);
 
     void addTargetFlowToFlowsContinuation(int srcFlowInd, String targetFlowName);
 

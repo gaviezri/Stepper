@@ -42,7 +42,7 @@ public class EngineController implements Serializable {
     public LoadDataDTO readXML(String path) {
         try {
             flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
-            //flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
+            flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){
             return new LoadDataDTO(path, "", false, e.getMessage());

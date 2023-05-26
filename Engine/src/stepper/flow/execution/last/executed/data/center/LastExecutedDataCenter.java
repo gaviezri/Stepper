@@ -12,7 +12,7 @@ public class LastExecutedDataCenter {
     private Integer currentStepIdx;
     private Integer stepsCount;
 
-    private static LastExecutedDataCenter instance = null;
+    private static LastExecutedDataCenter instance = new LastExecutedDataCenter();
     private LastExecutedDataCenter() {
         // Exists only to defeat instantiation.
     }

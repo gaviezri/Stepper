@@ -104,12 +104,15 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         finalDataName = mappingGraph.getResourceNameThatMappedTo(finalDataName);
         DataDefinition theExpectedDataDefinition = ExecutionDataName2Definition.get(finalDataName);
 
-        if (theExpectedDataDefinition == null)
+        if (theExpectedDataDefinition == null) {
+
             throw new NoMatchingKeyWasFoundException("The key " + finalDataName + " cant be found!");
-
-        if (expectedDataType.isAssignableFrom(theExpectedDataDefinition.getType())) {
+        } else if (expectedDataType.isEnum()) {
             Object aValue = ExecutionDataValues.get(finalDataName);
+            return (T) Enum.valueOf((Class<Enum>) expectedDataType, aValue.toString());
 
+        } else if (expectedDataType.isAssignableFrom(theExpectedDataDefinition.getType())) {
+            Object aValue = ExecutionDataValues.get(finalDataName);
             return expectedDataType.cast(aValue);
         } else {
             throw new GivenValueTypeDontMatchException("Expected type " + expectedDataType + "but " +

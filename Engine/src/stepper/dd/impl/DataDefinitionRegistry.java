@@ -1,5 +1,6 @@
 package stepper.dd.impl;
 
+import com.sun.istack.internal.NotNull;
 import stepper.dd.impl.enumeration.EnumerationDataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
 import stepper.dd.impl.number.DoubleDataDefinition;
@@ -37,5 +38,28 @@ public enum DataDefinitionRegistry implements stepper.dd.api.DataDefinition {
     public Class<?> getType() {
         return dataDefinition.getType();
     }
+
+
+//    public static DataDefinitionRegistry fromString(String value) {
+//
+//        switch (value.toLowerCase()) {
+//            case "string":
+//                return STRING;
+//            case "integer":
+//                return NUMBER;
+//            case "double":
+//                return DOUBLE;
+//            case "relation":
+//                return RELATION;
+//            case "list":
+//                return LIST;
+//            case "mapping":
+//                return MAPPING;
+//            case "enumeration":
+//                return ENUMERATION;
+//            default:
+//                throw new IllegalArgumentException(value);
+//        }
+//    }
 
 }

@@ -3,6 +3,8 @@ package body;
 import app.AppController;
 import body.library.LibraryController;
 import body.execution.ExecutionController;
+import body.library.definition.DefinitionController;
+import body.library.input.InputController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,10 +31,18 @@ public class BodyController {
     public void initialize() throws Exception{
         flowExecTab.setDisable(true);
         flowStatTab.setDisable(true);
+      
+       
+      
         flowLibComponentController.setBodyController(this);
-        flowExecComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
+
+        DefinitionController flowDefController = flowLibComponentController.getDefinitionController();
+        InputController flowInputComponentController = flowLibComponentController.getInputComponentController();
+
+        flowExecComponentController.setBodyController(this);
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
+        flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowDefController, flowInputComponentController);
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
     }
 

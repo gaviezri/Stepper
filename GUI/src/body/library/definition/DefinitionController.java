@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 public class DefinitionController extends LibraryControllerComponent {
 
 
+
+
     @FXML private ListView<String> flowDefAvailableFlowsList;
     @FXML private AnchorPane flowPresentationAnchorPane;
     @FXML private ScrollPane flowDataScrollPane;
@@ -40,6 +42,9 @@ public class DefinitionController extends LibraryControllerComponent {
     private  List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
     private List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
     private List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
+    public ListView<String> getFlowDefAvailableFlowsList() {
+        return flowDefAvailableFlowsList;
+    }
     private void clearAllData() {
         flowDefAvailableFlowsList.getItems().clear();
         flowDescriptionsProperty.clear();
@@ -47,6 +52,9 @@ public class DefinitionController extends LibraryControllerComponent {
         stepsVBoxByFlowIdx.clear();
         inputsVBoxByFlowIdx.clear();
         outputsVBoxByFlowIdx.clear();
+    }
+    public TitledPane getStepsTitledPane() {
+        return stepsTitledPane;
     }
     // --WIRINGS--
     public void initialize() {
@@ -311,11 +319,15 @@ public class DefinitionController extends LibraryControllerComponent {
         selectFlowButton.setOnMouseClicked(event -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
-                this.libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()));
+                this.libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null);
         });
     }
 
     public int getSelectedFlowIndex() {
         return flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex();
+    }
+
+    public FlowDefinitionDTO getSelectedFlow() {
+        return flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex());
     }
 }

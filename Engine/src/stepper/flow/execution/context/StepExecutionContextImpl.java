@@ -49,9 +49,13 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
         for (Map.Entry<String, String> entry : inputFinalName2Definition.entrySet()) {
             String finalName = entry.getKey();
-            String value = entry.getValue();
-            stepper.dd.api.DataDefinition dataDefinition = DataDefinitionRegistry.valueOf(value.toUpperCase());
-            ExecutionDataName2Definition.put(finalName, dataDefinition);
+            String value = entry.getValue().equals("Integer") ? "Number" : entry.getValue();
+            try {
+                stepper.dd.api.DataDefinition dataDefinition = DataDefinitionRegistry.valueOf(value.toUpperCase());
+                ExecutionDataName2Definition.put(finalName, dataDefinition);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(value);
+            }
         }
         this.mappingGraph = mappingGraph;
 

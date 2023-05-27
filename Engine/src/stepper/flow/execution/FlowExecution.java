@@ -27,7 +27,9 @@ public class FlowExecution implements Serializable {
     Map<String, StepExecutionDataManager> finalStepName2stepsManagers;
 
 
-
+    public String getName(){
+        return flowDefinition.getName();
+    }
     public Set<String> getFinalStepsName(){
         return finalStepName2stepsManagers.keySet();
     }

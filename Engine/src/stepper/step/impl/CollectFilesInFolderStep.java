@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -36,7 +35,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     }
 
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "FILES_LIST":
                 return DataDefinitionRegistry.LIST;

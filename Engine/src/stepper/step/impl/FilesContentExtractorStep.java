@@ -1,5 +1,4 @@
 package stepper.step.impl;
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
@@ -95,7 +94,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "FILES_LIST":
                 return DataDefinitionRegistry.LIST;
@@ -116,7 +115,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
             List<FileData> filesList = context.getDataValue("FILES_LIST",List.class);
             Integer lineNumberToExtract = context.getDataValue("LINE", Integer.class);
 
-            context.storeDataValue("DATA",createFilesContentRelation(filesList,logger,lineNumberToExtract),DataDefinitionRegistry.RELATION);
+            context.storeDataValue("DATA",createFilesContentRelation(filesList,logger,lineNumberToExtract), DataDefinitionRegistry.RELATION);
 
             if(filesList.isEmpty()) {
                 logger.addSummaryLine("No files were given!");

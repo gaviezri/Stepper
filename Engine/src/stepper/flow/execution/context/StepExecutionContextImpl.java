@@ -11,7 +11,6 @@ import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,8 +20,8 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     StepUsageDeclaration currentStepUsageDeclaration;
     private String currentStepName;
     private DataAliasingManager dataAliasingManager;
-    private Map<String, Object> ExecutionDataValues;
-    private Map<String, DataDefinition> ExecutionDataName2Definition = new HashMap<>();
+    private Map<String, Object> ExecutionDataValues; // final name TO value
+    private Map<String, stepper.dd.api.DataDefinition> ExecutionDataName2Definition = new HashMap<>();
     private Map<String, StepExecutionDataManager> step2Manager = new LinkedHashMap<>();
     private MappingGraph mappingGraph;
     public String getFinalDataName(String name) {
@@ -38,8 +37,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         this.currentStepName = currentStepName;
     }
 
-
-
     public StepExecutionContextImpl(FlowDefinition flowDefinition, Map<String, Object> inputFinalName2Value, Map<String, String> inputFinalName2Definition, MappingGraph mappingGraph) {
 
         List<StepUsageDeclaration> steps = flowDefinition.getFlowSteps();
@@ -53,7 +50,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         for (Map.Entry<String, String> entry : inputFinalName2Definition.entrySet()) {
             String finalName = entry.getKey();
             String value = entry.getValue();
-            DataDefinition dataDefinition = DataDefinitionRegistry.valueOf(value.toUpperCase());
+            stepper.dd.api.DataDefinition dataDefinition = DataDefinitionRegistry.valueOf(value.toUpperCase());
             ExecutionDataName2Definition.put(finalName, dataDefinition);
         }
         this.mappingGraph = mappingGraph;
@@ -66,7 +63,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         StepExecutionDataManager theManager = step2Manager.get(name);
         theManager.setStepResult(stepResult);
     }
-
 
     @Override
     public AbstractLogger getStepLogger() {
@@ -96,13 +92,12 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         setCurrentStepName(currentStepUsageDeclaration.getFinalStepName());
     }
 
-
     @Override
     public <T> T getDataValue(String dataName, Class<T> expectedDataType) throws NoMatchingKeyWasFoundException, GivenValueTypeDontMatchException {
 
         String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
         finalDataName = mappingGraph.getResourceNameThatMappedTo(finalDataName);
-        DataDefinition theExpectedDataDefinition = ExecutionDataName2Definition.get(finalDataName);
+        stepper.dd.api.DataDefinition theExpectedDataDefinition = ExecutionDataName2Definition.get(finalDataName);
 
         if (theExpectedDataDefinition == null) {
 
@@ -121,11 +116,11 @@ public class StepExecutionContextImpl implements StepExecutionContext {
 
     }
 
-    @Override
-    public void storeDataValue(String dataName, Object value, DataDefinitionRegistry datadefinition)  {
+    @Override                                                   // used to be flowDefinitionRegistry
+    public void storeDataValue(String dataName, Object value, DataDefinition dataDefinition)  {
         // use current step name?
         String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
-        ExecutionDataName2Definition.put(finalDataName,datadefinition);
+        ExecutionDataName2Definition.put(finalDataName,dataDefinition);
         ExecutionDataValues.put(finalDataName, value);
     }
 

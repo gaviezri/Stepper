@@ -13,18 +13,18 @@ import java.util.*;
 
 public class FlowBuilderImpl implements FlowBuilder, Serializable {
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
-    private Map<String,List<Enum>> enumInputName2InputVal = new HashMap<>();
+    private Map<String, Class<?extends Enum>> enumInputName2InputVal = new HashMap<>();
 
 
     public FlowBuilderImpl(){
         /** EVERY STEP WITH ENUM-INPUT NEEDS TO BE MAPPED HERE FOR FUTURE VALIDATION!*/
-        List<Enum> curEnum = new ArrayList<>();
+//        List<Enum> curEnum = new ArrayList<>();
+//
+//        curEnum.add(ZipperStep.OperationType.ZIP);
+//        curEnum.add(ZipperStep.OperationType.UNZIP);
+        enumInputName2InputVal.put("OPERATION", ZipperStep.OperationType.class);
 
-        curEnum.add(ZipperStep.OperationType.ZIP);
-        curEnum.add(ZipperStep.OperationType.UNZIP);
-        enumInputName2InputVal.put("OPERATION", new ArrayList<>(curEnum));
-
-        curEnum.clear();
+//          curEnum.clear();
 //         TODO: add enum formal types
 //        curEnum.add("GET");
 //        curEnum.add("PUT");
@@ -175,22 +175,25 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
 
         return resDD;
     }
-
     @Override
     public Enum isValidEnumInputNameAndValue(String name, String value){
-        List<Enum> curEnumList;
-        for (String inputName:enumInputName2InputVal.keySet()) {
-            if(inputName.equals(name)){
-                curEnumList = enumInputName2InputVal.get(inputName);
-                for (Enum e:curEnumList){
-                    if(e.toString().equals(value)){
-                        return e;
-                    }
-                }
-            }
-        }
-        return null;
+        return Enum.valueOf(enumInputName2InputVal.get(name), value);
     }
+
+//    public Enum isValidEnumInputNameAndValue(String name, String value){
+//        List<Enum> curEnumList;
+//        for (String inputName:enumInputName2InputVal.keySet()) {
+//            if(inputName.equals(name)){
+//                curEnumList = enumInputName2InputVal.get(inputName);
+//                for (Enum e:curEnumList){
+//                    if(e.toString().equals(value)){
+//                        return e;
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
     public String getFlowNameByInd(int flowInd){

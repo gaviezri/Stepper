@@ -1,7 +1,6 @@
 package stepper.flow.definition.mapping;
 
 import stepper.dd.api.DataDefinition;
-import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.step.api.enums.DataNecessity;
 
 import java.io.Serializable;

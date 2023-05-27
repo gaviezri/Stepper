@@ -19,7 +19,7 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
     /* 5.4 */ final List<String> freeInputsNecessity;
     /* 6.1 */ final List<String> outputsFinalNames;
     /* 6.2 */ final List<String> outputsTypes;
-    /* 6.3 */ final List<String> outputsContent;
+    /* 6.3 */ final List<Object> outputsContent = new ArrayList<>();
     /* 7.1 */ final List<String> stepsNamesWithAlias;
     /* 7.2 */ final List<String> stepsDurationInMillis;
     /* 7.3 */ final List<String> stepsResult;
@@ -47,7 +47,10 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         freeInputsNecessity = flowExecution.getFlowDefinition().getFreeInputsNecessity();
         outputsFinalNames = flowExecution.getFlowDefinition().getAllOutputsNames();
         outputsTypes = flowExecution.getFlowDefinition().getAllOutputsTypes();
-        outputsContent = flowExecution.getAllOutputsContent();
+        // TODO: The root function " FlowExecution.getAllOutputsContent() " was changed so that the return value will
+        //  be Objects and not there string representatives
+        outputsContent.addAll(flowExecution.getAllOutputsContent());
+
         stepsNamesWithAlias = flowExecution.getStepsNamesWithAlias();
         stepsDurationInMillis = flowExecution.getStepsDurationInMillis();
         stepsResult = flowExecution.getStepsResult();
@@ -92,7 +95,7 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         return outputsTypes;
     }
 
-    public List<String> getOutputsContent() {
+    public List<Object> getOutputsContent() {
         return outputsContent;
     }
 

@@ -82,11 +82,13 @@ public class EngineController implements Serializable {
         FlowExecutor flowExecutor = new FlowExecutor();
         flowExecutor.setActiveFlow(flowToExecute);
         flowExecutor.setFlowFreeInputs(valName2valType);
+
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.setFlowExecution(executionArchive.peek());
 
         flowsExecutorsManager.executeFlow(flowExecutor);
     }
+
     public List<Map<String,String>> getExecutedFlowHeaders() {
         return executionArchive.getExecutedFlowHeaders();
 

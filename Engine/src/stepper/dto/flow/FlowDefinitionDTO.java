@@ -6,6 +6,7 @@ import stepper.dto.step.StepsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionDTO extends AbstractDTO {
@@ -41,6 +42,9 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 7.2 */ List<String> outputTypes;
     /* 7.3 */ List<String> finalStepNameThatProducedTheOutput;
 
+    // ---CONTINUATION--- //
+    /* 8 */ Map<String, List<Pair<String,String>>> targetFlowName2DataMappings;
+
     public List<String> freeInputUserString() {
         return freeInputUserString;
     }
@@ -69,8 +73,12 @@ public class FlowDefinitionDTO extends AbstractDTO {
         finalStepNameThatProducedTheOutput = flowDef.getFinalStepNamesThatProducedTheOutputs();
         continuationsCount = flowDef.getContinuationsCount();
         stepsDTO = new StepsDTO(flowDef.getFlowSteps(), flowDef.getMappingGraph());
+        targetFlowName2DataMappings = flowDef.getContinuation().
+                getAllContinuationDataFromCurFlow();
     }
-
+    public Map<String, List<Pair<String,String>>> getContinuationDataMap(){
+        return targetFlowName2DataMappings;
+    }
     public FlowDefinitionDTO(String errmessage) {
         super(errmessage);
     }

@@ -400,7 +400,9 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     public List<Pair<String, List<String>>> getFreeInputs2StepsThatUseThem(){
         List<Pair<String, List<String>>> convertedToStrings = new ArrayList<>();
         for (Pair<DataDefinitionDeclaration,List<StepUsageDeclaration>> input2steps : flowFreeInputs2StepsThatUseThem){
-            convertedToStrings.add(new Pair<>(input2steps.getKey().getName(), input2steps.getValue().stream().map(x-> x.getFinalStepName()).collect(Collectors.toList())));
+            convertedToStrings.add(new Pair<>(input2steps.getKey().getName(), input2steps.getValue().stream().
+                    map(x-> x.getFinalStepName()).
+                    collect(Collectors.toList())));
         }
         return convertedToStrings;
     }

@@ -34,7 +34,11 @@ public class Continuation {
         return targetFlowName2DataMappings.containsKey(flowName);
     }
 
-    public List<Pair<String,String>> getContinuationsByName(String flowName){
+    public Map<String, List<Pair<String, String>>> getAllContinuationDataFromCurFlow() {
+        return targetFlowName2DataMappings;
+    }
+
+    public List<Pair<String,String>> getTargetFlowContinuationDataByName(String flowName){
         return targetFlowName2DataMappings.get(flowName);
     }
 

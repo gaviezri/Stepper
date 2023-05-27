@@ -5,6 +5,7 @@ import body.library.LibraryController;
 import body.execution.ExecutionController;
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
+import body.statistics.StatisticsController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -15,6 +16,7 @@ public class BodyController {
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
+    @FXML private StatisticsController flowStatComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowLibTab;
     @FXML private AnchorPane flowLibComponent;
@@ -31,12 +33,11 @@ public class BodyController {
     public void initialize() throws Exception{
         flowExecTab.setDisable(true);
         flowStatTab.setDisable(true);
-      
-       
-      
+
+        flowStatComponentController.setBodyController(this);
+
         flowLibComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
-
         DefinitionController flowDefController = flowLibComponentController.getDefinitionController();
         InputController flowInputComponentController = flowLibComponentController.getInputComponentController();
 

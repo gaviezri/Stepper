@@ -16,7 +16,7 @@ public class StatisticsManager {
      * ONLY FLOWS & STEPS FROM THE LAST FILE LOADED!
      */
     ExecutionArchive executionArchive;
-    // <Original Step Name , (Occurrences Counter, Sum Durations)>
+    // { Original Step Name : (Occurrences Counter, Sum Durations) }
     Map<String, Pair<Integer, Duration>> stepStatistics;
     // <Flow Name , (Occurrences Counter, Sum Durations)>
     Map<String, Pair<Integer, Duration>> flowStatistics;

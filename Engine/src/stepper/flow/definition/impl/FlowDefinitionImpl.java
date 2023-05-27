@@ -34,7 +34,7 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     final private Continuation continuation = new Continuation();
     private boolean isReadOnly;
     private Map<String,Object> initialInputName2Value = new Hashtable<>();
-    private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
+    //private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
 
     @Override
     public Integer getContinuationsCount(){
@@ -69,7 +69,7 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     @Override
     public void addFlowsInitialInputValues(String inputName, Object initialValue, DataDefinition curDD){
         initialInputName2Value.put(inputName,initialValue);
-        initialInputName2DataDef.put(inputName,curDD);
+        //initialInputName2DataDef.put(inputName,curDD);
     }
 
     public FlowDefinitionImpl(String name) {
@@ -488,4 +488,5 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         }
         return null;
     }
+
 }

@@ -1,10 +1,12 @@
 package stepper.controller;
 
 import javafx.util.Pair;
+import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
+import stepper.dto.statistics.StatisticsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.archive.ExecutionArchive;
@@ -12,9 +14,8 @@ import stepper.flow.execution.runner.FlowExecutorsManager;
 import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
 import stepper.flow.loader.FlowLoader;
+import stepper.statistics.StatisticsManager;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class EngineController implements Serializable {
     FlowLoader flowLoader = new FlowLoader();
     LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
     FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
-
+    private StatisticsManager statisticsManager = new StatisticsManager(getArchive());
     private static EngineController instance = null;
 
     private EngineController() {
@@ -106,6 +107,27 @@ public class EngineController implements Serializable {
     public ExecutedFlowDetailsDTO getExecutedFlowDetails(int flowIdx) {
         return new ExecutedFlowDetailsDTO(executionArchive.get(flowIdx));
     }
+
+    public StatisticsDTO getCurrentLoadedFlowsStatisticsDetails(){
+        statisticsManager.collectStatistics();
+        return new StatisticsDTO(statisticsManager.getStepStatistics(),statisticsManager.getFlowStatistics());
+    }
+
+    public FlowsExecutionHistoryDTO getExecutedFlowsHistoryDetails(){
+        return new FlowsExecutionHistoryDTO(this.executionArchive.getFlowExecutionStack());
+    }
+
+//    public void testPrintingTODELETE(FlowsExecutionHistoryDTO.SortFilter filter){
+//        FlowsExecutionHistoryDTO test = getExecutedFlowsHistoryDetails();
+//
+//        test.sorteFlowExecutionDTOsBy(filter);
+//        for (List<Object> row: test.getFlowExecutionHistoryDetailsRows()) {
+//            for (Object data:row){
+//                System.out.print(data + "|");
+//            }
+//            System.out.println();
+//        }
+//    }
 
     public ExecutionArchive getArchive() {
         return this.executionArchive;

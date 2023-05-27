@@ -3,6 +3,7 @@ package stepper.flow.execution.last.executed.data.center;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class LastExecutedDataCenter {
@@ -11,6 +12,7 @@ public class LastExecutedDataCenter {
     private String currentStepName;
     private Integer currentStepIdx;
     private Integer stepsCount;
+    private Map<String, Object> executionDataValues;
 
     private static LastExecutedDataCenter instance = new LastExecutedDataCenter();
     private LastExecutedDataCenter() {
@@ -62,6 +64,12 @@ public class LastExecutedDataCenter {
     public static synchronized void setStepsCount(Integer stepsCount, UUID lastExecutedFlowUUID) {
         if (instance.lastExecutedFlowUUID == lastExecutedFlowUUID) {
             instance.stepsCount = stepsCount;
+        }
+    }
+
+    public static void setExecutionOutputs(Map<String, Object> executionData, UUID lastExecutedFlowUUID) {
+        if (instance.lastExecutedFlowUUID == lastExecutedFlowUUID) {
+            instance.executionDataValues = executionData;
         }
     }
 }

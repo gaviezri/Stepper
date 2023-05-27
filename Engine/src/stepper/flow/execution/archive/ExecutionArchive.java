@@ -43,6 +43,10 @@ public class ExecutionArchive implements Serializable {
         return headers;
     }
 
+    public Stack<FlowExecution> getFlowExecutionStack() {
+        return flowExecutionStack;
+    }
+
     public FlowExecution getFlowExecutionByIndex(int i){
         return flowExecutionStack.get(i);
     }

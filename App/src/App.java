@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import stepper.controller.EngineController;
+import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.statistics.StatisticsManager;
 
 public class App extends Application {
@@ -31,6 +32,7 @@ public class App extends Application {
         primaryStage.getIcons().add(new javafx.scene.image.Image("file:///" + ICON_PATH));
 
         primaryStage.show();
+
     }
     public static void main(String[] args) {
         Application.launch(args);

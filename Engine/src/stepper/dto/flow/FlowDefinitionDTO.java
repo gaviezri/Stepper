@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class FlowDefinitionDTO extends AbstractDTO {
     /* see command definition in word document pg 19 */
-    Class<?> Type = this.getClass();
     /* 1 */ String flowName;
     /* 2 */ String description;
     /* 3 */ List<String> formalOutputs;
@@ -140,6 +139,9 @@ public class FlowDefinitionDTO extends AbstractDTO {
 
     public String getFlowName() {
         return flowName;
+    }
+    public StepsDTO getStepsDTO() {
+        return stepsDTO;
     }
 
 }

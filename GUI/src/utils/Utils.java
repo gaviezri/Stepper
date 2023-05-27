@@ -1,6 +1,7 @@
 package utils;
 
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 
 import java.lang.reflect.Method;
@@ -10,6 +11,10 @@ public class Utils {
     private static void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         Text text = new Text(content);
+        if (alertType == Alert.AlertType.ERROR){
+            alert.getDialogPane().setGraphic(new javafx.scene.image.ImageView(new Image("file:///" + System.getProperty("user.dir") + "/GUI/resources/missings.jpg")));
+        }
+
         text.wrappingWidthProperty().bind(alert.getDialogPane().widthProperty());
         alert.setTitle(title);
         alert.setHeaderText(header);

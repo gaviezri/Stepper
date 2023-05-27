@@ -6,16 +6,16 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 import stepper.dto.flow.FlowDefinitionDTO;
+import stepper.dto.step.SingleStepDTO;
+import stepper.dto.step.StepsDTO;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -31,22 +31,22 @@ public class DefinitionController extends LibraryControllerComponent {
     @FXML private Button selectFlowButton;
     @FXML private Accordion flowInformationAccordion;
     @FXML private TitledPane stepsTitledPane;
-    @FXML private ListView<String> stepsListView;
     @FXML private TitledPane inputsTitledPane;
     @FXML private TitledPane outputsTitledPane;
     private List<FlowDefinitionDTO> flowDefinitionDTOList = new ArrayList<>();
     private  SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
-    private  List<List<String>> flowStepsFullNameByFlowIdx = new ArrayList<>();
+    private  List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
     private List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
     private List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
     private void clearAllData() {
         flowDefAvailableFlowsList.getItems().clear();
         flowDescriptionsProperty.clear();
         flowFormalOutputsProperty.clear();
-        flowStepsFullNameByFlowIdx.clear();
-
+        stepsVBoxByFlowIdx.clear();
+        inputsVBoxByFlowIdx.clear();
+        outputsVBoxByFlowIdx.clear();
     }
     // --WIRINGS--
     public void initialize() {
@@ -76,12 +76,11 @@ public class DefinitionController extends LibraryControllerComponent {
                 if(!flowDataScrollPane.isVisible()) {
                     flowDataScrollPane.visibleProperty().set(true);
                 }
-
-                selectedFlowDescriptionLabel.textProperty().set(flowDescriptionsProperty.get(newValue.intValue()));
-                stepsListView.getItems().clear();
-                stepsListView.getItems().addAll(flowStepsFullNameByFlowIdx.get(newValue.intValue()));
-                inputsTitledPane.setContent(inputsVBoxByFlowIdx.get(newValue.intValue()));
-                outputsTitledPane.setContent(outputsVBoxByFlowIdx.get(newValue.intValue()));
+                int theIdx = newValue.intValue();
+                selectedFlowDescriptionLabel.textProperty().set(flowDescriptionsProperty.get(theIdx));
+                stepsTitledPane.setContent(stepsVBoxByFlowIdx.get(theIdx));
+                inputsTitledPane.setContent(inputsVBoxByFlowIdx.get(theIdx));
+                outputsTitledPane.setContent(outputsVBoxByFlowIdx.get(theIdx));
             }
         }));
 
@@ -142,20 +141,104 @@ public class DefinitionController extends LibraryControllerComponent {
     // -- STEPS --
     private void setFlowsStepsData(FlowDefinitionDTO dto) {
         List<Boolean> stepsReadonly = dto.getIsStepReadonly();
-        List<Pair<String,String>> step2alias = dto.getStep2alias();
-        List<String> currentFlowStepsPresentations = new ArrayList<>();
-        for (int i = 0; i<stepsReadonly.size(); ++i){
-            Pair<String,String> s2a = step2alias.get(i);
-            currentFlowStepsPresentations.add(stepPresentationFormat(s2a.getKey(),s2a.getValue(),stepsReadonly.get(i)));
+        VBox content = new VBox();
+        StepsDTO allStepsDTO = dto.getStepsDTO();
+
+        for (SingleStepDTO stepDTO : allStepsDTO.getSteps()) {
+            content.getChildren().size();
+            content.getChildren().add(createStepPane(stepDTO, stepsReadonly.get(content.getChildren().size())));
         }
-        flowStepsFullNameByFlowIdx.add(currentFlowStepsPresentations);
+        stepsVBoxByFlowIdx.add(content);
     }
-    private String stepPresentationFormat(String name, String alias ,Boolean readonly) {;
-        boolean gotAlias = !name.equals(alias);
-        return alias +
-                (gotAlias ? " - (" + name + ")" : "") +
-                (readonly ? " [Readonly]" : "");
+    private TitledPane createStepPane(SingleStepDTO stepDTO, Boolean isReadOnly) {
+        TitledPane stepPane = new TitledPane();
+        stepPane.setText(stepDTO.getStepName() + (isReadOnly ? " (read-only)" : ""));
+        stepPane.setExpanded(false);
+        VBox content = new VBox();
+        stepPane.setContent(content);
+        content.getChildren().add(createStepInputsPane(stepDTO));
+        content.getChildren().add(createStepOutputsPane(stepDTO));
+        return stepPane;
     }
+    private Node createStepInputsPane(SingleStepDTO stepDTO) {
+        TitledPane inputsPane = new TitledPane();
+        inputsPane.setText("Inputs");
+        inputsPane.setExpanded(false);
+        VBox content = new VBox();
+        inputsPane.setContent(content);
+
+        List<String> inputsFinalNames = stepDTO.getInputsFinalNames();
+        List<Boolean> isMandatoryInput = stepDTO.getIsMandatoryInput();
+        List<Boolean> isConnectedInput = stepDTO.getIsConnectedInput();
+        Map<String,Pair<String,String>> inputFinalName2SourceStepAndOutPut = stepDTO.getInputPostAliasName2SourceStepNameAndSourceOutputName();
+
+        for (int i = 0; i < inputsFinalNames.size(); i++) {
+            String finalName = inputsFinalNames.get(i);
+            content.getChildren().add(createStepInputPane(finalName,
+                                                        isMandatoryInput.get(i),
+                                                        isConnectedInput.get(i),
+                                                        inputFinalName2SourceStepAndOutPut.get(finalName)));
+        }
+        return inputsPane;
+    }
+
+    private Node createStepInputPane(String name, Boolean mandatory, Boolean connected, Pair<String,String> SourceStepAndSourceOutPut){
+        TitledPane inputPane = new TitledPane();
+        inputPane.setText(name);
+        inputPane.setExpanded(false);
+
+        VBox content = new VBox();
+        inputPane.setContent(content);
+
+        Label mandatoryLabel = new Label("Mandatory: " + mandatory);
+        Label connectedLabel = new Label("Connected: " + connected);
+        if (connected) {
+            Label sourceStepLabel = new Label("from (source step): " + SourceStepAndSourceOutPut.getKey());
+            Label sourceOutputLabel = new Label("output of: " + SourceStepAndSourceOutPut.getValue());
+            content.getChildren().addAll(mandatoryLabel, connectedLabel, sourceStepLabel, sourceOutputLabel);
+        } else {
+            content.getChildren().addAll(mandatoryLabel, connectedLabel);
+        }
+
+
+        return inputPane;
+    }
+
+    private Node createStepOutputsPane(SingleStepDTO stepDTO) {
+        TitledPane outputsPane = new TitledPane();
+        outputsPane.setText("Outputs");
+        outputsPane.setExpanded(false);
+        VBox content = new VBox();
+        outputsPane.setContent(content);
+
+        List<String> outputsFinalNames = stepDTO.getOutputsNamesPostAliasing();
+        Map<String,List<Pair<String,String>>> outputTargets = stepDTO.getOutputPostAliasName2AllTargetStepNameAndTargetInputName();
+        for (int i = 0; i < outputsFinalNames.size(); i++) {
+            String finalName = outputsFinalNames.get(i);
+            content.getChildren().add(createSingleStepOutputPane(finalName, outputTargets.get(finalName)));
+        }
+        return outputsPane;
+    }
+
+    private Node createSingleStepOutputPane(String finalName, List<Pair<String, String>> targetStepAndInputName) {
+        TitledPane outputPane = new TitledPane();
+        outputPane.setText(finalName);
+        outputPane.setExpanded(false);
+
+        VBox content = new VBox();
+        outputPane.setContent(content);
+        if (targetStepAndInputName != null) {
+            for (Pair<String, String> target : targetStepAndInputName) {
+                Label targetStepLabel = new Label("to (target step): " + target.getKey());
+                Label targetInputLabel = new Label("input of: " + target.getValue());
+                content.getChildren().addAll(targetStepLabel, targetInputLabel);
+            }
+        }
+        return outputPane;
+    }
+
+
+
     // --OUTPUTS--
     private void setFlowOutputsData(FlowDefinitionDTO dto) {
         List<String> outputs = dto.getOutputsFinalNames();
@@ -163,13 +246,13 @@ public class DefinitionController extends LibraryControllerComponent {
         List<String> stepsThatUseOutputs = dto.getFinalStepNameThatProducedTheOutput();
         VBox content = new VBox();
         for (int i = 0; i < outputs.size(); i++) {
-            content.getChildren().add(createOutputPane(outputs.get(i),
+            content.getChildren().add(createFlowOutputPane(outputs.get(i),
                     outputTypes.get(i),
                     stepsThatUseOutputs.get(i)));
         }
         outputsVBoxByFlowIdx.add(content);
     }
-    private TitledPane createOutputPane(String name, String type, String stepProducedBy) {
+    private TitledPane createFlowOutputPane(String name, String type, String stepProducedBy) {
         TitledPane outputPane = new TitledPane();
         outputPane.setText(name);
         outputPane.setExpanded(false);
@@ -196,13 +279,13 @@ public class DefinitionController extends LibraryControllerComponent {
                 continue;
             }
             usedNames.add(name);
-            TitledPane presentation = createFreeInputPane(name, freeInputTypes.get(i),
+            TitledPane presentation = createFlowFreeInputPane(name, freeInputTypes.get(i),
                                                             stepsThatUseFreeInputs.get(i).getValue(),freeInputsNecessity.get(i));
             content.getChildren().add(presentation);
         }
         inputsVBoxByFlowIdx.add(content);
     }
-    private TitledPane createFreeInputPane(String name, String type, List<String> stepsThatUseMe, String Necessity) {
+    private TitledPane createFlowFreeInputPane(String name, String type, List<String> stepsThatUseMe, String Necessity) {
         TitledPane inputPane = new TitledPane();
         inputPane.setText(name);
         inputPane.setExpanded(false);

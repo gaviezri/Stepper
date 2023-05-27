@@ -15,11 +15,6 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 2 */ String description;
     /* 3 */ List<String> formalOutputs;
     /* 4 */ Boolean isFlowReadonly;
-
-    public Integer getContinuationsCount() {
-        return continuationsCount;
-    }
-
     /* 5 */ Integer continuationsCount;
 
     // ---STEPS--- //
@@ -33,8 +28,9 @@ public class FlowDefinitionDTO extends AbstractDTO {
     /* 6.1 */ List<String> freeInputsFinalNames;
     /* 6.2 */ List<String> freeInputTypes;
     /* 6.3 */ List<Pair<String,List<String>>> freeInputs2StepsThatUseThem;
-    List<String> freeInputUserString;
-    /* 6.4 */ List<String> freeInputNecessity;
+    /* 6.4 */ List<String> freeInputUserString;
+    /* 6.5 */ List<String> freeInputNecessity;
+    /* 6.6 */ Map<String,Object> initialInputName2Value;
 
     // ---OUTPUTS--- //
     /* 7.1 */ List<String> outputsFinalNames;
@@ -43,6 +39,10 @@ public class FlowDefinitionDTO extends AbstractDTO {
 
     // ---CONTINUATION--- //
     /* 8 */ Map<String, List<Pair<String,String>>> targetFlowName2DataMappings;
+
+    public Integer getContinuationsCount() {
+        return continuationsCount;
+    }
 
     public List<String> freeInputUserString() {
         return freeInputUserString;
@@ -74,7 +74,13 @@ public class FlowDefinitionDTO extends AbstractDTO {
         stepsDTO = new StepsDTO(flowDef.getFlowSteps(), flowDef.getMappingGraph());
         targetFlowName2DataMappings = flowDef.getContinuation().
                 getAllContinuationDataFromCurFlow();
+        initialInputName2Value = flowDef.getInitialInputName2Value();
     }
+
+    public Map<String, Object> getInitialValues() {
+        return initialInputName2Value;
+    }
+
     public Map<String, List<Pair<String,String>>> getContinuationDataMap(){
         return targetFlowName2DataMappings;
     }

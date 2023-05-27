@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public class StepsDTO {
-    List<SingleStepDTO> steps = new ArrayList<>();
+    final List<SingleStepDTO> steps = new ArrayList<>();
 
     public StepsDTO(List<StepUsageDeclaration> stepsUsageDecl, MappingGraph mappingGraph)
  {
@@ -20,9 +20,21 @@ public class StepsDTO {
         }
     }
 
-//    public SingleStepDTO getStepByName(String stepName){
-//
-//    }
+    public Boolean doesThisStepExists(String stepName){
+        return steps.stream().
+                map(SingleStepDTO::getStepName).
+                anyMatch(x->x.equals(stepName));
+    }
+
+    public SingleStepDTO getStepDTOByName(String stepName){
+        for(SingleStepDTO stepDTO:steps){
+            if(stepDTO.getStepName().equals(stepName)){
+                return stepDTO;
+            }
+        }
+        throw new IllegalArgumentException("Step \"" + stepName + "\" does not exist.");
+    }
+
     public SingleStepDTO getStepByInd(int stepInd){ //only if list of DTOs with same order as stepUsageDeclaration in flow definition
         return steps.get(stepInd);
     }

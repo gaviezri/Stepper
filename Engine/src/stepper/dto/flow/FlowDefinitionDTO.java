@@ -2,6 +2,7 @@ package stepper.dto.flow;
 
 import javafx.util.Pair;
 import stepper.dto.AbstractDTO;
+import stepper.dto.step.StepsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class FlowDefinitionDTO extends AbstractDTO {
 
     /* 5.1 */ List<Pair<String,String>> step2alias;
     /* 5.2 */ List<Boolean> isStepReadonly;
+    /* 5.3 */ StepsDTO stepsDTO;
 
     // ---INPUTS--- //
 
@@ -66,6 +68,7 @@ public class FlowDefinitionDTO extends AbstractDTO {
         outputTypes =  flowDef.getAllOutputsTypes();
         finalStepNameThatProducedTheOutput = flowDef.getFinalStepNamesThatProducedTheOutputs();
         continuationsCount = flowDef.getContinuationsCount();
+        stepsDTO = new StepsDTO(flowDef.getFlowSteps(), flowDef.getMappingGraph());
     }
 
     public FlowDefinitionDTO(String errmessage) {

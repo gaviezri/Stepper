@@ -5,13 +5,15 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="flowExecutionMainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.execution.ExecutionController">
    <children>
       <VBox fx:id="fakeLoadingVBox" style="-fx-alignment: center;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="fakeLoadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="186.0" text="Loading . . ." />
+            <Label fx:id="fakeLoadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="186.0" text="One Moment Please. . ." />
             <ProgressBar fx:id="fakeProgressBar" prefHeight="29.0" prefWidth="587.0" progress="0.0" style="-fx-accent: red;" />
          </children>
       </VBox>
@@ -22,6 +24,14 @@
                   <Tooltip fx:id="executedStepsStatusListViewToolTip" text="Empty Tooltip" />
                </tooltip>
             </ListView>
+            <FlowPane fx:id="selectedStepDetailsFlowPane" layoutX="14.0" layoutY="9.0" prefHeight="200.0" prefWidth="951.0" />
+            <Label fx:id="stepInProgressLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="349.0" layoutY="240.0" prefHeight="46.0" prefWidth="282.0" />
+            <ProgressBar fx:id="flowProgressBar" layoutX="338.0" layoutY="298.0" prefHeight="23.0" prefWidth="304.0" progress="0.0" style="-fx-accent: red;" />
+            <Label fx:id="flowProgressPercentageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="469.0" layoutY="330.0" prefHeight="23.0" prefWidth="42.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

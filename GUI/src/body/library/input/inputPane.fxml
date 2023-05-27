@@ -16,6 +16,11 @@
             <VBox fx:id="inputsVBox" prefHeight="314.0" prefWidth="513.0" />
          </content>
       </ScrollPane>
+      <Button fx:id="backToDefinitionButton" ellipsisString="" layoutX="720.0" layoutY="263.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0">
+         <tooltip>
+            <Tooltip fx:id="executeFlowToolTip1" text="In order to start fill atleast the mandatory inputs." />
+         </tooltip>
+      </Button>
       <Pane fx:id="buttonWrapperForToolTip" layoutX="720.0" layoutY="177.0">
          <children>
             <Button fx:id="startFlowButton" ellipsisString="" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0">
@@ -25,10 +30,5 @@
             </Button>
          </children>
       </Pane>
-      <Button fx:id="backToDefinitionButton" ellipsisString="" layoutX="720.0" layoutY="263.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0">
-         <tooltip>
-            <Tooltip fx:id="executeFlowToolTip1" text="In order to start fill atleast the mandatory inputs." />
-         </tooltip>
-      </Button>
    </children>
 </AnchorPane>

@@ -55,7 +55,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
         if ( result == StepResult.SUCCESS){
 
             try {
-                timeToSleep = context.getDataValue("TIME_TO_SPEND", Number.class).longValue() * 1000;
+                timeToSleep = context.getDataValue("TIME_TO_SPEND", Integer.class).longValue() * 1000;
                 logger.log("About to sleep for " + timeToSleep + " seconds...");
                 Thread.sleep(timeToSleep);
                 logger.log("Done sleeping...");

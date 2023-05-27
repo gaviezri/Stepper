@@ -46,4 +46,32 @@ public class SingleStepDTO {
             isConnectedInput.add(stepInputs2AllSourceStepAndSourceOutputs.containsKey(inputName));
         }
     }
+
+    public String getStepName() {
+        return stepName;
+    }
+
+    public List<String> getInputsFinalNames() {
+        return inputsFinalNames;
+    }
+
+    public List<Boolean> getIsMandatoryInput() {
+        return isMandatoryInput;
+    }
+
+    public List<Boolean> getIsConnectedInput() {
+        return isConnectedInput;
+    }
+
+    public Map<String, Pair<String, String>> getInputPostAliasName2SourceStepNameAndSourceOutputName() {
+        return inputPostAliasName2SourceStepNameAndSourceOutputName;
+    }
+
+    public List<String> getOutputsNamesPostAliasing() {
+        return outputsNamesPostAliasing;
+    }
+
+    public Map<String, List<Pair<String, String>>> getOutputPostAliasName2AllTargetStepNameAndTargetInputName() {
+        return outputPostAliasName2AllTargetStepNameAndTargetInputName;
+    }
 }

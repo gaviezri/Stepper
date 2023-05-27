@@ -23,11 +23,7 @@
                <content>
                   <Accordion fx:id="flowInformationAccordion" prefHeight="322.0" prefWidth="413.0">
                     <panes>
-                      <TitledPane fx:id="stepsTitledPane" animated="false" text="Steps">
-                           <content>
-                              <ListView fx:id="stepsListView" prefHeight="0.0" prefWidth="406.0" />
-                           </content>
-                      </TitledPane>
+                      <TitledPane fx:id="stepsTitledPane" animated="false" text="Steps" />
                       <TitledPane fx:id="inputsTitledPane" animated="false" text="Inputs" />
                       <TitledPane fx:id="outputsTitledPane" animated="false" text="Outputs" />
                     </panes>

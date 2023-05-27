@@ -9,7 +9,9 @@ import stepper.step.api.enums.DataNecessity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
@@ -48,6 +50,56 @@ public class MappingGraph implements Serializable {
 
         }
     }
+
+    public Map<String,List<Pair<String,String>>> getAllTargetStepsAndTargetInputFinalNamesBySourceStepFinalName(String srcStepName){
+        /**
+          for a given step name returns a dict with
+          keys as the step's outputs that are connected to other steps
+          values as a list of corresponding steps and data names
+
+         {source output name -> [ (target step name, target input name) ... ]
+         */
+        Map<String,List<Pair<String,String>>> res = new HashMap();
+
+        for(List<MappingEdge> edgeList : edges){
+            for(MappingEdge edge:edgeList){
+                if(edge.getSourceStepName().equals(srcStepName)){
+                    // create new key and empty list as value if not created yet
+                    if(!res.containsKey(edge.getSourceDataName())){
+                        res.put(edge.getSourceDataName(),new ArrayList<>());
+                    }
+                    res.get(edge.getSourceDataName()).add(new Pair<String,String>(edge.getTargetStepName(), edge.getTargetDataName()));
+                }
+            }
+        }
+        return res;
+    }
+
+    public Map<String,Pair<String,String>> getSourceStepAndSourceOutputFinalNamesByTargetStepFinalName(String targetStepName){
+        /**
+         for a given step name returns a dict with
+         keys as the step's input names that are connected to other steps
+         values as a pair of corresponding steps and data names
+
+         {target input name -> (source step name, source output name)
+         */
+        Map<String,Pair<String,String>> res = new HashMap();
+        String curTargetInputName;
+
+        for(List<MappingEdge> edgeList : edges){
+            for(MappingEdge edge:edgeList){
+                if(edge.getTargetStepName().equals(targetStepName)){
+                    // if target input name has been added to the map already, just add to the target list
+                    // else create new key and empty list as value
+                    curTargetInputName = edge.getTargetDataName();
+
+                    res.put(curTargetInputName,new Pair<String,String>(edge.getSourceStepName(), edge.getSourceDataName()));
+                }
+            }
+        }
+        return res;
+    }
+
 
     public List<String> getStepNodes() {
         return stepNodes;
@@ -154,5 +206,6 @@ public class MappingGraph implements Serializable {
         }
         return wantedDataName;
     }
+
 
 }

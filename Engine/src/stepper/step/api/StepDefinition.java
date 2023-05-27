@@ -7,15 +7,33 @@ import stepper.step.api.enums.StepResult;
 
 import java.util.List;
 
-public interface StepDefinition {
-    String getStepName();
-    boolean isReadonly();
-    List<DataDefinitionDeclaration> inputs();
-    List<DataDefinitionDeclaration> outputs();
-    StepResult invoke(StepExecutionContext context);
-    StepResult validateInputs(StepExecutionContext context);
-    DataDefinition getResourceDataDefinition(String dataOriginalName);
-    DataNecessity getResourceNecessity(String dataOriginalName);
-    String getResourceUserString(String resource);
+public abstract class StepDefinition {
+    public abstract String getStepName();
+    public abstract boolean isReadonly();
+    public abstract List<DataDefinitionDeclaration> inputs();
+    public abstract List<DataDefinitionDeclaration> outputs();
+    public abstract StepResult invoke(StepExecutionContext context);
+    public abstract StepResult validateInputs(StepExecutionContext context);
+    public abstract DataDefinition getResourceDataDefinition(String dataOriginalName);
+    public abstract DataNecessity getResourceNecessity(String dataOriginalName);
+    public abstract String getResourceUserString(String resource);
+    public DataDefinitionDeclaration getInputDataDefDecByInputOrgName(String dataName){
+        DataDefinitionDeclaration res = null;
+        for(DataDefinitionDeclaration dataDefDec : inputs()){
+            if(dataDefDec.getName().equals(dataName)){
+                res = dataDefDec;
+            }
+        }
+        return res;
+    }
 
+    public DataDefinitionDeclaration getOutputDataDefDecByOutputOrgName(String dataName){
+        DataDefinitionDeclaration res = null;
+        for(DataDefinitionDeclaration dataDefDec : outputs()){
+            if(dataDefDec.getName().equals(dataName)){
+                res = dataDefDec;
+            }
+        }
+        return res;
+    }
 }

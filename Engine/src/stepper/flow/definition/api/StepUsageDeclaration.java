@@ -33,4 +33,6 @@ public interface StepUsageDeclaration {
     String getFinalInputNameByOrg(String org);
 
     public String getInputOrgNameByFinalName(String finalName);
+
+    int getStepOrder();
 }

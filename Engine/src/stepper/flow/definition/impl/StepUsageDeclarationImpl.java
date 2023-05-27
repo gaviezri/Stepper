@@ -10,6 +10,7 @@ import stepper.step.api.enums.DataNecessity;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializable {
@@ -18,7 +19,8 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
     private final StepDefinition stepDefinition;
     private boolean skipIfFail;
     private String stepName;
-
+    // steporder == step index in the flow
+    private int stepOrder;
     @Override
     public Boolean isInputMandatory(String inputFinalName){
         String orgName = getInputOrgNameByFinalName(inputFinalName);
@@ -34,11 +36,11 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
     public String getFinalInputNameByOrg(String org){
         return inputs2finalNames.get(org);
     }
-
-    public StepUsageDeclarationImpl(StepDefinition stepDefinition, boolean skipIfFail, String stepName) {
+    public StepUsageDeclarationImpl(StepDefinition stepDefinition, boolean skipIfFail, String stepName, int stepOrder) {
         this.stepDefinition = stepDefinition;
         this.skipIfFail = skipIfFail;
         this.stepName = stepName;
+        this.stepOrder = stepOrder;
         stepDefinition.inputs().forEach(datadef -> inputs2finalNames.put(datadef.getName(), datadef.getName()));
         stepDefinition.outputs().forEach(datadef -> outputs2finalNames.put(datadef.getName(), datadef.getName()));
     }
@@ -100,24 +102,24 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
     @Override
     public String getResourceFinalName(String dataName) {
 
-        for (DataDefinitionDeclaration datadefdecl : stepDefinition.inputs()){
-            String finalName = inputs2finalNames.get(dataName);
-            finalName = finalName == null ? dataName : finalName;
-            if (datadefdecl.getName().equals(dataName)){
-                String finalDataName = inputs2finalNames.get(dataName);
-                return finalDataName == null ? dataName : finalDataName;
-            }
+        String finalName =  getResourceFinalNameFrom(dataName, stepDefinition.inputs(), inputs2finalNames);
+        if (finalName == null){
+            finalName = getResourceFinalNameFrom(dataName, stepDefinition.outputs(), outputs2finalNames);
         }
-        for (DataDefinitionDeclaration datadefdecl : stepDefinition.outputs()){
-            String finalName = outputs2finalNames.get(dataName);
-            finalName = finalName == null ? dataName : finalName;
-            if (datadefdecl.getName().equals(dataName)){
-                String finalDataName = outputs2finalNames.get(dataName);
-                return finalDataName == null ? dataName : finalDataName;
-            }
-        }
-        return dataName;
+        return finalName;
     }
+
+    private String getResourceFinalNameFrom(String dataName, List<DataDefinitionDeclaration> list, Map<String, String> resource2finalNames) {
+        if (resource2finalNames.values().contains(dataName)){
+            return dataName;
+        }
+        String finalName = resource2finalNames.get(dataName);
+        if (finalName != null){
+            return finalName;
+        }
+        return null;
+    }
+
     @Override
     public Boolean containsResource(String dataName){
 
@@ -144,5 +146,9 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
             }
         }
         return resDD;
+    }
+    @Override
+    public int getStepOrder(){
+        return stepOrder;
     }
 }

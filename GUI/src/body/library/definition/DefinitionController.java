@@ -27,7 +27,7 @@ public class DefinitionController extends LibraryControllerComponent {
     @FXML private ScrollPane flowDataScrollPane;
     @FXML private Label selectedFlowNameLabel;
     @FXML private Label selectedFlowDescriptionLabel;
-
+    @FXML private Label continuationsLabel;
     @FXML private Button selectFlowButton;
     @FXML private Accordion flowInformationAccordion;
     @FXML private TitledPane stepsTitledPane;
@@ -39,6 +39,8 @@ public class DefinitionController extends LibraryControllerComponent {
     private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
     private  List<List<String>> flowStepsFullNameByFlowIdx = new ArrayList<>();
+    private List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
+    private List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
     private void clearAllData() {
         flowDefAvailableFlowsList.getItems().clear();
         flowDescriptionsProperty.clear();
@@ -50,6 +52,7 @@ public class DefinitionController extends LibraryControllerComponent {
     public void initialize() {
         // set button photo
         initializeSelectButton();
+        initializeContinuationsLabel();
         //hide steps in flow label until first flow is selected
         selectFlowButton.visibleProperty().set(false);
         flowInformationAccordion.visibleProperty().set(false);
@@ -77,13 +80,25 @@ public class DefinitionController extends LibraryControllerComponent {
                 selectedFlowDescriptionLabel.textProperty().set(flowDescriptionsProperty.get(newValue.intValue()));
                 stepsListView.getItems().clear();
                 stepsListView.getItems().addAll(flowStepsFullNameByFlowIdx.get(newValue.intValue()));
+                inputsTitledPane.setContent(inputsVBoxByFlowIdx.get(newValue.intValue()));
+                outputsTitledPane.setContent(outputsVBoxByFlowIdx.get(newValue.intValue()));
             }
         }));
 
-
-
     }
 
+    private void initializeContinuationsLabel(){
+        continuationsLabel.setVisible(false);
+        continuationsLabel.visibleProperty().bind(selectedFlowIdx.greaterThan(-1));
+        continuationsLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            if(selectedFlowIdx.get() > -1) {
+                return "Continuations: " + flowDefinitionDTOList.get(selectedFlowIdx.get()).getContinuationsCount();
+            }
+            return "";
+        }, selectedFlowIdx));
+
+        continuationsLabel.setWrapText(true);
+    }
     private void initializeSelectButton() {
         ImageView iv = new ImageView(getClass().getResource("select-button.png").toString());
         iv.setFitHeight(160);
@@ -152,7 +167,7 @@ public class DefinitionController extends LibraryControllerComponent {
                     outputTypes.get(i),
                     stepsThatUseOutputs.get(i)));
         }
-        outputsTitledPane.setContent(content);
+        outputsVBoxByFlowIdx.add(content);
     }
     private TitledPane createOutputPane(String name, String type, String stepProducedBy) {
         TitledPane outputPane = new TitledPane();
@@ -185,7 +200,7 @@ public class DefinitionController extends LibraryControllerComponent {
                                                             stepsThatUseFreeInputs.get(i).getValue(),freeInputsNecessity.get(i));
             content.getChildren().add(presentation);
         }
-        inputsTitledPane.setContent(content);
+        inputsVBoxByFlowIdx.add(content);
     }
     private TitledPane createFreeInputPane(String name, String type, List<String> stepsThatUseMe, String Necessity) {
         TitledPane inputPane = new TitledPane();

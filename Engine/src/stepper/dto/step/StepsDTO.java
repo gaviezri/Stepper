@@ -19,24 +19,32 @@ public class StepsDTO {
                     mappingGraph.getSourceStepAndSourceOutputFinalNamesByTargetStepFinalName(step.getFinalStepName())));
         }
     }
+//
+//    public Boolean doesThisStepExists(String stepName){
+//        return steps.stream().
+//                map(SingleStepDTO::getStepName).
+//                anyMatch(x->x.equals(stepName));
+//    }
+//
+//    public SingleStepDTO getStepDTOByName(String stepName){
+//        for(SingleStepDTO stepDTO:steps){
+//            if(stepDTO.getStepName().equals(stepName)){
+//                return stepDTO;
+//            }
+//        }
+//        throw new IllegalArgumentException("Step \"" + stepName + "\" does not exist.");
+//    }
+//
+//    public SingleStepDTO getStepByInd(int stepInd){ //only if list of DTOs with same order as stepUsageDeclaration in flow definition
+//        return steps.get(stepInd);
+//    }
+//
+//    public int getStepsCount(){
+//        return steps.size();
+//    }
 
-    public Boolean doesThisStepExists(String stepName){
-        return steps.stream().
-                map(SingleStepDTO::getStepName).
-                anyMatch(x->x.equals(stepName));
-    }
-
-    public SingleStepDTO getStepDTOByName(String stepName){
-        for(SingleStepDTO stepDTO:steps){
-            if(stepDTO.getStepName().equals(stepName)){
-                return stepDTO;
-            }
-        }
-        throw new IllegalArgumentException("Step \"" + stepName + "\" does not exist.");
-    }
-
-    public SingleStepDTO getStepByInd(int stepInd){ //only if list of DTOs with same order as stepUsageDeclaration in flow definition
-        return steps.get(stepInd);
+    public List<SingleStepDTO> getSteps() {
+        return steps;
     }
 
 }

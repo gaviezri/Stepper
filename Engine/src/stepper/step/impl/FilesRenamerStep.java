@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
@@ -48,7 +47,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "FILES_TO_RENAME":
                 return DataDefinitionRegistry.LIST;
@@ -142,7 +141,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             logger.log("Exception occurred: " + e.getMessage());
             result = StepResult.FAILURE;
         }
-        context.storeDataValue("RENAME_RESULT", renameResult ,DataDefinitionRegistry.RELATION);
+        context.storeDataValue("RENAME_RESULT", renameResult , DataDefinitionRegistry.RELATION);
         context.tock();
         return result;
     }

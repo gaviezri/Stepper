@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -34,7 +33,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "RESULT":
                 return DataDefinitionRegistry.STRING;
@@ -77,7 +76,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
                     }
                 }
                 logger.log("Extracted total of " + source.getTotalSize() + " properties");
-                context.storeDataValue("RESULT", result.toString(),DataDefinitionRegistry.STRING);
+                context.storeDataValue("RESULT", result.toString(), DataDefinitionRegistry.STRING);
             } else {
                 logger.addSummaryLine("Source data is empty\n result is empty");
             }

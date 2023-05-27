@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.dd.impl.relation.RelationDataDefinition;
@@ -23,7 +22,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
 
     }
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "SOURCE":
                 return DataDefinitionRegistry.RELATION;

@@ -21,6 +21,10 @@ public interface FlowDefinition {
 
     List<String> getFlowFormalOutputs();
 
+    Map<String, Object> getInitialInputName2Value();
+
+    Map<String, DataDefinition> getInitialInputName2DataDef();
+
     Integer getContinuationsCount();
 
     Continuation getContinuation();

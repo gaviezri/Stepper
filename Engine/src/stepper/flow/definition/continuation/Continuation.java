@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Continuation {
+    /** {target flow name : (Source Data Org Name, Target Data Org Name)} */
     Map<String, List<Pair<String,String>>> targetFlowName2DataMappings = new HashMap<>();
 
     /** allows adding flows to Continuations object in 2 steps:
@@ -15,6 +16,7 @@ public class Continuation {
      * 2. List of pairs representing (Source Data Org Name, Target Data Org Name)
      * by that keeping the user unaware of the implementations details */
     String curTargetFlow;
+
     public void addTargetFlow(String targetFlowName){
         curTargetFlow = targetFlowName;
         if(!targetFlowName2DataMappings.containsKey(curTargetFlow)){

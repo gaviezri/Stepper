@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
@@ -81,7 +80,7 @@ public class CommandLineStep extends AbstractStepDefinition {
     }
 
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "COMMAND":
             case "RESULT":

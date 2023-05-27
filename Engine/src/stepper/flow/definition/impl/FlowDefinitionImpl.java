@@ -33,8 +33,16 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private MappingGraph mappingGraph;
     final private Continuation continuation = new Continuation();
     private boolean isReadOnly;
-    private Map<String,Object> initialInputName2Value = new Hashtable<>();
-    private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
+    final private Map<String,Object> initialInputName2Value = new Hashtable<>();
+    final private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
+    @Override
+    public Map<String, Object> getInitialInputName2Value() {
+        return initialInputName2Value;
+    }
+    @Override
+    public Map<String, DataDefinition> getInitialInputName2DataDef() {
+        return initialInputName2DataDef;
+    }
 
     @Override
     public Integer getContinuationsCount(){
@@ -233,7 +241,6 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         mappingGraph = new MappingGraph(stepsUsageDecl, rawSourceStepData2TargetStepDataMapping, dataAliasingManager);
         createAutomaticMapping();
         setMandatoryInputs();
-
     }
     private void createAutomaticMapping(){
         mappingGraph.createAutomaticMapping(this);

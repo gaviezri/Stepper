@@ -177,11 +177,11 @@ public class ConsoleApp {
 
     private void presentFlowOutputsDetails(ExecutedFlowDetailsDTO executedFlowDetailsDTO) {
         List<String> outputsFinalNames = executedFlowDetailsDTO.getOutputsFinalNames();
-        List<String> outputsValues = executedFlowDetailsDTO.getOutputsContent();
+        List<Object> outputsValues = executedFlowDetailsDTO.getOutputsContent();
         List<String> outputsTypes = executedFlowDetailsDTO.getOutputsTypes();
         ui.presentMessageToUser("\n-------------------------------------\nOUTPUTS:\n");
         for(int i = 0; i < outputsFinalNames.size(); i++){
-            ui.printResource(outputsFinalNames.get(i), outputsValues.get(i), outputsTypes.get(i));
+            ui.printResource(outputsFinalNames.get(i), outputsValues.get(i).toString(), outputsTypes.get(i));
         }
     }
 

@@ -1,6 +1,5 @@
 package stepper.step.impl;
 
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.AbstractLogger;
@@ -26,7 +25,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
         }
     }
     @Override
-    public DataDefinition getResourceDataDefinition(String dataOriginalName) {
+    public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "TIME_TO_SPEND":
                 return DataDefinitionRegistry.NUMBER;

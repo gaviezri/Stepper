@@ -2,6 +2,7 @@ package stepper.flow.execution;
 
 import javafx.util.Pair;
 import stepper.flow.definition.api.FlowDefinition;
+import stepper.flow.execution.context.StepExecutionContext;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
@@ -21,7 +22,7 @@ public class FlowExecution implements Serializable {
     private Instant endTimeInstant;
     private Duration duration;
     private Map<String,Object> freeInputContent = new HashMap<>();
-    private Map<String,String> executionOutputs = new HashMap<>();
+    private Map<String, Object> executionOutputs = new HashMap<String, Object>();
 
     Map<String, StepExecutionDataManager> finalStepName2stepsManagers;
 
@@ -131,11 +132,7 @@ public class FlowExecution implements Serializable {
     }
 
     public void setExecutionOutputs(Map<String, Object> executionOutputs) {
-        for (Map.Entry entry : executionOutputs.entrySet()){
-            String key = (String) entry.getKey();
-            String value = entry.getValue().toString();
-            this.executionOutputs.put(key, value);
-        }
+        this.executionOutputs = executionOutputs;
     }
 
     public List<String> getStepsResult() {
@@ -177,15 +174,16 @@ public class FlowExecution implements Serializable {
         return stepsLogs2TimeStamp;
     }
 
-    public List<String> getAllOutputsContent() {
-        List<String> outputsContent = new ArrayList<>();
-        for (String outputName : this.getFlowDefinition().getAllOutputsNames()) {
-            outputsContent.add(this.getOutputContent(outputName));
-        }
-        return outputsContent;
+    public Collection<Object> getAllOutputsContent() {
+        return this.executionOutputs.values();
     }
-    private String getOutputContent(String outputName) {
+    private Object getOutputContentByName(String outputName) {
         return executionOutputs.get(outputName);
     }
 
+    public void setInitialValuesContent(Map<String, Object> executionData) {
+        for(String inputName : this.flowDefinition.getInitialInputName2Value().keySet()){
+            executionData.put(inputName, flowDefinition.getInitialInputName2Value().get(inputName));
+        }
+    }
 }

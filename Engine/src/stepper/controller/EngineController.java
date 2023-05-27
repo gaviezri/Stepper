@@ -109,6 +109,7 @@ public class EngineController implements Serializable {
     }
 
     public StatisticsDTO getCurrentLoadedFlowsStatisticsDetails(){
+        statisticsManager.collectStatistics();
         return new StatisticsDTO(statisticsManager.getStepStatistics(),statisticsManager.getFlowStatistics());
     }
 

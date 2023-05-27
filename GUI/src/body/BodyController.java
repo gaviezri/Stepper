@@ -18,8 +18,8 @@ public class BodyController {
     @FXML private AnchorPane flowLibComponent;
     @FXML private Tab flowExecTab;
     @FXML private AnchorPane flowExecComponent;
-
-
+    @FXML private Tab flowStatTab;
+    @FXML private TabPane flowStatComponent;
 
 
     public void setMainController(AppController appController) {
@@ -28,6 +28,7 @@ public class BodyController {
 
     public void initialize() throws Exception{
         flowExecTab.setDisable(true);
+        flowStatTab.setDisable(true);
         flowLibComponentController.setBodyController(this);
         flowExecComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
@@ -38,6 +39,7 @@ public class BodyController {
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
         flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
             flowExecTab.setDisable(false);
+            flowStatTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
             EngineController.getInstance().executeFlow(flowLibComponentController.getDefinitionController().getSelectedFlowIndex(), flowLibComponentController.getInputComponentController().getValName2ValType());
         });

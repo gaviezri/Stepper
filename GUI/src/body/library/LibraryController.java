@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 
 public class LibraryController extends body.BodyControllerComponent{
 
-    private BodyController bodyController;
     @FXML private InputController inputComponentController;
     @FXML private DefinitionController definitionComponentController;
     @FXML public AnchorPane libraryAnchorPane;

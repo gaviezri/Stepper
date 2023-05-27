@@ -17,6 +17,7 @@ import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import stepper.dto.flow.FlowDefinitionDTO;
 
+import javax.tools.Tool;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -200,7 +201,8 @@ public class InputController extends LibraryControllerComponent {
     private void initializeButtonToolTip(){
         startFlowToolTip.setWrapText(true);
         startFlowToolTip.setFont(javafx.scene.text.Font.font("System", javafx.scene.text.FontWeight.BOLD, 14));
-        buttonWrapperForToolTip.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+        Tooltip.install(buttonWrapperForToolTip, startFlowToolTip);
+        buttonWrapperForToolTip.setOnMouseEntered(event -> {
             if(allMandatorySatisfied.get()){
                 startFlowToolTip.setText("Click to start the flow");
             }else{
@@ -209,7 +211,7 @@ public class InputController extends LibraryControllerComponent {
             }
             startFlowToolTip.show(buttonWrapperForToolTip, event.getScreenX(), event.getScreenY());
         });
-        buttonWrapperForToolTip.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+        buttonWrapperForToolTip.setOnMouseExited(event -> {
             startFlowToolTip.hide();
         });
 
@@ -257,7 +259,6 @@ public class InputController extends LibraryControllerComponent {
     }
 
     public void setInputsToSelectedFlow(FlowDefinitionDTO dto) {
-        System.out.println("Setting inputs to selected flow");
         inputsVBox.getChildren().clear();
         inputsLabel.setText("Inputs for " + dto.getFlowName());
         Pair<Map<INPUT_FIELDS,List>,Map<INPUT_FIELDS,List>> MandatoryAndOptionalFieldMaps =
@@ -267,14 +268,14 @@ public class InputController extends LibraryControllerComponent {
 
 
         if (mandatoryFields.get(INPUT_FIELDS.NAME).size() != 0) {
-            setInputFieldElements(mandatoryFields, true);
+            setInputFieldElements(mandatoryFields, true, dto);
         }
         if (optionalFields.get(INPUT_FIELDS.NAME).size() != 0) {
-            setInputFieldElements(optionalFields, false);
+            setInputFieldElements(optionalFields, false, dto);
         }
     }
 
-    private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory) {
+    private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto) {
         VBox internalInputFieldVBox = new VBox();
         TitledPane InputsTitledPane = new TitledPane((mandatory ? "Mandatory Fields" : "Optional Fields"),internalInputFieldVBox);
         InputsTitledPane.setExpanded(false);
@@ -288,7 +289,7 @@ public class InputController extends LibraryControllerComponent {
             Pair<String,List<String>> stepNames =(Pair) fields.get(INPUT_FIELDS.USED_BY).get(i);
 
             InputField inputElement = new InputField(inputName, inputType, userString, stepNames.getValue());
-            inputElement.createElement();
+            inputElement.createElement(/*dto.getInitialValues()*/);
             allFields.add(inputElement);
             internalInputFieldVBox.getChildren().add(inputElement.getInputFieldElement());
         }

@@ -18,7 +18,7 @@ public class StatisticsManager {
     ExecutionArchive executionArchive;
     // { Original Step Name : (Occurrences Counter, Sum Durations) }
     Map<String, Pair<Integer, Duration>> stepStatistics;
-    // <Flow Name , (Occurrences Counter, Sum Durations)>
+    // { Flow Name : (Occurrences Counter, Sum Durations) }
     Map<String, Pair<Integer, Duration>> flowStatistics;
 
     public StatisticsManager(ExecutionArchive executionArchive) {

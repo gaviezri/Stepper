@@ -35,6 +35,16 @@ public class FlowExecutorsManager implements Serializable {
         }
     }
 
+    public int getNumOfFlowsFinished() {
+        int numOfFlowsFinished = 0;
+        for (Map.Entry<UUID, Future<FlowExecutionResult>> entry : UUID2Execution.entrySet()) {
+            if (entry.getValue().isDone()) {
+                numOfFlowsFinished++;
+            }
+        }
+        return numOfFlowsFinished;
+    }
+
     public enum FlowExecutionStatus {
         RUNNING, FINISHED, FAILED, NOT_FOUND
     }

@@ -51,14 +51,16 @@ public class ExecutionController extends BodyControllerComponent {
         flowProgressPercentageLabel.setWrapText(true);
         initializeStepsStatusToolTip();
         bindExecutionTabComponents();
-
-
+    }
+    @Override
+    protected void finalize() {
+        poller.shutdown();
     }
 
     public void bindExecutionTabComponents() {
         poller.scheduleAtFixedRate(() -> {
             try {
-                Thread.sleep(POLLING_INTERVAL* 5);
+                Thread.sleep(POLLING_INTERVAL* 3);
             } catch (InterruptedException ignored) {
             }
             if (realExecutionAnchorPane.isVisible() && LastExecutedDataCenter.isFlowExecutionInProgress()) {
@@ -174,9 +176,9 @@ public class ExecutionController extends BodyControllerComponent {
      * CHANGE THIS , LISTENING TO THE WRONG FOLK!
      * */
 
-    public void bindFlowExecutionElementsToSelectButton(DefinitionController definitionController, InputController inputController) {
+    public void bindFlowExecutionElementsToSelectButton(DefinitionController definitionController) {
 
-        definitionController.getFlowDefAvailableFlowsList().getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            bodyController.getMainController().numOfFlowsExecutedProperty().addListener(((observable, oldValue, newValue) -> {
             flowProgressBar.setVisible(true);
             flowProgressPercentageLabel.setVisible(true);
             stepInProgressLabel.setVisible(true);

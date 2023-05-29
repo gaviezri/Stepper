@@ -10,7 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Pair;
 import stepper.controller.EngineController;
+
+import java.util.Map;
 
 public class BodyController {
     private AppController mainController;
@@ -43,7 +46,6 @@ public class BodyController {
 
         flowExecComponentController.setBodyController(this);
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
-        flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowDefController, flowInputComponentController);
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
     }
 
@@ -52,8 +54,16 @@ public class BodyController {
             flowExecTab.setDisable(false);
             flowStatTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
-            EngineController.getInstance().executeFlow(flowLibComponentController.getDefinitionController().getSelectedFlowIndex(), flowLibComponentController.getInputComponentController().getValName2ValType());
+
+            int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
+            Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
+            mainController.executeFlow(flowIndex, valName2valType);
+
         });
+    }
+
+    public void bindFlowExecutionElementsToSelectButton() {
+        flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowLibComponentController.getDefinitionController());
     }
 
     public void bindDefinitionTabComponents() {
@@ -63,7 +73,4 @@ public class BodyController {
         return mainController;
     }
     public ExecutionController getFlowExecutionController() {return flowExecComponentController;}
-
-
-
 }

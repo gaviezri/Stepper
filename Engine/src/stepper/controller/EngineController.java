@@ -31,6 +31,7 @@ public class EngineController implements Serializable {
     private StatisticsManager statisticsManager = new StatisticsManager(getArchive());
     private static EngineController instance = null;
 
+
     private EngineController() {
     }
 
@@ -140,5 +141,13 @@ public class EngineController implements Serializable {
 
     public void wakeUp() {
         this.flowsExecutorsManager.wakeUp();
+    }
+
+    public int getNumOfFlowsExecuted() {
+        return executionArchive.getNumOfFlowExecutions();
+    }
+
+    public int getNumOfFlowsFinished() {
+        return flowsExecutorsManager.getNumOfFlowsFinished();
     }
 }

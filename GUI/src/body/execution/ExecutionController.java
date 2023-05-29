@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 import stepper.step.api.enums.StepResult;
 
+import javax.tools.Tool;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -34,10 +35,19 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private AnchorPane realExecutionAnchorPane;
     @FXML private ListView executedStepsStatusListView;
     @FXML private Tooltip executedStepsStatusListViewToolTip;
-    @FXML private FlowPane selectedStepDetailsFlowPane;
+
     @FXML private Label stepInProgressLabel;
     @FXML private Label flowProgressPercentageLabel;
     @FXML private ProgressBar flowProgressBar;
+
+    @FXML private FlowPane selectedStepDetailsFlowPane;
+    @FXML private Label executionEndLabel;
+    @FXML private TableView stepDetailsTableView;
+    @FXML private TableColumn stepNameCol;
+    @FXML private TableColumn stepResultCol;
+    @FXML private TableColumn stepDurationCol;
+    @FXML private TableColumn stepLogsCol;
+    @FXML private TableColumn stepOutputsCol;
     // continuation section
     // summary section
     // step details section
@@ -74,26 +84,29 @@ public class ExecutionController extends BodyControllerComponent {
             }
         }, 0, POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
 
+        poller.scheduleAtFixedRate(() -> {
+            Platform.runLater(() -> {
+                doneExecutionPaneSwitch(LastExecutedDataCenter.isFlowExecutionInProgress());
+            });
+        }, 0 ,POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
+
         flowProgressBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.floatValue() == 1.0f) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ignored) {
-                }
-                Platform.runLater(() -> {
-                    utils.Utils.ShowInformation("Heads up!", "Flow execution completed successfully", "");
-//                    flowProgressBar.setVisible(false);
-//                    flowProgressPercentageLabel.setVisible(false);
-//                    stepInProgressLabel.setVisible(false);
-                    //continuationPane.setVisible(true);
-                    //executionSummaryLabel.setVisible(true);
-                    // bind continuation pane and execution summary label progressbar
-                });
-
-
+            if (newValue.floatValue() == 1.0f ) {
+                utils.Utils.ShowInformation("Heads up!", "Flow execution completed successfully", "");
             }
         });
 
+    }
+
+    private void doneExecutionPaneSwitch(boolean value) {
+        flowProgressBar.setVisible(value);
+        flowProgressPercentageLabel.setVisible(value);
+        stepInProgressLabel.setVisible(value);
+
+        executionEndLabel.setVisible(true);
+//        executionSummaryLabel.setVisible(true);
+        // continuation pane.setvisible
+        // bind continuation pane and execution summary label progressbar
     }
 
     private void updateExecutedStepsStatusListView(Map<String, StepResult> executedStepsStatus) {
@@ -101,7 +114,14 @@ public class ExecutionController extends BodyControllerComponent {
         executedStepsStatus.forEach((stepName, stepResult) -> {
             executedStepsStatusListView.getItems().forEach(item -> {
                 Label curItem = (Label) item;
-                if (curItem.getText().equals(stepName)) {
+                // remove (readonly) from step name
+                String rawItemName = curItem.getText();
+                String finalItemName =  (rawItemName.contains("(read-only)")) ?
+                        rawItemName.substring(0,rawItemName.indexOf("(")-1)
+                        :
+                        curItem.getText();
+
+                if (finalItemName.equals(stepName)) {
 //
                     if (curItem.getTextFill().equals(javafx.scene.paint.Color.GREY)) {
 
@@ -118,6 +138,7 @@ public class ExecutionController extends BodyControllerComponent {
                             default:
                                 break;
                         }
+
                     }
                 }
             });
@@ -162,27 +183,15 @@ public class ExecutionController extends BodyControllerComponent {
         executedStepsStatusListViewToolTip.setGraphic(textFlow);
         executedStepsStatusListViewToolTip.wrapTextProperty().setValue(true);
         executedStepsStatusListViewToolTip.setText("");
-
-        executedStepsStatusListView.setOnMouseEntered(event -> {
-            executedStepsStatusListViewToolTip.show(executedStepsStatusListView, event.getScreenX(), event.getScreenY());
-        });
-
-        executedStepsStatusListView.setOnMouseExited(event -> {
-            executedStepsStatusListViewToolTip.hide();
-        });
+        executedStepsStatusListViewToolTip.setMaxHeight(200);
+        Tooltip.install(executedStepsStatusListView, executedStepsStatusListViewToolTip);
 
     }
-    /**
-     * CHANGE THIS , LISTENING TO THE WRONG FOLK!
-     * */
-
     public void bindFlowExecutionElementsToSelectButton(DefinitionController definitionController) {
 
             bodyController.getMainController().numOfFlowsExecutedProperty().addListener(((observable, oldValue, newValue) -> {
-            flowProgressBar.setVisible(true);
-            flowProgressPercentageLabel.setVisible(true);
-            stepInProgressLabel.setVisible(true);
-            // continuationPane.setVisible(false);
+                doneExecutionPaneSwitch(true);
+                // continuationPane.setVisible(false);
             // executionSummaryLabel.setVisible(false);
             executedStepsStatusListView.getItems().clear();
             VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();

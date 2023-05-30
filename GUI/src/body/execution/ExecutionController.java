@@ -1,5 +1,6 @@
 package body.execution;
 
+import body.BodyController;
 import body.BodyControllerComponent;
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
@@ -11,12 +12,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 import stepper.step.api.enums.StepResult;
+import sun.plugin.services.WPlatformService;
 
 import javax.tools.Tool;
 import java.util.List;
@@ -24,6 +28,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExecutionController extends BodyControllerComponent {
     // fake section
@@ -41,18 +46,27 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private ProgressBar flowProgressBar;
 
     @FXML private FlowPane selectedStepDetailsFlowPane;
-    @FXML private Label executionEndLabel;
-    @FXML private TableView stepDetailsTableView;
+    @FXML private TableView stepSinglularDetailsTableView;
     @FXML private TableColumn stepNameCol;
     @FXML private TableColumn stepResultCol;
     @FXML private TableColumn stepDurationCol;
+
+    @FXML private TableView logsTableView;
     @FXML private TableColumn stepLogsCol;
+
+    @FXML private TableView outputsTableView;
     @FXML private TableColumn stepOutputsCol;
+
+    @FXML private Label executionEndLabel;
+
+    @FXML private HBox continuationOptionsHbox;
     // continuation section
     // summary section
     // step details section
     private static final int POLLING_INTERVAL = 200;
-    ScheduledExecutorService poller = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService poller = Executors.newScheduledThreadPool(1);
+    private boolean notified = false;
+    private boolean fooled = false;
 
 
 
@@ -61,6 +75,7 @@ public class ExecutionController extends BodyControllerComponent {
         flowProgressPercentageLabel.setWrapText(true);
         initializeStepsStatusToolTip();
         bindExecutionTabComponents();
+        executionEndLabel.setWrapText(true);
     }
     @Override
     protected void finalize() {
@@ -69,45 +84,68 @@ public class ExecutionController extends BodyControllerComponent {
 
     public void bindExecutionTabComponents() {
         poller.scheduleAtFixedRate(() -> {
-            try {
-                Thread.sleep(POLLING_INTERVAL* 3);
-            } catch (InterruptedException ignored) {
+            if (bodyController != null) {
+                if (bodyController.getMainController() != null) {
+                    int numOfFlows = bodyController.getMainController().numOfFlowsExecutedProperty().get();
+                    if (realExecutionAnchorPane.isVisible() && numOfFlows > 0) {
+                        try {
+                            float flowProgressPercentage = (LastExecutedDataCenter.getCurrentStepIdx() + 1.f) / LastExecutedDataCenter.getStepsCount();
+                            if (flowProgressPercentage != flowProgressBar.getProgress()) {
+                                Platform.runLater(() -> {
+                                    updateFlowProgressPercentageLabel(flowProgressPercentage);
+                                    updateFlowProgressBar(flowProgressPercentage);
+                                    updateStepInProgressLabel(LastExecutedDataCenter.getCurrentStepName());
+                                    updateExecutedStepsStatusListView(LastExecutedDataCenter.getExecutedStepsStatus());
+                                });
+
+                            }
+                        } catch (NullPointerException ignored) {
+                        }
+                    }
+
+
+                    if (!LastExecutedDataCenter.isFlowExecutionInProgress()
+                            && !notified
+                            && numOfFlows > 0) {
+                        notified = true;
+                        boolean success = LastExecutedDataCenter.getFlowExecutionResult() == FlowExecutionResult.SUCCESS;
+                        String message = success ?
+                                "Flow execution completed successfully" :
+                                "Flow execution ended with failure!";
+                        Platform.runLater(() -> {
+                            executionEndLabel.setText("\"" + LastExecutedDataCenter.getLastExecutedFlowName() + "\" execution ended" + (success ? " successfully" : " with failure!"));
+                            utils.Utils.ShowInformation("Heads up!", message, "");
+                            flowProgressBar.setProgress(0);
+                            doneExecutionPaneSwitch();
+                        });
+                    }
+                }
             }
-            if (realExecutionAnchorPane.isVisible() && LastExecutedDataCenter.isFlowExecutionInProgress()) {
-                Platform.runLater(() -> {
-                float flowProgressPercentage =  (LastExecutedDataCenter.getCurrentStepIdx() + 1.f) / LastExecutedDataCenter.getStepsCount();
-                updateFlowProgressPercentageLabel(flowProgressPercentage);
-                updateFlowProgressBar(flowProgressPercentage);
-                updateStepInProgressLabel(LastExecutedDataCenter.getCurrentStepName());
-                updateExecutedStepsStatusListView(LastExecutedDataCenter.getExecutedStepsStatus());
-            });
-            }
+
         }, 0, POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
 
-        poller.scheduleAtFixedRate(() -> {
-            Platform.runLater(() -> {
-                doneExecutionPaneSwitch(LastExecutedDataCenter.isFlowExecutionInProgress());
-            });
-        }, 0 ,POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
+    private void doneExecutionPaneSwitch() {
+        ExecutionPaneSwitch(false);
+    }
 
-        flowProgressBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.floatValue() == 1.0f ) {
-                utils.Utils.ShowInformation("Heads up!", "Flow execution completed successfully", "");
-            }
+    private void startExecutionPaneSwitch(){
+        ExecutionPaneSwitch(true);
+    }
+
+    private void ExecutionPaneSwitch(boolean value){
+        Platform.runLater(() -> {
+            flowProgressBar.setVisible(value);
+            flowProgressPercentageLabel.setVisible(value);
+            stepInProgressLabel.setVisible(value);
+
+            executionEndLabel.setVisible(!value);
+            continuationOptionsHbox.setVisible(!value);
+            // continuation pane.setvisible
+            // bind continuation pane and execution summary label progressbar
         });
-
     }
 
-    private void doneExecutionPaneSwitch(boolean value) {
-        flowProgressBar.setVisible(value);
-        flowProgressPercentageLabel.setVisible(value);
-        stepInProgressLabel.setVisible(value);
-
-        executionEndLabel.setVisible(true);
-//        executionSummaryLabel.setVisible(true);
-        // continuation pane.setvisible
-        // bind continuation pane and execution summary label progressbar
-    }
 
     private void updateExecutedStepsStatusListView(Map<String, StepResult> executedStepsStatus) {
 
@@ -190,34 +228,40 @@ public class ExecutionController extends BodyControllerComponent {
     public void bindFlowExecutionElementsToSelectButton(DefinitionController definitionController) {
 
             bodyController.getMainController().numOfFlowsExecutedProperty().addListener(((observable, oldValue, newValue) -> {
-                doneExecutionPaneSwitch(true);
-                // continuationPane.setVisible(false);
-            // executionSummaryLabel.setVisible(false);
-            executedStepsStatusListView.getItems().clear();
-            VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();
-            for(int i = 0; i < stepsNames.getChildren().size(); i++) {
-                Label stepName = new Label(((TitledPane) stepsNames.getChildren().get(i)).getText());
-                stepName.setTextFill(javafx.scene.paint.Color.GREY);
-                executedStepsStatusListView.getItems().add(stepName);
-            }
+                startExecutionPaneSwitch();
+                Platform.runLater(() -> {
+                    notified = false;
+                    executedStepsStatusListView.getItems().clear();
+                    VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();
+                    for (int i = 0; i < stepsNames.getChildren().size(); i++) {
+                        Label stepName = new Label(((TitledPane) stepsNames.getChildren().get(i)).getText());
+                        stepName.setTextFill(javafx.scene.paint.Color.GREY);
+                        executedStepsStatusListView.getItems().add(stepName);
+                    }
+                });
         }));
     }
     public void bindFakeSectionToExecutionEnablement(TabPane mainTabPane) {
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue == mainTabPane.getTabs().get(1)) {
-                realExecutionAnchorPane.setVisible(false);
-                fakeLoadingVBox.setVisible(true);
+
                 // animate fake progress bar for 2 seconds/
                 // then show real execution pane and hide fake loading pane
-                KeyFrame begin =  new KeyFrame(Duration.ZERO, new KeyValue(fakeProgressBar.progressProperty(), 0));
-                KeyFrame end = new KeyFrame(Duration.seconds(1), new KeyValue(fakeProgressBar.progressProperty(), 1));
-                Timeline timeline = new Timeline(begin, end);
-                timeline.setCycleCount(1);
-                timeline.setOnFinished(event -> {
-                    realExecutionAnchorPane.setVisible(true);
-                    fakeLoadingVBox.setVisible(false);
-                });
-                timeline.play();
+                if (!fooled) {
+                    realExecutionAnchorPane.setVisible(false);
+                    fakeLoadingVBox.setVisible(true);
+                    KeyFrame begin = new KeyFrame(Duration.ZERO, new KeyValue(fakeProgressBar.progressProperty(), 0));
+                    KeyFrame end = new KeyFrame(Duration.seconds(3), new KeyValue(fakeProgressBar.progressProperty(), 1));
+                    Timeline timeline = new Timeline(begin, end);
+                    timeline.setCycleCount(1);
+                    timeline.setOnFinished(event -> {
+                        realExecutionAnchorPane.setVisible(true);
+                        fakeLoadingVBox.setVisible(false);
+                    });
+                    timeline.play();
+                    fooled = true;
+                }
+                updateExecutedStepsStatusListView(LastExecutedDataCenter.getExecutedStepsStatus());
             }
         });
     }

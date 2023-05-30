@@ -43,8 +43,8 @@ public class AppController {
     @FXML
     private TabPane bodyComponent;
 
-    private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty();
-    private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty();
+    private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
+    private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
     ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
 
     public void initialize(){
@@ -74,7 +74,7 @@ public class AppController {
         return sceneMainPane.getScene().getWindow();
     }
 
-    public IntegerProperty numOfFlowsExecutedProperty() {
+    public synchronized IntegerProperty numOfFlowsExecutedProperty() {
         return numOfFlowsExecuted;
     }
     public IntegerProperty numOfFlowsFinishedProperty() {

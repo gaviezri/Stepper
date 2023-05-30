@@ -28,34 +28,14 @@ public class StatisticsController extends body.BodyControllerComponent implement
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-//        stepSumTimeTab.setOnSelectionChanged(event -> {
-//            if(stepSumTimeTab.isSelected()){
-//                updateStepsCountChar();
-//            }
-//        });
-//        flowExecutionCount.setOnSelectionChanged(event -> {
-//            if(flowExecutionCount.isSelected()){
-//                updateFlowExecutionCountChar();
-//            }
-//        });
-//        flowSumTimeTab.setOnSelectionChanged(event -> {
-//            if(flowSumTimeTab.isSelected()){
-//                updateFlowSumTimeChar();
-//            }
-//        });
-//        stepExecutionCount.setOnSelectionChanged(event -> {
-//            if(stepExecutionCount.isSelected()){
-//                updateStepExecutionCountChar();
-//            }
-//        });
-    }
+        // CHECK THE AppController.numOfFlowExecutedProperty() and AppController.numOfFlowFinishedProperty() for the new code.
+        // could be good to listen to it and update the chart accordingly.
+        // OLD CODE HAPPENS ONCE.
 
-    // OLD CODE:
 //        if(EngineController.getInstance().executionOccurred()){
 //            updateStepsCountChar();
-//        }
 
-
+    }
     private void updateStepsCountChar() {
         // Reach engine through main controller...
         StatisticsDTO statisticsDTO = EngineController.getInstance().getCurrentLoadedFlowsStatisticsDetails();

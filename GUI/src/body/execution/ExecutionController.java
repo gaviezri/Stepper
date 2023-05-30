@@ -108,13 +108,23 @@ public class ExecutionController extends BodyControllerComponent {
                             && !notified
                             && numOfFlows > 0) {
                         notified = true;
-                        boolean success = LastExecutedDataCenter.getFlowExecutionResult() == FlowExecutionResult.SUCCESS;
-                        String message = success ?
-                                "Flow execution completed successfully" :
-                                "Flow execution ended with failure!";
+                        FlowExecutionResult flowResult = LastExecutedDataCenter.getFlowExecutionResult();
+                        StringBuilder message = new StringBuilder("Flow execution ended with ");
+                        switch (flowResult) {
+                            case SUCCESS:
+                                message.append("success");
+                                break;
+                            case FAILURE:
+                                message.append("failure");
+                                break;
+                            default:
+                                message.append("warnings");
+                                break;
+                        }
+
                         Platform.runLater(() -> {
-                            executionEndLabel.setText("\"" + LastExecutedDataCenter.getLastExecutedFlowName() + "\" execution ended" + (success ? " successfully" : " with failure!"));
-                            utils.Utils.ShowInformation("Heads up!", message, "");
+                            executionEndLabel.setText("\"" + LastExecutedDataCenter.getLastExecutedFlowName() + "\" " + message.toString() + "!");
+                            utils.Utils.ShowInformation("Heads up!", message.toString(), "");
                             flowProgressBar.setProgress(0);
                             doneExecutionPaneSwitch();
                         });
@@ -218,6 +228,7 @@ public class ExecutionController extends BodyControllerComponent {
         Text grey = new Text("Step not yet executed - Grey\n");
         grey.setStyle("-fx-fill: grey;");
         textFlow.getChildren().addAll(header,green, red, orange, grey);
+        executedStepsStatusListViewToolTip.setShowDelay(Duration.ZERO);
         executedStepsStatusListViewToolTip.setGraphic(textFlow);
         executedStepsStatusListViewToolTip.wrapTextProperty().setValue(true);
         executedStepsStatusListViewToolTip.setText("");
@@ -235,6 +246,7 @@ public class ExecutionController extends BodyControllerComponent {
                     VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();
                     for (int i = 0; i < stepsNames.getChildren().size(); i++) {
                         Label stepName = new Label(((TitledPane) stepsNames.getChildren().get(i)).getText());
+                        stepsNames.setStyle("-fx-font-weight: bold;");
                         stepName.setTextFill(javafx.scene.paint.Color.GREY);
                         executedStepsStatusListView.getItems().add(stepName);
                     }
@@ -251,7 +263,7 @@ public class ExecutionController extends BodyControllerComponent {
                     realExecutionAnchorPane.setVisible(false);
                     fakeLoadingVBox.setVisible(true);
                     KeyFrame begin = new KeyFrame(Duration.ZERO, new KeyValue(fakeProgressBar.progressProperty(), 0));
-                    KeyFrame end = new KeyFrame(Duration.seconds(3), new KeyValue(fakeProgressBar.progressProperty(), 1));
+                    KeyFrame end = new KeyFrame(Duration.seconds(1.5), new KeyValue(fakeProgressBar.progressProperty(), 1));
                     Timeline timeline = new Timeline(begin, end);
                     timeline.setCycleCount(1);
                     timeline.setOnFinished(event -> {
@@ -261,7 +273,6 @@ public class ExecutionController extends BodyControllerComponent {
                     timeline.play();
                     fooled = true;
                 }
-                updateExecutedStepsStatusListView(LastExecutedDataCenter.getExecutedStepsStatus());
             }
         });
     }

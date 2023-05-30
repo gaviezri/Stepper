@@ -3,6 +3,7 @@ package body.library.input;
 import body.execution.ExecutionController;
 import body.library.LibraryControllerComponent;
 import body.library.definition.DefinitionController;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
@@ -219,19 +221,15 @@ public class InputController extends LibraryControllerComponent {
         startFlowToolTip.setWrapText(true);
         startFlowToolTip.setFont(javafx.scene.text.Font.font("System", javafx.scene.text.FontWeight.BOLD, 14));
         Tooltip.install(buttonWrapperForToolTip, startFlowToolTip);
-        buttonWrapperForToolTip.setOnMouseEntered(event -> {
-            if(allMandatorySatisfied.get()){
+        startFlowToolTip.setShowDelay(Duration.ZERO);
+        allMandatorySatisfied.addListener((observable, oldValue, newValue) -> {
+            if(newValue){
                 startFlowToolTip.setText("Click to start the flow");
             }else{
                 startFlowToolTip.setText("To start, fill the mandatory inputs.\n" +
                         "If you want, optional inputs can be provided but are optional ;-)");
             }
-            startFlowToolTip.show(buttonWrapperForToolTip, event.getScreenX(), event.getScreenY());
         });
-        buttonWrapperForToolTip.setOnMouseExited(event -> {
-            startFlowToolTip.hide();
-        });
-
     }
 
     public void initializeBackButton(AnchorPane inputPane, AnchorPane definitionPane){
@@ -242,23 +240,35 @@ public class InputController extends LibraryControllerComponent {
         backToDefinitionButton.setGraphic(iv);
         backToDefinitionButton.backgroundProperty().set(null);
         backToDefinitionButton.setOnMousePressed(event -> {
-            backToDefinitionButton.translateYProperty().set(3);
+            Platform.runLater(()-> {
+                backToDefinitionButton.translateYProperty().set(4);
+            });
+
         });
         backToDefinitionButton.setOnMouseReleased(event -> {
-            backToDefinitionButton.translateYProperty().set(-3);
+            Platform.runLater(() -> {
+                backToDefinitionButton.translateYProperty().set(-4);
+            });
         });
+
         backToDefinitionButton.setOnMouseClicked(event -> {
-            inputPane.setVisible(false);
-            definitionPane.setVisible(true);
+            Platform.runLater(() -> {
+                inputPane.setVisible(false);
+                definitionPane.setVisible(true);
+            });
         });
     }
+
     private void initializeStartButton(){
         ImageView iv = new ImageView(getClass().getResource("start-button.png").toString());
         iv.setFitHeight(160);
         iv.setFitWidth(160);
         iv.setPreserveRatio(true);
-        startFlowButton.setGraphic(iv);
-        startFlowButton.backgroundProperty().set(null);
+        Platform.runLater(() -> {
+            startFlowButton.setGraphic(iv);
+            startFlowButton.backgroundProperty().set(null);
+        });
+
         startFlowButton.onMousePressedProperty().addListener(event -> {
             startFlowButton.translateYProperty().set(3);
         });
@@ -272,7 +282,6 @@ public class InputController extends LibraryControllerComponent {
                 startFlowButton.setDisable(true);
             }
         });
-
     }
 
     public void setInputsToSelectedFlow(FlowDefinitionDTO dto, Map<String,Object> continuationValues) {

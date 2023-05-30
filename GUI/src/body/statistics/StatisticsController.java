@@ -28,12 +28,16 @@ public class StatisticsController extends body.BodyControllerComponent implement
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        if(EngineController.getInstance().executionOccurred()){
-            updateStepsCountChar();
-        }
-    }
+        // CHECK THE AppController.numOfFlowExecutedProperty() and AppController.numOfFlowFinishedProperty() for the new code.
+        // could be good to listen to it and update the chart accordingly.
+        // OLD CODE HAPPENS ONCE.
 
+//        if(EngineController.getInstance().executionOccurred()){
+//            updateStepsCountChar();
+
+    }
     private void updateStepsCountChar() {
+        // Reach engine through main controller...
         StatisticsDTO statisticsDTO = EngineController.getInstance().getCurrentLoadedFlowsStatisticsDetails();
         // { Original Step Name : (Occurrences Counter, Sum Durations) }
         Map<String, Pair<Integer, Duration>> stepStatistics = statisticsDTO.getStepStatistics();

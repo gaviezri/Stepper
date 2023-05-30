@@ -10,6 +10,7 @@ import stepper.dto.statistics.StatisticsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.archive.ExecutionArchive;
+import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 import stepper.flow.execution.runner.FlowExecutorsManager;
 import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
@@ -30,6 +31,7 @@ public class EngineController implements Serializable {
     FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
     private StatisticsManager statisticsManager = new StatisticsManager(getArchive());
     private static EngineController instance = null;
+
 
     private EngineController() {
     }
@@ -117,6 +119,7 @@ public class EngineController implements Serializable {
         return new FlowsExecutionHistoryDTO(this.executionArchive.getFlowExecutionStack());
     }
 
+
 //    public void testPrintingTODELETE(FlowsExecutionHistoryDTO.SortFilter filter){
 //        FlowsExecutionHistoryDTO test = getExecutedFlowsHistoryDetails();
 //
@@ -140,5 +143,13 @@ public class EngineController implements Serializable {
 
     public void wakeUp() {
         this.flowsExecutorsManager.wakeUp();
+    }
+
+    public int getNumOfFlowsExecuted() {
+        return executionArchive.getNumOfFlowExecutions();
+    }
+
+    public int getNumOfFlowsFinished() {
+        return flowsExecutorsManager.getNumOfFlowsFinished();
     }
 }

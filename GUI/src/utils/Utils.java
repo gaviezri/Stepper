@@ -21,7 +21,7 @@ public class Utils {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    public  static void ShowInformation(String title, String header, String content) {
+    public static void ShowInformation(String title, String header, String content) {
         showAlert(Alert.AlertType.INFORMATION, title, header, content);
     }
 

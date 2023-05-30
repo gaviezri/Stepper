@@ -66,7 +66,7 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
         flowExecution.tock();
         flowExecution.setExecutionOutputs(context.getExecutionDataValues());
         LastExecutedDataCenter.setExecutionOutputs(context.getExecutionDataValues(), flowUUID);
-        LastExecutedDataCenter.endFlow(flowUUID);
+        LastExecutedDataCenter.endFlow(flowUUID, flowExecution.getFlowExecutionResult());
         presentEndOfExecutionSummary(flowExecution);
         return flowExecution.getFlowExecutionResult();
     }

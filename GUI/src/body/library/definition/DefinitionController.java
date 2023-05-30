@@ -127,7 +127,7 @@ public class DefinitionController extends LibraryControllerComponent {
         headerController.getLoadedPath().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 clearAllData();
-                flowDefinitionDTOList = mainController.getEngineController().getAllFlowDefinitionsData();
+                flowDefinitionDTOList = mainController.getAllFlowDefinitionsData();
 
                 for(FlowDefinitionDTO dto : flowDefinitionDTOList){
                     setFlowsHeadersData(dto);

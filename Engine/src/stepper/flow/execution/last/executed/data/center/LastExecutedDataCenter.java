@@ -2,6 +2,7 @@ package stepper.flow.execution.last.executed.data.center;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
 import java.util.HashMap;
@@ -17,6 +18,8 @@ public class LastExecutedDataCenter {
     private Integer stepsCount;
     private Map<String, Object> executionDataValues;
     private Map<String, StepResult> stepResults;
+
+    private FlowExecutionResult flowExecutionResult;
     private Boolean isFlowInProgress = false;
 
     private static LastExecutedDataCenter instance = new LastExecutedDataCenter();
@@ -42,6 +45,7 @@ public class LastExecutedDataCenter {
         instance.lastExecutedFlowUUID = lastExecutedFlowUUID;
         instance.executionDataValues = new HashMap<>();
         instance.stepResults = new HashMap<>();
+        instance.flowExecutionResult = null;
     }
 
     public static String getCurrentStepName() {
@@ -90,8 +94,9 @@ public class LastExecutedDataCenter {
         return instance.stepResults;
     }
 
-    public static boolean isFlowExecutionInProgress() {
-        return instance.lastExecutedFlowUUID != null;
+    public static boolean isFlowExecutionInProgress()
+    {
+        return instance.isFlowInProgress;
     }
 
     public static void startFlow(UUID lastExecutedFlowUUID) {
@@ -100,9 +105,14 @@ public class LastExecutedDataCenter {
         }
     }
 
-    public static void endFlow(UUID lastExecutedFlowUUID) {
+    public static void endFlow(UUID lastExecutedFlowUUID, FlowExecutionResult flowExecutionResult) {
         if (instance.lastExecutedFlowUUID.equals(lastExecutedFlowUUID)) {
             instance.isFlowInProgress = false;
+            instance.flowExecutionResult = flowExecutionResult;
         }
+    }
+
+    public static FlowExecutionResult getFlowExecutionResult() {
+        return instance.flowExecutionResult;
     }
 }

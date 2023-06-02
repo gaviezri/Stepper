@@ -156,4 +156,8 @@ public class AppController {
     public Map<String, String> getAllSummaryLines() {
         return lastExecutedDataCenter.getAllSummaryLines();
     }
+
+    public Map getLastFlowOutputs() {
+        return lastExecutedDataCenter.getLastFlowOutputs();
+    }
 }

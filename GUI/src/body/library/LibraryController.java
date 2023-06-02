@@ -1,10 +1,13 @@
 package body.library;
 
-import body.BodyController;
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 
 public class LibraryController extends body.BodyControllerComponent{
@@ -36,5 +39,10 @@ public class LibraryController extends body.BodyControllerComponent{
 
     public DefinitionController getDefinitionController() {
         return this.definitionComponentController;
+    }
+
+    public void setInputSectionToContinuation(String flowNameContinuedTo,List<Pair<String,String>> continuationDataMap) {
+        definitionComponentController.setContinuationFlowInputs(flowNameContinuedTo, continuationDataMap);
+
     }
 }

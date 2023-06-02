@@ -12,9 +12,13 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 
+import java.util.List;
 import java.util.Map;
 
 public class BodyController {
+    public static final int FLOW_LIB_TAB = 0;
+    public static final int FLOW_EXEC_TAB = 1;
+    public static final int FLOW_STAT_TAB = 2;
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
@@ -75,4 +79,10 @@ public class BodyController {
         return mainController;
     }
     public ExecutionController getFlowExecutionController() {return flowExecComponentController;}
+
+    public void setInputSectionToContinuation(String flowNameContinuedTo, List<Pair<String,String>> continuationDataMap) {
+        flowLibComponentController.setInputSectionToContinuation(flowNameContinuedTo, continuationDataMap);
+        mainTabPane.getSelectionModel().select(BodyController.FLOW_LIB_TAB);
+
+    }
 }

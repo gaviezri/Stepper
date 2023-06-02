@@ -1,7 +1,5 @@
 package body.execution;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.util.Duration;
 import javafx.util.Pair;
@@ -9,6 +7,7 @@ import stepper.dd.api.DataDefinition;
 import stepper.step.api.enums.StepResult;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SingleStepExecutionTableData {
    private String Name;
@@ -17,9 +16,7 @@ public class SingleStepExecutionTableData {
    private List<String> Logs;
    private String SummaryLine;
    private List<Node> OutputsNodes = new LinkedList<>();
-
-   private Set<String> OutputsThatWereTakenCareOf = new TreeSet<String>() {
-   };
+   private Set<String> OutputsThatWereTakenCareOf = new TreeSet<String>();
 
     public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine ,Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
         Name = stepName;
@@ -53,8 +50,8 @@ public class SingleStepExecutionTableData {
         return Logs;
     }
 
-    public List<Node> getOutputs() {
-        return OutputsNodes;
+    public List<String> getOutputsName() {
+        return OutputsThatWereTakenCareOf.stream().collect(Collectors.toList());
     }
 
     public void setStepResult(StepResult stepResult) {

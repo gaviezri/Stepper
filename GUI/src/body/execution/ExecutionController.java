@@ -7,11 +7,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -20,6 +22,7 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
+import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
@@ -60,37 +63,74 @@ public class ExecutionController extends BodyControllerComponent {
 
     @FXML private Label executionEndLabel;
 
-    @FXML private HBox continuationOptionsHbox;
+    @FXML private AnchorPane continuationAnchorPane;
+    @FXML private Button continueButton;
+    @FXML private ListView<String> continuationListView;
+    @FXML private Label continuationLabel;
 
-    private Map<String ,SingleStepExecutionTableData> currentFlowStepsExecutionTableDataList;
-    // continuation section
-    // summary section
-    // step details section
+    private Map<String ,SingleStepExecutionTableData> currentFlowStepsExecutionTableDataList  = new LinkedHashMap<>();
+    private Map<String, List<Pair<String,String>>> continuationDataMap;
+
     private static final int POLLING_INTERVAL = 200;
     private ScheduledExecutorService poller = Executors.newScheduledThreadPool(1);
     private boolean notified = false;
     private boolean fooled = false;
+    private BooleanProperty gotContinuations = new SimpleBooleanProperty(false);
 
 
 
     public void initialize() {
         flowExecutionMainAnchorPane.setDisable(true);
         flowProgressPercentageLabel.setWrapText(true);
+        executionEndLabel.setWrapText(true);
+
         initializeStepsStatusToolTip();
         bindExecutionTabComponents();
-        executionEndLabel.setWrapText(true);
-        currentFlowStepsExecutionTableDataList = new LinkedHashMap<>();
         bindSelectionOfStepInListViewToStepDetails();
+        initializeContinuationSection();
+
         stepSummaryLineLabel.setTooltip(new Tooltip());
         stepSummaryLineLabel.getTooltip().setOnShowing(event -> {
             Tooltip tooltip = (Tooltip) event.getSource();
             tooltip.setText(stepSummaryLineLabel.getText());
         });
-
-
     }
 
+    private void initializeContinuationSection(){
+        continueButton.setDisable(true);
+
+        continuationListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                continueButton.setDisable(false);
+            }
+        });
+        continueButton.setOnMouseClicked( event -> {
+            continueButton.setDisable(true);
+            Platform.runLater(()->{
+                bodyController.setInputSectionToContinuation(continuationListView.getSelectionModel().getSelectedItem(), continuationDataMap.get(continuationListView.getSelectionModel().getSelectedItem()));
+                continuationListView.getSelectionModel().clearSelection();
+            });
+        });
+
+        continuationListView.onMouseClickedProperty().addListener((observable, oldValue, newValue) -> {
+            //TODO: fix when clicking on the same item allows the continue button to be pressed again
+            // happens when clicking continue on continuation and then not executing it going back to execution and clicking on the same continuation
+            continueButton.setDisable(false);
+        });
+    }
     private void bindSelectionOfStepInListViewToStepDetails() {
+        executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                String stepPresentationName = getStepNameWithoutReadonly(((Label)newValue).getText());
+                SingleStepExecutionTableData singleStepExecutionTableData = currentFlowStepsExecutionTableDataList.get(getStepNameWithoutReadonly(stepPresentationName));
+                if (singleStepExecutionTableData != null) {
+                    updateStepDetails(singleStepExecutionTableData);
+                }
+                else {
+                    updateStepDetails(stepPresentationName);
+                }
+            }
+        });
         executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 String stepPresentationName = getStepNameWithoutReadonly(((Label)newValue).getText());
@@ -109,13 +149,15 @@ public class ExecutionController extends BodyControllerComponent {
         stepDetailsDurationLabel.setText("Duration: " + singleStepExecutionTableData.getDuration().toString());
         setResultLabelToNotExecuted(singleStepExecutionTableData.getResult().toString(), singleStepExecutionTableData.getResult());
         updateStepLogs(singleStepExecutionTableData.getLogs());
-        updateStepOutputs();
+        updateStepOutputs(singleStepExecutionTableData.getOutputsName());
 
         stepSummaryLineLabel.setText(singleStepExecutionTableData.getSummaryLine());
     }
 
-    private void updateStepOutputs() {
+    private void updateStepOutputs(List<String> outputs){
         outputsListView.visibleProperty().set(true);
+        outputsListView.getItems().clear();
+        outputsListView.getItems().addAll(outputs);
     }
 
     private void updateStepLogs(List<String> logs) {
@@ -167,15 +209,10 @@ public class ExecutionController extends BodyControllerComponent {
                                                                         appController.getAllSummaryLines());
                                     // check it out ^^^^
                                 });
-
                             }
                         } catch (NullPointerException ignored) {
                         }
-
-                        // update step results
-
                     }
-
                     if (!appController.isFlowExecutionInProgress()
                             && !notified
                             && numOfFlowExecuted > 0) {
@@ -257,7 +294,8 @@ public class ExecutionController extends BodyControllerComponent {
             stepInProgressLabel.setVisible(value);
 
             executionEndLabel.setVisible(!value);
-            continuationOptionsHbox.setVisible(!value);
+            continuationAnchorPane.setVisible(!value && gotContinuations.get());
+
             // continuation pane.setvisible
             // bind continuation pane and execution summary label progressbar
         });
@@ -365,9 +403,6 @@ public class ExecutionController extends BodyControllerComponent {
                     stepDetailsNameLabel.setText("select a step from the list");
                     stepDetailsDurationLabel.setText("to get");
                     stepDetailsResultLabel.setText("further details");
-
-
-
                     currentFlowStepsExecutionTableDataList.clear();
                 });
         }));
@@ -395,5 +430,14 @@ public class ExecutionController extends BodyControllerComponent {
             }
         });
     }
-
+    public void setContinuationProperty(FlowDefinitionDTO dto) {
+        gotContinuations.set(dto.getContinuationsCount() > 0);
+        continuationDataMap = dto.getContinuationDataMap();
+        if (continuationDataMap.size() > 0) {
+            continuationListView.getItems().clear();
+            continuationDataMap.forEach((key, value) -> {
+                continuationListView.getItems().add(key.toString());
+            });
+        }
+    }
 }

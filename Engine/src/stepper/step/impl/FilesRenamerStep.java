@@ -62,7 +62,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
     }
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
-        return StepResult.NULL;
+        return StepResult.NOT_EXECUTED;
     }
 
     @Override
@@ -143,6 +143,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         }
         context.storeDataValue("RENAME_RESULT", renameResult , DataDefinitionRegistry.RELATION);
         context.tock();
+        context.getCurrentStepManager().setStepResult(result);
         return result;
     }
 

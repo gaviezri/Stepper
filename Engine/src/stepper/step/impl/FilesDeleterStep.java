@@ -105,6 +105,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
             logger.log("FAILURE: No files where deleted! check yourself before you wreck yourself");
         }
         context.tock();
+        context.getCurrentStepManager().setStepResult(res);
         return res;
     }
 

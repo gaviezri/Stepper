@@ -71,6 +71,7 @@ public class CommandLineStep extends AbstractStepDefinition {
             logger.log("Error executing command: " + e.getMessage());
             logger.addSummaryLine("Command was not executed successfully");
         }
+        context.getCurrentStepManager().setStepResult(StepResult.SUCCESS);
         return StepResult.SUCCESS;
     }
 

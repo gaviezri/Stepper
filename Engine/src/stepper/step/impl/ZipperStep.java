@@ -81,6 +81,7 @@ public class ZipperStep extends AbstractStepDefinition {
         );
 
         context.tock();
+        context.getCurrentStepManager().setStepResult(result);
         return result;
     }
 

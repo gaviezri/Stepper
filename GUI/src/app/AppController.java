@@ -12,10 +12,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import javafx.util.Pair;
 import stepper.controller.EngineController;
+import stepper.dd.api.DataDefinition;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
+import stepper.flow.execution.FlowExecutionResult;
+import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -30,6 +34,8 @@ public class AppController {
     private BodyController bodyComponentController;
 
     private EngineController engineController;
+
+    private LastExecutedDataCenter lastExecutedDataCenter = LastExecutedDataCenter.getInstance();
 
     @FXML
     private ScrollPane sceneScrollPane;
@@ -101,5 +107,49 @@ public class AppController {
 
     public List<FlowDefinitionDTO> getAllFlowDefinitionsData() {
         return engineController.getAllFlowDefinitionsData();
+    }
+
+    public FlowExecutionResult getFlowExecutionResult() {
+        return lastExecutedDataCenter.getFlowExecutionResult();
+    }
+
+    public boolean isFlowExecutionInProgress() {
+        return lastExecutedDataCenter.isFlowExecutionInProgress();
+    }
+
+    public String getLastExecutedFlowName() {
+        return lastExecutedDataCenter.getLastExecutedFlowName();
+    }
+
+    public int getCurrentStepIdx() {
+        return lastExecutedDataCenter.getCurrentStepIdx();
+    }
+
+    public String getCurrentStepName() {
+        return lastExecutedDataCenter.getCurrentStepName();
+    }
+
+    public int getStepsCount(){
+        return lastExecutedDataCenter.getStepsCount();
+    }
+
+    public Map getExecutedStepsStatus(){
+        return lastExecutedDataCenter.getExecutedStepsStatus();
+    }
+
+    public Map<String,Map<String, Pair<DataDefinition, Object>>> getOutputsForAllSteps() {
+        return lastExecutedDataCenter.getOutputsForAllSteps();
+    }
+
+    public Map<String,List<String>> getAllStepsListOfLogs(){
+        return lastExecutedDataCenter.getAllStepsListOfLogs();
+    }
+
+    public Map<String, Duration> getAllStepsDuration() {
+        return lastExecutedDataCenter.getAllStepsDuration();
+    }
+
+    public Map<String, String> getAllSummaryLines() {
+        return lastExecutedDataCenter.getAllSummaryLines();
     }
 }

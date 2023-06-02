@@ -1,12 +1,16 @@
 package stepper.flow.execution.context;
 
+import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
 public interface StepExecutionContext {
@@ -24,4 +28,14 @@ public interface StepExecutionContext {
     Object getStepsManagers();
 
     Map<String, Object> getExecutionDataValues();
+
+    List<String> getStepLogs(String stepName);
+
+    Map<String, Pair<DataDefinition,Object>> getStepOutputs(String stepName);
+
+    StepExecutionDataManager getCurrentStepManager();
+
+    Duration getStepDuration(String finalStepName);
+
+    String getStepSummaryLine(String finalStepName);
 }

@@ -36,10 +36,14 @@ public class StatisticsManager {
     }
 
     public void collectStatistics() {
+        stepStatistics.clear();
+        flowStatistics.clear();
+
         FlowExecution curFlowExecution;
         String curFlowName;
         String curOriginalStepName;
         Duration curDuration = null;
+
 
         for (int i = 0; i < this.executionArchive.getNumOfFlowExecutions(); ++i) {
             curFlowExecution = this.executionArchive.getFlowExecutionByIndex(i);
@@ -55,11 +59,13 @@ public class StatisticsManager {
                     addStepToStatisticsByOriginalName(curOriginalStepName, curDuration);
                 }
             }
+
         }
     }
 
     private void addStepToStatisticsByOriginalName(String curOriginalStepName, Duration curDuration) {
         Integer curCounter;
+
         if (!stepStatistics.containsKey(curOriginalStepName)) {
             stepStatistics.put(curOriginalStepName, new Pair<>(1, curDuration));
         } else {

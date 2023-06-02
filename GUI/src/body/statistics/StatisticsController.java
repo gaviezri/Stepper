@@ -1,5 +1,6 @@
 package body.statistics;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -36,21 +37,51 @@ public class StatisticsController extends body.BodyControllerComponent implement
 //            updateStepsCountChar();
 
     }
-    private void updateStepsCountChar() {
+//    public void updateStepsDurationChar() {
+//        // Reach engine through main controller...
+//        StatisticsDTO statisticsDTO = EngineController.getInstance().getCurrentLoadedFlowsStatisticsDetails();
+//        // { Original Step Name : (Occurrences Counter, Sum Durations) }
+//        Map<String, Pair<Integer, Duration>> stepStatistics = statisticsDTO.getStepStatistics();
+//
+//        Platform.runLater(()->{
+//
+//            stepSumTimeChar.layout();
+//
+//            // steps count
+//            XYChart.Series series1 = new XYChart.Series();
+//
+//            for(String stepName : stepStatistics.keySet()){
+//                series1.getData().add(new XYChart.Data(stepName,stepStatistics.get(stepName).getKey()));
+//            }
+//            stepSumTimeChar.getData().clear();
+//            stepSumTimeChar.getData().add(series1);
+//        });
+//    }
+
+    public void updateBarChars() {
         // Reach engine through main controller...
         StatisticsDTO statisticsDTO = EngineController.getInstance().getCurrentLoadedFlowsStatisticsDetails();
         // { Original Step Name : (Occurrences Counter, Sum Durations) }
         Map<String, Pair<Integer, Duration>> stepStatistics = statisticsDTO.getStepStatistics();
+        Map<String, Pair<Integer, Duration>> flowStatistics = statisticsDTO.getFlowStatistics();
 
-        stepSumTimeChar.getData().clear();
-        stepSumTimeChar.layout();
+        Platform.runLater(()-> {
+            updateBarCharByName(stepStatistics, stepSumTimeChar, false);
+            updateBarCharByName(stepStatistics, stepExecutionChar, true);
+            updateBarCharByName(flowStatistics, flowSumTimeChar, false);
+            updateBarCharByName(flowStatistics, flowExecutionChar, true);
+        });
+    }
 
-        // steps count
-        XYChart.Series series1 = new XYChart.Series();
+    private void updateBarCharByName(Map<String, Pair<Integer, Duration>> statistics, BarChart<String,Number> curBarChar, Boolean isCountBased) {
+            curBarChar.layout();
 
-        for(String stepName : stepStatistics.keySet()){
-            series1.getData().add(new XYChart.Data(stepName,stepStatistics.get(stepName).getKey()));
-        }
-        stepSumTimeChar.getData().addAll(series1);
+            XYChart.Series series1 = new XYChart.Series();
+
+            for(String stepName : statistics.keySet()){
+                series1.getData().add(new XYChart.Data(stepName, isCountBased ? statistics.get(stepName).getKey() : statistics.get(stepName).getValue().toMillis()));
+            }
+            curBarChar.getData().clear();
+            curBarChar.getData().add(series1);
     }
 }

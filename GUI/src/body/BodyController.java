@@ -11,7 +11,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
-import stepper.controller.EngineController;
 
 import java.util.Map;
 
@@ -28,6 +27,9 @@ public class BodyController {
     @FXML private Tab flowStatTab;
     @FXML private TabPane flowStatComponent;
 
+    public void updateStatistics() {
+        this.flowStatComponentController.updateBarChars();
+    }
 
     public void setMainController(AppController appController) {
         mainController = appController;

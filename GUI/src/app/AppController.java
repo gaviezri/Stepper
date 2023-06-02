@@ -57,6 +57,10 @@ public class AppController {
         headerComponentController.setMainController(this);
         bodyComponentController.bindDefinitionTabComponents();
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
+        numOfFlowsFinished.addListener((
+                (observable, oldValue, newValue) -> {
+                    bodyComponentController.updateStatistics();
+                }));
     }
     @Override
     protected void finalize()

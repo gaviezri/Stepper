@@ -59,6 +59,7 @@ public class StatisticsManager {
                     addStepToStatisticsByOriginalName(curOriginalStepName, curDuration);
                 }
             }
+
         }
     }
 

@@ -87,6 +87,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
         }
         logger.addSummaryLine("Properties export completed successfully");
         context.tock();
+        context.getCurrentStepManager().setStepResult(stepResult);
         return stepResult;
     }
 

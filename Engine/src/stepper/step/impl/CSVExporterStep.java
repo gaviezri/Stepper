@@ -63,6 +63,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
 
             if (relation == null || relation.getRowSize() == 0) {
                 logger.log("Relation is Empty or null");
+                logger.addSummaryLine("relation did not export to CSV because it is empty or null. ");
                 result = StepResult.WARNING;
             } else {
                 int i = 0;
@@ -89,9 +90,11 @@ public class CSVExporterStep extends AbstractStepDefinition {
             e.printStackTrace();
             logger.log("Error while exporting relation to CSV");
             logger.log(e.getMessage());
+            logger.addSummaryLine("relation did not export to CSV.");
             return StepResult.FAILURE;
         }
         context.tock();
+        context.getCurrentStepManager().setStepResult(result);
         return result;
     }
 }

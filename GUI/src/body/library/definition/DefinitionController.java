@@ -113,11 +113,17 @@ public class DefinitionController extends LibraryControllerComponent {
         iv.setPreserveRatio(true);
         selectFlowButton.setGraphic(iv);
         selectFlowButton.backgroundProperty().set(null);
+        selectFlowButton.setOnMouseEntered(event -> {
+            selectFlowButton.translateYProperty().set(2);
+        });
         selectFlowButton.setOnMousePressed(event -> {
-            selectFlowButton.translateYProperty().set(3);
+            selectFlowButton.translateYProperty().set(5);
         });
         selectFlowButton.setOnMouseReleased(event -> {
-            selectFlowButton.translateYProperty().set(-3);
+            selectFlowButton.translateYProperty().set(-2);
+        });
+        selectFlowButton.setOnMouseExited(event -> {
+            selectFlowButton.translateYProperty().set(-5);
         });
     }
 

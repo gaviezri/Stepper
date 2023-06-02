@@ -1,6 +1,8 @@
 package stepper.step.manager;
 
 import javafx.util.Pair;
+import stepper.dd.api.DataDefinition;
+import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.logger.AbstractLogger;
 import stepper.flow.execution.logger.LogLine;
 import stepper.flow.execution.logger.step.StepExecutionLoggerImpl;
@@ -11,7 +13,9 @@ import stepper.step.execution.StepExecutionData;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StepExecutionDataManager implements DataManager, Serializable {
     // manager for each step in the flow
@@ -57,4 +61,11 @@ public class StepExecutionDataManager implements DataManager, Serializable {
     }
 
 
+    public Map<String, Pair<DataDefinition,Object>> getStepOutputs() {
+        return stepExecutionData.getStepOutputs();
+    }
+
+    public void addStepOutput(String finalDataName, Object value, DataDefinition dataDefinition) {
+        stepExecutionData.addStepOutput(finalDataName, value, dataDefinition);
+    }
 }

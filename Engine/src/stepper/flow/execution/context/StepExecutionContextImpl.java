@@ -1,5 +1,6 @@
 package stepper.flow.execution.context;
 
+import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.*;
@@ -11,6 +12,7 @@ import stepper.flow.execution.logger.AbstractLogger;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,9 +26,9 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     private Map<String, stepper.dd.api.DataDefinition> ExecutionDataName2Definition = new HashMap<>();
     private Map<String, StepExecutionDataManager> step2Manager = new LinkedHashMap<>();
     private MappingGraph mappingGraph;
-    public String getFinalDataName(String name) {
-        return dataAliasingManager.getAliasDataName(currentStepName, name);
-    }
+//    public String getFinalDataName(String name) {
+//        return dataAliasingManager.getAliasDataName(currentStepName, name);
+//    }
     @Override
     public String getCurrentStepName() {
         return currentStepName;
@@ -126,6 +128,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         String finalDataName = currentStepUsageDeclaration.getResourceFinalName(dataName);
         ExecutionDataName2Definition.put(finalDataName,dataDefinition);
         ExecutionDataValues.put(finalDataName, value);
+        getCurrentStepManager().addStepOutput(finalDataName, value, dataDefinition);
     }
 
     @Override
@@ -141,5 +144,33 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     @Override
     public Map<String,Object> getExecutionDataValues() {
         return ExecutionDataValues;
+    }
+
+    @Override
+    public List<String> getStepLogs(String stepName) {
+        return step2Manager.get(stepName).getLogs2TimeStamp().stream()
+                //.map(log -> log.getValue() + ": " + log.getKey()).collect(java.util.stream.Collectors.toList());
+                .map(log -> log.getKey()).collect(java.util.stream.Collectors.toList());
+
+    }
+
+    @Override
+    public Map<String, Pair<DataDefinition,Object>> getStepOutputs(String stepName) {
+        return step2Manager.get(stepName).getStepOutputs();
+    }
+
+    @Override
+    public StepExecutionDataManager getCurrentStepManager() {
+        return step2Manager.get(currentStepName);
+    }
+
+    @Override
+    public Duration getStepDuration(String stepName) {
+        return step2Manager.get(stepName).getDuration();
+    }
+
+    @Override
+    public String getStepSummaryLine(String stepName) {
+        return step2Manager.get(stepName).getStepSummaryLine();
     }
 }

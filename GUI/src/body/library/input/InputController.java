@@ -268,12 +268,17 @@ public class InputController extends LibraryControllerComponent {
             startFlowButton.setGraphic(iv);
             startFlowButton.backgroundProperty().set(null);
         });
-
-        startFlowButton.onMousePressedProperty().addListener(event -> {
-            startFlowButton.translateYProperty().set(3);
+        startFlowButton.setOnMouseEntered((event) -> {
+            startFlowButton.translateYProperty().set(2);
+        });
+        startFlowButton.setOnMousePressed((event) -> {
+            startFlowButton.translateYProperty().set(5);
+        });
+        startFlowButton.setOnMouseExited((event) -> {
+            startFlowButton.translateYProperty().set(-2);
         });
         startFlowButton.setOnMouseReleased(event -> {
-            startFlowButton.translateYProperty().set(-3);
+            startFlowButton.translateYProperty().set(-5);
         });
         allMandatorySatisfied.addListener((observable, oldValue, newValue) -> {
             if(newValue){

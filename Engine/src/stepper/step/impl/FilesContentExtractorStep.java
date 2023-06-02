@@ -127,6 +127,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
             logger.log(e.getMessage());
 
         }
+        context.getCurrentStepManager().setStepResult(result);
         return result;
     }
 

@@ -71,6 +71,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
                                     timeToSleep);
         }
         context.tock();
+        context.getCurrentStepManager().setStepResult(result);
         return result;
     }
 }

@@ -22,13 +22,6 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
     StepExecutionContext context;
     FlowDefinition activeFlow;
     FlowExecution flowExecution;
-    FlowExecutorsManager flowExecutorsManager;
-
-    public void reset(){
-        context = null;
-        activeFlow = null;
-    }
-
 
     public FlowExecutionResult call () {
         UUID flowUUID = flowExecution.getUniqueId();
@@ -47,14 +40,15 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
         LastExecutedDataCenter.startFlow(flowUUID);
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
-            LastExecutedDataCenter.setCurrentStepIdx(i,flowUUID);
-            LastExecutedDataCenter.setCurrentStepName(currentStepUsageDeclaration.getFinalStepName(),flowUUID);
+            setCurrentStepInDataCenter(flowUUID, i, currentStepUsageDeclaration);
             Boolean skipIfFail = currentStepUsageDeclaration.skipIfFail();
             String finalStepName = currentStepUsageDeclaration.getFinalStepName();
-            context.setCurrentStepUsageDeclaration(currentStepUsageDeclaration);
             System.out.println("Starting to execute step: " + finalStepName);
+            context.setCurrentStepUsageDeclaration(currentStepUsageDeclaration);
+
             StepResult stepResult = currentStepUsageDeclaration.getStepDefinition().invoke(context);
-            LastExecutedDataCenter.setStepResult(finalStepName, stepResult,flowUUID);
+
+            setStepsOutputInDataCenter(flowUUID, finalStepName, stepResult);
             System.out.println("Done executing step: " + finalStepName + ". Result: " + stepResult);
             context.setStepResult(finalStepName, stepResult);
             updateExecutionResult(flowExecution, stepResult, skipIfFail);
@@ -63,12 +57,33 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
                 break;
             }
         }
-        flowExecution.tock();
-        flowExecution.setExecutionOutputs(context.getExecutionDataValues());
-        LastExecutedDataCenter.setExecutionOutputs(context.getExecutionDataValues(), flowUUID);
-        LastExecutedDataCenter.endFlow(flowUUID, flowExecution.getFlowExecutionResult());
+        setFlowFinishedOnFlowExecution();
+        setFlowFinishedOnDataCenter(flowUUID);
         presentEndOfExecutionSummary(flowExecution);
         return flowExecution.getFlowExecutionResult();
+    }
+
+    private void setStepsOutputInDataCenter(UUID flowUUID, String finalStepName, StepResult stepResult) {
+        LastExecutedDataCenter.setStepLogs(finalStepName, context.getStepLogs(finalStepName), flowUUID);
+        LastExecutedDataCenter.setStepOutputs(finalStepName, context.getStepOutputs(finalStepName), flowUUID);
+        LastExecutedDataCenter.setStepResult(finalStepName, stepResult, flowUUID);
+        LastExecutedDataCenter.setStepsDuration(finalStepName, context.getStepDuration(finalStepName), flowUUID);
+        LastExecutedDataCenter.setStepSummaryLine(finalStepName, context.getStepSummaryLine(finalStepName), flowUUID);
+    }
+
+    private void setFlowFinishedOnFlowExecution() {
+        flowExecution.tock();
+        flowExecution.setExecutionOutputs(context.getExecutionDataValues());
+    }
+
+    private void setFlowFinishedOnDataCenter(UUID flowUUID) {
+        LastExecutedDataCenter.setExecutionOutputs(context.getExecutionDataValues(), flowUUID);
+        LastExecutedDataCenter.endFlow(flowUUID, flowExecution.getFlowExecutionResult());
+    }
+
+    private static void setCurrentStepInDataCenter(UUID flowUUID, int i, StepUsageDeclaration currentStepUsageDeclaration) {
+        LastExecutedDataCenter.setCurrentStepIdx(i, flowUUID);
+        LastExecutedDataCenter.setCurrentStepName(currentStepUsageDeclaration.getFinalStepName(), flowUUID);
     }
 
     private void presentEndOfExecutionSummary(FlowExecution flowExecution) {

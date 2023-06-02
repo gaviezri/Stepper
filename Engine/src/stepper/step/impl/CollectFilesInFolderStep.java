@@ -8,6 +8,7 @@ import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -96,7 +97,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
                 logger.log("Folder name represents an empty folder");
                 result = StepResult.WARNING;
             } else{
-                logger.log("Reading folder " + folderName + " content with filter: " + (filter != null ? filter : ""));
+                logger.log("Reading folder " + folderName +  (filter != null ? " content with filter: \"" + filter + "\"" : ""));
                 result = StepResult.SUCCESS;
             }
         } catch (Exception e) {
@@ -150,6 +151,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
             case FAILURE:
                 break;
         }
+        context.getCurrentStepManager().setStepResult(result);
         context.tock();
         return result;
     }

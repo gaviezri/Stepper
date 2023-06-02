@@ -130,6 +130,7 @@ public class FileDumperStep extends AbstractStepDefinition {
                 result = StepResult.FAILURE;
             }
             context.tock();
+            context.getCurrentStepManager().setStepResult(result);
             return result;
         }
 

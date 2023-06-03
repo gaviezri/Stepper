@@ -9,10 +9,7 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FilesDeleterStep extends AbstractStepDefinition {
@@ -72,14 +69,16 @@ public class FilesDeleterStep extends AbstractStepDefinition {
 
             DELETED_LIST = FILES_LIST.stream()
                     .filter(FileData::exists)
-                    .filter(file -> {
+                    .map(file -> {
+                        String fname = file.getName();
                         boolean deletedSuccessfully = file.delete();
                         if (!deletedSuccessfully) {
                             logger.log("Failed to delete file " + file.getName());
+                            fname = null;
                         }
-                        return !deletedSuccessfully;
+                        return fname;
                     })
-                    .map(FileData::getName)
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         }
 

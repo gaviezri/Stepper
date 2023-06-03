@@ -172,4 +172,8 @@ public class LastExecutedDataCenter {
     public Map<String, String> getAllSummaryLines() {
         return step2SummaryLine;
     }
+
+    public Map getLastFlowOutputs() {
+        return executionDataValues;
+    }
 }

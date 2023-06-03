@@ -79,9 +79,8 @@ public class InputController extends LibraryControllerComponent {
             return null;
         }
 
-        private void createElement(Map<String, Object> initialValues, Map<String,Object> continuationValues)
-        {
-            switch(type){
+        private void createElement(Map<String, Object> initialValues, Map<String,Object> continuationValues) {
+            switch (type) {
                 case "String":
                 case "List":
                     setStringInputField();
@@ -100,19 +99,23 @@ public class InputController extends LibraryControllerComponent {
                     // or
                     break;
             }
-            Node2InputField.put(inputFieldElement,this);
-            if (initialValues.containsKey(name)){
-                satisfied.unbind();
-                satisfied.setValue(true);
-                inputFieldElement.setDisable(true);
-               if (type.equals("Enum")) { ((ComboBox) inputFieldElement).setValue(initialValues.get(name).toString());}
-               else { ((TextField) inputFieldElement).setText(initialValues.get(name).toString());}
+            Node2InputField.put(inputFieldElement, this);
+            if (initialValues.containsKey(name)) {
+                setPresetValuesInElement(initialValues);
+            } else if (continuationValues != null && continuationValues.containsKey(name)) {
+                setPresetValuesInElement(continuationValues);
             }
-            if (continuationValues != null){
+        }
 
+        private void setPresetValuesInElement(Map<String, Object> initialValues) {
+            satisfied.unbind();
+            satisfied.setValue(true);
+            inputFieldElement.setDisable(true);
+            if (type.equals("Enum")) {
+                ((ComboBox) inputFieldElement).setValue(initialValues.get(name).toString());
+            } else {
+                ((TextField) inputFieldElement).setText(initialValues.get(name).toString());
             }
-
-
         }
 
         public BooleanProperty getSatisfied() {
@@ -207,6 +210,7 @@ public class InputController extends LibraryControllerComponent {
     @FXML Pane buttonWrapperForToolTip;
     BooleanProperty allMandatorySatisfied = new SimpleBooleanProperty(false);
 
+
     // END OF Input Controller's fields
 
     public void initialize() {
@@ -294,6 +298,7 @@ public class InputController extends LibraryControllerComponent {
         inputsLabel.setText("Inputs for " + dto.getFlowName());
         Pair<Map<INPUT_FIELDS,List>,Map<INPUT_FIELDS,List>> MandatoryAndOptionalFieldMaps =
                 createMandatoryAndOptionalFieldMaps(dto);
+
         Map<INPUT_FIELDS, List> mandatoryFields = MandatoryAndOptionalFieldMaps.getKey();
         Map<INPUT_FIELDS, List> optionalFields = MandatoryAndOptionalFieldMaps.getValue();
 
@@ -304,6 +309,10 @@ public class InputController extends LibraryControllerComponent {
         if (optionalFields.get(INPUT_FIELDS.NAME).size() != 0) {
             setInputFieldElements(optionalFields, false, dto, continuationValues);
         }
+    }
+
+    private void setContinuationElements(FlowDefinitionDTO dto) {
+        libraryController.getBodyController().getFlowExecutionController().setContinuationProperty(dto);
     }
 
     private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto, Map<String,Object> continuationValues) {
@@ -328,7 +337,6 @@ public class InputController extends LibraryControllerComponent {
             allMandatorySatisfied.bind(Bindings.createBooleanBinding(() ->
                     allFields.stream().allMatch(x -> x.satisfied.get()), allFields.stream().map(x -> x.satisfied).collect(Collectors.toList()).toArray(new BooleanProperty[0])));
         }
-
     }
 
     private static  Pair<Map<INPUT_FIELDS,List>,Map<INPUT_FIELDS,List>> createMandatoryAndOptionalFieldMaps(FlowDefinitionDTO dto) {
@@ -396,11 +404,6 @@ public class InputController extends LibraryControllerComponent {
     public Button getStartButton() {
         return startFlowButton;
     }
-
-    public Pane getStartButtonWrapper(){
-        return buttonWrapperForToolTip;
-    }
-
     // Create the Pair of 2 Map<String,String> maps that will be used to initialize the context in flow execution
     public Pair<Map, Map> getValName2ValType() {
         Map<String, Object> Name2Val = new HashMap<>();

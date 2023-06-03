@@ -37,6 +37,7 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
         flowExecution.setFinalStepName2stepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());
         // start actual execution
         flowExecution.tick();
+        StepResult stepResult = StepResult.FAILURE;
         LastExecutedDataCenter.startFlow(flowUUID);
         for (int i = 0; i < stepsList.size(); i++) {
             StepUsageDeclaration currentStepUsageDeclaration = stepsList.get(i);
@@ -45,9 +46,11 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
             String finalStepName = currentStepUsageDeclaration.getFinalStepName();
             System.out.println("Starting to execute step: " + finalStepName);
             context.setCurrentStepUsageDeclaration(currentStepUsageDeclaration);
-
-            StepResult stepResult = currentStepUsageDeclaration.getStepDefinition().invoke(context);
-
+            try {
+                stepResult = currentStepUsageDeclaration.getStepDefinition().invoke(context);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             setStepsOutputInDataCenter(flowUUID, finalStepName, stepResult);
             System.out.println("Done executing step: " + finalStepName + ". Result: " + stepResult);
             context.setStepResult(finalStepName, stepResult);

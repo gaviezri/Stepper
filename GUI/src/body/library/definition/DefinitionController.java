@@ -14,9 +14,11 @@ import javafx.util.Pair;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.step.SingleStepDTO;
 import stepper.dto.step.StepsDTO;
+import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class DefinitionController extends LibraryControllerComponent {
@@ -213,8 +215,6 @@ public class DefinitionController extends LibraryControllerComponent {
         } else {
             content.getChildren().addAll(mandatoryLabel, connectedLabel);
         }
-
-
         return inputPane;
     }
 
@@ -250,8 +250,6 @@ public class DefinitionController extends LibraryControllerComponent {
         }
         return outputPane;
     }
-
-
 
     // --OUTPUTS--
     private void setFlowOutputsData(FlowDefinitionDTO dto) {
@@ -325,9 +323,10 @@ public class DefinitionController extends LibraryControllerComponent {
         selectFlowButton.setOnMouseClicked(event -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
-                this.libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null);
+                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null);
         });
     }
+
 
     public int getSelectedFlowIndex() {
         return flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex();
@@ -335,5 +334,25 @@ public class DefinitionController extends LibraryControllerComponent {
 
     public FlowDefinitionDTO getSelectedFlow() {
         return flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex());
+    }
+
+    public void setContinuationFlowInputs(String flowNameContinuedTo, List<Pair<String,String>> output2InputMapping) {
+        OptionalInt index = IntStream.range(0, flowDefinitionDTOList.size())
+                .filter(i -> flowDefinitionDTOList.get(i).getFlowName().equals(flowNameContinuedTo))
+                .findFirst();
+        if (index.isPresent()) {
+
+            Map<String,Object> lastFlowOutputs = libraryController.getBodyController().getMainController().getLastFlowOutputs();
+            Map<String,Object> inputsToSet = new HashMap<>();
+            for (Pair<String,String> output2Input : output2InputMapping) {
+                String outputName = output2Input.getKey();
+                String inputName = output2Input.getValue();
+                Object outputValue = lastFlowOutputs.get(outputName);
+                if (outputValue == null) {continue;}
+                inputsToSet.put(inputName,outputValue);
+            }
+            flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
+            libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet);
+        }
     }
 }

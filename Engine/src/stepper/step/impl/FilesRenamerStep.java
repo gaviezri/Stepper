@@ -102,12 +102,13 @@ public class FilesRenamerStep extends AbstractStepDefinition {
                 String oldName = filesToRename.get(i).getName();
                 Path oldFileFullPath = Paths.get(filesToRename.get(i).getPath());
                 String filenameNoExtenstion = "";
+                String extension = "";
                 try {
                     filenameNoExtenstion = oldName.substring(0, oldName.lastIndexOf('.'));
+                    extension = oldName.substring(oldName.lastIndexOf('.'));
                 } catch (Exception e) {
                     logger.log("File: " + oldName + " has no extension");
                 }
-                String extension = oldName.substring(oldName.lastIndexOf('.'));
                 Path newFileFullPath = oldFileFullPath.resolveSibling(prefix + filenameNoExtenstion + suffix + extension);
 
                 subResult = renameFile(oldFileFullPath, newFileFullPath, logger, renameResult);

@@ -66,7 +66,10 @@ public class AppController {
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
         numOfFlowsFinished.addListener((
                 (observable, oldValue, newValue) -> {
-                    bodyComponentController.updateStatistics();
+                    if(!oldValue.equals(newValue)) {
+                        bodyComponentController.updateStatistics();
+                        bodyComponentController.updateHistory(engineController.getFlowExecutionStack());
+                    }
                 }));
     }
     @Override

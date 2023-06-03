@@ -1,6 +1,7 @@
 package body;
 
 import app.AppController;
+import body.history.HistoryController;
 import body.library.LibraryController;
 import body.execution.ExecutionController;
 import body.library.definition.DefinitionController;
@@ -11,14 +12,17 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
+import stepper.flow.execution.FlowExecution;
 
 import java.util.Map;
+import java.util.Stack;
 
 public class BodyController {
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
     @FXML private StatisticsController flowStatComponentController;
+    @FXML private HistoryController flowHistoryComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowLibTab;
     @FXML private AnchorPane flowLibComponent;
@@ -26,9 +30,15 @@ public class BodyController {
     @FXML private AnchorPane flowExecComponent;
     @FXML private Tab flowStatTab;
     @FXML private TabPane flowStatComponent;
+    @FXML private Tab flowsHistoryTab;
+    @FXML private AnchorPane anchorHistory;
 
     public void updateStatistics() {
         this.flowStatComponentController.updateBarChars();
+    }
+
+    public void updateHistory(Stack<FlowExecution> flowExecutionStack){
+        this.flowHistoryComponentController.updateTable(flowExecutionStack);
     }
 
     public void setMainController(AppController appController) {
@@ -40,7 +50,7 @@ public class BodyController {
         flowStatTab.setDisable(true);
 
         flowStatComponentController.setBodyController(this);
-
+        flowHistoryComponentController.setBodyController(this);
         flowLibComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
         DefinitionController flowDefController = flowLibComponentController.getDefinitionController();

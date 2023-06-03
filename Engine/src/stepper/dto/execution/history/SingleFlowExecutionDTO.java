@@ -2,7 +2,6 @@ package stepper.dto.execution.history;
 
 import stepper.flow.execution.FlowExecutionResult;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

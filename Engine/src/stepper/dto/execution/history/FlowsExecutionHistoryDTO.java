@@ -11,39 +11,21 @@ public class FlowsExecutionHistoryDTO {
         TIME,
 
         RESULT,
-        ;
-    }
 
-//    private class ComparatorByName implements Comparator<SingleFlowExecutionDTO> {
-//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-//            // TODO: Handle possible null values
-//            return x.getFlowName().compareTo(y.getFlowName());
-//        }
-//    }
-//    private class ComparatorByTime implements Comparator<SingleFlowExecutionDTO> {
-//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-//            // TODO: Handle possible null values
-//            return x.getStartTime().compareTo(y.getStartTime());
-//        }
-//    }
-//    private class ComparatorByRes implements Comparator<SingleFlowExecutionDTO> {
-//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-//            // TODO: Handle possible null values
-//            return x.getFlowExecutionResult().compareTo(y.getFlowExecutionResult());
-//        }
-//    }
+    }
 
     // each DTO contains a list with 3 elements: name, time and result.
     final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
 
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
         for(FlowExecution flow:flowExecutionStack){
-            SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flow.getName(),flow.getFormattedStartTime(), flow.getFlowExecutionResult());
+            SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flow.getName(),flow.getFormattedStartTime(),
+                    flow.getFlowExecutionResult());
             this.flowExecutionDTOs.add(flowExDTO);
         }
     }
 
-    public void sorteFlowExecutionDTOsBy(SortFilter sortFilter){
+    public void sortedFlowExecutionDTOsBy(SortFilter sortFilter){
         List<SingleFlowExecutionDTO> res;
 
         switch (sortFilter){
@@ -84,4 +66,24 @@ public class FlowsExecutionHistoryDTO {
     public List<List<Object>> getFlowExecutionHistoryDetailsRows() {
         return flowExecutionDTOs.stream().map(x->x.getFlowData()).collect(Collectors.toList());
     }
+
+
+    //    private class ComparatorByName implements Comparator<SingleFlowExecutionDTO> {
+//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
+//            // TODO: Handle possible null values
+//            return x.getFlowName().compareTo(y.getFlowName());
+//        }
+//    }
+//    private class ComparatorByTime implements Comparator<SingleFlowExecutionDTO> {
+//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
+//            // TODO: Handle possible null values
+//            return x.getStartTime().compareTo(y.getStartTime());
+//        }
+//    }
+//    private class ComparatorByRes implements Comparator<SingleFlowExecutionDTO> {
+//        public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
+//            // TODO: Handle possible null values
+//            return x.getFlowExecutionResult().compareTo(y.getFlowExecutionResult());
+//        }
+//    }
 }

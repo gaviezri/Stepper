@@ -45,8 +45,8 @@ public class StatisticsController extends body.BodyControllerComponent implement
 
             XYChart.Series series1 = new XYChart.Series();
 
-            for(String stepName : statistics.keySet()){
-                series1.getData().add(new XYChart.Data(stepName, isCountBased ? statistics.get(stepName).getKey() : statistics.get(stepName).getValue().toMillis()));
+            for(String name : statistics.keySet()){
+                series1.getData().add(new XYChart.Data(name, isCountBased ? statistics.get(name).getKey() : statistics.get(name).getValue().toMillis()));
             }
             curBarChar.getData().clear();
             curBarChar.getData().add(series1);

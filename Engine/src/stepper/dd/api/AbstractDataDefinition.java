@@ -8,10 +8,10 @@ public abstract class AbstractDataDefinition implements DataDefinition, Serializ
     private final boolean userFriendly;
     private final Class<?> type;
 
-    @Override
-    public String toString() {
-        return null;
-    }
+//    @Override
+//    public String toString() {
+//        return null;
+//    }
 
     public AbstractDataDefinition(String name, boolean userFriendly, Class<?> type) {
         this.name = name;

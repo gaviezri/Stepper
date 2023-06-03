@@ -39,27 +39,8 @@ public enum DataDefinitionRegistry implements stepper.dd.api.DataDefinition {
         return dataDefinition.getType();
     }
 
-
-//    public static DataDefinitionRegistry fromString(String value) {
-//
-//        switch (value.toLowerCase()) {
-//            case "string":
-//                return STRING;
-//            case "integer":
-//                return NUMBER;
-//            case "double":
-//                return DOUBLE;
-//            case "relation":
-//                return RELATION;
-//            case "list":
-//                return LIST;
-//            case "mapping":
-//                return MAPPING;
-//            case "enumeration":
-//                return ENUMERATION;
-//            default:
-//                throw new IllegalArgumentException(value);
-//        }
-//    }
-
+    @Override
+    public String toString() {
+        return this.getType().getSimpleName();
+    }
 }

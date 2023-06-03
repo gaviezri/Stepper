@@ -163,7 +163,7 @@ public class InputController extends LibraryControllerComponent {
 
         private void setStringInputField() {
             inputFieldElement = new TextField();
-            ((TextField) inputFieldElement).setPromptText(setTextualPrompt("|"));
+            ((TextField) inputFieldElement).setPromptText(setTextualPrompt(" |"));
             satisfied.bind(((TextField) inputFieldElement).textProperty().isNotEmpty());
         }
 

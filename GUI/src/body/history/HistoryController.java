@@ -10,12 +10,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.execution.history.SingleFlowExecutionDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -44,9 +46,11 @@ public class HistoryController extends body.BodyControllerComponent implements I
         @FXML
         private RadioButton nameFilter;
         private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
-
+        @FXML
+        private VBox RerunButton;
         ObservableList executedFlows;
         FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
+
 
         public void updateTable(Stack<FlowExecution> flowExecutionStack){
                 curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
@@ -79,6 +83,23 @@ public class HistoryController extends body.BodyControllerComponent implements I
                                 });
                         }
                 });
+
+                historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                        if (newSelection != null && newSelection != oldSelection) {
+                                List<Object> selectedFlowData = newSelection.getFlowData();
+//                                System.out.println(selectedFlowData); TODO: make button not disable
+                        }
+                });
+                RerunButton.setOnMouseEntered(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()+10));
+                RerunButton.setOnMouseExited(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()-10));
+
+
+                RerunButton.setOnMouseClicked(event -> {
+                        // Perform your desired actions when the image is clicked
+                        RerunButton.setLayoutY(RerunButton.getLayoutY()+5);
+                        System.out.println("NOW I SHALL RE RUN AND GAL IS GAY");
+                });
+                RerunButton.setOnMouseReleased(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()-5));
         }
 }
 

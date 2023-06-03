@@ -4,11 +4,15 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="flowHistoryComponent" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
+<AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
    <children>
       <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">
         <columns>
@@ -29,5 +33,19 @@
             <RadioButton fx:id="resultFilter" mnemonicParsing="false" text="Result" toggleGroup="$SortFilters" />
          </children>
       </HBox>
+      <VBox fx:id="RerunButton" alignment="TOP_CENTER" layoutX="757.0" layoutY="247.0">
+         <children>
+            <ImageView fitHeight="96.0" fitWidth="182.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@rerun_button.png" />
+               </image>
+            </ImageView>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rerun" textAlignment="CENTER" wrappingWidth="63.87371826171875">
+               <font>
+                  <Font name="Bernard MT Condensed" size="22.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

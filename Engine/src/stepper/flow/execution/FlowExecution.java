@@ -17,7 +17,7 @@ public class FlowExecution implements Serializable {
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
-    private String formattedStartTime;
+    private String formattedStartTime;  // THIS CANT BE NULL!!!
     private Instant startTimeInstant;
     private Instant endTimeInstant;
     private Duration duration;

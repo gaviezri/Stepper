@@ -21,11 +21,17 @@
             <fx:include fx:id="flowExecComponent" source="execution/executionTab.fxml" />
         </content>
       </Tab>
+      <Tab fx:id="flowsHistoryTab" text="History">
+        <content>
+            <fx:include fx:id="flowHistoryComponent" source="history/historyTab.fxml" />
+        </content>
+      </Tab>
       <Tab fx:id="flowStatTab" text="Statistics">
         <content>
             <fx:include fx:id="flowStatComponent" source="statistics/statisticsTab.fxml" />
         </content>
       </Tab>
+
 
         <!--include exeuctionTab-->
         <!-- include history-->

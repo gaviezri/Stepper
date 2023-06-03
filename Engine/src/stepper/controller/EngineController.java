@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 
 public class EngineController implements Serializable {
@@ -36,6 +37,9 @@ public class EngineController implements Serializable {
     private EngineController() {
     }
 
+    public Stack<FlowExecution> getFlowExecutionStack(){
+        return executionArchive.getFlowExecutionStack();
+    }
     public synchronized static EngineController getInstance() {
         if (instance == null) {
             instance = new EngineController();

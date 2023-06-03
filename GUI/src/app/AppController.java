@@ -16,6 +16,7 @@ import stepper.dd.api.DataDefinition;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.dto.flow.FlowNamesDTO;
 import stepper.dto.flow.LoadDataDTO;
+import stepper.dto.statistics.StatisticsDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 
@@ -65,7 +66,10 @@ public class AppController {
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
         numOfFlowsFinished.addListener((
                 (observable, oldValue, newValue) -> {
-                    bodyComponentController.updateStatistics();
+                    if(!oldValue.equals(newValue)) {
+                        bodyComponentController.updateStatistics();
+                        bodyComponentController.updateHistory(engineController.getFlowExecutionStack());
+                    }
                 }));
     }
     @Override
@@ -74,7 +78,9 @@ public class AppController {
         executorServiceForPollingExecutions.shutdown();
     }
 
-
+    public StatisticsDTO getCurrentLoadedFlowsStatisticsDetails(){
+        return engineController.getInstance().getCurrentLoadedFlowsStatisticsDetails();
+    }
     public EngineController getEngineController() {
         return engineController;
     }

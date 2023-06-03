@@ -106,7 +106,6 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         stepper.dd.api.DataDefinition theExpectedDataDefinition = ExecutionDataName2Definition.get(finalDataName);
 
         if (theExpectedDataDefinition == null) {
-
             throw new NoMatchingKeyWasFoundException("The key " + finalDataName + " cant be found!");
         } else if (expectedDataType.isEnum()) {
             Object aValue = ExecutionDataValues.get(finalDataName);

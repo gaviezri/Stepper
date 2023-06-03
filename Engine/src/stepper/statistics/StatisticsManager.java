@@ -42,7 +42,7 @@ public class StatisticsManager {
         FlowExecution curFlowExecution;
         String curFlowName;
         String curOriginalStepName;
-        Duration curDuration = null;
+        Duration curDuration = null;   //// IF FLOW FAILES THIS CAN STAY NULL BUT NEEDS TO GET SOME VALUE!!!
 
 
         for (int i = 0; i < this.executionArchive.getNumOfFlowExecutions(); ++i) {

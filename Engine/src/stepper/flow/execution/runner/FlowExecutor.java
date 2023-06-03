@@ -57,6 +57,7 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
             updateExecutionResult(flowExecution, stepResult, skipIfFail);
             breakFlowIfStepFails = (stepResult == StepResult.FAILURE && !skipIfFail);
             if (breakFlowIfStepFails) {
+                flowExecution.tock();
                 break;
             }
         }

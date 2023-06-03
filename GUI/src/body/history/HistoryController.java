@@ -1,8 +1,7 @@
 package body.history;
 
-import javax.swing.event.ChangeListener;
+import body.BodyController;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,11 +12,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.execution.history.SingleFlowExecutionDTO;
+import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -47,10 +46,11 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private RadioButton nameFilter;
         private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
         @FXML
-        private VBox RerunButton;
-        ObservableList executedFlows;
-        FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
+        private VBox rerunButton;
+        private ObservableList executedFlows;
+        private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
 
+        private SingleFlowExecutionDTO selectedFlow;
 
         public void updateTable(Stack<FlowExecution> flowExecutionStack){
                 curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
@@ -86,20 +86,37 @@ public class HistoryController extends body.BodyControllerComponent implements I
 
                 historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                         if (newSelection != null && newSelection != oldSelection) {
-                                List<Object> selectedFlowData = newSelection.getFlowData();
-//                                System.out.println(selectedFlowData); TODO: make button not disable
+                                this.selectedFlow = newSelection;
                         }
                 });
-                RerunButton.setOnMouseEntered(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()+10));
-                RerunButton.setOnMouseExited(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()-10));
 
+                rerunButton.setOnMouseEntered(event ->
+                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()+10)
+                        ));
 
-                RerunButton.setOnMouseClicked(event -> {
-                        // Perform your desired actions when the image is clicked
-                        RerunButton.setLayoutY(RerunButton.getLayoutY()+5);
-                        System.out.println("NOW I SHALL RE RUN AND GAL IS GAY");
+                rerunButton.setOnMouseExited(event ->
+                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()-10)
+                                ));
+
+                rerunButton.setOnMouseReleased(event ->
+                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()-5))
+                        );
+        }
+
+        public void bindInputPaneEnablementToReRunButton(AnchorPane inputPane, AnchorPane definitionPane ) {
+                rerunButton.setOnMouseClicked(event -> {
+                        Platform.runLater(()->{
+                                rerunButton.setLayoutY(rerunButton.getLayoutY()+5);
+                                bodyController.setActiveTab(BodyController.FLOW_LIB_TAB);
+                                inputPane.setVisible(true);
+                                definitionPane.setVisible(false);
+                                bodyController.getFlowLibComponentController().
+                                        getInputComponentController().
+                                        setInputsToSelectedFlow(
+                                                new FlowDefinitionDTO(selectedFlow.getDataName2value(), selectedFlow.getFlowName()), null);
+
+                        });
                 });
-                RerunButton.setOnMouseReleased(event -> RerunButton.setLayoutY(RerunButton.getLayoutY()-5));
         }
 }
 

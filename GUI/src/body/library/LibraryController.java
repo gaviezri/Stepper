@@ -25,6 +25,15 @@ public class LibraryController extends body.BodyControllerComponent{
         libraryAnchorPane.getChildren().get(1).setVisible(false);
         inputComponentController.initializeBackButton(inputComponent, definitionComponent);
     }
+
+    public AnchorPane getInputComponent() {
+        return inputComponent;
+    }
+
+    public AnchorPane getDefinitionComponent() {
+        return definitionComponent;
+    }
+
     public void bindInputPaneEnablementToSelectButton() {
         definitionComponentController.bindInputPaneEnablementToSelectButton(inputComponent, definitionComponent);
     }

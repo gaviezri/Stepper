@@ -17,12 +17,16 @@ public class FlowExecution implements Serializable {
     private final UUID uniqueId;
     private final FlowDefinition flowDefinition;
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.SUCCESS;
-    private String formattedStartTime;  // THIS CANT BE NULL!!!
+    private String formattedStartTime;
     private Instant startTimeInstant;
     private Instant endTimeInstant;
     private Duration duration;
     private Map<String,Object> freeInputContent = new HashMap<>();
     private Map<String, Object> executionOutputs = new HashMap<String, Object>();
+
+    public Map<String, Object> getExecutionOutputs() {
+        return executionOutputs;
+    }
 
     Map<String, StepExecutionDataManager> finalStepName2stepsManagers;
 

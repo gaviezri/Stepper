@@ -48,6 +48,10 @@ public class FlowDefinitionDTO extends AbstractDTO {
         return freeInputUserString;
     }
 
+    public FlowDefinitionDTO(Map<String, Object> dataName2value, String name) {
+        this.initialInputName2Value = dataName2value;
+        this.flowName = name;
+    }
 
     public FlowDefinitionDTO(FlowDefinition flowDef){
         flowName = flowDef.getName();

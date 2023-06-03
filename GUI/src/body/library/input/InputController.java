@@ -321,6 +321,7 @@ public class InputController extends LibraryControllerComponent {
         InputsTitledPane.setExpanded(false);
         inputsVBox.getChildren().add(InputsTitledPane);
         internalInputFieldVBox.setSpacing(15);
+
         List<InputField> allFields = new LinkedList<>();
         for (int i = 0; i < fields.get(INPUT_FIELDS.NAME).size(); i++) {
             String inputName = (String) fields.get(INPUT_FIELDS.NAME).get(i);

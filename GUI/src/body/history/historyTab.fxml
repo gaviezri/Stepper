@@ -33,7 +33,7 @@
             <RadioButton fx:id="resultFilter" mnemonicParsing="false" text="Result" toggleGroup="$SortFilters" />
          </children>
       </HBox>
-      <VBox fx:id="RerunButton" alignment="TOP_CENTER" layoutX="757.0" layoutY="247.0">
+      <VBox fx:id="rerunButton" alignment="TOP_CENTER" layoutX="757.0" layoutY="247.0">
          <children>
             <ImageView fitHeight="96.0" fitWidth="182.0" pickOnBounds="true" preserveRatio="true">
                <image>

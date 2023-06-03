@@ -24,7 +24,8 @@ import java.util.Stack;
 public class BodyController {
     public static final int FLOW_LIB_TAB = 0;
     public static final int FLOW_EXEC_TAB = 1;
-    public static final int FLOW_STAT_TAB = 2;
+    public static final int FLOW_HIST_TAB = 2;
+    public static final int FLOW_STAT_TAB = 3;
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
@@ -40,6 +41,10 @@ public class BodyController {
     @FXML private Tab flowsHistoryTab;
     @FXML private AnchorPane anchorHistory;
 
+    public void setActiveTab(int activeTab) {
+        this.mainTabPane.getSelectionModel().select(activeTab);
+    }
+
     public void updateStatistics() {
         this.flowStatComponentController.updateBarChars();
     }
@@ -47,10 +52,6 @@ public class BodyController {
     public void updateHistory(Stack<FlowExecution> flowExecutionStack){
         this.flowHistoryComponentController.updateTable(flowExecutionStack);
     }
-
-//    public void updateHistoryTableSortingFilter(){
-//        this.flowHistoryComponentController.setCurSortingFilter();
-//    }
 
     public void setMainController(AppController appController) {
         mainController = appController;
@@ -70,6 +71,11 @@ public class BodyController {
         flowExecComponentController.setBodyController(this);
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
+        flowHistoryComponentController.bindInputPaneEnablementToReRunButton(flowLibComponentController.getInputComponent(),flowLibComponentController.getDefinitionComponent());
+    }
+
+    public LibraryController getFlowLibComponentController() {
+        return flowLibComponentController;
     }
 
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {

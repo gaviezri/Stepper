@@ -8,9 +8,11 @@ import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import body.statistics.StatisticsController;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.Toggle;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import stepper.flow.execution.FlowExecution;
@@ -45,6 +47,10 @@ public class BodyController {
     public void updateHistory(Stack<FlowExecution> flowExecutionStack){
         this.flowHistoryComponentController.updateTable(flowExecutionStack);
     }
+
+//    public void updateHistoryTableSortingFilter(){
+//        this.flowHistoryComponentController.setCurSortingFilter();
+//    }
 
     public void setMainController(AppController appController) {
         mainController = appController;

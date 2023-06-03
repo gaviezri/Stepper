@@ -1,23 +1,21 @@
 package body.history;
 
+import javax.swing.event.ChangeListener;
 import javafx.application.Platform;
-import javafx.beans.property.Property;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.execution.history.SingleFlowExecutionDTO;
-import stepper.dto.flow.ExecutedFlowDetailsDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -37,12 +35,22 @@ public class HistoryController extends body.BodyControllerComponent implements I
         @FXML
         private TableColumn<SingleFlowExecutionDTO, String> startTime;
 
-        ObservableList executedFlows;
+        @FXML
+        private ToggleGroup SortFilters;
+        @FXML
+        private RadioButton startTimeFilter;
+        @FXML
+        private RadioButton resultFilter;
+        @FXML
+        private RadioButton nameFilter;
+        private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
 
+        ObservableList executedFlows;
+        FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
 
         public void updateTable(Stack<FlowExecution> flowExecutionStack){
-                FlowsExecutionHistoryDTO flowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
-                executedFlows = FXCollections.observableArrayList(flowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
+                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                 Platform.runLater(()-> {
                         historyTable.setItems(executedFlows);
                 });
@@ -55,6 +63,34 @@ public class HistoryController extends body.BodyControllerComponent implements I
                         flowExecutionResult.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
                         startTime.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
                 });
+
+                SortFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                        if (SortFilters.getSelectedToggle() != null) {
+                                if (SortFilters.getSelectedToggle() == resultFilter) {
+                                        curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.RESULT);
+                                } else if (SortFilters.getSelectedToggle() == nameFilter) {
+                                        curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.NAME);
+                                } else {
+                                       curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.TIME);
+                                }
+                                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                                Platform.runLater(()-> {
+                                        historyTable.setItems(executedFlows);
+                                });
+                        }
+                });
         }
 }
 
+//        public void setCurSortingFilter(ObservableValue<? extends Toggle> ov,
+//                                        Toggle old_toggle, Toggle new_toggle) {
+//                if (SortFilters.getSelectedToggle() != null) {
+//                        if (SortFilters.getSelectedToggle() == resultFilter) {
+//                                curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.RESULT;
+//                        } else {
+//                                curSortingFilter = SortFilters.getSelectedToggle() == nameFilter ?
+//                                        FlowsExecutionHistoryDTO.SortFilter.NAME :
+//                                        FlowsExecutionHistoryDTO.SortFilter.TIME;
+//                        }
+//                }
+//        }

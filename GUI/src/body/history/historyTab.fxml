@@ -5,24 +5,29 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="flowHistoryComponent" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
    <children>
-      <TableView fx:id="historyTable" prefHeight="367.0" prefWidth="350.0">
+      <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">
         <columns>
           <TableColumn fx:id="flowName" editable="false" prefWidth="150.0" resizable="false" text="Name" />
-          <TableColumn fx:id="startTime" prefWidth="100.0" resizable="false" text="Start Time" />
-            <TableColumn fx:id="flowExecutionResult" prefWidth="100.0" resizable="false" text="Result" />
+          <TableColumn fx:id="startTime" prefWidth="150.0" resizable="false" text="Start Time" />
+            <TableColumn fx:id="flowExecutionResult" prefWidth="150.0" resizable="false" text="Result" />
         </columns>
       </TableView>
-      <Text layoutX="10.0" layoutY="386.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sort by:" />
-      <RadioButton layoutX="62.0" layoutY="374.0" mnemonicParsing="false" text="Name">
-         <toggleGroup>
-            <ToggleGroup fx:id="SortFilters" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton layoutX="212.0" layoutY="374.0" mnemonicParsing="false" text="Result" toggleGroup="$SortFilters" />
-      <RadioButton layoutX="126.0" layoutY="374.0" mnemonicParsing="false" text="Start Time" toggleGroup="$SortFilters" />
+      <HBox layoutX="10.0" layoutY="373.05078125" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sort by:" />
+            <RadioButton fx:id="nameFilter" mnemonicParsing="false" text="Name">
+               <toggleGroup>
+                  <ToggleGroup fx:id="SortFilters" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="startTimeFilter" mnemonicParsing="false" text="Start Time" toggleGroup="$SortFilters" />
+            <RadioButton fx:id="resultFilter" mnemonicParsing="false" text="Result" toggleGroup="$SortFilters" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

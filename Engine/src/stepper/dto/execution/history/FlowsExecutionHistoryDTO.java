@@ -25,7 +25,7 @@ public class FlowsExecutionHistoryDTO {
         }
     }
 
-    public void sortedFlowExecutionDTOsBy(SortFilter sortFilter){
+    public void sortFlowExecutionDTOsBy(SortFilter sortFilter){
         List<SingleFlowExecutionDTO> res;
 
         switch (sortFilter){

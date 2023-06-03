@@ -45,4 +45,9 @@ public class LibraryController extends body.BodyControllerComponent{
         definitionComponentController.setContinuationFlowInputs(flowNameContinuedTo, continuationDataMap);
 
     }
+
+    public void showInputComponent() {
+        libraryAnchorPane.getChildren().get(0).setVisible(false);
+        libraryAnchorPane.getChildren().get(1).setVisible(true);
+    }
 }

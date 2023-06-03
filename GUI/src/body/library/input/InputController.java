@@ -309,7 +309,6 @@ public class InputController extends LibraryControllerComponent {
         if (optionalFields.get(INPUT_FIELDS.NAME).size() != 0) {
             setInputFieldElements(optionalFields, false, dto, continuationValues);
         }
-        setContinuationElements(dto);
     }
 
     private void setContinuationElements(FlowDefinitionDTO dto) {

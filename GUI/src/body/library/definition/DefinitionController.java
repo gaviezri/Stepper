@@ -348,6 +348,7 @@ public class DefinitionController extends LibraryControllerComponent {
                 String outputName = output2Input.getKey();
                 String inputName = output2Input.getValue();
                 Object outputValue = lastFlowOutputs.get(outputName);
+                if (outputValue == null) {continue;}
                 inputsToSet.put(inputName,outputValue);
             }
             flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());

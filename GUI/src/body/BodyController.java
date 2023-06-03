@@ -6,6 +6,7 @@ import body.execution.ExecutionController;
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import body.statistics.StatisticsController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -63,6 +64,7 @@ public class BodyController {
 
             int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
             Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
+            getFlowExecutionController().setContinuationProperty(mainController.getAllFlowDefinitionsData().get(flowIndex));
             mainController.executeFlow(flowIndex, valName2valType);
 
         });
@@ -82,7 +84,9 @@ public class BodyController {
 
     public void setInputSectionToContinuation(String flowNameContinuedTo, List<Pair<String,String>> continuationDataMap) {
         flowLibComponentController.setInputSectionToContinuation(flowNameContinuedTo, continuationDataMap);
-        mainTabPane.getSelectionModel().select(BodyController.FLOW_LIB_TAB);
-
+        Platform.runLater(() -> {
+            mainTabPane.getSelectionModel().select(BodyController.FLOW_LIB_TAB);
+            flowLibComponentController.showInputComponent();
+        });
     }
 }

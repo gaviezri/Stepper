@@ -118,6 +118,7 @@ public class ExecutionController extends BodyControllerComponent {
             continueButton.setDisable(false);
         });
     }
+
     private void bindSelectionOfStepInListViewToStepDetails() {
         executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

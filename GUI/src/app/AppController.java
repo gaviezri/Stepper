@@ -71,6 +71,7 @@ public class AppController {
                         bodyComponentController.updateHistory(engineController.getFlowExecutionStack());
                     }
                 }));
+
     }
     @Override
     protected void finalize()

@@ -141,6 +141,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         } catch (Exception e) {
             logger.log("Exception occurred: " + e.getMessage());
             result = StepResult.FAILURE;
+
         }
         context.storeDataValue("RENAME_RESULT", renameResult , DataDefinitionRegistry.RELATION);
         context.tock();

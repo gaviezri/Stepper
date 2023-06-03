@@ -8,9 +8,11 @@ import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import body.statistics.StatisticsController;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.Toggle;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import stepper.flow.execution.FlowExecution;
@@ -22,7 +24,8 @@ import java.util.Stack;
 public class BodyController {
     public static final int FLOW_LIB_TAB = 0;
     public static final int FLOW_EXEC_TAB = 1;
-    public static final int FLOW_STAT_TAB = 2;
+    public static final int FLOW_HIST_TAB = 2;
+    public static final int FLOW_STAT_TAB = 3;
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
@@ -37,6 +40,10 @@ public class BodyController {
     @FXML private TabPane flowStatComponent;
     @FXML private Tab flowsHistoryTab;
     @FXML private AnchorPane anchorHistory;
+
+    public void setActiveTab(int activeTab) {
+        this.mainTabPane.getSelectionModel().select(activeTab);
+    }
 
     public void updateStatistics() {
         this.flowStatComponentController.updateBarChars();
@@ -64,6 +71,11 @@ public class BodyController {
         flowExecComponentController.setBodyController(this);
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
+        flowHistoryComponentController.bindInputPaneEnablementToReRunButton(flowLibComponentController.getInputComponent(),flowLibComponentController.getDefinitionComponent());
+    }
+
+    public LibraryController getFlowLibComponentController() {
+        return flowLibComponentController;
     }
 
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {

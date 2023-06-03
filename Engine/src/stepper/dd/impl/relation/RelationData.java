@@ -85,7 +85,7 @@ public class RelationData extends RelationDataDefinition implements Serializable
     }
 
 
-    private static class SingleRow implements Serializable{
+    public static class SingleRow implements Serializable{
 
         private Map<String, String> data;
 

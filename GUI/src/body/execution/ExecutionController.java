@@ -10,7 +10,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
@@ -68,7 +70,7 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private ListView<String> continuationListView;
     @FXML private Label continuationLabel;
 
-    private Map<String ,SingleStepExecutionTableData> currentFlowStepsExecutionTableDataList  = new LinkedHashMap<>();
+    private Map<String ,SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
     private Map<String, List<Pair<String,String>>> continuationDataMap;
 
     private static final int POLLING_INTERVAL = 200;
@@ -87,6 +89,7 @@ public class ExecutionController extends BodyControllerComponent {
         initializeStepsStatusToolTip();
         bindExecutionTabComponents();
         bindSelectionOfStepInListViewToStepDetails();
+        bindSelectionOfOutputInListViewToOutputDetails();
         initializeContinuationSection();
 
         stepSummaryLineLabel.setTooltip(new Tooltip());
@@ -94,6 +97,29 @@ public class ExecutionController extends BodyControllerComponent {
             Tooltip tooltip = (Tooltip) event.getSource();
             tooltip.setText(stepSummaryLineLabel.getText());
         });
+    }
+
+    private void bindSelectionOfOutputInListViewToOutputDetails() {
+        outputsListView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> {
+                if(newValue != null) {
+
+                    Stage outputModal = new Stage();
+                    outputModal.setTitle("Outputs");
+                    outputModal.initModality(Modality.APPLICATION_MODAL);
+                    outputModal.initOwner(this.getBodyController().getMainController().getPrimaryStage());
+                    int outputidx = outputsListView.getSelectionModel().getSelectedIndex();
+                    String outputName = getStepNameWithoutReadonly(((Label) executedStepsStatusListView.getSelectionModel().getSelectedItem()).getText());
+                    VBox currentOutputExecutionDataRoot = currentFlowStepsExecutionTableDataMap.get(outputName).getOutputNode(outputidx);
+                    Scene outputScene = new Scene(currentOutputExecutionDataRoot, 200, 100);
+                    outputModal.setScene(outputScene);
+                    outputModal.sizeToScene();
+                    outputModal.showAndWait();
+                    outputsListView.getSelectionModel().clearSelection();
+                }
+            });
+
+        }));
     }
 
     private void initializeContinuationSection(){
@@ -123,7 +149,7 @@ public class ExecutionController extends BodyControllerComponent {
         executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 String stepPresentationName = getStepNameWithoutReadonly(((Label)newValue).getText());
-                SingleStepExecutionTableData singleStepExecutionTableData = currentFlowStepsExecutionTableDataList.get(getStepNameWithoutReadonly(stepPresentationName));
+                SingleStepExecutionTableData singleStepExecutionTableData = currentFlowStepsExecutionTableDataMap.get(getStepNameWithoutReadonly(stepPresentationName));
                 if (singleStepExecutionTableData != null) {
                     updateStepDetails(singleStepExecutionTableData);
                 }
@@ -135,7 +161,7 @@ public class ExecutionController extends BodyControllerComponent {
         executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 String stepPresentationName = getStepNameWithoutReadonly(((Label)newValue).getText());
-                SingleStepExecutionTableData singleStepExecutionTableData = currentFlowStepsExecutionTableDataList.get(getStepNameWithoutReadonly(stepPresentationName));
+                SingleStepExecutionTableData singleStepExecutionTableData = currentFlowStepsExecutionTableDataMap.get(getStepNameWithoutReadonly(stepPresentationName));
                 if (singleStepExecutionTableData != null) {
                     updateStepDetails(singleStepExecutionTableData);
                 }
@@ -146,26 +172,31 @@ public class ExecutionController extends BodyControllerComponent {
         });
     }
     private void updateStepDetails(SingleStepExecutionTableData singleStepExecutionTableData) {
-        stepDetailsNameLabel.setText(singleStepExecutionTableData.getName());
-        stepDetailsDurationLabel.setText("Duration: " + singleStepExecutionTableData.getDuration().toString());
-        setResultLabelToNotExecuted(singleStepExecutionTableData.getResult().toString(), singleStepExecutionTableData.getResult());
-        updateStepLogs(singleStepExecutionTableData.getLogs());
-        updateStepOutputs(singleStepExecutionTableData.getOutputsName());
+        Platform.runLater(()-> {
+            stepDetailsNameLabel.setText(singleStepExecutionTableData.getName());
+            stepDetailsDurationLabel.setText("Duration: " + singleStepExecutionTableData.getDuration().toString());
+            setResultLabelToNotExecuted(singleStepExecutionTableData.getResult().toString(), singleStepExecutionTableData.getResult());
+            updateStepLogs(singleStepExecutionTableData.getLogs());
+            updateStepOutputs(singleStepExecutionTableData.getOutputsName());
+            stepSummaryLineLabel.setText(singleStepExecutionTableData.getSummaryLine());
+        });
 
-        stepSummaryLineLabel.setText(singleStepExecutionTableData.getSummaryLine());
     }
 
     private void updateStepOutputs(List<String> outputs){
-        outputsListView.visibleProperty().set(true);
-        outputsListView.getItems().clear();
-        outputsListView.getItems().addAll(outputs);
+        Platform.runLater(()->{
+            outputsListView.visibleProperty().set(true);
+            outputsListView.getItems().clear();
+            outputsListView.getItems().addAll(outputs);
+        });
     }
 
     private void updateStepLogs(List<String> logs) {
-        logsListView.visibleProperty().set(true);
-        logsListView.getItems().clear();
-        logsListView.getItems().addAll(logs);
-
+        Platform.runLater(()->{
+            logsListView.visibleProperty().set(true);
+            logsListView.getItems().clear();
+            logsListView.getItems().addAll(logs);
+        });
     }
 
     private void updateStepDetails(String stepPresentationName) {
@@ -257,13 +288,13 @@ public class ExecutionController extends BodyControllerComponent {
         }
         // update step details section
         for ( String stepName : executedStepsStatus.keySet()){
-            if (currentFlowStepsExecutionTableDataList.containsKey(stepName)){
+            if (currentFlowStepsExecutionTableDataMap.containsKey(stepName)){
                 // update it
-                if(currentFlowStepsExecutionTableDataList.get(stepName).getResult().equals(StepResult.NOT_EXECUTED)){
+                if(currentFlowStepsExecutionTableDataMap.get(stepName).getResult().equals(StepResult.NOT_EXECUTED)){
                     continue;
                 }
                 else{
-                    currentFlowStepsExecutionTableDataList.get(stepName).updateData(executedStepsStatus.get(stepName),
+                    currentFlowStepsExecutionTableDataMap.get(stepName).updateData(executedStepsStatus.get(stepName),
                             allStepsJavaFXDuration.get(stepName),
                             allStepsListOfLogs.get(stepName),
                             allSummaryLines.get(stepName),
@@ -271,7 +302,7 @@ public class ExecutionController extends BodyControllerComponent {
                 };
             }
             else{
-                currentFlowStepsExecutionTableDataList.put(stepName,
+                currentFlowStepsExecutionTableDataMap.put(stepName,
                         new SingleStepExecutionTableData(stepName,
                                 executedStepsStatus.get(stepName),
                                 allStepsJavaFXDuration.get(stepName),
@@ -404,7 +435,7 @@ public class ExecutionController extends BodyControllerComponent {
                     stepDetailsNameLabel.setText("select a step from the list");
                     stepDetailsDurationLabel.setText("to get");
                     stepDetailsResultLabel.setText("further details");
-                    currentFlowStepsExecutionTableDataList.clear();
+                    currentFlowStepsExecutionTableDataMap.clear();
                 });
         }));
     }

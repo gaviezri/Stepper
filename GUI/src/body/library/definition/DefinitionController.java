@@ -6,6 +6,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -170,16 +171,21 @@ public class DefinitionController extends LibraryControllerComponent {
         TitledPane stepPane = new TitledPane();
         stepPane.setText(stepDTO.getStepName() + (isReadOnly ? " (read-only)" : ""));
         stepPane.setExpanded(false);
-        VBox content = new VBox();
-        stepPane.setContent(content);
-        content.getChildren().add(createStepInputsPane(stepDTO));
-        content.getChildren().add(createStepOutputsPane(stepDTO));
+        SplitPane content = new SplitPane();
+        VBox wrapper = new VBox();
+        wrapper.getChildren().add(content);
+        content.setOrientation(Orientation.HORIZONTAL);
+        stepPane.setContent(wrapper);
+        content.getItems().add(createStepInputsPane(stepDTO));
+        content.getItems().add(createStepOutputsPane(stepDTO));
+        content.setDividerPosition(0, 0.5);
         return stepPane;
     }
     private Node createStepInputsPane(SingleStepDTO stepDTO) {
         TitledPane inputsPane = new TitledPane();
         inputsPane.setText("Inputs");
-        inputsPane.setExpanded(false);
+        inputsPane.setExpanded(true);
+        inputsPane.setCollapsible(false);
         VBox content = new VBox();
         inputsPane.setContent(content);
 
@@ -201,7 +207,7 @@ public class DefinitionController extends LibraryControllerComponent {
     private Node createStepInputPane(String name, Boolean mandatory, Boolean connected, Pair<String,String> SourceStepAndSourceOutPut){
         TitledPane inputPane = new TitledPane();
         inputPane.setText(name);
-        inputPane.setExpanded(false);
+        inputPane.setExpanded(true);
 
         VBox content = new VBox();
         inputPane.setContent(content);
@@ -221,7 +227,8 @@ public class DefinitionController extends LibraryControllerComponent {
     private Node createStepOutputsPane(SingleStepDTO stepDTO) {
         TitledPane outputsPane = new TitledPane();
         outputsPane.setText("Outputs");
-        outputsPane.setExpanded(false);
+        outputsPane.setExpanded(true);
+        outputsPane.setCollapsible(false);
         VBox content = new VBox();
         outputsPane.setContent(content);
 
@@ -237,7 +244,8 @@ public class DefinitionController extends LibraryControllerComponent {
     private Node createSingleStepOutputPane(String finalName, List<Pair<String, String>> targetStepAndInputName) {
         TitledPane outputPane = new TitledPane();
         outputPane.setText(finalName);
-        outputPane.setExpanded(false);
+        outputPane.setExpanded(true);
+
 
         VBox content = new VBox();
         outputPane.setContent(content);

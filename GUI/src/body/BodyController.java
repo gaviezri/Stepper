@@ -8,11 +8,9 @@ import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import body.statistics.StatisticsController;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Toggle;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import stepper.flow.execution.FlowExecution;
@@ -38,7 +36,7 @@ public class BodyController {
     @FXML private AnchorPane flowExecComponent;
     @FXML private Tab flowStatTab;
     @FXML private TabPane flowStatComponent;
-    @FXML private Tab flowsHistoryTab;
+    @FXML private Tab flowHistoTab;
     @FXML private AnchorPane anchorHistory;
 
     public void setActiveTab(int activeTab) {
@@ -60,6 +58,7 @@ public class BodyController {
     public void initialize() throws Exception{
         flowExecTab.setDisable(true);
         flowStatTab.setDisable(true);
+        flowHistoTab.setDisable(true);
 
         flowStatComponentController.setBodyController(this);
         flowHistoryComponentController.setBodyController(this);
@@ -82,6 +81,7 @@ public class BodyController {
         flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
             flowExecTab.setDisable(false);
             flowStatTab.setDisable(false);
+            flowHistoTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
 
             int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();

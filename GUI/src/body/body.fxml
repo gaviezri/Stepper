@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<TabPane fx:id="mainTabPane" prefHeight="600.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="40.0" tabMaxWidth="300.0" tabMinHeight="40.0" tabMinWidth="200.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
+<TabPane fx:id="mainTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="300.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
     <tabs>
         <Tab fx:id="flowLibTab" text="Library">
             <styleClass>
@@ -21,7 +21,7 @@
             <fx:include fx:id="flowExecComponent" source="execution/executionTab.fxml" />
         </content>
       </Tab>
-      <Tab fx:id="flowsHistoryTab" text="History">
+      <Tab fx:id="flowHistoTab" text="History">
         <content>
             <fx:include fx:id="flowHistoryComponent" source="history/historyTab.fxml" />
         </content>

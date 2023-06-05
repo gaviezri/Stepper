@@ -1,7 +1,6 @@
 package stepper.dd.impl.relation;
 
 import java.io.Serializable;
-import java.text.CollationKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,6 +81,10 @@ public class RelationData extends RelationDataDefinition implements Serializable
     }
     public int getTotalSize() {
         return totalSize;
+    }
+
+    public List<Map<String,String>> getRows() {
+        return rows.stream().map(row -> row.data).collect(Collectors.toList());
     }
 
 

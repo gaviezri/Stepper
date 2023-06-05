@@ -1,10 +1,14 @@
 package body.execution;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -22,19 +26,15 @@ import static stepper.dd.impl.DataDefinitionRegistry.STRING;
 
 public class SingleStepExecutionTableData {
     public class TableEntry {
-        private String key;
-        private String value;
+        private final Map<String, StringProperty> properties = FXCollections.observableHashMap();
 
-        public TableEntry(String key, String value) {
-            this.key = key;
-            this.value = value;
+        public TableEntry(Map<String,String> map){
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                properties.put(entry.getKey(), new SimpleStringProperty(entry.getValue()));
+            }
         }
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
+        public StringProperty getValue(String key){
+            return properties.get(key);
         }
 
     }
@@ -135,33 +135,39 @@ public class SingleStepExecutionTableData {
             case ENUMERATION:
             case MAPPING:
                 outputNode = new Label(String.format("%s", value));
-
+                ((Label) outputNode).setWrapText(true);
                 break;
             case LIST:
                 outputNode = new TextArea(((List<?>) value).stream().map(Object::toString).collect(Collectors.joining("\n")));
                 ((TextArea) outputNode).editableProperty().set(false);
                 break;
             case RELATION:
-                ObservableList<SingleStepExecutionTableData.TableEntry> dataList = FXCollections.observableArrayList();
-               TableView<SingleStepExecutionTableData.TableEntry> relationNode = new TableView<>();
                 RelationData relationData = ((RelationData) value);
-                for (int i = 0; i < relationData.getColSize(); ++i){
+                // get list of rows (maps)
+                List<Map<String, String>> relationRows = relationData.getRows();
+                // extract unique keys as row columns
+                Set<String> columnNames = new LinkedHashSet<>();
+                for (Map<String, String> relationRow : relationRows) {
+                    columnNames.addAll(relationRow.keySet());
+                }
 
-                    TableColumn<SingleStepExecutionTableData.TableEntry, String> column = new TableColumn<>(relationData.getColumnsNames().get(i));
-                    column.setCellValueFactory(new PropertyValueFactory<>("value"));
-                    column.editableProperty().set(false);
-                    relationNode.getColumns().add(column);
+                ObservableList<TableEntry> tableEntries = FXCollections.observableArrayList();
+                for (Map<String, String> relationRow : relationRows) {
+                    tableEntries.add(new TableEntry(relationRow));
                 }
-                for (int i = 0; i< relationData.getRowSize(); ++i) {
-                    for (int j = 0; j < relationData.getColSize(); ++j) {
-                        dataList.add(new SingleStepExecutionTableData.TableEntry(relationData.getColumnsNames().get(j), relationData.getDataFromCell(i, j)));
-                    }
+                TableView<TableEntry> relationTableView = new TableView<>(tableEntries);
+                for (String columnName : columnNames) {
+                    TableColumn<TableEntry, String> column = new TableColumn<>(columnName);
+                    column.setCellValueFactory(cellData -> cellData.getValue().getValue(columnName));
+                    relationTableView.getColumns().add(column);
                 }
-                relationNode.setItems(dataList);
-                relationNode.setEditable(false);
-                outputNode = relationNode;
+                GridPane gridPane = new GridPane();
+                gridPane.add(relationTableView, 0, 0);
+                relationTableView.setEditable(false);
+                outputNode = gridPane;
                 break;
         }
+
         backBone.getChildren().add(outputNode);
         return backBone;
     }

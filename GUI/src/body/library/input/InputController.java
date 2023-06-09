@@ -47,19 +47,6 @@ public class InputController extends LibraryControllerComponent {
             allFields.add(this);
         }
 
-        public void setInitialized(Boolean initialized) {
-            isInitialValue = initialized;
-        }
-
-        public Boolean getInitialized() {
-            return isInitialValue;
-        }
-        public static void clearInputFields() {
-            Node2InputField.clear();
-        }
-        public static InputField getInputFieldOfElement(Node node){
-            return  Node2InputField.get(node);
-        }
         public String getName() {
             return name;
         }

@@ -7,16 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.step.api.enums.StepResult;
+import sun.plugin.javascript.navig.Anchor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -161,10 +159,14 @@ public class SingleStepExecutionTableData {
                     column.setCellValueFactory(cellData -> cellData.getValue().getValue(columnName));
                     relationTableView.getColumns().add(column);
                 }
-                GridPane gridPane = new GridPane();
-                gridPane.add(relationTableView, 0, 0);
+                AnchorPane anchorPane = new AnchorPane(relationTableView);
+                AnchorPane.setTopAnchor(relationTableView, 0.0);
+                AnchorPane.setBottomAnchor(relationTableView, 0.0);
+                AnchorPane.setLeftAnchor(relationTableView, 0.0);
+                AnchorPane.setRightAnchor(relationTableView, 0.0);
+
                 relationTableView.setEditable(false);
-                outputNode = gridPane;
+                outputNode = anchorPane;
                 break;
         }
 

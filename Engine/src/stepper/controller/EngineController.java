@@ -25,10 +25,10 @@ import java.util.Stack;
 
 public class EngineController implements Serializable {
 
-    ExecutionArchive executionArchive = new ExecutionArchive();
-    FlowLoader flowLoader = new FlowLoader();
-    LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
-    FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
+    private ExecutionArchive executionArchive = new ExecutionArchive();
+    private FlowLoader flowLoader = new FlowLoader();
+    private LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
+    private FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
     private StatisticsManager statisticsManager = new StatisticsManager(getArchive());
     private static EngineController instance = null;
 
@@ -132,19 +132,6 @@ public class EngineController implements Serializable {
         return new FlowsExecutionHistoryDTO(this.executionArchive.getFlowExecutionStack());
     }
 
-
-//    public void testPrintingTODELETE(FlowsExecutionHistoryDTO.SortFilter filter){
-//        FlowsExecutionHistoryDTO test = getExecutedFlowsHistoryDetails();
-//
-//        test.sorteFlowExecutionDTOsBy(filter);
-//        for (List<Object> row: test.getFlowExecutionHistoryDetailsRows()) {
-//            for (Object data:row){
-//                System.out.print(data + "|");
-//            }
-//            System.out.println();
-//        }
-//    }
-
     public ExecutionArchive getArchive() {
         return this.executionArchive;
     }
@@ -164,5 +151,10 @@ public class EngineController implements Serializable {
 
     public int getNumOfFlowsFinished() {
         return flowsExecutorsManager.getNumOfFlowsFinished();
+    }
+
+    public void stop() {
+        flowsExecutorsManager.stop();
+
     }
 }

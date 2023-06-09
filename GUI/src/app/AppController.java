@@ -167,4 +167,17 @@ public class AppController {
     public Map getLastFlowOutputs() {
         return lastExecutedDataCenter.getLastFlowOutputs();
     }
+
+    public void stop() {
+        if (executorServiceForPollingExecutions != null) {
+            executorServiceForPollingExecutions.shutdown();
+            bodyComponentController.stop();
+        }
+
+    }
+
+    public void setTheme(String themeSrc) {
+        sceneScrollPane.getScene().getStylesheets().clear();
+        sceneScrollPane.getScene().getStylesheets().add(themeSrc);
+    }
 }

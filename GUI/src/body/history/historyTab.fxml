@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
+<AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" styleClass="container" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
    <children>
       <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">
         <columns>
@@ -30,14 +30,14 @@
       </TableView>
       <HBox layoutX="10.0" layoutY="373.05078125" spacing="10.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sort by:" />
-            <RadioButton fx:id="nameFilter" mnemonicParsing="false" text="Name">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Sort by:" />
+            <RadioButton fx:id="nameFilter" mnemonicParsing="false" styleClass="text" text="Name">
                <toggleGroup>
                   <ToggleGroup fx:id="SortFilters" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="startTimeFilter" mnemonicParsing="false" text="Start Time" toggleGroup="$SortFilters" />
-            <RadioButton fx:id="resultFilter" mnemonicParsing="false" text="Result" toggleGroup="$SortFilters" />
+            <RadioButton fx:id="startTimeFilter" mnemonicParsing="false" styleClass="text" text="Start Time" toggleGroup="$SortFilters" />
+            <RadioButton fx:id="resultFilter" mnemonicParsing="false" styleClass="text" text="Result" toggleGroup="$SortFilters" />
          </children>
       </HBox>
       <VBox fx:id="rerunButton" alignment="TOP_CENTER" layoutX="729.0" layoutY="242.0" prefHeight="127.0" prefWidth="109.0">
@@ -66,9 +66,9 @@
          <children>
             <VBox fx:id="stepDetailsVBox" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                <children>
-                  <Label fx:id="stepDetailsNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="select a step from the list" />
-                  <Label fx:id="stepDetailsDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="to get" />
-                  <Label fx:id="stepDetailsResultLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="further details" />
+                  <Label fx:id="stepDetailsNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" styleClass="text" text="select a step from the list" />
+                  <Label fx:id="stepDetailsDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" styleClass="text" text="to get" />
+                  <Label fx:id="stepDetailsResultLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" styleClass="text" text="further details" />
                </children>
             </VBox>
             <TitledPane fx:id="logsTitledPane" alignment="CENTER" animated="false" collapsible="false" text="Logs" GridPane.columnIndex="1">

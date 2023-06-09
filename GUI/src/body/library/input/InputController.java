@@ -83,7 +83,7 @@ public class InputController extends LibraryControllerComponent {
             return null;
         }
 
-        private void createElement(Map<String, Object> initialValues, Map<String,Object> continuationValues) {
+        private void createElement(Map<String, Object> initialValues, Map<String,Object> continuationValues,Boolean isReRun) {
             switch (type) {
                 case "String":
                 case "List":
@@ -107,11 +107,15 @@ public class InputController extends LibraryControllerComponent {
             if (initialValues.containsKey(name)) {
                 setPresetValuesInElement(initialValues, true);
             } else if (continuationValues != null && continuationValues.containsKey(name)) {
-                setPresetValuesInElement(continuationValues, false);
+                setPresetValuesInElement(continuationValues, false, isReRun);
             }
         }
 
-        private void setPresetValuesInElement(Map<String, Object> initialValues, boolean isInitialValue) {
+        private void setPresetValuesInElement(Map<String, Object> initialValues, boolean isInitialValue){
+            setPresetValuesInElement(initialValues,isInitialValue,false);
+        }
+
+        private void setPresetValuesInElement(Map<String, Object> initialValues, boolean isInitialValue, Boolean isReRun) {
             this.satisfied.unbind();
             this.satisfied.setValue(true);
             this.isInitialValue = isInitialValue;
@@ -120,6 +124,7 @@ public class InputController extends LibraryControllerComponent {
             } else {
                 ((TextField) inputFieldElement).setText(initialValues.get(name).toString());
             }
+            inputFieldElement.setDisable(isReRun);
         }
 
         public BooleanProperty getSatisfied() {
@@ -304,7 +309,7 @@ public class InputController extends LibraryControllerComponent {
         });
     }
 
-    public void setInputsToSelectedFlow(FlowDefinitionDTO dto, Map<String,Object> continuationValues) {
+    public void setInputsToSelectedFlow(FlowDefinitionDTO dto, Map<String,Object> continuationValues, Boolean isReRun) {
         inputsVBox.getChildren().clear();
         inputsLabel.setText("Inputs for " + dto.getFlowName());
         Pair<Map<INPUT_FIELDS,List>,Map<INPUT_FIELDS,List>> MandatoryAndOptionalFieldMaps =
@@ -315,10 +320,10 @@ public class InputController extends LibraryControllerComponent {
 
 
         if (mandatoryFields.get(INPUT_FIELDS.NAME).size() != 0) {
-            setInputFieldElements(mandatoryFields, true, dto, continuationValues);
+            setInputFieldElements(mandatoryFields, true, dto, continuationValues, isReRun);
         }
         if (optionalFields.get(INPUT_FIELDS.NAME).size() != 0) {
-            setInputFieldElements(optionalFields, false, dto, continuationValues);
+            setInputFieldElements(optionalFields, false, dto, continuationValues, isReRun);
         }
     }
 
@@ -326,7 +331,7 @@ public class InputController extends LibraryControllerComponent {
 //        libraryController.getBodyController().getFlowExecutionController().setContinuationProperty(dto);
 //    }
 
-    private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto, Map<String,Object> continuationValues) {
+    private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto, Map<String,Object> continuationValues, Boolean isReRun) {
         VBox internalInputFieldVBox = new VBox();
         TitledPane InputsTitledPane = new TitledPane((mandatory ? "Mandatory Fields" : "Optional Fields"),internalInputFieldVBox);
         InputsTitledPane.setExpanded(false);
@@ -341,7 +346,7 @@ public class InputController extends LibraryControllerComponent {
             Pair<String,List<String>> stepNames =(Pair) fields.get(INPUT_FIELDS.USED_BY).get(i);
 
             InputField inputElement = new InputField(inputName, inputType, userString, stepNames.getValue(), mandatory);
-            inputElement.createElement(dto.getInitialValues(), continuationValues);
+            inputElement.createElement(dto.getInitialValues(), continuationValues, isReRun);
             InputField.allFields.add(inputElement);
             if (!inputElement.isInitialValue) {
                 internalInputFieldVBox.getChildren().add(inputElement.getInputFieldElementWithWrapper());

@@ -33,7 +33,7 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     private MappingGraph mappingGraph;
     final private Continuation continuation = new Continuation();
     private boolean isReadOnly;
-    final private Map<String,Object> initialInputName2Value = new Hashtable<>();
+    private Map<String,Object> initialInputName2Value = new Hashtable<>();
     //final private Map<String,DataDefinition> initialInputName2DataDef = new Hashtable<>();
     @Override
     public Map<String, Object> getInitialInputName2Value() {
@@ -78,6 +78,10 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
     public void addFlowsInitialInputValues(String inputName, Object initialValue, DataDefinition curDD){
         initialInputName2Value.put(inputName,initialValue);
         //initialInputName2DataDef.put(inputName,curDD);
+    }
+
+    public void setFlowsInitialInputValues(Map<String,Object> initialInputName2Value){
+        this.initialInputName2Value = initialInputName2Value;
     }
 
     public FlowDefinitionImpl(String name) {

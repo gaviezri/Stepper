@@ -176,7 +176,7 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private void bindStepDetailsToSelectedStep() {
 //                executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 //                        if (newSelection != null && newSelection != oldSelection) {
-//                                SingleStepExecutionTableData selectedStep = currentFlowStepsExecutionTableDataMap.get(newSelection);
+//                                SingleStepExecutionTableData selectedStepTableDataMap = currentFlowStepsExecutionTableDataMap.get(newSelection);
 //                                stepDetailsNameLabel.setText(selectedStep.getStepName());
 //                                stepDetailsDurationLabel.setText(selectedStep.getDuration());
 //                                stepDetailsResultLabel.setText(selectedStep.getStepExecutionResult().toString());

@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 public class Utils {
 
     private static void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+
         Platform.runLater(()-> {
             Alert alert = new Alert(alertType);
             Text text = new Text(content);
@@ -23,6 +24,7 @@ public class Utils {
             alert.setContentText(content);
             alert.showAndWait();
         });
+
     }
     public static void ShowInformation(String title, String header, String content) {
         showAlert(Alert.AlertType.INFORMATION, title, header, content);

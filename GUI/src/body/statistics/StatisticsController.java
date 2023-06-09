@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class StatisticsController extends body.BodyControllerComponent implements Initializable {
+public class StatisticsController extends body.BodyControllerComponent{
     @FXML private Tab stepSumTimeTab;
     @FXML private Tab flowExecutionCount;
     @FXML private Tab flowSumTimeTab;
@@ -52,8 +52,4 @@ public class StatisticsController extends body.BodyControllerComponent implement
             curBarChar.getData().add(series1);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 }

@@ -85,4 +85,5 @@ public class StatisticsManager {
             this.flowStatistics.put(curFlowName, new Pair<>(curCounter, curDuration));
         }
     }
+
 }

@@ -19,7 +19,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+
 <AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" styleClass="container" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
+
    <children>
       <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">
         <columns>
@@ -109,5 +111,18 @@
             </ListView>
          </children>
       </VBox>
+      <HBox layoutX="10.0" layoutY="395.0" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter by:" />
+            <RadioButton fx:id="successFilter" mnemonicParsing="false" text="Success">
+               <toggleGroup>
+                  <ToggleGroup fx:id="resFilters" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="failureFilter" mnemonicParsing="false" text="Failure" toggleGroup="$resFilters" />
+            <RadioButton fx:id="warningFilter" mnemonicParsing="false" text="Warning" toggleGroup="$resFilters" />
+            <RadioButton fx:id="noneFilter" mnemonicParsing="false" text="None" toggleGroup="$resFilters" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

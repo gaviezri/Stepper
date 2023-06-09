@@ -74,10 +74,20 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
         @FXML
         private VBox rerunButton;
+        @FXML
+        private ToggleGroup resFilters;
+        @FXML
+        private RadioButton successFilter;
+        @FXML
+        private RadioButton failureFilter;
+        @FXML
+        private RadioButton warningFilter;
+        @FXML
+        private RadioButton noneFilter;
         private ObservableList executedFlows;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
-
+        private RadioButton curFilteringElement = noneFilter;
         private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
 
 
@@ -87,6 +97,7 @@ public class HistoryController extends body.BodyControllerComponent implements I
                         flowName.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
                         flowExecutionResult.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
                         startTime.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                        noneFilter.setSelected(true);
                 });
 
                 initializeHistoryTable();
@@ -113,6 +124,13 @@ public class HistoryController extends body.BodyControllerComponent implements I
                         }
                 });
 
+                resFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                        FlowExecutionResult filter = FlowExecutionResult.NONE;
+                        if(oldValue != null) {
+                                filterExecutions(oldValue, newValue);
+                        }
+                });
+
                 historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                         if (newSelection != null && newSelection != oldSelection) {
                                 this.selectedFlow = newSelection;
@@ -129,6 +147,26 @@ public class HistoryController extends body.BodyControllerComponent implements I
                                 });
                         }
                 });
+        }
+
+        private void filterExecutions(Toggle oldValue, Toggle newValue) {
+                FlowExecutionResult filter;
+                if (!oldValue.equals(newValue)) {
+                        if (resFilters.getSelectedToggle() == successFilter) {
+                                filter = FlowExecutionResult.SUCCESS;
+                        } else if (resFilters.getSelectedToggle() == failureFilter) {
+                                filter = FlowExecutionResult.FAILURE;
+                        } else if (resFilters.getSelectedToggle() == warningFilter){
+                                filter = FlowExecutionResult.WARNING;
+                        } else {
+                                filter = FlowExecutionResult.NONE;
+                        }
+
+                        executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.filterFlowExecutionDTOsBy(filter));
+                        Platform.runLater(() -> {
+                                historyTable.setItems(executedFlows);
+                        });
+                }
         }
 
         private void initializeRerunButton() {

@@ -298,9 +298,10 @@ public class InputController extends LibraryControllerComponent {
         });
         allMandatorySatisfied.addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                startFlowButton.setDisable(false);
+                Platform.runLater(() -> startFlowButton.setDisable(false));
+
             }else{
-                startFlowButton.setDisable(true);
+              Platform.runLater(() ->  startFlowButton.setDisable(true));
             }
         });
     }

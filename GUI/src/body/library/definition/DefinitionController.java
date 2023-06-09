@@ -2,6 +2,7 @@ package body.library.definition;
 import app.AppController;
 import body.library.LibraryControllerComponent;
 import header.HeaderController;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -329,9 +330,11 @@ public class DefinitionController extends LibraryControllerComponent {
 
     public void bindInputPaneEnablementToSelectButton(AnchorPane inputPane, AnchorPane definitionPane) {
         selectFlowButton.setOnMouseClicked(event -> {
+            Platform.runLater(() -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
                 libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null,false);
+            });
         });
     }
 

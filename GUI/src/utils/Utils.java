@@ -13,6 +13,7 @@ public class Utils {
         Text text = new Text(content);
         if (alertType == Alert.AlertType.ERROR){
             alert.getDialogPane().setGraphic(new javafx.scene.image.ImageView(new Image("file:///" + System.getProperty("user.dir") + "/GUI/resources/missings.jpg")));
+            title = "Smile Mushon! " + title;
         }
 
         text.wrappingWidthProperty().bind(alert.getDialogPane().widthProperty());

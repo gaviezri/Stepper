@@ -175,4 +175,9 @@ public class AppController {
         }
 
     }
+
+    public void setTheme(String themeSrc) {
+        sceneScrollPane.getScene().getStylesheets().clear();
+        sceneScrollPane.getScene().getStylesheets().add(themeSrc);
+    }
 }

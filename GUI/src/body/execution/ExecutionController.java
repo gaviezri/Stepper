@@ -237,19 +237,21 @@ public class ExecutionController extends BodyControllerComponent {
                             float flowProgressPercentage = (appController.getCurrentStepIdx() + 1.f) / appController.getStepsCount();
                             if (flowProgressPercentage != flowProgressBar.getProgress()) {
                                 Platform.runLater(() -> {
-                                    updateFlowProgressPercentageLabel(flowProgressPercentage);
-                                    updateFlowProgressBar(flowProgressPercentage);
-                                    updateStepInProgressLabel(appController.getCurrentStepName());
-                                    updateExecutedStepsStatusListView(appController.getExecutedStepsStatus());
+                                    synchronized (this) {
+                                        updateFlowProgressPercentageLabel(flowProgressPercentage);
+                                        updateFlowProgressBar(flowProgressPercentage);
+                                        updateStepInProgressLabel(appController.getCurrentStepName());
+                                        updateExecutedStepsStatusListView(appController.getExecutedStepsStatus());
 
-                                    // update step details section
+                                        // update step details section
 
-                                    updateSingleStepExecutionData(appController.getAllStepsListOfLogs(),
-                                                                    appController.getOutputsForAllSteps(),
-                                                                     appController.getExecutedStepsStatus(),
-                                                                      appController.getAllStepsDuration(),
-                                                                        appController.getAllSummaryLines());
-                                    // check it out ^^^^
+                                        updateSingleStepExecutionData(appController.getAllStepsListOfLogs(),
+                                                appController.getOutputsForAllSteps(),
+                                                appController.getExecutedStepsStatus(),
+                                                appController.getAllStepsDuration(),
+                                                appController.getAllSummaryLines());
+                                        // check it out ^^^^
+                                    }
                                 });
                             }
                         } catch (NullPointerException ignored) {

@@ -56,9 +56,9 @@ public class BodyController {
     }
 
     public void initialize() throws Exception{
-        flowExecTab.setDisable(true);
-        flowStatTab.setDisable(true);
-        flowHistoTab.setDisable(true);
+        initializeTab(flowExecTab);
+        initializeTab(flowStatTab);
+        initializeTab(flowHistoTab);
 
         flowStatComponentController.setBodyController(this);
         flowHistoryComponentController.setBodyController(this);
@@ -74,6 +74,11 @@ public class BodyController {
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
 
         flowHistoryComponentController.bindInputPaneEnablementToReRunButton(flowLibComponentController.getInputComponent(),flowLibComponentController.getDefinitionComponent());
+    }
+
+    private void initializeTab(Tab flowHistoTab) {
+        flowHistoTab.setDisable(true);
+        flowHistoTab.getStyleClass().add("tab");
     }
 
     public LibraryController getFlowLibComponentController() {

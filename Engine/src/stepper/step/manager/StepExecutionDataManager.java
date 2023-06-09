@@ -49,7 +49,8 @@ public class StepExecutionDataManager implements DataManager, Serializable {
     }
 
     public String getStepSummaryLine() {
-        return stepLogger.getSummaryLine().getLine();
+        try { return stepLogger.getSummaryLine().getLine(); }
+        catch (Exception e) { return null; }
     }
 
     public List<Pair<String, String>> getLogs2TimeStamp() {

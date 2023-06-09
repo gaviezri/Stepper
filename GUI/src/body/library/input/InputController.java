@@ -331,9 +331,6 @@ public class InputController extends LibraryControllerComponent {
         }
     }
 
-//    private void setContinuationElements(FlowDefinitionDTO dto) {
-//        libraryController.getBodyController().getFlowExecutionController().setContinuationProperty(dto);
-//    }
 
     private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto, Map<String,Object> continuationValues) {
         VBox internalInputFieldVBox = new VBox();

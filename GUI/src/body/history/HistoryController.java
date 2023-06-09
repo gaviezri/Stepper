@@ -7,14 +7,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.execution.history.SingleFlowExecutionDTO;
-import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
@@ -24,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
+
+import static body.execution.ExecutionController.getStepNameWithoutReadonly;
 
 public class HistoryController extends body.BodyControllerComponent implements Initializable{
 
@@ -89,6 +93,7 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 initializeRerunButton();
                 bindStepDetailsToSelectedStep();
                 bindStepsListViewToSelectedFlow();
+                bindSelectionOfOutputInListViewToOutputDetailsModal();
         }
 
         private void initializeHistoryTable() {
@@ -173,17 +178,54 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 });
         }
 
+        private void bindSelectionOfOutputInListViewToOutputDetailsModal() {
+                outputsListView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+                        Platform.runLater(() -> {
+                                if(newValue != null) {
+
+                                        Stage outputModal = new Stage();
+                                        outputModal.setTitle("Outputs");
+                                        outputModal.initModality(Modality.APPLICATION_MODAL);
+                                        outputModal.initOwner(this.getBodyController().getMainController().getPrimaryStage());
+                                        int outputidx = outputsListView.getSelectionModel().getSelectedIndex();
+                                        String outputName = getStepNameWithoutReadonly(executedStepsStatusListView.getSelectionModel().getSelectedItem().toString());
+                                        VBox currentOutputExecutionDataRoot = currentFlowStepsExecutionTableDataMap.get(outputName).getOutputNode(outputidx);
+                                        Scene outputScene = new Scene(currentOutputExecutionDataRoot,200, 200);
+                                        outputModal.setScene(outputScene);
+                                        outputModal.sizeToScene();
+                                        outputModal.showAndWait();
+                                        outputsListView.getSelectionModel().clearSelection();
+                                }
+                        });
+
+                }));
+        }
+
         private void bindStepDetailsToSelectedStep() {
-//                executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-//                        if (newSelection != null && newSelection != oldSelection) {
-//                                SingleStepExecutionTableData selectedStepTableDataMap = currentFlowStepsExecutionTableDataMap.get(newSelection);
-//                                stepDetailsNameLabel.setText(selectedStep.getStepName());
-//                                stepDetailsDurationLabel.setText(selectedStep.getDuration());
-//                                stepDetailsResultLabel.setText(selectedStep.getStepExecutionResult().toString());
-//                                logsListView.setItems(selectedStep.getLogs());
-//                                outputsListView.setItems(selectedStep.getOutputs());
-//                        }
-//                });
+                executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                        if (newSelection != null && newSelection != oldSelection) {
+                                SingleStepExecutionTableData selectedStepTableDataMap = currentFlowStepsExecutionTableDataMap.get(newSelection);
+                                stepDetailsNameLabel.setText(selectedStepTableDataMap.getName());
+                                stepDetailsDurationLabel.setText(getDurationOrNA(selectedStepTableDataMap));
+                                stepDetailsResultLabel.setText(getResult(selectedStepTableDataMap));
+
+                                logsListView.setItems(FXCollections.observableArrayList(selectedStepTableDataMap.getLogs()));
+                                logsListView.setVisible(logsListView.getItems().size() > 0);
+
+                                outputsListView.setItems(FXCollections.observableArrayList(selectedStepTableDataMap.getOutputsName()));
+                                outputsListView.setVisible(outputsListView.getItems().size() > 0);
+                        }
+                });
+        }
+
+        private static String getResult(SingleStepExecutionTableData selectedStepTableDataMap) {
+                try { return selectedStepTableDataMap.getResult().toString();}
+                catch (NullPointerException e) { return "Not Executed";}
+        }
+
+        private static String getDurationOrNA(SingleStepExecutionTableData selectedStepTableDataMap) {
+                try { return selectedStepTableDataMap.getDuration().toString();}
+                catch (NullPointerException e) { return "N/A";}
         }
 
         private void bindStepsListViewToSelectedFlow() {

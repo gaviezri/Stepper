@@ -167,4 +167,12 @@ public class AppController {
     public Map getLastFlowOutputs() {
         return lastExecutedDataCenter.getLastFlowOutputs();
     }
+
+    public void stop() {
+        if (executorServiceForPollingExecutions != null) {
+            executorServiceForPollingExecutions.shutdown();
+            bodyComponentController.stop();
+        }
+
+    }
 }

@@ -114,4 +114,8 @@ public class BodyController {
             flowLibComponentController.showInputComponent();
         });
     }
+
+    public void stop(){
+        flowExecComponentController.stop();
+    }
 }

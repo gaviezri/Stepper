@@ -380,7 +380,7 @@ public class ExecutionController extends BodyControllerComponent {
         }
         return color;
     }
-    private static String getStepNameWithoutReadonly(String Name) {
+    public static String getStepNameWithoutReadonly(String Name) {
         String finalItemName =  (Name.contains("(read-only)")) ?
                 Name.substring(0,Name.indexOf("(")-1)
                 :
@@ -479,6 +479,12 @@ public class ExecutionController extends BodyControllerComponent {
             continuationDataMap.forEach((key, value) -> {
                 continuationListView.getItems().add(key.toString());
             });
+        }
+    }
+
+    public void stop() {
+        if (poller != null) {
+            poller.shutdown();
         }
     }
 }

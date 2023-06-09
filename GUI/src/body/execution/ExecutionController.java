@@ -294,7 +294,7 @@ public class ExecutionController extends BodyControllerComponent {
 
         Map<String,javafx.util.Duration> allStepsJavaFXDuration = new LinkedHashMap<>();
         for (String stepName : allStepsDuration.keySet()){
-            allStepsJavaFXDuration.put(stepName, javafx.util.Duration.millis(allStepsDuration.get(stepName).toMillis()));
+            allStepsJavaFXDuration.put(stepName, javafx.util.Duration.millis(allStepsDuration.get(stepName)==null ? 0.0 : allStepsDuration.get(stepName).toMillis()));
         }
         // update step details section
         for ( String stepName : executedStepsStatus.keySet()){

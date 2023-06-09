@@ -1,8 +1,11 @@
 package stepper.dto.execution.history;
 
 import stepper.flow.execution.FlowExecution;
+import stepper.flow.execution.FlowExecutionResult;
+import stepper.step.api.enums.StepResult;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FlowsExecutionHistoryDTO {
     public enum SortFilter {
@@ -12,20 +15,22 @@ public class FlowsExecutionHistoryDTO {
     }
 
     final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
-
+    List<SingleFlowExecutionDTO> curFilteredExecutions = flowExecutionDTOs;
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
         for(FlowExecution flowExecution:flowExecutionStack){
             SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flowExecution);
             this.flowExecutionDTOs.add(flowExDTO);
         }
     }
-
+    public List<SingleFlowExecutionDTO> filterFlowExecutionDTOsBy(FlowExecutionResult filter){
+        curFilteredExecutions =  filter.equals(FlowExecutionResult.NONE) ? flowExecutionDTOs : flowExecutionDTOs.stream().filter(x->x.getFlowExecutionResult().equals(filter)).collect(Collectors.toList());
+        return curFilteredExecutions;
+    }
     public void sortFlowExecutionDTOsBy(SortFilter sortFilter){
-        List<SingleFlowExecutionDTO> res;
 
         switch (sortFilter){
             case NAME:
-                Collections.sort(flowExecutionDTOs,new Comparator<SingleFlowExecutionDTO>() {
+                Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                         public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
                             // TODO: Handle possible null values
                             return x.getFlowName().compareTo(y.getFlowName());
@@ -33,7 +38,7 @@ public class FlowsExecutionHistoryDTO {
                     });
                 break;
             case TIME:
-                Collections.sort(flowExecutionDTOs,new Comparator<SingleFlowExecutionDTO>() {
+                Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                     public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
                         // TODO: Handle possible null values
                         return x.getStartTime().compareTo(y.getStartTime());
@@ -41,7 +46,7 @@ public class FlowsExecutionHistoryDTO {
                 });
                 break;
             case RESULT:
-                Collections.sort(flowExecutionDTOs,new Comparator<SingleFlowExecutionDTO>() {
+                Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                     public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
                         // TODO: Handle possible null values
                         return x.getFlowExecutionResult().compareTo(y.getFlowExecutionResult());
@@ -50,12 +55,11 @@ public class FlowsExecutionHistoryDTO {
                 break;
             default:
                 throw new IllegalArgumentException("No such filter to sort by.");
-
         }
     }
 
     public List<SingleFlowExecutionDTO> getFlowExecutionDTOs() {
-        return flowExecutionDTOs;
+        return curFilteredExecutions;
     }
 
     public SingleFlowExecutionDTO getFlowExecutionDTOByIndex(int index){

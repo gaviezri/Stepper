@@ -11,6 +11,7 @@ import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class CommandLineStep extends AbstractStepDefinition {
         }
         String msg;
         ProcessBuilder pb = new ProcessBuilder(command);
+//        pb.directory(new File("C:\\Program Files\\Git\\usr\\bin"));
         if (arguments != null) {
             pb.command().addAll(arguments);
             msg = "About to invoke " + command + arguments;
@@ -57,7 +59,8 @@ public class CommandLineStep extends AbstractStepDefinition {
         }
         try {
             logger.log(msg);
-            Process p = pb.start();
+//            Process p = pb.start();
+            Process p = Runtime.getRuntime().exec(command);
             p.waitFor();
             logger.addSummaryLine("Command executed successfully");
             StringBuilder sb = new StringBuilder();

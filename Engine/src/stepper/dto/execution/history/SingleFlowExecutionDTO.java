@@ -1,11 +1,15 @@
 package stepper.dto.execution.history;
 
+import javafx.util.Pair;
+import stepper.dd.api.DataDefinition;
+import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
+import stepper.step.api.enums.StepResult;
+import stepper.step.manager.StepExecutionDataManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.time.Duration;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SingleFlowExecutionDTO {
     private String flowName;
@@ -13,6 +17,8 @@ public class SingleFlowExecutionDTO {
     private FlowExecutionResult flowExecutionResult;
     private  UUID uniqueId;
     private Map<String, Object> dataName2value;
+
+    private Map<String, StepExecutionDataManager> finalStepName2stepsManagers = new LinkedHashMap<>();
 
     public UUID getUniqueId() {
         return uniqueId;
@@ -22,12 +28,15 @@ public class SingleFlowExecutionDTO {
         return dataName2value;
     }
 
-    public SingleFlowExecutionDTO(String flowName, String startTimeInstant, FlowExecutionResult flowExecutionResult, UUID uniqueId, Map<String, Object> dataName2value) {
-        this.flowName = flowName;
-        this.startTime = startTimeInstant;
-        this.flowExecutionResult = flowExecutionResult;
-        this.uniqueId = uniqueId;
-        this.dataName2value = dataName2value;
+
+
+    public SingleFlowExecutionDTO(FlowExecution flowExecution){
+        this.flowName = flowExecution.getName();
+        this.startTime = flowExecution.getFormattedStartTime();
+        this.flowExecutionResult = flowExecution.getFlowExecutionResult();
+        this.uniqueId = flowExecution.getUniqueId();
+        this.dataName2value = flowExecution.getExecutionOutputs();
+        this.finalStepName2stepsManagers = flowExecution.getFinalStepName2stepsManagers();
     }
 
     public String getFlowName() {
@@ -50,5 +59,29 @@ public class SingleFlowExecutionDTO {
         res.add(flowExecutionResult);
 
         return res;
+    }
+
+    public List<String> getFinalStepsName(){
+        return new ArrayList<>(finalStepName2stepsManagers.keySet());
+    }
+
+    public StepResult getStepExecutionResult(String stepName) {
+        return finalStepName2stepsManagers.get(stepName).getStepResult();
+    }
+
+    public Duration getStepDuration(String stepName) {
+        return finalStepName2stepsManagers.get(stepName).getDuration();
+    }
+
+    public List<String> getStepLogs(String stepName) {
+        return finalStepName2stepsManagers.get(stepName).getLogs2TimeStamp().stream().map(x-> x.getKey() + " : " + x.getValue()).collect(Collectors.toList());
+    }
+
+    public String getStepSummaryLine(String stepName) {
+        return finalStepName2stepsManagers.get(stepName).getStepSummaryLine();
+    }
+
+    public Map<String, Pair<DataDefinition, Object>> getStepOutputs(String stepName) {
+        return finalStepName2stepsManagers.get(stepName).getStepOutputs();
     }
 }

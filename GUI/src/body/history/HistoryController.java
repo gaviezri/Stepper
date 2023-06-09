@@ -1,6 +1,7 @@
 package body.history;
 
 import body.BodyController;
+import body.execution.SingleStepExecutionTableData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,13 +11,17 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.dto.execution.history.SingleFlowExecutionDTO;
 import stepper.dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
+import stepper.step.api.enums.StepResult;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -37,6 +42,24 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private TableColumn<SingleFlowExecutionDTO, String> startTime;
 
         @FXML
+        private ListView executedStepsStatusListView;
+
+        @FXML
+        private Label stepDetailsNameLabel;
+
+        @FXML
+        private Label stepDetailsDurationLabel;
+
+        @FXML
+        private Label stepDetailsResultLabel;
+
+        @FXML
+        private ListView logsListView;
+
+        @FXML
+        private ListView outputsListView;
+
+        @FXML
         private ToggleGroup SortFilters;
         @FXML
         private RadioButton startTimeFilter;
@@ -51,13 +74,8 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
 
-        public void updateTable(Stack<FlowExecution> flowExecutionStack){
-                curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
-                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
-                Platform.runLater(()-> {
-                        historyTable.setItems(executedFlows);
-                });
-        }
+        private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
+
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
@@ -67,6 +85,13 @@ public class HistoryController extends body.BodyControllerComponent implements I
                         startTime.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
                 });
 
+                initializeHistoryTable();
+                initializeRerunButton();
+                bindStepDetailsToSelectedStep();
+                bindStepsListViewToSelectedFlow();
+        }
+
+        private void initializeHistoryTable() {
                 SortFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
                         if (SortFilters.getSelectedToggle() != null) {
                                 if (SortFilters.getSelectedToggle() == resultFilter) {
@@ -99,6 +124,9 @@ public class HistoryController extends body.BodyControllerComponent implements I
                                 });
                         }
                 });
+        }
+
+        private void initializeRerunButton() {
 
                 Platform.runLater(()->{
                         rerunButton.setDisable(true);
@@ -136,17 +164,56 @@ public class HistoryController extends body.BodyControllerComponent implements I
                         });
                 });
         }
-}
 
-//        public void setCurSortingFilter(ObservableValue<? extends Toggle> ov,
-//                                        Toggle old_toggle, Toggle new_toggle) {
-//                if (SortFilters.getSelectedToggle() != null) {
-//                        if (SortFilters.getSelectedToggle() == resultFilter) {
-//                                curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.RESULT;
-//                        } else {
-//                                curSortingFilter = SortFilters.getSelectedToggle() == nameFilter ?
-//                                        FlowsExecutionHistoryDTO.SortFilter.NAME :
-//                                        FlowsExecutionHistoryDTO.SortFilter.TIME;
+        public void updateTable(Stack<FlowExecution> flowExecutionStack){
+                curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
+                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                Platform.runLater(()-> {
+                        historyTable.setItems(executedFlows);
+                });
+        }
+
+        private void bindStepDetailsToSelectedStep() {
+//                executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//                        if (newSelection != null && newSelection != oldSelection) {
+//                                SingleStepExecutionTableData selectedStep = currentFlowStepsExecutionTableDataMap.get(newSelection);
+//                                stepDetailsNameLabel.setText(selectedStep.getStepName());
+//                                stepDetailsDurationLabel.setText(selectedStep.getDuration());
+//                                stepDetailsResultLabel.setText(selectedStep.getStepExecutionResult().toString());
+//                                logsListView.setItems(selectedStep.getLogs());
+//                                outputsListView.setItems(selectedStep.getOutputs());
 //                        }
-//                }
-//        }
+//                });
+        }
+
+        private void bindStepsListViewToSelectedFlow() {
+                historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                        if (newSelection != null && newSelection != oldSelection) {
+                                currentFlowStepsExecutionTableDataMap.clear();
+                                SingleFlowExecutionDTO selectedFlow = newSelection;
+                                for (String stepName : selectedFlow.getFinalStepsName()) {
+                                        StepResult result = selectedFlow.getStepExecutionResult(stepName);
+                                        Duration duration = getDuration(selectedFlow, stepName);
+
+                                        currentFlowStepsExecutionTableDataMap.put(stepName,
+                                                new SingleStepExecutionTableData(stepName,
+                                                        result,
+                                                        duration,
+                                                        selectedFlow.getStepLogs(stepName),
+                                                        selectedFlow.getStepSummaryLine(stepName),
+                                                        selectedFlow.getStepOutputs(stepName)));
+                                }
+                                Platform.runLater(()-> {
+                                        executedStepsStatusListView.setItems(FXCollections.observableArrayList(currentFlowStepsExecutionTableDataMap.keySet()));
+                                });
+
+                        }
+                });
+        }
+
+        private static Duration getDuration(SingleFlowExecutionDTO selectedFlow, String stepName) {
+                try { return new Duration(selectedFlow.getStepDuration(stepName).toMillis()); }
+                catch (Exception e) { return null;}
+        }
+
+}

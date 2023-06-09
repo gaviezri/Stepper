@@ -91,17 +91,20 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         } catch (Exception e) {
             throw new RuntimeException("Failed to store data value", e);
         }
-        if(DELETED_LIST.size() == 0){
+        if(numberOfFilesToDelete == 0){
             res = StepResult.SUCCESS;
-            logger.addSummaryLine(filesListIsEmpty ? "No files? No problem - no files were given so no deletion failed" : "All files deleted successfully!");
+            logger.addSummaryLine("No files? No problem - no files were given so no deletion failed");
+        } else if (DELETED_LIST.size() == numberOfFilesToDelete) {
+            res = StepResult.SUCCESS;
+            logger.addSummaryLine("All " + numberOfFilesToDelete + " files were deleted successfully");
         }
-        else if(DELETED_LIST.size() != numberOfFilesToDelete){
+        else if(DELETED_LIST.size() != numberOfFilesToDelete && DELETED_LIST.size() != 0){
             res = StepResult.WARNING;
-            logger.log("WARNING: Only " + DELETION_STATS.get("DELETED") + "/" + numberOfFilesToDelete + " files where deleted!");
+            logger.log("WARNING: Only " + DELETION_STATS.get("DELETED") + "/" + numberOfFilesToDelete + " files were deleted!");
         }
         else{
             res = StepResult.FAILURE;
-            logger.log("FAILURE: No files where deleted! check yourself before you wreck yourself");
+            logger.log("FAILURE: No files were deleted! check yourself before you wreck yourself");
         }
         context.tock();
         context.getCurrentStepManager().setStepResult(res);

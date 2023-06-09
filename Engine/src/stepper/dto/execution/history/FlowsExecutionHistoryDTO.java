@@ -14,9 +14,8 @@ public class FlowsExecutionHistoryDTO {
     final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
 
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
-        for(FlowExecution flow:flowExecutionStack){
-            SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flow.getName(),flow.getFormattedStartTime(),
-                    flow.getFlowExecutionResult(), flow.getUniqueId(), flow.getExecutionOutputs());
+        for(FlowExecution flowExecution:flowExecutionStack){
+            SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flowExecution);
             this.flowExecutionDTOs.add(flowExDTO);
         }
     }
@@ -57,6 +56,10 @@ public class FlowsExecutionHistoryDTO {
 
     public List<SingleFlowExecutionDTO> getFlowExecutionDTOs() {
         return flowExecutionDTOs;
+    }
+
+    public SingleFlowExecutionDTO getFlowExecutionDTOByIndex(int index){
+        return flowExecutionDTOs.get(index);
     }
 
 }

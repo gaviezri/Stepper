@@ -192,4 +192,8 @@ public class FlowExecution implements Serializable {
             executionData.put(inputName, flowDefinition.getInitialInputName2Value().get(inputName));
         }
     }
+
+    public Map<String, StepExecutionDataManager> getFinalStepName2stepsManagers() {
+        return finalStepName2stepsManagers;
+    }
 }

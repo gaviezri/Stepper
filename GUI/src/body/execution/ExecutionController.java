@@ -3,6 +3,7 @@ package body.execution;
 import app.AppController;
 import body.BodyControllerComponent;
 import body.library.definition.DefinitionController;
+import body.library.input.InputController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -145,6 +146,15 @@ public class ExecutionController extends BodyControllerComponent {
         });
     }
 
+
+    public void clearStepDetails() {
+        stepDetailsNameLabel.setText("select a step from the list");
+        stepDetailsDurationLabel.setText("to get");
+        stepDetailsResultLabel.setText("further details");
+        stepDetailsResultLabel.setTextFill(Color.BLACK);
+        outputsListView.getItems().clear();
+        logsListView.getItems().clear();
+    }
     private void bindSelectionOfStepInListViewToStepDetails() {
         executedStepsStatusListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -427,7 +437,6 @@ public class ExecutionController extends BodyControllerComponent {
                     VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();
                     for (int i = 0; i < stepsNames.getChildren().size(); i++) {
                         Label stepName = new Label(((TitledPane) stepsNames.getChildren().get(i)).getText());
-                        stepsNames.setStyle("-fx-font-weight: bold;");
                         stepName.setTextFill(javafx.scene.paint.Color.GREY);
                         executedStepsStatusListView.getItems().add(stepName);
                     }

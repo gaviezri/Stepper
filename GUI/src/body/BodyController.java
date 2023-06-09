@@ -69,7 +69,10 @@ public class BodyController {
 
         flowExecComponentController.setBodyController(this);
         flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
+
+        flowInputComponentController.initializeStartButton(flowExecComponentController);
         bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
+
         flowHistoryComponentController.bindInputPaneEnablementToReRunButton(flowLibComponentController.getInputComponent(),flowLibComponentController.getDefinitionComponent());
     }
 

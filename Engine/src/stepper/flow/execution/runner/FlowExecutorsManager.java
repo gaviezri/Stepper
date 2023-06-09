@@ -45,6 +45,12 @@ public class FlowExecutorsManager implements Serializable {
         return numOfFlowsFinished;
     }
 
+    public void stop() {
+        if (executorService != null) {
+            executorService.shutdownNow();
+        }
+    }
+
     public enum FlowExecutionStatus {
         RUNNING, FINISHED, FAILED, NOT_FOUND
     }

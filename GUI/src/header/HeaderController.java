@@ -53,23 +53,29 @@ public class HeaderController {
     private Menu changeThemeMenu;
 
     @FXML
-    private MenuItem themeItem1;
+    private MenuItem darkThemeItem;
 
     @FXML
-    private MenuItem themeItem2;
+    private MenuItem pastelThemeItem;
 
     private final StringProperty loadedXMLPath = new SimpleStringProperty();
 
-    @FXML
-    void BrowseBtnMouseEnter(MouseEvent event) {
 
+    public void initialize() {
+        pathTextField.textProperty().bind(loadedXMLPath);
+        initializeThemeSelection();
     }
 
-    @FXML
-    void BrowseBtnMouseLeave(MouseEvent event) {
+    private void initializeThemeSelection() {
 
+        darkThemeItem.addEventHandler(ActionEvent.ACTION, event -> {
+            mainController.setTheme(getClass().getClassLoader().getResource("../GUI/dark.css").toString());
+        });
+
+        pastelThemeItem.addEventHandler(ActionEvent.ACTION, event -> {
+            mainController.setTheme(getClass().getClassLoader().getResource("../GUI/pastel.css").toString());
+        });
     }
-
     @FXML
     void BrowseBtnMousePress(MouseEvent event) {
         EngineController  engine = mainController.getEngineController();
@@ -90,10 +96,6 @@ public class HeaderController {
         }
     }
 
-    public void initialize() {
-        pathTextField.textProperty().bind(loadedXMLPath);
-
-    }
 
 
     public void setMainController(AppController appController) {

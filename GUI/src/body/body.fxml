@@ -5,16 +5,16 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<TabPane fx:id="mainTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="300.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
+<TabPane fx:id="mainTabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="container" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="300.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.BodyController">
     <tabs>
         <Tab fx:id="flowLibTab" text="Library">
-            <styleClass>
-                <String fx:value="flowtab" />
-                <String fx:value="clickable" />
-            </styleClass>
             <content>
                 <fx:include fx:id="flowLibComponent" source="library/libraryTab.fxml" />
             </content>
+         <styleClass>
+            <String fx:value="tab" />
+            <String fx:value="tab" />
+         </styleClass>
         </Tab>
       <Tab fx:id="flowExecTab" text="Execution">
         <content>

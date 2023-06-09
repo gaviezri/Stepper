@@ -26,13 +26,16 @@ public class App extends Application {
         // get loaders
         FXMLLoader appLoader = new FXMLLoader(AppController.class.getResource("app.fxml"));
         ScrollPane root = appLoader.load();
+        appController = appLoader.getController();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Stepper");
         primaryStage.getIcons().add(new javafx.scene.image.Image("file:///" + ICON_PATH));
-
+        primaryStage.setOnCloseRequest(event -> {
+            engineController.stop();
+            appController.stop();
+        });
         primaryStage.show();
-
     }
     public static void main(String[] args) {
         Application.launch(args);

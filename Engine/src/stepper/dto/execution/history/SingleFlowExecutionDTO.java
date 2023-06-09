@@ -74,7 +74,7 @@ public class SingleFlowExecutionDTO {
     }
 
     public List<String> getStepLogs(String stepName) {
-        return finalStepName2stepsManagers.get(stepName).getLogs2TimeStamp().stream().map(x-> x.getKey() + " : " + x.getValue()).collect(Collectors.toList());
+        return finalStepName2stepsManagers.get(stepName).getLogs2TimeStamp().stream().map(Pair::getKey).collect(Collectors.toList());
     }
 
     public String getStepSummaryLine(String stepName) {

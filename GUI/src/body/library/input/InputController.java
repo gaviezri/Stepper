@@ -1,30 +1,22 @@
 package body.library.input;
 
-import body.execution.ExecutionController;
 import body.library.LibraryControllerComponent;
-import body.library.definition.DefinitionController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import stepper.dto.flow.FlowDefinitionDTO;
 
-import javax.naming.Name;
-import javax.tools.Tool;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,17 +30,29 @@ public class InputController extends LibraryControllerComponent {
         private String userString;
         private List<String> stepNames;
         private BooleanProperty satisfied;
+        private boolean isMandatory;
+        private static List<InputField> allFields = new LinkedList<>();
+        private Boolean isInitialValue = false;
         private Node inputFieldElement;
 
 
-        public InputField(String name, String type, String userString, List<String> stepNames) {
+        public InputField(String name, String type, String userString, List<String> stepNames, boolean isMandatory) {
             this.name = name;
             this.type = type;
             this.userString = userString;
-            satisfied = new SimpleBooleanProperty(false);
             this.stepNames = stepNames;
+            this.isMandatory = isMandatory;
+            satisfied = new SimpleBooleanProperty(false);
+            allFields.add(this);
         }
 
+        public void setInitialized(Boolean initialized) {
+            isInitialValue = initialized;
+        }
+
+        public Boolean getInitialized() {
+            return isInitialValue;
+        }
         public static void clearInputFields() {
             Node2InputField.clear();
         }
@@ -101,16 +105,16 @@ public class InputController extends LibraryControllerComponent {
             }
             Node2InputField.put(inputFieldElement, this);
             if (initialValues.containsKey(name)) {
-                setPresetValuesInElement(initialValues);
+                setPresetValuesInElement(initialValues, true);
             } else if (continuationValues != null && continuationValues.containsKey(name)) {
-                setPresetValuesInElement(continuationValues);
+                setPresetValuesInElement(continuationValues, false);
             }
         }
 
-        private void setPresetValuesInElement(Map<String, Object> initialValues) {
-            satisfied.unbind();
-            satisfied.setValue(true);
-            inputFieldElement.setDisable(true);
+        private void setPresetValuesInElement(Map<String, Object> initialValues, boolean isInitialValue) {
+            this.satisfied.unbind();
+            this.satisfied.setValue(true);
+            this.isInitialValue = isInitialValue;
             if (type.equals("Enum")) {
                 ((ComboBox) inputFieldElement).setValue(initialValues.get(name).toString());
             } else {
@@ -184,8 +188,16 @@ public class InputController extends LibraryControllerComponent {
             return null;
         }
 
-        public Node getInputFieldElement() {
-            return inputFieldElement;
+        public Node getInputFieldElementWithWrapper() {
+            HBox wrapper = new HBox();
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setSpacing(10);
+            Label label = new Label(userString + " [" + name.toLowerCase().replace('_',' ') + "]:");
+            label.wrapTextProperty().set(true);
+            wrapper.getChildren().add(label);
+            wrapper.getChildren().add(inputFieldElement);
+            HBox.setHgrow(inputFieldElement, Priority.ALWAYS);
+            return wrapper;
         }
 
     }
@@ -202,7 +214,7 @@ public class InputController extends LibraryControllerComponent {
 
     // Input Controller's fields
     @FXML Label inputsLabel;
-    @FXML ScrollPane inputsScrollPane;
+//    @FXML ScrollPane inputsScrollPane;
     @FXML VBox inputsVBox;
     @FXML Tooltip startFlowToolTip;
     @FXML Button startFlowButton;
@@ -247,7 +259,6 @@ public class InputController extends LibraryControllerComponent {
             Platform.runLater(()-> {
                 backToDefinitionButton.translateYProperty().set(4);
             });
-
         });
         backToDefinitionButton.setOnMouseReleased(event -> {
             Platform.runLater(() -> {
@@ -311,9 +322,9 @@ public class InputController extends LibraryControllerComponent {
         }
     }
 
-    private void setContinuationElements(FlowDefinitionDTO dto) {
-        libraryController.getBodyController().getFlowExecutionController().setContinuationProperty(dto);
-    }
+//    private void setContinuationElements(FlowDefinitionDTO dto) {
+//        libraryController.getBodyController().getFlowExecutionController().setContinuationProperty(dto);
+//    }
 
     private void setInputFieldElements(Map<INPUT_FIELDS, List> fields, Boolean mandatory, FlowDefinitionDTO dto, Map<String,Object> continuationValues) {
         VBox internalInputFieldVBox = new VBox();
@@ -322,21 +333,23 @@ public class InputController extends LibraryControllerComponent {
         inputsVBox.getChildren().add(InputsTitledPane);
         internalInputFieldVBox.setSpacing(15);
 
-        List<InputField> allFields = new LinkedList<>();
+
         for (int i = 0; i < fields.get(INPUT_FIELDS.NAME).size(); i++) {
             String inputName = (String) fields.get(INPUT_FIELDS.NAME).get(i);
             String inputType = (String) fields.get(INPUT_FIELDS.TYPE).get(i);
             String userString = (String) fields.get(INPUT_FIELDS.USER_STRING).get(i);
             Pair<String,List<String>> stepNames =(Pair) fields.get(INPUT_FIELDS.USED_BY).get(i);
 
-            InputField inputElement = new InputField(inputName, inputType, userString, stepNames.getValue());
+            InputField inputElement = new InputField(inputName, inputType, userString, stepNames.getValue(), mandatory);
             inputElement.createElement(dto.getInitialValues(), continuationValues);
-            allFields.add(inputElement);
-            internalInputFieldVBox.getChildren().add(inputElement.getInputFieldElement());
+            InputField.allFields.add(inputElement);
+            if (!inputElement.isInitialValue) {
+                internalInputFieldVBox.getChildren().add(inputElement.getInputFieldElementWithWrapper());
+            }
         }
         if (mandatory){
             allMandatorySatisfied.bind(Bindings.createBooleanBinding(() ->
-                    allFields.stream().allMatch(x -> x.satisfied.get()), allFields.stream().map(x -> x.satisfied).collect(Collectors.toList()).toArray(new BooleanProperty[0])));
+                    InputField.allFields.stream().filter(x -> x.isMandatory).allMatch(x -> x.satisfied.get()), InputField.allFields.stream().map(x -> x.satisfied).collect(Collectors.toList()).toArray(new BooleanProperty[0])));
         }
     }
 
@@ -410,23 +423,16 @@ public class InputController extends LibraryControllerComponent {
         Map<String, Object> Name2Val = new HashMap<>();
         Map<String, String> Name2Type = new HashMap<>();
 
-        inputsVBox.getChildren().forEach(x -> {
-            if (x instanceof TitledPane) {
-                TitledPane titledPane = (TitledPane) x;
-                VBox internalVBox = (VBox) titledPane.getContent();
-                internalVBox.getChildren().forEach(y -> {
-                    InputField inputField = InputField.getInputFieldOfElement(y);
-                    String content = inputField.getContent();
-                    if(! content.equals("")) {
-                        String inputName = inputField.getName();
-                        String inputType = inputField.getType();
-                        if (inputType.equals("Enum")){
-                            inputType = "Enumeration";
-                        }
-                        Name2Type.put(inputName, inputType);
-                        Name2Val.put(inputName, finalizeInputByType(inputType, content));
-                    }
-                });
+        InputField.allFields.forEach(inputField -> {
+            String content = inputField.getContent();
+            if (!content.equals("")) {
+                String inputName = inputField.getName();
+                String inputType = inputField.getType();
+                if (inputType.equals("Enum")) {
+                    inputType = "Enumeration";
+                }
+                Name2Type.put(inputName, inputType);
+                Name2Val.put(inputName, finalizeInputByType(inputType, content));
             }
         });
         return new Pair<>(Name2Val, Name2Type);

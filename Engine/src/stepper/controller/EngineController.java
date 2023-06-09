@@ -10,7 +10,6 @@ import stepper.dto.statistics.StatisticsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.archive.ExecutionArchive;
-import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 import stepper.flow.execution.runner.FlowExecutorsManager;
 import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.flow.execution.runner.FlowExecutor;
@@ -56,18 +55,28 @@ public class EngineController implements Serializable {
         }
         return new LoadDataDTO(path, "Flow(s) loaded successfully!", true, "");
     }
-    public FlowDefinitionDTO getFlowDefinitionData(Integer flowIdx){
+    public FlowDefinitionDTO getFlowDefinitionDataByIndex(Integer flowIdx){
         try {
-            return new FlowDefinitionDTO(flowLibrary.getFlowDefinition(flowIdx));
+            return new FlowDefinitionDTO(flowLibrary.getFlowDefinitionByIndex(flowIdx));
         }catch (Exception e){
             return new FlowDefinitionDTO(e.getMessage());
         }
     }
+
+    public FlowDefinitionDTO getFlowDefinitionDtoByName(String name){
+        try {
+            return new FlowDefinitionDTO(flowLibrary.getFlowDefinitionByName(name));
+        }catch (Exception e){
+            return new FlowDefinitionDTO(e.getMessage());
+        }
+    }
+
+
     public List<FlowDefinitionDTO> getAllFlowDefinitionsData(){
         try {
             List<FlowDefinitionDTO> allDTOS = new ArrayList<>();
             for (int i = 0; i < flowLibrary.getCountOfLoadedFlows(); ++i){
-                allDTOS.add(getFlowDefinitionData(i));
+                allDTOS.add(getFlowDefinitionDataByIndex(i));
             }
             return allDTOS;
         }catch (Exception e){
@@ -85,7 +94,7 @@ public class EngineController implements Serializable {
 
     public void executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
 
-        FlowDefinition flowToExecute = flowLibrary.getFlowDefinition(flowIdx);
+        FlowDefinition flowToExecute = flowLibrary.getFlowDefinitionByIndex(flowIdx);
         FlowExecutor flowExecutor = new FlowExecutor();
         flowExecutor.setActiveFlow(flowToExecute);
         flowExecutor.setFlowFreeInputs(valName2valType);

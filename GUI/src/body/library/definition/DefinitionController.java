@@ -331,7 +331,7 @@ public class DefinitionController extends LibraryControllerComponent {
         selectFlowButton.setOnMouseClicked(event -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
-                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null);
+                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null,false);
         });
     }
 
@@ -360,7 +360,7 @@ public class DefinitionController extends LibraryControllerComponent {
                 inputsToSet.put(inputName,outputValue);
             }
             flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
-            libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet);
+            libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet,false);
         }
     }
 }

@@ -246,7 +246,7 @@ public class ConsoleApp {
         FlowNamesDTO flowNamesDTO = engineController.getFlowDefinitionsNames();
         Integer selectedFlowIndex = ui.getSelectedFlowIndexFromUser(flowNamesDTO.getFlowNames());
         if(selectedFlowIndex >= 0) {
-            FlowDefinitionDTO flowDefinitionDTO = engineController.getFlowDefinitionData(selectedFlowIndex);
+            FlowDefinitionDTO flowDefinitionDTO = engineController.getFlowDefinitionDataByIndex(selectedFlowIndex);
             Pair<Map,Map> valuesFromUser2valuesDefinition = ui.getInputsFromUser(flowDefinitionDTO.getFreeInputsFinalNames(),
                     flowDefinitionDTO.getFreeInputTypes(),
                     flowDefinitionDTO.getFreeInputNecessity(),
@@ -299,7 +299,7 @@ public class ConsoleApp {
                 if (selection == 0) {
                     flag = false;
                 } else {
-                    FlowDefinitionDTO flowDefDTO = engineController.getFlowDefinitionData(selection-1);
+                    FlowDefinitionDTO flowDefDTO = engineController.getFlowDefinitionDataByIndex(selection-1);
 
                     if (!flowDefDTO.getStatus()){
                         ui.presentMessageToUser("Error: " + flowDefDTO.getErrorMessage());

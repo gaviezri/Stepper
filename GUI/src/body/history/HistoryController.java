@@ -72,7 +72,6 @@ public class HistoryController extends body.BodyControllerComponent implements I
         private VBox rerunButton;
         private ObservableList executedFlows;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
-
         private SingleFlowExecutionDTO selectedFlow;
 
         private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
@@ -112,11 +111,28 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                         if (newSelection != null && newSelection != oldSelection) {
                                 this.selectedFlow = newSelection;
+                                Platform.runLater(() -> {
+                                        rerunButton.setDisable(false);
+                                        rerunButton.setOpacity(1.0);
+                                });
+                        }
+                        else{
+                                Platform.runLater(() -> {
+                                        rerunButton.setDisable(true);
+                                        rerunButton.setOpacity(0.5);
+
+                                });
                         }
                 });
         }
 
         private void initializeRerunButton() {
+
+                Platform.runLater(()->{
+                        rerunButton.setDisable(true);
+                        rerunButton.setOpacity(0.5);
+
+                });
                 rerunButton.setOnMouseEntered(event ->
                         Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()+10)
                         ));
@@ -128,6 +144,7 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 rerunButton.setOnMouseReleased(event ->
                         Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()-5))
                         );
+
         }
 
         public void bindInputPaneEnablementToReRunButton(AnchorPane inputPane, AnchorPane definitionPane ) {
@@ -140,7 +157,9 @@ public class HistoryController extends body.BodyControllerComponent implements I
                                 bodyController.getFlowLibComponentController().
                                         getInputComponentController().
                                         setInputsToSelectedFlow(
-                                                new FlowDefinitionDTO(selectedFlow.getDataName2value(), selectedFlow.getFlowName()), null);
+                                                bodyController.getMainController().getEngineController().
+                                                        getFlowDefinitionDtoByName(selectedFlow.getFlowName()),
+                                                selectedFlow.getDataName2value(),true);
 
                         });
                 });

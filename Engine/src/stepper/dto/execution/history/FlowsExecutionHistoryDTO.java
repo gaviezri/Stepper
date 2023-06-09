@@ -8,11 +8,8 @@ public class FlowsExecutionHistoryDTO {
     public enum SortFilter {
         NAME,
         TIME,
-
         RESULT,
-
     }
-
 
     final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
 

@@ -11,11 +11,15 @@ public class LoadedFlowsLibrary implements Serializable {
     public void setLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {
         this.loadedflowDefinitions = loadedflowDefinitions;
     }
-    public FlowDefinition getFlowDefinition(Integer flowIdx){
+    public FlowDefinition getFlowDefinitionByIndex(Integer flowIdx){
         if (flowIdx < 0 || flowIdx >= loadedflowDefinitions.size()){
             return null;
         }
         return loadedflowDefinitions.get(flowIdx);
+    }
+
+    public FlowDefinition getFlowDefinitionByName(String name){
+        return loadedflowDefinitions.stream().filter(x->x.getName().equals(name)).findFirst().get();
     }
 
 

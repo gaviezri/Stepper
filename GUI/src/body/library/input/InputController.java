@@ -1,5 +1,6 @@
 package body.library.input;
 
+import body.execution.ExecutionController;
 import body.library.LibraryControllerComponent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -224,11 +225,9 @@ public class InputController extends LibraryControllerComponent {
 
 
     // END OF Input Controller's fields
-
     public void initialize() {
         startFlowButton.setDisable(true);
         initializeButtonToolTip();
-        initializeStartButton();
         inputsVBox.setAlignment(javafx.geometry.Pos.TOP_CENTER);
         inputsVBox.setSpacing(15);
     }
@@ -274,7 +273,7 @@ public class InputController extends LibraryControllerComponent {
         });
     }
 
-    private void initializeStartButton(){
+    public void initializeStartButton(ExecutionController executionController){
         ImageView iv = new ImageView(getClass().getResource("start-button.png").toString());
         iv.setFitHeight(160);
         iv.setFitWidth(160);
@@ -292,7 +291,8 @@ public class InputController extends LibraryControllerComponent {
         startFlowButton.setOnMouseExited((event) -> {
             startFlowButton.translateYProperty().set(-2);
         });
-        startFlowButton.setOnMouseReleased(event -> {
+        startFlowButton.setOnMouseReleased((event)-> {
+            executionController.clearStepDetails();
             startFlowButton.translateYProperty().set(-5);
         });
         allMandatorySatisfied.addListener((observable, oldValue, newValue) -> {

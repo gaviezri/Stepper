@@ -24,12 +24,12 @@
       </VBox>
       <AnchorPane fx:id="realExecutionAnchorPane" prefHeight="384.0" prefWidth="1250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ListView fx:id="executedStepsStatusListView" layoutX="973.0" layoutY="9.0" prefHeight="367.0" prefWidth="269.0">
+            <ListView fx:id="executedStepsStatusListView" layoutX="22.0" layoutY="52.0" prefHeight="367.0" prefWidth="269.0">
                <tooltip>
                   <Tooltip fx:id="executedStepsStatusListViewToolTip" text="Empty Tooltip" />
                </tooltip>
             </ListView>
-            <FlowPane fx:id="selectedStepDetailsFlowPane" layoutX="14.0" layoutY="9.0" prefHeight="177.0" prefWidth="952.0">
+            <FlowPane fx:id="selectedStepDetailsFlowPane" layoutX="284.0" layoutY="14.0" prefHeight="177.0" prefWidth="952.0">
                <children>
                   <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="176.0" prefWidth="952.0">
                     <columnConstraints>
@@ -78,22 +78,23 @@
                   </GridPane>
                </children>
             </FlowPane>
-            <Label fx:id="stepInProgressLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="349.0" layoutY="240.0" prefHeight="46.0" prefWidth="282.0" />
-            <ProgressBar fx:id="flowProgressBar" layoutX="338.0" layoutY="298.0" prefHeight="23.0" prefWidth="304.0" progress="0.0" style="-fx-accent: red;" />
-            <Label fx:id="flowProgressPercentageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="469.0" layoutY="330.0" prefHeight="23.0" prefWidth="42.0">
+            <Label fx:id="stepInProgressLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="348.0" layoutY="362.0" prefHeight="46.0" prefWidth="282.0" />
+            <ProgressBar fx:id="flowProgressBar" layoutX="337.0" layoutY="332.0" prefHeight="23.0" prefWidth="304.0" progress="0.0" style="-fx-accent: red;" />
+            <Label fx:id="flowProgressPercentageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="468.0" layoutY="298.0" prefHeight="23.0" prefWidth="42.0">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label fx:id="executionEndLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="385.0" layoutY="234.0" prefHeight="59.0" prefWidth="480.0" />
-            <Label fx:id="stepSummaryLineLabel" layoutX="14.0" layoutY="192.0" prefHeight="46.0" prefWidth="700.0" />
-            <AnchorPane fx:id="continuationAnchorPane" layoutX="10.0" layoutY="295.0" prefHeight="154.0" prefWidth="433.0">
+            <AnchorPane fx:id="continuationAnchorPane" layoutX="810.0" layoutY="266.0" prefHeight="154.0" prefWidth="433.0">
                <children>
                   <Button fx:id="continueButton" layoutX="296.0" layoutY="77.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="103.0" text="Continue" />
                   <Label fx:id="continuationLabel" layoutX="36.0" layoutY="14.0" prefHeight="21.0" prefWidth="186.0" text="Continuity available:" />
                   <ListView fx:id="continuationListView" layoutX="29.0" layoutY="35.0" prefHeight="119.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
+            <Label layoutX="97.0" layoutY="23.0" text="steps in execution" />
+            <Label fx:id="executionEndLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="642.0" layoutY="199.0" prefHeight="59.0" prefWidth="480.0" />
+            <Label fx:id="stepSummaryLineLabel" layoutX="337.0" layoutY="235.0" prefHeight="59.0" prefWidth="547.0" style="-fx-wrap-text: true;" />
          </children>
       </AnchorPane>
    </children>

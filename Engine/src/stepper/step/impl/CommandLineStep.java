@@ -50,7 +50,7 @@ public class CommandLineStep extends AbstractStepDefinition {
         }
         String msg;
         ProcessBuilder pb = new ProcessBuilder(command);
-//        pb.directory(new File("C:\\Program Files\\Git\\usr\\bin"));
+//        pb.directory(new File("C:\\Users\\a\\Downloads\\stepper utils\\test"));
         if (arguments != null) {
             pb.command().addAll(arguments);
             msg = "About to invoke " + command + arguments;
@@ -59,8 +59,8 @@ public class CommandLineStep extends AbstractStepDefinition {
         }
         try {
             logger.log(msg);
-//            Process p = pb.start();
-            Process p = Runtime.getRuntime().exec(command);
+            Process p = pb.start();
+//            Process p = Runtime.getRuntime().exec(command);
             p.waitFor();
             logger.addSummaryLine("Command executed successfully");
             StringBuilder sb = new StringBuilder();

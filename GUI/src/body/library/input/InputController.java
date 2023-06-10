@@ -315,6 +315,7 @@ public class InputController extends LibraryControllerComponent {
         Map<INPUT_FIELDS, List> mandatoryFields = MandatoryAndOptionalFieldMaps.getKey();
         Map<INPUT_FIELDS, List> optionalFields = MandatoryAndOptionalFieldMaps.getValue();
 
+        InputField.allFields.clear();
 
         if (mandatoryFields.get(INPUT_FIELDS.NAME).size() != 0) {
             setInputFieldElements(mandatoryFields, true, dto, continuationValues, isReRun);

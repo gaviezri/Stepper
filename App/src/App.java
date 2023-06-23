@@ -14,6 +14,11 @@ import stepper.controller.EngineController;
 import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.statistics.StatisticsManager;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class App extends Application {
 
     private final String ICON_PATH = System.getProperty("user.dir") + "\\GUI\\resources\\steppericon.png";

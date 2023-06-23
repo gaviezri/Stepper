@@ -228,7 +228,7 @@ public class InputController extends LibraryControllerComponent {
         startFlowToolTip.setWrapText(true);
         startFlowToolTip.setFont(javafx.scene.text.Font.font("System", javafx.scene.text.FontWeight.BOLD, 14));
         Tooltip.install(buttonWrapperForToolTip, startFlowToolTip);
-        startFlowToolTip.setShowDelay(Duration.ZERO);
+        //startFlowToolTip.setShowDelay(Duration.ZERO);
         allMandatorySatisfied.addListener((observable, oldValue, newValue) -> {
             if(newValue){
                 startFlowToolTip.setText("Click to start the flow");

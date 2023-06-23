@@ -16,11 +16,13 @@ import stepper.flow.loader.FlowLoader;
 import stepper.flow.loader.LoadedFlowsLibrary;
 import stepper.statistics.StatisticsManager;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 
 public class EngineController implements Serializable {
@@ -51,10 +53,26 @@ public class EngineController implements Serializable {
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){
-            return new LoadDataDTO(path, "", false, e.getMessage());
+            return new LoadDataDTO("", false, e.getMessage());
         }
-        return new LoadDataDTO(path, "Flow(s) loaded successfully!", true, "");
+        return new LoadDataDTO("Flow(s) loaded successfully!", true, "");
     }
+
+    public LoadDataDTO readXML(InputStream XMLFileStream){
+    /**
+     *    This function is for the servlet
+     * -> works with a stream of the file and not a path to file
+     * */
+        try{
+            flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
+            flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
+            executionArchive.clear();
+        }catch (Exception e){
+            return new LoadDataDTO("", false, e.getMessage());
+        }
+        return new LoadDataDTO("Flow(s) loaded successfully!", true, "");
+    }
+
     public FlowDefinitionDTO getFlowDefinitionDataByIndex(Integer flowIdx){
         try {
             return new FlowDefinitionDTO(flowLibrary.getFlowDefinitionByIndex(flowIdx));

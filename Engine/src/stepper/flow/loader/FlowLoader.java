@@ -15,8 +15,10 @@ import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepDefinition;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 //TODO: if errors occured throw exception to be caught and transmitted into UI instead of nulls
@@ -56,6 +58,16 @@ public class FlowLoader implements Serializable {
         initialFlowValidations(document);
         return builder.buildFlows();
     }
+
+    public List<FlowDefinition> loadFlowFromXML(InputStream XMLfileStream) throws Exception {
+        Document document = new DocumentBuilderFactoryImpl().newDocumentBuilder().parse(XMLfileStream);
+        document.getDocumentElement().normalize();
+        builder.reset();
+        initialFlowValidations(document);
+        return builder.buildFlows();
+    }
+
+
     private void initialFlowValidations(Document document) throws Exception{
         String threadCount;
         try {
@@ -68,7 +80,7 @@ public class FlowLoader implements Serializable {
         // builder will be used to create the flow definitions
         // and will work along the validations to minimize the number of iterations over the xml
 
-            // get all flow elements from xml
+        // get all flow elements from xml
         NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
         validateFlowDefinitionsInXML(flowDefinitionsNodeList);
     }

@@ -48,7 +48,7 @@ public class EngineController implements Serializable {
     }
     public LoadDataDTO readXML(String path) {
         try {
-            flowLibrary.AddLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
+            flowLibrary.addLoadedFlowDefinitions(flowLoader.loadFlowFromXML(path));
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){
@@ -63,7 +63,7 @@ public class EngineController implements Serializable {
      * -> works with a stream of the file and not a path to file
      * */
         try{
-            flowLibrary.AddLoadedflowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
+            flowLibrary.addLoadedFlowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){

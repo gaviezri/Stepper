@@ -59,8 +59,9 @@ public class FlowLoader implements Serializable {
         return builder.buildFlows();
     }
 
-    public List<FlowDefinition> loadFlowFromXML(InputStream XMLfileStream) throws Exception {
-        Document document = new DocumentBuilderFactoryImpl().newDocumentBuilder().parse(XMLfileStream);
+    public List<FlowDefinition> loadFlowFromXML(InputStream XMLFileStream) throws Exception {
+        // servlet version
+        Document document = new DocumentBuilderFactoryImpl().newDocumentBuilder().parse(XMLFileStream);
         document.getDocumentElement().normalize();
         builder.reset();
         initialFlowValidations(document);

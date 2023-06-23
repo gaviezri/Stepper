@@ -12,9 +12,7 @@ public class MyServletContextListener implements ServletContextListener {
         // Called when the ServletContext is initialized
         ServletContext servletContext = servletContextEvent.getServletContext();
 
-//        // Create a Gson object
-//        Gson gson = new GsonBuilder().create();
-//        servletContext.setAttribute(Utils.GSON,gson);
+        servletContext.setAttribute(Utils.adminLoggedInStatus,false);
     }
 
     @Override

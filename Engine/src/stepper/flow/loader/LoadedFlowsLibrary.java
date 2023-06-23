@@ -8,11 +8,18 @@ import java.util.List;
 public class LoadedFlowsLibrary implements Serializable {
     private List<FlowDefinition> loadedflowDefinitions = null;
 
-    public void AddLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {
+    public void addLoadedFlowDefinitions(List<FlowDefinition> newLoadedFlowDefinitions) {
         if (this.loadedflowDefinitions != null) {
-            loadedflowDefinitions.addAll(loadedflowDefinitions);
+            for (FlowDefinition flowDefinition:newLoadedFlowDefinitions) {
+//              add only flows with new names
+                if(this.loadedflowDefinitions.stream().
+                        map(FlowDefinition::getName).
+                        noneMatch(x->x.equals(flowDefinition.getName()))){
+                    this.loadedflowDefinitions.add(flowDefinition);
+                }
+            }
         } else {
-            this.loadedflowDefinitions = loadedflowDefinitions;
+            this.loadedflowDefinitions = newLoadedFlowDefinitions;
         }
     }
     public FlowDefinition getFlowDefinitionByIndex(Integer flowIdx){

@@ -30,6 +30,7 @@ public class Main extends Application {
 
          primaryStage.setOnCloseRequest(event -> {
                 AdminRequestsDispatcher.getInstance().logoutAdmin();
+                mainController.shutdownPollingExecutions();
                 System.exit(0);
             });
 

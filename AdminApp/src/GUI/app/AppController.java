@@ -86,6 +86,10 @@ public class AppController {
         return numOfFlowsFinished;
     }
 
+    public void shutdownPollingExecutions() {
+        executorServiceForPollingExecutions.shutdown();
+    }
+
 //    public BodyController getBodyController() {
 //        return bodyComponentController;
 //    }

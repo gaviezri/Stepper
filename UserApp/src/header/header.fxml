@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.Text?>
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS" />
+        <RowConstraints vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="50.0" styleClass="container" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+               <children>
+                      <Label ellipsisString="STEPPER" prefHeight="31.0" prefWidth="168.0" style="-fx-font-size: 35;" text="Stepper" HBox.hgrow="ALWAYS">
+                          <padding>
+                              <Insets left="20.0" />
+                          </padding>
+                          <opaqueInsets>
+                              <Insets />
+                          </opaqueInsets>
+                          <textFill>
+                        <RadialGradient centerX="0.4772727272727273" centerY="0.558252427184466" cycleMethod="REFLECT" focusAngle="-127.09" focusDistance="0.29268292682926833" radius="0.5365853658536586">
+                           <stops>
+                              <Stop color="#ee4343" />
+                              <Stop color="#ee4343" offset="0.007246376811594203" />
+                              <Stop color="#ed4545" offset="0.20872406933788012" />
+                              <Stop color="BLACK" offset="0.7355072463768116" />
+                              <Stop color="BLACK" offset="1.0" />
+                           </stops>
+                        </RadialGradient>
+                          </textFill>
+                      </Label>
+                      <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="specialText" text="Loaded Flow(s) File:" HBox.hgrow="ALWAYS" />
+                      <TextField id="xmlpath" fx:id="pathTextField" editable="false" minWidth="100.0" prefHeight="29.0" prefWidth="529.0" HBox.hgrow="ALWAYS">
+                          <padding>
+                              <Insets top="5.0" />
+                          </padding>
+                      </TextField>
+                      <Button fx:id="browseBtn" ellipsisString="Browse" mnemonicParsing="false" onMousePressed="#BrowseBtnMousePress" prefHeight="28.0" prefWidth="91.0" text="Browse" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+        <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="text">
+            <padding>
+                <Insets top="5.0" />
+            </padding>
+            <menus>
+                <Menu fx:id="systemMenu" mnemonicParsing="false" styleClass="specialText" text="System">
+                    <items>
+                        <MenuItem fx:id="saveSnapshot" mnemonicParsing="false" onAction="#SaveSystemSnapshotPressed" text="Save snapshot" />
+                        <MenuItem fx:id="loadSnapshot" mnemonicParsing="false" onAction="#LoadSystemSnapshotPressed" text="Load snapshot" />
+                    </items>
+                </Menu>
+                <Menu fx:id="themeMenu" mnemonicParsing="false" styleClass="specialText" text="Theme">
+                    <items>
+                        <Menu fx:id="changeThemeMenu" mnemonicParsing="false" styleClass="text" text="Change theme">
+                            <items>
+                                <MenuItem fx:id="darkThemeItem" mnemonicParsing="false" text="dark" />
+                                <MenuItem fx:id="pastelThemeItem" mnemonicParsing="false" text="pastel" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </children>
+</GridPane>

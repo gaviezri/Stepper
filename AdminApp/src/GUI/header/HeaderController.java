@@ -1,6 +1,7 @@
 package GUI.header;
 
 
+import Communication.AdminRequestsDispatcher;
 import GUI.app.AppController;
 
 import GUI.utils.Utils;
@@ -16,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import Communication.StepperRequestsDispatcher;
+import stepper.dto.flow.LoadDataDTO;
+
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -50,33 +53,45 @@ public class HeaderController  {
     }
     @FXML
     void BrowseBtnMousePress(MouseEvent event) {
+        File chosenFile = getFlowXMLFile();
+        if (chosenFile != null) {
+            String path = chosenFile.getAbsolutePath();
+            StringBuilder sb = StringifyXMLContent(path);
+            LoadDataDTO result = AdminRequestsDispatcher.getInstance().loadXML(sb.toString());
+            updateGUIonXMLLoadingStatus(path, result);
+        }
+    }
+
+    private File getFlowXMLFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Flow XML File");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("XML Files", "*.xml"));
 
         File chosenFile = fileChooser.showOpenDialog(this.mainController.getPrimaryStage());
-        if (chosenFile != null) {
-            String path = chosenFile.getAbsolutePath();
-            File selectedFile = new File(path);
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))){
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-            }catch (Exception e){
-                Utils.ShowError("Error","Error opening xml", e.getMessage());
+        return chosenFile;
+    }
+
+    private static StringBuilder StringifyXMLContent(String path) {
+        File selectedFile = new File(path);
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))){
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
             }
+        }catch (Exception e){
+            Utils.ShowError("Error","Error opening xml", e.getMessage());
+        }
+        return sb;
+    }
 
-
-            Map result = StepperRequestsDispatcher.getInstance().loadXML(sb.toString());
-            if (result != null) {
-                if(result.get("valid").equals(true)){
-                    loadedXMLPath.set(path);
-                } else {
-                    Utils.ShowError("Error","Error while loading flow(s)", (String)result.get("error"));
-                }
+    private void updateGUIonXMLLoadingStatus(String path, LoadDataDTO result) {
+        if (result != null) {
+            if(result.getStatus()){
+                loadedXMLPath.set(path);
+            } else {
+                Utils.ShowError("Error","Error while loading flow(s)", result.getErrorMessage());
             }
         }
     }

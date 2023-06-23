@@ -1,5 +1,7 @@
 package GUI.app;
 
+import Communication.AdminRequestsDispatcher;
+import Communication.StepperRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
 import javafx.beans.property.IntegerProperty;
@@ -10,10 +12,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import javafx.util.Pair;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
+import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
+import stepper.dto.statistics.StatisticsDTO;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +40,7 @@ public class AppController {
 
     @FXML
     private BodyController bodyComponentController;
-
+    AdminRequestsDispatcher reqDispatcher = AdminRequestsDispatcher.getInstance();
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
     ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
@@ -47,10 +48,28 @@ public class AppController {
     public void initialize(){
         this.headerComponentController.setMainController(this);
         this.bodyComponentController.setMainController(this);
+        initializePollingExecutions();
     }
+
+    private void initializePollingExecutions() {
+        executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
+            try {
+                StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
+                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
+
+                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
+                    bodyComponentController.updateStatistics(reqDispatcher.getStatisticsDTO());
+                    bodyComponentController.updateHistory(reqDispatcher.getHistoryDTO());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
     @Override
-    protected void finalize()
-    {
+    protected void finalize() {
         executorServiceForPollingExecutions.shutdown();
     }
 

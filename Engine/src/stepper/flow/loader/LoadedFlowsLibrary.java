@@ -6,10 +6,14 @@ import java.io.Serializable;
 import java.util.List;
 
 public class LoadedFlowsLibrary implements Serializable {
-    private List<FlowDefinition> loadedflowDefinitions;
+    private List<FlowDefinition> loadedflowDefinitions = null;
 
-    public void setLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {
-        this.loadedflowDefinitions = loadedflowDefinitions;
+    public void AddLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {
+        if (loadedflowDefinitions != null) {
+            loadedflowDefinitions.addAll(loadedflowDefinitions);
+        } else {
+            this.loadedflowDefinitions = loadedflowDefinitions;
+        }
     }
     public FlowDefinition getFlowDefinitionByIndex(Integer flowIdx){
         if (flowIdx < 0 || flowIdx >= loadedflowDefinitions.size()){

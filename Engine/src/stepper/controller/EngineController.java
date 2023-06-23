@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.stream.Stream;
 
 
 public class EngineController implements Serializable {
@@ -49,7 +48,7 @@ public class EngineController implements Serializable {
     }
     public LoadDataDTO readXML(String path) {
         try {
-            flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
+            flowLibrary.AddLoadedflowDefinitions(flowLoader.loadFlowFromXML(path));
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){
@@ -64,7 +63,7 @@ public class EngineController implements Serializable {
      * -> works with a stream of the file and not a path to file
      * */
         try{
-            flowLibrary.setLoadedflowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
+            flowLibrary.AddLoadedflowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
             executionArchive.clear();
         }catch (Exception e){

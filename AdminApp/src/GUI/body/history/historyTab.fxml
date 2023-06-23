@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" styleClass="container" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.history.HistoryController">
+<AnchorPane fx:id="flowHistoryComponent" prefHeight="418.0" prefWidth="953.0" styleClass="container" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.body.history.HistoryController">
 
    <children>
       <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">

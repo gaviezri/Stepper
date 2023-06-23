@@ -3,7 +3,7 @@
 
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
-<TabPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="body.statistics.StatisticsController">
+<TabPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.body.statistics.StatisticsController">
    <tabs>
       <Tab fx:id="stepExecutionCount" closable="false" text="Step execution count">
          <content>

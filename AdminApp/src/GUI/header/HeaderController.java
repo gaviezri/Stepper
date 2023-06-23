@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 
-public class HeaderController {
+public class HeaderController  {
     private AppController mainController;
 
     @FXML
@@ -45,7 +45,9 @@ public class HeaderController {
         pathTextField.textProperty().bind(loadedXMLPath);
     }
 
-
+    public void setMainController(AppController mainController) {
+        this.mainController = mainController;
+    }
     @FXML
     void BrowseBtnMousePress(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();

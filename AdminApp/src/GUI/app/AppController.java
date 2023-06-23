@@ -1,6 +1,7 @@
 package GUI.app;
 
 import GUI.header.HeaderController;
+import GUI.body.BodyController;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -33,12 +34,19 @@ public class AppController {
     @FXML
     private TabPane bodyComponent;
 
+    @FXML
+    private HeaderController headerComponentController;
+
+    @FXML
+    private BodyController bodyComponentController;
+
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
     ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
 
     public void initialize(){
-
+        this.headerComponentController.setMainController(this);
+        this.bodyComponentController.setMainController(this);
     }
     @Override
     protected void finalize()

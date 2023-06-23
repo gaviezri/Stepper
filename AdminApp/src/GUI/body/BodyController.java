@@ -50,24 +50,7 @@ public class BodyController {
     }
 
     public void initialize() throws Exception{
-        initializeTab(flowExecTab);
-        initializeTab(flowStatTab);
-        initializeTab(flowHistoTab);
 
-//        flowStatComponentController.setBodyController(this);
-//        flowHistoryComponentController.setBodyController(this);
-//        flowLibComponentController.setBodyController(this);
-//        flowLibComponentController.bindInputPaneEnablementToSelectButton();
-//        DefinitionController flowDefController = flowLibComponentController.getDefinitionController();
-//        InputController flowInputComponentController = flowLibComponentController.getInputComponentController();
-//
-//        flowExecComponentController.setBodyController(this);
-//        flowExecComponentController.bindFakeSectionToExecutionEnablement(mainTabPane);
-//
-//        flowInputComponentController.initializeStartButton(flowExecComponentController);
-//        bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution();
-//
-//        flowHistoryComponentController.bindInputPaneEnablementToReRunButton(flowLibComponentController.getInputComponent(),flowLibComponentController.getDefinitionComponent());
     }
 
     private void initializeTab(Tab flowHistoTab) {
@@ -96,6 +79,10 @@ public class BodyController {
 
     public void bindFlowExecutionElementsToSelectButton() {
 //        flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowLibComponentController.getDefinitionController());
+    }
+
+    public AppController getMainController() {
+        return mainController;
     }
 
 //    public void bindDefinitionTabComponents() {

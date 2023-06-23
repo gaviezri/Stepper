@@ -25,7 +25,7 @@ public class LoadXMLServlet extends HttpServlet {
 //      create json from DTO
         String jsonDTO = Utils.gson.toJson(loadDataDTO);
         resp.getWriter().println(jsonDTO);
-//        System.out.println(engineController.getFlowDefinitionsNames().getFlowNames());
+        System.out.println(engineController.getFlowDefinitionsNames().getFlowNames());
     }
 }
 

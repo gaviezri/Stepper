@@ -9,7 +9,7 @@ public class LoadedFlowsLibrary implements Serializable {
     private List<FlowDefinition> loadedflowDefinitions = null;
 
     public void AddLoadedflowDefinitions(List<FlowDefinition> loadedflowDefinitions) {
-        if (loadedflowDefinitions != null) {
+        if (this.loadedflowDefinitions != null) {
             loadedflowDefinitions.addAll(loadedflowDefinitions);
         } else {
             this.loadedflowDefinitions = loadedflowDefinitions;

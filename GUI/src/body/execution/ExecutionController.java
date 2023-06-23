@@ -421,7 +421,7 @@ public class ExecutionController extends BodyControllerComponent {
         Text grey = new Text("Step not yet executed - Grey\n");
         grey.setStyle("-fx-fill: grey;");
         textFlow.getChildren().addAll(header,green, red, orange, grey);
-        executedStepsStatusListViewToolTip.setShowDelay(Duration.ZERO);
+        //executedStepsStatusListViewToolTip.setShowDelay(Duration.ZERO);
         executedStepsStatusListViewToolTip.setGraphic(textFlow);
         executedStepsStatusListViewToolTip.wrapTextProperty().setValue(true);
         executedStepsStatusListViewToolTip.setText("");

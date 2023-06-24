@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.rmi.CORBA.Util;
 import java.io.IOException;
 
 @WebServlet(name="HistoryStatisticsServlet",urlPatterns = {"/statistics","/history"})
@@ -30,9 +29,9 @@ public class HistoryStatisticsServlet extends HttpServlet {
 
     private String handleStatisticsRequest(){
 //        get statistics DTO and turn it to Json
-        return Utils.gson.toJson(Utils.engineController.getCurrentLoadedFlowsStatisticsDetails());
+        return Utils.GSON_INSTANCE.toJson(Utils.ENGINE_CONTROLLER_INSTANCE.getCurrentLoadedFlowsStatisticsDetails());
     }
     private String handleHistoryRequest(){
-        return Utils.gson.toJson(Utils.engineController.getExecutedFlowsHistoryDetails());
+        return Utils.GSON_INSTANCE.toJson(Utils.ENGINE_CONTROLLER_INSTANCE.getExecutedFlowsHistoryDetails());
     }
 }

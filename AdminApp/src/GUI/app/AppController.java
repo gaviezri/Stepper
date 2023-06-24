@@ -3,6 +3,7 @@ package GUI.app;
 import communication.AdminRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
+import dto.flow.FlowDefinitionDTO;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.stage.Window;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.statistics.StatisticsDTO;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -63,11 +65,17 @@ public class AppController {
             try {
                 StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
                 FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
+                List<String> flowNames = reqDispatcher.getFlowDefinitionNames();
+//                List<String> usersName = reqDispatcher.getUsersNames();
 
-                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
-                    bodyComponentController.updateStatistics(reqDispatcher.getStatisticsDTO());
-                    bodyComponentController.updateHistory(reqDispatcher.getHistoryDTO());
+//                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
+//                    bodyComponentController.updateStatistics(sDTO);
+//                    bodyComponentController.updateHistory(hDTO);
+//                }
+                if (flowNames.size() > 0) {
+                    bodyComponentController.updateFlowNames(flowNames);
                 }
+
 
             } catch (Exception e) {
                 e.printStackTrace();

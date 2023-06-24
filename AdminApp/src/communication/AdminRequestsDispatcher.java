@@ -4,16 +4,25 @@ import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.flow.LoadDataDTO;
 import dto.statistics.StatisticsDTO;
 import java.net.HttpURLConnection;
+import java.util.List;
+
 import static communication.Utils.GSON_INSTANCE;
 
 
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
+    public enum StartUpStatus {
+        SUCCESS,
+        FAILURE,
+        ALREADY_RUNNING
+    }
     private static final String LOAD_XML = "/loadXML";
     private static final String STATISTICS = "/statistics";
     private static final String HISTORY = "/history";
     private static final String ADMIN_STATUS = "/admin/status";
     private static final String ADMIN_LOGOUT = "/admin/logout";
+    private static final String FLOW_NAMES = "/flows/names";
+    private static final String USERS_NAMES = "/users/names";
 
     private static AdminRequestsDispatcher instance = new AdminRequestsDispatcher();
     public static AdminRequestsDispatcher getInstance() {
@@ -66,17 +75,31 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
+    public List<String> getFlowDefinitionNames() {
+        try {
+            HttpURLConnection con = getConnection(FLOW_NAMES, "GET", "application/json");
+            con.getOutputStream().flush();
 
-    public boolean isAdminOnline() {
+            List<String> flowNames = GSON_INSTANCE.fromJson(getResponse(con), List.class);
+            return flowNames;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+    public StartUpStatus isAdminOnline() {
         try {
             HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", null);
             boolean result = GSON_INSTANCE.fromJson(getResponse(con), Boolean.class);
             con.disconnect();
-            return result;
+            return result ? StartUpStatus.ALREADY_RUNNING : StartUpStatus.SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return StartUpStatus.FAILURE;
     }
 
 

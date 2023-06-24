@@ -14,7 +14,7 @@ public class Main extends Application {
         if (AdminRequestsDispatcher.getInstance().isAdminOnline()) {
             GUI.utils.Utils.ShowError("Error",
                     "Application is already running",
-                    "Only single AdminApp is allowed... exiting.");
+                    "Only single instance is allowed.");
             return;
         }
         FXMLLoader appLoader = new FXMLLoader(AppController.class.getResource("app.fxml"));
@@ -24,12 +24,13 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Stepper");
 
-         primaryStage.setOnCloseRequest(event -> {
-                AdminRequestsDispatcher.getInstance().logoutAdmin();
-                mainController.shutdownPollingExecutions();
-                System.exit(0);
-            });
+         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+             mainController.doFinalize();
+         });
 
+        primaryStage.setOnCloseRequest(event -> {
+                    mainController.doFinalize();
+        });
         primaryStage.show();
     }
 }

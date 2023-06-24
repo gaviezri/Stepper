@@ -1,5 +1,6 @@
 package GUI.body.statistics;
 
+import GUI.body.BodyControllerComponent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -11,7 +12,7 @@ import dto.statistics.StatisticsDTO;
 import java.time.Duration;
 import java.util.Map;
 
-public class StatisticsController extends body.BodyControllerComponent{
+public class StatisticsController extends BodyControllerComponent {
     @FXML private Tab stepSumTimeTab;
     @FXML private Tab flowExecutionCount;
     @FXML private Tab flowSumTimeTab;

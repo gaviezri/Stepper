@@ -7,7 +7,7 @@
     <tabs>
         <Tab fx:id="usersManagementTab" text="Users Management">
             <content>
-
+                <fx:include fx:id="usersManagementTabComponent" source="users/management/usersManagementTab.fxml" />
             </content>
          <styleClass>
             <String fx:value="tab" />
@@ -15,7 +15,7 @@
         </Tab>
       <Tab fx:id="rolesManagementTab" text="Roles Management">
         <content>
-
+            <fx:include fx:id="rolesManagementTabComponent" source="roles/rolesManagementTab.fxml" />
         </content>
       </Tab>
       <Tab fx:id="flowHistoTab" text="Execution History">

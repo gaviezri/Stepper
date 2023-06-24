@@ -22,7 +22,9 @@ public abstract class StepperRequestsDispatcher {
         URL url = new URL(HOST + path);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(method);
-        con.setRequestProperty("Content-Type", contentType);
+        if (contentType != null){
+            con.setRequestProperty("Content-Type", contentType);
+        }
         if (cookieIDValue >= 0) {
             con.setRequestProperty("Cookie", "ID=" + cookieIDValue);
         }
@@ -33,7 +35,6 @@ public abstract class StepperRequestsDispatcher {
 
 
     protected String getResponse(HttpURLConnection con) throws Exception{
-        con.getOutputStream().flush();
         StringBuilder sb = new StringBuilder();
         String line;
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));

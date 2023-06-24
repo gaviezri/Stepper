@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 @WebServlet(name="UsersPresenceServlet", urlPatterns = {"/admin/status","/admin/logout","/user/status","/user/login","/user/logout"})
@@ -19,7 +20,7 @@ public class UsersPresenceServlet extends HttpServlet {
      * This servlet is responsible for:
      * 1. /admin/status -> returns the current admin login status, if no admin is logged it updates it to true
      * 2. /admin/logout -> sets the admin login status to false
-     * 3.
+     * 3. /user/status  ->
      * */
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
@@ -29,7 +30,7 @@ public class UsersPresenceServlet extends HttpServlet {
         } else if(path.equals("/admin/logout")) {
             this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN,false);
             res = "false";
-        } else if(path.equals("/user/status")){
+        } else if(path.equals("/user/status")){ //check if user logged in
             // fetch (query) parameter from the request
             res = handleUserStatus(req);
         }
@@ -56,16 +57,31 @@ public class UsersPresenceServlet extends HttpServlet {
             }
             resp.getWriter().println(id);
         }
-        System.out.println(this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM));
-        System.out.println(this.getServletContext().getAttribute(Utils.USER_2_COOKIE));
-
     }
 
     final protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Retrieve cookies from the request
-        Cookie[] cookies = req.getCookies();
-
-
+        String path = req.getServletPath();
+        if(path.equals("/user/logout")) {
+            // Retrieve cookies from the request
+            Cookie[] cookies = req.getCookies();
+            if(cookies != null) {
+                String nameToDelete;
+                Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
+                Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
+                Map<String, Integer> usersCookies = (Map) this.getServletContext().getAttribute(Utils.USER_2_COOKIE); // get users in system ID map
+                for (Map.Entry<String, Integer> entry : usersCookies.entrySet()) {  // for all users in
+                    if (entry.getValue().equals(id)) {
+                        nameToDelete = entry.getKey();
+                        usersCookies.remove(nameToDelete);
+                        usersInfoMap.remove(nameToDelete);
+                        resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", nameToDelete, id));
+                        return;
+                    }
+                }
+                resp.getWriter().println(String.format("user with id {0} was not found in system", id));
+            }
+            resp.getWriter().println(String.format("no cookie found... please login first"));
+        }
     }
 
     private String handleUserStatus(HttpServletRequest req) {

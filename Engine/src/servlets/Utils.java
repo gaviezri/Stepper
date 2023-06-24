@@ -10,5 +10,4 @@ public class Utils {
     final static public EngineController ENGINE_CONTROLLER_INSTANCE = EngineController.getInstance();
     final static public String ADMIN_LOGGED_IN = "isAdminLoggedIn";
     final static public String USERS_IN_SYSTEM = "usersLoggedInMap";
-
 }

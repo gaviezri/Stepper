@@ -1,12 +1,12 @@
 package stepper.controller;
 
 import javafx.util.Pair;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.flow.ExecutedFlowDetailsDTO;
-import stepper.dto.flow.FlowDefinitionDTO;
-import stepper.dto.flow.FlowNamesDTO;
-import stepper.dto.flow.LoadDataDTO;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.flow.ExecutedFlowDetailsDTO;
+import dto.flow.FlowDefinitionDTO;
+import dto.flow.FlowNamesDTO;
+import dto.flow.LoadDataDTO;
+import dto.statistics.StatisticsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.archive.ExecutionArchive;

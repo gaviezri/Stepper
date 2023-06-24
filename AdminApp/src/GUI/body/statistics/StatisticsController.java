@@ -22,9 +22,9 @@ public class StatisticsController extends body.BodyControllerComponent{
     @FXML private BarChart<String,Number> flowExecutionChar;
     @FXML private BarChart<String,Number> stepSumTimeChar;
 
-    public void updateBarChars() {
+    public void updateBarChars(StatisticsDTO statisticsDTO){
         // Reach engine through main controller...
-        StatisticsDTO statisticsDTO = bodyController.getMainController().getCurrentLoadedFlowsStatisticsDetails();
+
         // { Original Step Name : (Occurrences Counter, Sum Durations) }
         Map<String, Pair<Integer, Duration>> stepStatistics = statisticsDTO.getStepStatistics();
         Map<String, Pair<Integer, Duration>> flowStatistics = statisticsDTO.getFlowStatistics();

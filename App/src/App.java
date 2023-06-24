@@ -1,23 +1,13 @@
 import app.AppController;
 
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import stepper.controller.EngineController;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import stepper.statistics.StatisticsManager;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class App extends Application {
 

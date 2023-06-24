@@ -1,6 +1,5 @@
 package GUI.body.history;
 
-import GUI.body.BodyController;
 import body.execution.SingleStepExecutionTableData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,9 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.execution.history.SingleFlowExecutionDTO;
-import stepper.flow.execution.FlowExecution;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.execution.history.SingleFlowExecutionDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
@@ -25,7 +23,6 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 import static body.execution.ExecutionController.getStepNameWithoutReadonly;
 
@@ -73,8 +70,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         private RadioButton nameFilter;
         private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
         @FXML
-        private VBox rerunButton;
-        @FXML
         private ToggleGroup resFilters;
         @FXML
         private RadioButton successFilter;
@@ -101,7 +96,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 });
 
                 initializeHistoryTable();
-                initializeRerunButton();
                 bindStepDetailsToSelectedStep();
                 bindStepsListViewToSelectedFlow();
                 bindSelectionOfOutputInListViewToOutputDetailsModal();
@@ -125,7 +119,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 });
 
                 resFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                        FlowExecutionResult filter = FlowExecutionResult.NONE;
                         if(oldValue != null) {
                                 filterExecutions(oldValue, newValue);
                         }
@@ -134,17 +127,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                         if (newSelection != null && newSelection != oldSelection) {
                                 this.selectedFlow = newSelection;
-                                Platform.runLater(() -> {
-                                        rerunButton.setDisable(false);
-                                        rerunButton.setOpacity(1.0);
-                                });
-                        }
-                        else{
-                                Platform.runLater(() -> {
-                                        rerunButton.setDisable(true);
-                                        rerunButton.setOpacity(0.5);
-
-                                });
                         }
                 });
         }
@@ -169,33 +151,13 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 }
         }
 
-        private void initializeRerunButton() {
-
-                Platform.runLater(()->{
-                        rerunButton.setDisable(true);
-                        rerunButton.setOpacity(0.5);
-
-                });
-                rerunButton.setOnMouseEntered(event ->
-                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()+10)
-                        ));
-
-                rerunButton.setOnMouseExited(event ->
-                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()-10)
-                                ));
-
-                rerunButton.setOnMouseReleased(event ->
-                        Platform.runLater(()-> rerunButton.setLayoutY(rerunButton.getLayoutY()-5))
-                        );
-
-        }
 
 
 
-        public void updateTable(Stack<FlowExecution> flowExecutionStack){
-                curFlowsExecutionHistoryDTO = new FlowsExecutionHistoryDTO(flowExecutionStack);
+        public void updateTable(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO) {
+                curFlowsExecutionHistoryDTO = flowsExecutionHistoryDTO;
                 executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
-                Platform.runLater(()-> {
+                Platform.runLater(() -> {
                         historyTable.setItems(executedFlows);
                 });
         }

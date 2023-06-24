@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
+      <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS" />
+        <RowConstraints vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="288.0" spacing="50.0" styleClass="container" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+               <children>
+                      <Label ellipsisString="STEPPER" prefHeight="31.0" prefWidth="168.0" style="-fx-font-size: 35;" text="Stepper" HBox.hgrow="ALWAYS">
+                          <padding>
+                              <Insets left="20.0" />
+                          </padding>
+                          <opaqueInsets>
+                              <Insets />
+                          </opaqueInsets>
+                          <textFill>
+                        <RadialGradient centerX="0.4772727272727273" centerY="0.558252427184466" cycleMethod="REFLECT" focusAngle="-127.09" focusDistance="0.29268292682926833" radius="0.5365853658536586">
+                           <stops>
+                              <Stop color="#ee4343" />
+                              <Stop color="#ee4343" offset="0.007246376811594203" />
+                              <Stop color="#ed4545" offset="0.20872406933788012" />
+                              <Stop color="BLACK" offset="0.7355072463768116" />
+                              <Stop color="BLACK" offset="1.0" />
+                           </stops>
+                        </RadialGradient>
+                          </textFill>
+                      </Label>
+                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="100.0" spacing="15.0" HBox.hgrow="ALWAYS">
+                     <children>
+                            <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="specialText" text="username:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="userNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="100.0" spacing="15.0">
+                     <children>
+                        <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="specialText" text="manager:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="isManagerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="100.0" spacing="15.0">
+                     <children>
+                        <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="specialText" text="roles assigned:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="rolesAssignedText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+    </children>
+</GridPane>

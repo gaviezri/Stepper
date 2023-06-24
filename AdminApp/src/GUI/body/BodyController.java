@@ -1,17 +1,14 @@
 package GUI.body;
 
 import GUI.app.AppController;
-import javafx.application.Platform;
+import GUI.body.history.HistoryController;
+import GUI.body.statistics.StatisticsController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Pair;
-
-
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
+import stepper.dto.statistics.StatisticsDTO;
 
 public class BodyController {
     public static final int USERS_MANAGEMENT_TAB = 0;
@@ -21,8 +18,8 @@ public class BodyController {
     private AppController mainController;
 //    @FXML private LibraryController flowLibComponentController;
 //    @FXML private ExecutionController flowExecComponentController;
-//    @FXML private StatisticsController flowStatComponentController;
-//    @FXML private HistoryController flowHistoryComponentController;
+    @FXML private StatisticsController flowStatComponentController;
+    @FXML private HistoryController flowHistoryComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowLibTab;
     @FXML private AnchorPane flowLibComponent;
@@ -50,6 +47,8 @@ public class BodyController {
     }
 
     public void initialize() throws Exception{
+        flowHistoTab.setDisable(true);
+        flowStatTab.setDisable(true);
 
     }
 
@@ -84,6 +83,17 @@ public class BodyController {
     public AppController getMainController() {
         return mainController;
     }
+
+    public void updateStatistics(StatisticsDTO statistics) {
+        flowStatTab.setDisable(false);
+        flowStatComponentController.updateBarChars(statistics);
+    }
+
+    public void updateHistory(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO){
+        flowHistoTab.setDisable(false);
+        flowHistoryComponentController.updateTable(flowsExecutionHistoryDTO);
+    }
+
 
 //    public void bindDefinitionTabComponents() {
 //        flowLibComponentController.bindLibraryTabComponents();

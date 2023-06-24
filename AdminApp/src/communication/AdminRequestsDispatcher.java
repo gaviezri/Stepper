@@ -6,7 +6,8 @@ import dto.statistics.StatisticsDTO;
 
 import java.net.HttpURLConnection;
 
-import static servlets.Utils.GSON_INSTANCE;
+import static communication.Utils.GSON_INSTANCE;
+
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String LOAD_XML = "/loadXML";

@@ -53,7 +53,14 @@ public class UsersPresenceServlet extends HttpServlet {
                         usersCookies.put(name, id); // add user
                         this.getServletContext().setAttribute(Utils.NEXT_FREE_ID, id + 1); // update next available ID
                     }
+                    System.out.println(String.format("New user with \"{0}\" with id \"{1}\" was logged in...",name,id));
                 }
+                else {
+                    System.out.println(String.format("Something went wrong probably user with name {0} already logged in",name));
+                }
+            }
+            else{
+                System.out.println("Something went wrong... no name was given");
             }
             resp.getWriter().println(id);
         }
@@ -75,12 +82,15 @@ public class UsersPresenceServlet extends HttpServlet {
                         usersCookies.remove(nameToDelete);
                         usersInfoMap.remove(nameToDelete);
                         resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", nameToDelete, id));
+                        System.out.println(String.format("{0} with id {1} was logged out (deleted)", nameToDelete, id));
                         return;
                     }
                 }
                 resp.getWriter().println(String.format("user with id {0} was not found in system", id));
+                System.out.println(String.format("user with id {0} was not found in system", id));
             }
             resp.getWriter().println(String.format("no cookie found... please login first"));
+            System.out.println(String.format("no cookie found... please login first"));
         }
     }
 

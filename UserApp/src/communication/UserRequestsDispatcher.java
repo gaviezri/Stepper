@@ -12,10 +12,11 @@ import java.util.List;
 
 public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String USER_LOGOUT = "/user/logout";
-    private static final String USER_LOGIN= "/user/login";
+    private static final String USER_LOGIN= "/user/login?name=";
     private static final String FLOWS_DEFINITIONS = "/flow/definitions";
 
-
+    private static String cookieIDName;
+    private static String cookieIDValue;
 
     private static UserRequestsDispatcher instance = new UserRequestsDispatcher();
     public static UserRequestsDispatcher getInstance() {
@@ -51,7 +52,26 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         return false;
     }
 
+    public boolean login(String userName) {
+        try {
+            HttpURLConnection con = getConnection(USER_LOGIN + userName, "POST", "text/plain");
+            con.getOutputStream().flush();
+            /* set cookie if value >= 0 (success)
+             * else return false
+             *
+             */
+            boolean status = Boolean.parseBoolean(getResponse(con));
+            con.disconnect();
+            return status;
+            // refactor ^^
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // CHANGE TO FALSE
+        return true;
+    }
+
     public List<FlowDefinitionDTO> getUserRoleData() {
-     return null;
+         return null;
     }
 }

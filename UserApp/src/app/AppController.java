@@ -186,4 +186,6 @@ public class AppController {
         sceneScrollPane.getScene().getStylesheets().clear();
         sceneScrollPane.getScene().getStylesheets().add(themeSrc);
     }
+
+
 }

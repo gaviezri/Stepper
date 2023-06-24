@@ -7,8 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.statistics.StatisticsDTO;
 
 public class BodyController {
     public static final int USERS_MANAGEMENT_TAB = 0;

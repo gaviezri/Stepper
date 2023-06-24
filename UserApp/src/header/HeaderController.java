@@ -49,7 +49,6 @@ public class HeaderController {
 
 
     public void initialize() {
-        pathTextField.textProperty().bind(loadedXMLPath);
     }
 
     public void setMainController(AppController appController) {

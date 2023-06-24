@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="Engine" exported="" />
     <orderEntry type="module" module-name="GUI" exported="" />
     <orderEntry type="module" module-name="CUI" exported="" />
+    <orderEntry type="module" module-name="Communication" />
   </component>
 </module>

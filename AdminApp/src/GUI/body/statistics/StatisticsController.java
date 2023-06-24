@@ -6,7 +6,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tab;
 import javafx.util.Pair;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.statistics.StatisticsDTO;
 
 import java.time.Duration;
 import java.util.Map;

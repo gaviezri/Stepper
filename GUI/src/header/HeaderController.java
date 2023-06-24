@@ -14,7 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import stepper.controller.EngineController;
-import stepper.dto.flow.LoadDataDTO;
+import dto.flow.LoadDataDTO;
 
 import java.io.*;
 import java.nio.file.Paths;

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="flowExecutionMainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.body.execution.ExecutionController">
+   <children>
+      <VBox fx:id="fakeLoadingVBox" style="-fx-alignment: center;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="fakeLoadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="186.0" text="One Moment Please. . ." />
+            <ProgressBar fx:id="fakeProgressBar" prefHeight="29.0" prefWidth="587.0" progress="0.0" style="-fx-accent: red;" />
+         </children>
+      </VBox>
+      <AnchorPane fx:id="realExecutionAnchorPane" prefHeight="384.0" prefWidth="1250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ListView fx:id="executedStepsStatusListView" layoutX="22.0" layoutY="52.0" prefHeight="367.0" prefWidth="269.0">
+               <tooltip>
+                  <Tooltip fx:id="executedStepsStatusListViewToolTip" text="Empty Tooltip" />
+               </tooltip>
+            </ListView>
+            <FlowPane fx:id="selectedStepDetailsFlowPane" layoutX="284.0" layoutY="14.0" prefHeight="177.0" prefWidth="952.0">
+               <children>
+                  <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="176.0" prefWidth="952.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="471.0" minWidth="10.0" prefWidth="267.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="795.0" minWidth="10.0" prefWidth="326.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="795.0" minWidth="10.0" prefWidth="359.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <VBox fx:id="stepDetailsVBox" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                           <children>
+                              <Label fx:id="stepDetailsNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="select a step from the list" />
+                              <Label fx:id="stepDetailsDurationLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="to get" />
+                              <Label fx:id="stepDetailsResultLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="267.0" text="further details" />
+                           </children>
+                        </VBox>
+                        <TitledPane fx:id="logsTitledPane" alignment="CENTER" animated="false" collapsible="false" text="Logs" GridPane.columnIndex="1">
+                          <content>
+                            <AnchorPane fx:id="logsDefaultAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="176.0">
+                                 <children>
+                                    <Label fx:id="logDefaultLabel" layoutX="93.0" layoutY="62.0" text="No Content To Show" />
+                                    <ListView fx:id="logsListView" layoutY="-1.0" prefHeight="147.0" prefWidth="326.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                           <font>
+                              <Font name="System Bold Italic" size="15.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane fx:id="outputsTitledPane" alignment="CENTER" animated="false" collapsible="false" text="Outputs (Interactive)" GridPane.columnIndex="2">
+                           <content>
+                              <AnchorPane fx:id="outputsDefaultAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="outputsDefaultLabel" layoutX="109.0" layoutY="62.0" text="No Content To Show" />
+                                    <ListView fx:id="outputsListView" layoutX="-1.0" layoutY="-1.0" prefHeight="149.0" prefWidth="359.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <font>
+                              <Font name="System Bold Italic" size="15.0" />
+                           </font>
+                        </TitledPane>
+                     </children>
+                  </GridPane>
+               </children>
+            </FlowPane>
+            <Label fx:id="stepInProgressLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="348.0" layoutY="362.0" prefHeight="46.0" prefWidth="282.0" />
+            <ProgressBar fx:id="flowProgressBar" layoutX="337.0" layoutY="332.0" prefHeight="23.0" prefWidth="304.0" progress="0.0" style="-fx-accent: red;" />
+            <Label fx:id="flowProgressPercentageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="468.0" layoutY="298.0" prefHeight="23.0" prefWidth="42.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <AnchorPane fx:id="continuationAnchorPane" layoutX="810.0" layoutY="266.0" prefHeight="154.0" prefWidth="433.0">
+               <children>
+                  <Button fx:id="continueButton" layoutX="296.0" layoutY="77.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="103.0" text="Continue" />
+                  <Label fx:id="continuationLabel" layoutX="36.0" layoutY="14.0" prefHeight="21.0" prefWidth="186.0" text="Continuity available:" />
+                  <ListView fx:id="continuationListView" layoutX="29.0" layoutY="35.0" prefHeight="119.0" prefWidth="200.0" />
+               </children>
+            </AnchorPane>
+            <Label layoutX="97.0" layoutY="23.0" text="steps in execution" />
+            <Label fx:id="executionEndLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="642.0" layoutY="199.0" prefHeight="59.0" prefWidth="480.0" />
+            <Label fx:id="stepSummaryLineLabel" layoutX="337.0" layoutY="235.0" prefHeight="59.0" prefWidth="547.0" style="-fx-wrap-text: true;" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

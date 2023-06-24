@@ -1,14 +1,14 @@
-import app.AppController;
+
+import GUI.app.AppController;
 import communication.UserRequestsDispatcher;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import login.LoginController;
+import GUI.login.LoginController;
 
 import java.io.IOException;
 
@@ -16,17 +16,18 @@ public class Main extends Application {
     private AppController mainController;
     @Override
     public void start(Stage primaryStage) throws Exception {
-        startLoginModal(primaryStage);
         FXMLLoader loader = new FXMLLoader(AppController.class.getResource("app.fxml"));
         ScrollPane root = loader.load();
         mainController = loader.getController();
+
+        startLoginModal(primaryStage);
+
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Stepper");
         primaryStage.setOnCloseRequest(event -> {
             UserRequestsDispatcher.getInstance().logout();
             mainController.stop();
-            System.exit(0);
         });
     }
 
@@ -38,8 +39,9 @@ public class Main extends Application {
         loginStage.setScene(new Scene(root));
         loginStage.setTitle("Stepper - Login");
         loginController.setStage(loginStage);
+        loginController.setMainStage(primaryStage);
+        mainController.bindUserNameToText(loginController.getUserNameTextField());
         loginStage.show();
-
 
         loginStage.setOnCloseRequest(event -> {
             // Handle the close request of the login stage
@@ -47,9 +49,6 @@ public class Main extends Application {
                 // The user is not logged in, so quit the application
                 Platform.exit();
                 this.mainController.stop();
-            } else{
-                // The user is logged in, so just close the login window
-                primaryStage.show();
             }
         });
     }

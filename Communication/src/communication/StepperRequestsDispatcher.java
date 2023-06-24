@@ -8,11 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class StepperRequestsDispatcher {
+public abstract class StepperRequestsDispatcher {
 
     protected static final String PORT = "8080";
 
     protected static final String HOST = "http://localhost:" + PORT + "/stepper";
+
+    protected static int cookieIDValue;
 
     protected StepperRequestsDispatcher() {}
 
@@ -21,9 +23,13 @@ public class StepperRequestsDispatcher {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(method);
         con.setRequestProperty("Content-Type", contentType);
+        if (cookieIDValue >= 0) {
+            con.setRequestProperty("Cookie", "ID=" + cookieIDValue);
+        }
         con.setDoOutput(true);
         return con;
     }
+
 
 
     protected String getResponse(HttpURLConnection con) throws Exception{

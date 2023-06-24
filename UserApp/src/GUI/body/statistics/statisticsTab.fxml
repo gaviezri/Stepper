@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<TabPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.body.statistics.StatisticsController">
+   <tabs>
+      <Tab fx:id="stepExecutionCount" closable="false" text="Step execution count">
+         <content>
+            <BarChart fx:id="stepExecutionChar">
+              <xAxis>
+                <CategoryAxis label="STEPS" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis label="Count" side="LEFT" />
+              </yAxis>
+            </BarChart>
+         </content>
+      </Tab>
+      <Tab fx:id="flowSumTimeTab" closable="false" text="Flow total run time ">
+         <content>
+            <BarChart fx:id="flowSumTimeChar">
+               <xAxis>
+                  <CategoryAxis label="FLOWS" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis label="TIME ms" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </Tab>
+      <Tab fx:id="flowExecutionCount" closable="false" text="Flow execution count">
+         <content>
+            <BarChart fx:id="flowExecutionChar">
+               <xAxis>
+                  <CategoryAxis label="FLOWS" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis label="Count" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </content>
+      </Tab>
+      <Tab fx:id="stepSumTimeTab" closable="false" text="Step total run time ">
+         <content>
+            <BarChart fx:id="stepSumTimeChar">
+              <xAxis>
+                <CategoryAxis label="STEPS" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis label="TIME ms" side="LEFT" />
+              </yAxis>
+            </BarChart>
+         </content>
+      </Tab>
+   </tabs>
+</TabPane>

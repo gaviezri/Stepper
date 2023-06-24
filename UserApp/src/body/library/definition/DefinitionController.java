@@ -1,8 +1,6 @@
 package body.library.definition;
 
-import app.AppController;
 import body.library.LibraryControllerComponent;
-import header.HeaderController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -15,9 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-import stepper.dto.flow.FlowDefinitionDTO;
-import stepper.dto.step.SingleStepDTO;
-import stepper.dto.step.StepsDTO;
+import dto.flow.FlowDefinitionDTO;
+import dto.step.SingleStepDTO;
+import dto.step.StepsDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -132,22 +130,18 @@ public class DefinitionController extends LibraryControllerComponent {
         });
     }
 
-    public void bindDefinitionTabComponents() {
-        AppController mainController = this.libraryController.getBodyController().getMainController();
-        HeaderController headerController = mainController.getHeaderController();
-        headerController.getLoadedPath().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                clearAllData();
-                flowDefinitionDTOList = mainController.getAllFlowDefinitionsData();
+    public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefDTOlist) {
 
-                for(FlowDefinitionDTO dto : flowDefinitionDTOList){
-                    setFlowsHeadersData(dto);
-                    setFlowsStepsData(dto);
-                    setFlowInputsData(dto);
-                    setFlowOutputsData(dto);
-                }
+            clearAllData();
+            flowDefinitionDTOList = flowDefDTOlist;
+
+            for(FlowDefinitionDTO dto : flowDefinitionDTOList){
+                setFlowsHeadersData(dto);
+                setFlowsStepsData(dto);
+                setFlowInputsData(dto);
+                setFlowOutputsData(dto);
             }
-        });
+
     }
     // --FLOW HEADERS--
     private void setFlowsHeadersData(FlowDefinitionDTO dto) {
@@ -366,5 +360,9 @@ public class DefinitionController extends LibraryControllerComponent {
             flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
             libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet,false);
         }
+    }
+
+    public FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
+        return flowDefinitionDTOList.get(flowIndex);
     }
 }

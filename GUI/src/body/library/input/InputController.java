@@ -12,11 +12,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import stepper.dto.flow.FlowDefinitionDTO;
+import dto.flow.FlowDefinitionDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;

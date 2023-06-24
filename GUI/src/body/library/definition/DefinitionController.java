@@ -13,10 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
-import stepper.dto.flow.FlowDefinitionDTO;
-import stepper.dto.step.SingleStepDTO;
-import stepper.dto.step.StepsDTO;
-import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
+import dto.flow.FlowDefinitionDTO;
+import dto.step.SingleStepDTO;
+import dto.step.StepsDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -333,7 +332,7 @@ public class DefinitionController extends LibraryControllerComponent {
             Platform.runLater(() -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
-                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null,false);
+//                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null,false);
             });
         });
     }
@@ -363,7 +362,7 @@ public class DefinitionController extends LibraryControllerComponent {
                 inputsToSet.put(inputName,outputValue);
             }
             flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
-            libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet,false);
+//            libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet,false);
         }
     }
 }

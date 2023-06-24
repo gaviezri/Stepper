@@ -1,6 +1,7 @@
 package app;
 
 import body.BodyController;
+import communication.UserRequestsDispatcher;
 import header.HeaderController;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,10 +14,10 @@ import javafx.stage.Window;
 import javafx.util.Pair;
 import stepper.controller.EngineController;
 import stepper.dd.api.DataDefinition;
-import stepper.dto.flow.FlowDefinitionDTO;
-import stepper.dto.flow.FlowNamesDTO;
-import stepper.dto.flow.LoadDataDTO;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.flow.FlowDefinitionDTO;
+import dto.flow.FlowNamesDTO;
+import dto.flow.LoadDataDTO;
+import dto.statistics.StatisticsDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
 
@@ -57,14 +58,18 @@ public class AppController {
 
     public void initialize(){
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
-            numOfFlowsExecuted.set(EngineController.getInstance().getNumOfFlowsExecuted());
-            numOfFlowsFinished.set(EngineController.getInstance().getNumOfFlowsFinished());
-                },0, 200, TimeUnit.MILLISECONDS);
-        engineController = EngineController.getInstance();
+
+            UserRequestsDispatcher urd = UserRequestsDispatcher.getInstance();
+
+            bodyComponentController.updateFlowDefinitions(urd.getAllFlowDefinitionsData());
+            headerComponentController.updateUserRole(urd.getUserRoleData());
+
+                },0, 1, TimeUnit.SECONDS);
+
         bodyComponentController.setMainController(this);
         headerComponentController.setMainController(this);
-        bodyComponentController.bindDefinitionTabComponents();
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
+
         numOfFlowsFinished.addListener((
                 (observable, oldValue, newValue) -> {
                     if(!oldValue.equals(newValue)) {

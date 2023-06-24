@@ -1,4 +1,4 @@
-package stepper.dto.execution.history;
+package dto.execution.history;
 
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;

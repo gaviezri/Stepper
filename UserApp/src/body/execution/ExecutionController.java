@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
-import stepper.dto.flow.FlowDefinitionDTO;
+import dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 

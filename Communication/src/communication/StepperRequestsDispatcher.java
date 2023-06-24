@@ -1,4 +1,4 @@
-package Communication;
+package communication;
 
 
 
@@ -24,6 +24,19 @@ public class StepperRequestsDispatcher {
         con.setDoOutput(true);
         return con;
     }
+
+    protected String getResponse(HttpURLConnection con) throws Exception{
+        con.getOutputStream().flush();
+        StringBuilder sb = new StringBuilder();
+        String line;
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+
+        return sb.toString();
+    }
+
 
 
 }

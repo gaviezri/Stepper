@@ -1,14 +1,10 @@
-import Communication.AdminRequestsDispatcher;
-import Communication.StepperRequestsDispatcher;
+import communication.AdminRequestsDispatcher;
 import GUI.app.AppController;
-import GUI.utils.Utils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-
-import java.util.Map;
 
 public class Main extends Application {
     private AppController mainController;

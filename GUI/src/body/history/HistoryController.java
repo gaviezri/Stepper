@@ -15,8 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.execution.history.SingleFlowExecutionDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.execution.history.SingleFlowExecutionDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
@@ -197,12 +197,12 @@ public class HistoryController extends body.BodyControllerComponent implements I
                                 bodyController.setActiveTab(BodyController.FLOW_LIB_TAB);
                                 inputPane.setVisible(true);
                                 definitionPane.setVisible(false);
-                                bodyController.getFlowLibComponentController().
-                                        getInputComponentController().
-                                        setInputsToSelectedFlow(
-                                                bodyController.getMainController().getEngineController().
-                                                        getFlowDefinitionDtoByName(selectedFlow.getFlowName()),
-                                                selectedFlow.getDataName2value(),true);
+//                                bodyController.getFlowLibComponentController().
+//                                        getInputComponentController().
+//                                        setInputsToSelectedFlow(
+//                                                bodyController.getMainController().getEngineController().
+//                                                        getFlowDefinitionDtoByName(selectedFlow.getFlowName()),
+//                                                selectedFlow.getDataName2value(),true);
 
                         });
                 });

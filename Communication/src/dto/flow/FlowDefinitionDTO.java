@@ -1,8 +1,8 @@
-package stepper.dto.flow;
+package dto.flow;
 
 import javafx.util.Pair;
-import stepper.dto.AbstractDTO;
-import stepper.dto.step.StepsDTO;
+import dto.AbstractDTO;
+import dto.step.StepsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 
 import java.util.List;

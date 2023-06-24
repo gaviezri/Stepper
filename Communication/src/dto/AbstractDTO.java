@@ -1,4 +1,4 @@
-package stepper.dto;
+package dto;
 
 public abstract class AbstractDTO {
     protected String errorMessage;

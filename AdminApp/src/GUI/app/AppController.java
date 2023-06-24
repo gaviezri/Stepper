@@ -1,7 +1,6 @@
 package GUI.app;
 
-import Communication.AdminRequestsDispatcher;
-import Communication.StepperRequestsDispatcher;
+import communication.AdminRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
 import javafx.beans.property.IntegerProperty;
@@ -12,8 +11,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.statistics.StatisticsDTO;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

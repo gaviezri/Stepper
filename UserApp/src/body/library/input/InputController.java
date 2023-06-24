@@ -15,7 +15,7 @@ import javafx.scene.layout.*;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import stepper.dto.flow.FlowDefinitionDTO;
+import dto.flow.FlowDefinitionDTO;
 
 import java.util.HashMap;
 import java.util.LinkedList;

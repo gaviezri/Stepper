@@ -2,17 +2,14 @@ package body.statistics;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tab;
 import javafx.util.Pair;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.statistics.StatisticsDTO;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class StatisticsController extends body.BodyControllerComponent{
     @FXML private Tab stepSumTimeTab;

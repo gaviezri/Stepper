@@ -1,6 +1,5 @@
 package GUI.body.history;
 
-import GUI.body.BodyController;
 import body.execution.SingleStepExecutionTableData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,9 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.execution.history.SingleFlowExecutionDTO;
-import stepper.flow.execution.FlowExecution;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.execution.history.SingleFlowExecutionDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
@@ -25,7 +23,6 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 import static body.execution.ExecutionController.getStepNameWithoutReadonly;
 

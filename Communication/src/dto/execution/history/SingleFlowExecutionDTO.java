@@ -1,4 +1,4 @@
-package stepper.dto.execution.history;
+package dto.execution.history;
 
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;

@@ -1,27 +1,22 @@
 package GUI.header;
 
 
-import Communication.AdminRequestsDispatcher;
+import communication.AdminRequestsDispatcher;
 import GUI.app.AppController;
 
 import GUI.utils.Utils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import Communication.StepperRequestsDispatcher;
-import stepper.dto.flow.LoadDataDTO;
+import dto.flow.LoadDataDTO;
 
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.Map;
 
 
 public class HeaderController  {

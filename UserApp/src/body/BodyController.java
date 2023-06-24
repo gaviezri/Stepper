@@ -7,6 +7,7 @@ import body.library.LibraryController;
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
 import body.statistics.StatisticsController;
+import dto.flow.FlowDefinitionDTO;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -85,6 +86,10 @@ public class BodyController {
         return flowLibComponentController;
     }
 
+    public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefinitions) {
+        flowLibComponentController.updateFlowDefinitions(flowDefinitions);
+    }
+
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
         flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
             flowExecTab.setDisable(false);
@@ -94,19 +99,20 @@ public class BodyController {
 
             int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
             Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
-            getFlowExecutionController().setContinuationProperty(mainController.getAllFlowDefinitionsData().get(flowIndex));
+            getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(flowIndex));
             mainController.executeFlow(flowIndex, valName2valType);
 
         });
+    }
+
+    private FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
+        return flowLibComponentController.getFlowDefinitionsDataByIndex(flowIndex);
     }
 
     public void bindFlowExecutionElementsToSelectButton() {
         flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowLibComponentController.getDefinitionController());
     }
 
-    public void bindDefinitionTabComponents() {
-        flowLibComponentController.bindLibraryTabComponents();
-    }
     public AppController getMainController() {
         return mainController;
     }

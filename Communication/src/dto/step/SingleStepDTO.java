@@ -1,4 +1,4 @@
-package stepper.dto.step;
+package dto.step;
 
 import javafx.util.Pair;
 import stepper.flow.definition.api.StepUsageDeclaration;

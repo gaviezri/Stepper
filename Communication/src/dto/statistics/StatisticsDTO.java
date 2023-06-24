@@ -1,4 +1,4 @@
-package stepper.dto.statistics;
+package dto.statistics;
 
 import javafx.util.Pair;
 

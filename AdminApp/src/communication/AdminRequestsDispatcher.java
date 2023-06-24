@@ -1,16 +1,12 @@
-package Communication;
+package communication;
 
-import stepper.dto.execution.history.FlowsExecutionHistoryDTO;
-import stepper.dto.flow.ExecutedFlowDetailsDTO;
-import stepper.dto.flow.LoadDataDTO;
-import stepper.dto.statistics.StatisticsDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.flow.LoadDataDTO;
+import dto.statistics.StatisticsDTO;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
-import static servlets.Utils.gson;
+import static servlets.Utils.GSON_INSTANCE;
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String LOAD_XML = "/loadXML";
@@ -33,13 +29,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             con.getOutputStream().write(xmlContent.getBytes("UTF-8"));
             con.getOutputStream().flush();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            LoadDataDTO dto = gson.fromJson(sb.toString(), LoadDataDTO.class);
+            LoadDataDTO dto = GSON_INSTANCE.fromJson(getResponse(con), LoadDataDTO.class);
             con.disconnect();
             return dto;
         } catch (Exception e) {
@@ -53,13 +43,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(STATISTICS, "GET", "application/json");
             con.getOutputStream().flush();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            StatisticsDTO dto = gson.fromJson(sb.toString(), StatisticsDTO.class);
+            StatisticsDTO dto = GSON_INSTANCE.fromJson(getResponse(con), StatisticsDTO.class);
             con.disconnect();
             return dto;
         } catch (Exception e) {
@@ -73,13 +57,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(HISTORY, "GET", "application/json");
             con.getOutputStream().flush();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            FlowsExecutionHistoryDTO dto = gson.fromJson(sb.toString(), FlowsExecutionHistoryDTO.class);
+            FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getResponse(con), FlowsExecutionHistoryDTO.class);
             con.disconnect();
             return dto;
         } catch (Exception e) {
@@ -93,14 +71,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         try {
             HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", "plain/text");
             con.getOutputStream().flush();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            boolean result = gson.fromJson(sb.toString(), Boolean.class);
+            boolean result = GSON_INSTANCE.fromJson(getResponse(con), Boolean.class);
             con.disconnect();
             return result;
         } catch (Exception e) {

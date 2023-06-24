@@ -2,6 +2,7 @@ package body.library;
 
 import body.library.definition.DefinitionController;
 import body.library.input.InputController;
+import dto.flow.FlowDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
@@ -37,8 +38,8 @@ public class LibraryController extends body.BodyControllerComponent{
         definitionComponentController.bindInputPaneEnablementToSelectButton(inputComponent, definitionComponent);
     }
 
-    public void bindLibraryTabComponents() {
-        definitionComponentController.bindDefinitionTabComponents();
+    public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefinitionDTOList) {
+        definitionComponentController.updateFlowDefinitions(flowDefinitionDTOList);
     }
 
     public InputController getInputComponentController() {
@@ -57,5 +58,9 @@ public class LibraryController extends body.BodyControllerComponent{
     public void showInputComponent() {
         libraryAnchorPane.getChildren().get(0).setVisible(false);
         libraryAnchorPane.getChildren().get(1).setVisible(true);
+    }
+
+    public FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
+        return definitionComponentController.getFlowDefinitionsDataByIndex(flowIndex);
     }
 }

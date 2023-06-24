@@ -1,7 +1,7 @@
-package stepper.dto.flow;
+package dto.flow;
 
 import javafx.util.Pair;
-import stepper.dto.AbstractDTO;
+import dto.AbstractDTO;
 import stepper.flow.execution.FlowExecution;
 
 import java.util.ArrayList;

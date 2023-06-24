@@ -1,4 +1,4 @@
-package stepper.dto.step;
+package dto.step;
 
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.definition.mapping.MappingGraph;

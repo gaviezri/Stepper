@@ -1,6 +1,6 @@
-package stepper.dto.flow;
+package dto.flow;
 
-import stepper.dto.AbstractDTO;
+import dto.AbstractDTO;
 
 import java.util.List;
 

@@ -9,7 +9,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 10.0.11" level="application_server_libraries" />
     <orderEntry type="library" scope="PROVIDED" name="google.code.gson" level="project" />
+
     <orderEntry type="library" name="Tomcat 10" level="application_server_libraries" />
     <orderEntry type="module" module-name="Communication" />
+
   </component>
 </module>

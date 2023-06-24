@@ -69,8 +69,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
 
     public boolean isAdminOnline() {
         try {
-            HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", "plain/text");
-            con.getOutputStream().flush();
+            HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", null);
             boolean result = GSON_INSTANCE.fromJson(getResponse(con), Boolean.class);
             con.disconnect();
             return result;
@@ -83,8 +82,8 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
 
     public void logoutAdmin() {
         try {
-            HttpURLConnection con = getConnection(ADMIN_LOGOUT, "GET", "plain/text");
-            con.getOutputStream().flush();
+            HttpURLConnection con = getConnection(ADMIN_LOGOUT, "GET", null);
+            getResponse(con);
             con.disconnect();
         } catch (Exception e) {
             e.printStackTrace();

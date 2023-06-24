@@ -49,6 +49,14 @@ public class AppController {
         this.bodyComponentController.setMainController(this);
         initializePollingExecutions();
     }
+    @Override
+    protected void finalize() {
+        executorServiceForPollingExecutions.shutdown();
+        reqDispatcher.logoutAdmin();
+    }
+    public void doFinalize(){
+        finalize();
+    }
 
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
@@ -67,10 +75,7 @@ public class AppController {
         }, 0, 1, TimeUnit.SECONDS);
     }
 
-    @Override
-    protected void finalize() {
-        executorServiceForPollingExecutions.shutdown();
-    }
+
 
 
 

@@ -1,6 +1,5 @@
 package GUI.body.history;
 
-import body.execution.SingleStepExecutionTableData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static body.execution.ExecutionController.getStepNameWithoutReadonly;
+
 
 public class HistoryController extends GUI.body.BodyControllerComponent implements Initializable{
 
@@ -101,6 +100,13 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 bindSelectionOfOutputInListViewToOutputDetailsModal();
         }
 
+        public static String getStepNameWithoutReadonly(String Name) {
+                String finalItemName =  (Name.contains("(read-only)")) ?
+                        Name.substring(0,Name.indexOf("(")-1)
+                        :
+                        Name;
+                return finalItemName;
+        }
         private void initializeHistoryTable() {
                 SortFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
                         if (SortFilters.getSelectedToggle() != null) {

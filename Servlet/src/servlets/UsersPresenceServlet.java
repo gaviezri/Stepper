@@ -28,13 +28,21 @@ public class UsersPresenceServlet extends HttpServlet {
         if (path.equals("/admin/status")) {
             res = handleAdminStatus();
         } else if(path.equals("/admin/logout")) {
-            this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN,false);
-            res = "false";
+            res = handleAdminLogout();
         } else if(path.equals("/user/status")){ //check if user logged in
             // fetch (query) parameter from the request
             res = handleUserStatus(req);
         }
         resp.getWriter().println(res);
+    }
+
+    private String handleAdminLogout() {
+        String res;
+        synchronized (getServletContext()) {
+            this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN, false);
+        }
+        res = "false";
+        return res;
     }
 
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -109,7 +117,9 @@ public class UsersPresenceServlet extends HttpServlet {
         res = isAdminLoggedIn.toString();
 
         if(!isAdminLoggedIn){
-            this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN,true);
+            synchronized (this.getServletContext()) {
+                this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN, true);
+            }
         }
         return res;
     }

@@ -20,7 +20,11 @@ public class Main extends Application {
             primaryStage.setTitle("Stepper");
 
             Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-                mainController.doFinalize();
+                try {
+                    mainController.doFinalize();
+                } catch (Throwable t) {
+                    AdminRequestsDispatcher.getInstance().logoutAdmin();
+                }
             });
 
             primaryStage.setOnCloseRequest(event -> {

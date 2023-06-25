@@ -2,6 +2,7 @@ package servlets;
 
 import communication.UserSystemInfo;
 import communication.Utils;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -38,8 +39,10 @@ public class UsersPresenceServlet extends HttpServlet {
 
     private String handleAdminLogout() {
         String res;
-        synchronized (getServletContext()) {
-            this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN, false);
+        ServletContext context = getServletContext();
+        synchronized (context) {
+            context.setAttribute(Utils.FETCH_STARTUP_DATA_ADMIN, true);
+            context.setAttribute(Utils.ADMIN_LOGGED_IN, false);
         }
         res = "false";
         return res;
@@ -117,8 +120,10 @@ public class UsersPresenceServlet extends HttpServlet {
         res = isAdminLoggedIn.toString();
 
         if(!isAdminLoggedIn){
-            synchronized (this.getServletContext()) {
-                this.getServletContext().setAttribute(Utils.ADMIN_LOGGED_IN, true);
+            ServletContext context = getServletContext();
+            synchronized (context) {
+                context.setAttribute(Utils.ADMIN_LOGGED_IN, true);
+                context.setAttribute(Utils.FETCH_STARTUP_DATA_ADMIN, true);
             }
         }
         return res;

@@ -2,9 +2,12 @@ package GUI.body;
 
 import GUI.app.AppController;
 import GUI.body.history.HistoryController;
+import communication.Role;
 import GUI.body.roles.RolesController;
 import GUI.body.statistics.StatisticsController;
 import GUI.body.users.management.UsersManagementController;
+import dto.flow.FlowNamesDTO;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -13,6 +16,8 @@ import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.statistics.StatisticsDTO;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class BodyController {
     public static final int USERS_MANAGEMENT_TAB = 0;
@@ -100,8 +105,25 @@ public class BodyController {
         flowHistoryComponentController.updateTable(flowsExecutionHistoryDTO);
     }
 
-    public void updateFlowNames(List<String> flowNames) {
+    public void updateFlowNames(FlowNamesDTO flowNames) {
         rolesManagementTabComponentController.updateFlowNames(flowNames);
+    }
+
+    public void createRoleOnServer(List<Role> newRole) {
+        mainController.createRoleOnServer(newRole);
+    }
+
+    public void updateRoles(List<Map> roles) {
+        rolesManagementTabComponentController.updateRoles(roles);
+    }
+
+
+    public void bindRolesTabSelectionToRolesFetching(BooleanProperty fetchedRoles, Runnable getRoles) {
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == rolesManagementTab && !fetchedRoles.get()) {
+                getRoles.run();
+            }
+        });
     }
 
 

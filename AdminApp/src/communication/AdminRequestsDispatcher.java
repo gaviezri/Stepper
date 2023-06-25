@@ -1,16 +1,24 @@
 package communication;
 
 import dto.execution.history.FlowsExecutionHistoryDTO;
+import dto.flow.FlowNamesDTO;
 import dto.flow.LoadDataDTO;
 import dto.statistics.StatisticsDTO;
+
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.Map;
 
 import static communication.Utils.GSON_INSTANCE;
 
 
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
+
+
+
+
     public enum StartUpStatus {
         SUCCESS,
         FAILURE,
@@ -23,6 +31,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String ADMIN_LOGOUT = "/admin/logout";
     private static final String FLOW_NAMES = "/flows/names";
     private static final String USERS_NAMES = "/users/names";
+    private static final String ROLES = "/roles";
 
     private static AdminRequestsDispatcher instance = new AdminRequestsDispatcher();
     public static AdminRequestsDispatcher getInstance() {
@@ -64,7 +73,6 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public FlowsExecutionHistoryDTO getHistoryDTO(){
         try {
             HttpURLConnection con = getConnection(HISTORY, "GET", "application/json");
-            con.getOutputStream().flush();
 
             FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getResponse(con), FlowsExecutionHistoryDTO.class);
             con.disconnect();
@@ -75,12 +83,11 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
-    public List<String> getFlowDefinitionNames() {
+    public FlowNamesDTO getFlowDefinitionNames() {
         try {
             HttpURLConnection con = getConnection(FLOW_NAMES, "GET", "application/json");
-            con.getOutputStream().flush();
 
-            List<String> flowNames = GSON_INSTANCE.fromJson(getResponse(con), List.class);
+            FlowNamesDTO flowNames = GSON_INSTANCE.fromJson(getResponse(con), FlowNamesDTO.class);
             return flowNames;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,8 +95,31 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
+    public void createRoles(List<Role> newRole) {
+        try {
+            HttpURLConnection con = getConnection(ROLES, "POST", "application/json");
+            OutputStream os = con.getOutputStream();
+            os.write(GSON_INSTANCE.toJson(newRole).getBytes("UTF-8"));
+            os.flush();
+            os.close();
+            con.getResponseMessage();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-
+    public List<Map> getRoles() {
+        try {
+            HttpURLConnection con = getConnection(ROLES, "GET", null);
+            List<Map> roles = GSON_INSTANCE.fromJson(getResponse(con), List.class);
+            con.disconnect();
+            return roles;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public StartUpStatus isAdminOnline() {
         try {
             HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", null);

@@ -34,7 +34,9 @@ public class Role {
     }
 
     public void assignNewFlow(String flowName) {
-        assignedFlowNames.add(flowName);
+        if (!assignedFlowNames.contains(flowName)) {
+            assignedFlowNames.add(flowName);
+        }
     }
 
     public static List<Role> createRoleListFromJson(List<Map> rawRolesAsMaps) {
@@ -63,5 +65,9 @@ public class Role {
 
     public List<String> getFlows() {
         return assignedFlowNames;
+    }
+
+    public void unassignOldFlow(String flowName) {
+        assignedFlowNames.remove(flowName);
     }
 }

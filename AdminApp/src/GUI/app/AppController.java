@@ -15,8 +15,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import dto.execution.history.FlowsExecutionHistoryDTO;
-import dto.statistics.StatisticsDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +59,7 @@ public class AppController {
 
     private void initializeTabPane() {
         bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
-        bodyComponentController.bindRolesTabSelectionToRolesFetching(fetchedRoles, this::initializeRoles);
+        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(fetchedRoles, this::initializeRoles, this::updateFlows);
     }
 
     public void initializeRoles() {
@@ -69,6 +67,14 @@ public class AppController {
         if (roles.size() > 0)
         {
             bodyComponentController.updateRoles(roles);
+        }
+    }
+
+    public void updateFlows() {
+        FlowNamesDTO flows = reqDispatcher.getFlowDefinitionNames();
+        if (flows.size() > 0)
+        {
+            bodyComponentController.updateFlowNames(flows);
         }
     }
 
@@ -93,9 +99,9 @@ public class AppController {
 //                    bodyComponentController.updateStatistics(sDTO);
 //                    bodyComponentController.updateHistory(hDTO);
 //                }
-                if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
-                    bodyComponentController.updateFlowNames(flowNamesDTO);
-                }
+//                if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
+//                    bodyComponentController.updateFlowNames(flowNamesDTO);
+//                }
 
 
 

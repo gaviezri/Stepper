@@ -17,7 +17,6 @@ import dto.statistics.StatisticsDTO;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 public class BodyController {
     public static final int USERS_MANAGEMENT_TAB = 0;
@@ -118,10 +117,11 @@ public class BodyController {
     }
 
 
-    public void bindRolesTabSelectionToRolesFetching(BooleanProperty fetchedRoles, Runnable getRoles) {
+    public void bindRolesTabSelectionToRolesAndFlowsFetching(BooleanProperty fetchedRoles, Runnable getRoles, Runnable getFlows) {
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rolesManagementTab && !fetchedRoles.get()) {
                 getRoles.run();
+                getFlows.run();
             }
         });
     }

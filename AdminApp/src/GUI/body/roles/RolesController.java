@@ -2,13 +2,11 @@ package GUI.body.roles;
 
 import GUI.body.BodyControllerComponent;
 import GUI.body.roles.create.role.NewRoleModalController;
-import com.google.gson.internal.LinkedTreeMap;
 import communication.Role;
 import dto.flow.FlowNamesDTO;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +18,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
@@ -38,13 +37,50 @@ public class RolesController extends BodyControllerComponent {
 
     @FXML private Label chosenLabelDescriptionLabel;
 
-    @FXML private ListView<String> assignedFlowsListView;
+    @FXML private ListView<FlowListItem> assignedFlowsListView;
 
     @FXML private ListView<String> assignedUsersListView;
 
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
 
+    public class FlowListItem {
+        private final StringProperty name = new SimpleStringProperty();
+        private final BooleanProperty assigned = new SimpleBooleanProperty();
+
+        public FlowListItem(String name, boolean assigned) {
+            this.name.set(name);
+            this.assigned.set(assigned);
+        }
+        public String getName() {
+            return name.get();
+        }
+
+        public StringProperty nameProperty() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name.set(name);
+        }
+
+        public boolean isAssigned() {
+            return assigned.get();
+        }
+
+        public BooleanProperty assignedProperty() {
+            return assigned;
+        }
+
+        public void setAssigned(boolean assigned) {
+            this.assigned.set(assigned);
+        }
+
+        @Override
+        public String toString() {
+            return name.get();
+        }
+    }
 
     public void initialize() {
 
@@ -83,15 +119,28 @@ public class RolesController extends BodyControllerComponent {
     private void initializeSaveChangesButton() {
         saveChangesButton.setDisable(true);
         saveChangesButton.disableProperty().bind(Bindings.not(changesMade));
+        defineSaveChangeButtonOnActionBehaviour();
+    }
 
+    private void defineSaveChangeButtonOnActionBehaviour() {
         saveChangesButton.setOnAction(event -> {
             bodyController.createRoleOnServer(newlyAddedOrModifiedRoles);
+            availableRolesListView.getItems().forEach(role -> {
+               if (newlyAddedOrModifiedRoles.contains(role)) {
+                   role.setAssignedFlowNames(newlyAddedOrModifiedRoles.get(newlyAddedOrModifiedRoles.indexOf(role)).getAssignedFlowNames());
+               }
+            });
             newlyAddedOrModifiedRoles.clear();
             changesMade.setValue(false);
         });
     }
 
     private void initializeAvailableRolesListView() {
+        setRolesListViewCellFactory();
+        defineRolesListViewSelectionBehaviour();
+    }
+
+    private void setRolesListViewCellFactory() {
         availableRolesListView.setCellFactory(param -> new ListCell<Role>() {
             @Override
             protected void updateItem(Role item, boolean empty) {
@@ -104,6 +153,13 @@ public class RolesController extends BodyControllerComponent {
                 }
             }
         });
+    }
+
+    private void defineRolesListViewSelectionBehaviour() {
+
+        availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            assignedFlowsListView.setDisable(false);
+        });
 
         availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -113,10 +169,10 @@ public class RolesController extends BodyControllerComponent {
 
                 // recheck the assigned flows based on the selected role
                 for (int i = 0; i < assignedFlowsListView.getItems().size(); i++) {
-                   String flowName = assignedFlowsListView.getItems().get(i);
-                   // set the flow
+                   FlowListItem listItem = assignedFlowsListView.getItems().get(i);
+                   listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
                }
-
+                changesMade.setValue(false);
             }
         });
     }
@@ -124,7 +180,7 @@ public class RolesController extends BodyControllerComponent {
 
     private void initializeNewRoleButton() {
         newRoleButton.setOnAction(event -> {
-            Role newRole = openNewRoleDialog();
+            Role newRole = getNewRoleFromDialog();
             if (newRole != null) {
                 if (availableRolesListView.getItems().contains(newRole)) {
                     availableRolesListView.getItems().remove(newRole);
@@ -141,56 +197,67 @@ public class RolesController extends BodyControllerComponent {
         });
     }
 
-    private Role openNewRoleDialog() {
+    private Role getNewRoleFromDialog() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("create/role/newRoleModal.fxml"));
         try {
-            Parent root = loader.load();
-            NewRoleModalController newRoleModalController = loader.getController();
-            Stage modalStage = new Stage();
-            newRoleModalController.setStage(modalStage);
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.setScene(new Scene(root));
-            modalStage.setTitle("New Role");
-            modalStage.showAndWait();
-            return newRoleModalController.getNewRole();
+            return openDialogAndGetRole(loader);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    private static Role openDialogAndGetRole(FXMLLoader loader) throws IOException {
+        Parent root = loader.load();
+        NewRoleModalController newRoleModalController = loader.getController();
+        Stage modalStage = new Stage();
+        newRoleModalController.setStage(modalStage);
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setScene(new Scene(root));
+        modalStage.setTitle("New Role");
+        modalStage.showAndWait();
+        return newRoleModalController.getNewRole();
+    }
+
     private void initializeAssignedFlowsListView() {
         assignedFlowsListView.setDisable(true);
 
-        availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            assignedFlowsListView.setDisable(false);
-        });
-
-        assignedFlowsListView.setCellFactory(CheckBoxListCell.forListView(item -> {
-            CheckBox checkBox = new CheckBox();
-            BooleanProperty selectedProperty = new SimpleBooleanProperty();
-
-
-            checkBox.selectedProperty().bindBidirectional(selectedProperty);
-
-            selectedProperty.addListener((observable, oldValue, newValue) -> {
-                // get selected role and assign flow name to it
-                Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
-                selectedRole.assignNewFlow(item);
-                changesMade.setValue(true);
-
-            });
-            return selectedProperty;
+        assignedFlowsListView.setCellFactory(CheckBoxListCell.forListView(new Callback<FlowListItem, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(FlowListItem param) {
+                return param.assignedProperty();
+            }
         }));
     }
 
 public void updateFlowNames(FlowNamesDTO flowNames) {
-        ObservableList fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
-        if (assignedFlowsListView.getItems().size()>0){
-            extendListWithNewFlowNamesIfFound(fetchedFlowNames);
-        } else {
-            assignedFlowsListView.setItems(fetchedFlowNames);
+        ObservableList<String> fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
+        for (String flowName : fetchedFlowNames) {
+            if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
+                assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
+            }
         }
+    }
+
+    private FlowListItem createNewFlowListItem(String flowName) {
+        FlowListItem item = new FlowListItem(flowName, false);
+        item.assignedProperty().addListener((observable, oldValue, newValue) -> {
+            changesMade.setValue(true);
+            Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
+            if (selectedRole != null) {
+                if (newValue == true) {
+                    selectedRole.assignNewFlow(flowName);
+                } else {
+                    selectedRole.unassignOldFlow(flowName);
+                }
+                if (!newlyAddedOrModifiedRoles.contains(selectedRole)) {
+                    newlyAddedOrModifiedRoles.add(selectedRole);
+                } else {
+                    newlyAddedOrModifiedRoles.set(newlyAddedOrModifiedRoles.indexOf(selectedRole), selectedRole);
+                }
+            }
+        });
+        return item;
     }
 
     private void extendListWithNewFlowNamesIfFound(ObservableList fetchedFlowNames) {
@@ -206,6 +273,4 @@ public void updateFlowNames(FlowNamesDTO flowNames) {
         ObservableList adequateRoles = FXCollections.observableArrayList(Role.createRoleListFromJson(roles));
         availableRolesListView.setItems(adequateRoles);
     }
-
-
 }

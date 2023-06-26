@@ -63,9 +63,9 @@ public class EngineController implements Serializable {
      * -> works with a stream of the file and not a path to file
      * */
         try{
-            flowLibrary.addLoadedFlowDefinitions(flowLoader.loadFlowFromXML(XMLFileStream));
+            List<FlowDefinition> newlyLoadedFlows = flowLoader.loadFlowFromXML(XMLFileStream);
+            flowLibrary.addLoadedFlowDefinitions(newlyLoadedFlows);
             flowsExecutorsManager.setWorkersCount(flowLoader.getWorkersCount());
-            executionArchive.clear();
         }catch (Exception e){
             return new LoadDataDTO("", false, e.getMessage());
         }

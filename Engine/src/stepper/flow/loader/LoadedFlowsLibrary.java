@@ -10,7 +10,7 @@ public class LoadedFlowsLibrary implements Serializable {
 
     public void addLoadedFlowDefinitions(List<FlowDefinition> newLoadedFlowDefinitions) {
         if (this.loadedflowDefinitions != null) {
-            for (FlowDefinition flowDefinition:newLoadedFlowDefinitions) {
+            for (FlowDefinition flowDefinition : newLoadedFlowDefinitions) {
 //              add only flows with new names
                 if(this.loadedflowDefinitions.stream().
                         map(FlowDefinition::getName).
@@ -18,7 +18,7 @@ public class LoadedFlowsLibrary implements Serializable {
                     this.loadedflowDefinitions.add(flowDefinition);
                 }
             }
-        } else {
+        } else if (newLoadedFlowDefinitions.size() > 0) {
             this.loadedflowDefinitions = newLoadedFlowDefinitions;
         }
     }

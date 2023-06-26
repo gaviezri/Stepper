@@ -81,7 +81,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     public UserSystemInfo getUsersCurrentInfo(String userName){
         try {
-            HttpURLConnection con = getConnection(USER_STATUS, "GET", "application/json");
+            HttpURLConnection con = getConnection(USER_STATUS + "?name=" + userName, "GET", "application/json");
             UserSystemInfo userInfo = Utils.GSON_INSTANCE.fromJson(getResponse(con),UserSystemInfo.class);
             con.disconnect();
             return userInfo; //could be null if username not in system!

@@ -86,7 +86,6 @@ public class HeaderController  {
             if(result.getStatus()){
                 loadedXMLPath.set(path);
                 Utils.ShowInformation("Success","Flow(s) loaded successfully", result.getMessage());
-                mainController.updateFlows();
             } else {
                 Utils.ShowError("Error","Error while loading flow(s)", result.getErrorMessage());
             }

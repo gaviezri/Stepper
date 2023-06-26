@@ -10,14 +10,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import static servlets.UsersPresenceServlet.*;
 
-@WebServlet(name="UsersPresenceServlet", urlPatterns = {"/admin/status","/admin/logout","/user/status","/user/login","/user/logout", "/user/info/all"})
+@WebServlet(name="UsersPresenceServlet", urlPatterns = {ADMIN_STATUS_ENDPOINT,ADMIN_LOGOUT_ENDPOINT,USER_STATUS_ENDPOINT,
+                                                        USER_LOGIN_ENDPOINT,USER_LOGOUT_ENDPOINT, USER_INFO_ALL_ENDPOINT})
 public class UsersPresenceServlet extends HttpServlet {
     /**
      * This servlet is responsible for:
@@ -25,20 +25,26 @@ public class UsersPresenceServlet extends HttpServlet {
      * 2. /admin/logout -> sets the admin login status to false
      * 3. /user/status  ->
      * */
+    static final String ADMIN_STATUS_ENDPOINT = "/admin/status";
+    static final String ADMIN_LOGOUT_ENDPOINT = "/admin/logout";
+    static final String USER_STATUS_ENDPOINT = "/user/status";
+    static final String USER_LOGIN_ENDPOINT = "/user/login";
+    static final String USER_LOGOUT_ENDPOINT = "/user/logout";
+    static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         String res = null;
         switch (path) {
-            case "/admin/status":
+            case ADMIN_STATUS_ENDPOINT:
                 res = handleAdminStatus();
                 break;
-            case "/admin/logout":
+            case ADMIN_LOGOUT_ENDPOINT:
                 res = handleAdminLogout();
                 break;
-            case "/user/status":
-                res = handleUserStatus(req);
+            case USER_STATUS_ENDPOINT:
+                res = handleUserStatus(req.getParameter("name"));
                 break;
-            case "/user/info/all":
+            case USER_INFO_ALL_ENDPOINT:
                 res = handleUserInfo(req);
                 break;
         }
@@ -67,7 +73,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
-        if(path.equals("/user/login")) {
+        if(path.equals(USER_LOGIN_ENDPOINT)) {
             String name = req.getParameter("name");
             Integer id = -1;
             if (name != null) {
@@ -75,11 +81,7 @@ public class UsersPresenceServlet extends HttpServlet {
                 if(!usersInfoMap.containsKey(name)) {  // if given name is not already logged in
                     UserSystemInfo userSystemInfo = new UserSystemInfo(name);  // create new user with given name and default values
                     synchronized (this.getServletContext()) {
-                        usersInfoMap.put(name, userSystemInfo); // add new user
-                        id = (Integer) this.getServletContext().getAttribute(Utils.NEXT_FREE_ID); // get the next available ID
-                        Map<Integer,String> cookies2User = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
-                        cookies2User.put(id, name); // add user
-                        this.getServletContext().setAttribute(Utils.NEXT_FREE_ID, id + 1); // update next available ID
+                        id = addNewUserToContext(name, usersInfoMap, userSystemInfo);
                     }
                     System.out.println(String.format("New user with \"{0}\" with id \"{1}\" was logged in...",name,id));
                 }
@@ -94,29 +96,48 @@ public class UsersPresenceServlet extends HttpServlet {
         }
     }
 
+    private Integer addNewUserToContext(String name, Map<String, UserSystemInfo> usersInfoMap, UserSystemInfo userSystemInfo) {
+        Integer id;
+        usersInfoMap.put(name, userSystemInfo); // add new user
+        id = (Integer) this.getServletContext().getAttribute(Utils.NEXT_FREE_ID); // get the next available ID
+        Map<Integer,String> cookies2User = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
+        cookies2User.put(id, name); // add user
+        this.getServletContext().setAttribute(Utils.NEXT_FREE_ID, id + 1); // update next available ID
+        return id;
+    }
+
     final protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
-        if(path.equals("/user/logout")) {
+        if(path.equals(USER_LOGOUT_ENDPOINT)) {
             // Retrieve cookies from the request
-            Cookie[] cookies = req.getCookies();
-            if(cookies != null) {
-                Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
-                Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
-                Map<Integer, String> usersCookies = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
-                String userName = usersCookies.get(id);
-                if (userName != null) {
-                   usersInfoMap.remove(userName);
-                   usersCookies.remove(id);
-                    resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
-                    System.out.println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
-                    return;
-                }
+            handleUserLogout(req, resp);
+        }
+    }
+
+    private void handleUserLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Cookie[] cookies = req.getCookies();
+        if(cookies != null) {
+            Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
+            Map<Integer, String> usersCookies = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
+            String userName = usersCookies.get(id);
+            if (userName != null) {
+                deleteUserFromContext(resp, id, usersCookies, userName);
+            } else {
                 resp.getWriter().println(String.format("user with id {0} was not found in system", id));
                 System.out.println(String.format("user with id {0} was not found in system", id));
             }
+        } else {
             resp.getWriter().println(String.format("no cookie found... please login first"));
             System.out.println(String.format("no cookie found... please login first"));
         }
+    }
+
+    private void deleteUserFromContext(HttpServletResponse resp, Integer id, Map<Integer, String> usersCookies, String userName) throws IOException {
+        Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
+        usersInfoMap.remove(userName);
+        usersCookies.remove(id);
+        resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
+        System.out.println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
     }
 
     private String handleUserStatus(String name) {

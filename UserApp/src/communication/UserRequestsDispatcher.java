@@ -2,18 +2,15 @@ package communication;
 
 import com.google.gson.reflect.TypeToken;
 import dto.flow.FlowDefinitionDTO;
-import com.google.gson.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.nio.Buffer;
 import java.util.List;
 
 public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String USER_LOGOUT = "/user/logout";
     private static final String USER_LOGIN= "/user/login?name=";
     private static final String FLOWS_DEFINITIONS = "/flow/definitions";
-
+    private static final String USER_STATUS = "/user/status";
+    private static final String ROLES_USER = "/roles/user";
 
     private static UserRequestsDispatcher instance = new UserRequestsDispatcher();
     public static UserRequestsDispatcher getInstance() {
@@ -70,4 +67,29 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     public List<FlowDefinitionDTO> getUserRoleData() {
          return null;
     }
+    public List getUserRolesList(){
+        try {
+            HttpURLConnection con = getConnection(ROLES_USER, "GET", "application/json");
+            List userRoles = Utils.GSON_INSTANCE.fromJson(getResponse(con),List.class);
+            con.disconnect();
+            return userRoles;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public UserSystemInfo getUsersCurrentInfo(String userName){
+        try {
+            HttpURLConnection con = getConnection(USER_STATUS, "GET", "application/json");
+            UserSystemInfo userInfo = Utils.GSON_INSTANCE.fromJson(getResponse(con),UserSystemInfo.class);
+            con.disconnect();
+            return userInfo; //could be null if username not in system!
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+

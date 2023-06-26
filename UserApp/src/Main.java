@@ -29,6 +29,10 @@ public class Main extends Application {
             UserRequestsDispatcher.getInstance().logout();
             mainController.stop();
         });
+        Thread.setDefaultUncaughtExceptionHandler((thread,throwable) -> {
+            mainController.doFinalize();
+        });
+
     }
 
     private void startLoginModal(Stage primaryStage) throws IOException {

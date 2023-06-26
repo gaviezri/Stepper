@@ -1,5 +1,6 @@
 package servlets;
 
+import dto.flow.FlowDefinitionDTO;
 import dto.flow.LoadDataDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,12 +11,13 @@ import stepper.controller.EngineController;
 
 
 import java.io.IOException;
+import java.util.List;
 
 
 import static communication.Utils.GSON_INSTANCE;
 
 
-@WebServlet(name = "LoadXMLServlet", urlPatterns = {"/loadXML", "/flows/names"})
+@WebServlet(name = "LoadXMLServlet", urlPatterns = {"/loadXML", "/flows/names", "/flow/definitions"})
 public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     @Override
@@ -33,8 +35,21 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.getWriter().println(GSON_INSTANCE.toJson(EngineController.getInstance().getFlowDefinitionsNames()));
+        switch(req.getServletPath()){
+            case "flows/names":
+                System.out.println("a call to 'flows/names' endpoint was made...");
+                resp.setContentType("application/json");
+                resp.getWriter().println(GSON_INSTANCE.toJson(EngineController.getInstance().getFlowDefinitionsNames()));
+                break;
+            case "/flow/definitions":
+                System.out.println("a call to 'flows/definitions' endpoint was made...");
+                resp.setContentType("application/json");
+                List<FlowDefinitionDTO> allFlowDefinitionsData = EngineController.getInstance().getAllFlowDefinitionsData();
+                // need to filter FDs by users role before sending back
+                break;
+
+        }
+
         System.out.println("response sent");
     }
 }

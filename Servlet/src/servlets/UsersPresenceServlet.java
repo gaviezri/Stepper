@@ -119,13 +119,12 @@ public class UsersPresenceServlet extends HttpServlet {
         }
     }
 
-    private String handleUserStatus(HttpServletRequest req) {
-        String name = req.getParameter("name");
+    private String handleUserStatus(String name) {
         if(name != null) {
-            Map userInfo = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);
-            return String.valueOf(userInfo.containsKey(name));
+            Map usersInSystemInfo = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);
+            return Utils.GSON_INSTANCE.toJson(usersInSystemInfo.containsKey(name));
         }
-        return "false";
+        return null; //=name
     }
 
     private String handleAdminStatus() {

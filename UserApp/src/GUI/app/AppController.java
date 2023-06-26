@@ -3,6 +3,7 @@ package GUI.app;
 import GUI.body.BodyController;
 import communication.UserRequestsDispatcher;
 import GUI.header.HeaderController;
+import communication.UserSystemInfo;
 import dto.statistics.StatisticsDTO;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -30,7 +31,6 @@ public class AppController {
     @FXML
     private BodyController bodyComponentController;
 
-
     @FXML
     private ScrollPane sceneScrollPane;
 
@@ -57,12 +57,18 @@ public class AppController {
     @Override
     protected void finalize()
     {
+        UserRequestsDispatcher.getInstance().logout();
         executorServiceForPollingExecutions.shutdown();
     }
-
+    public void doFinalize()
+    {
+        finalize();
+    }
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
+                updateManagerAndRoles();
+
 //                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
 //
 //                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
@@ -73,6 +79,11 @@ public class AppController {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateManagerAndRoles() {
+        UserSystemInfo userInfo = reqDispatcher.getUsersCurrentInfo(headerComponentController.getUserName());
+        headerComponentController.updateManagerAndRoleText(userInfo.getManager().toString());
     }
 
 

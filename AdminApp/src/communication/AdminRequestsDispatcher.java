@@ -43,7 +43,6 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     private AdminRequestsDispatcher() {}
 
 
-
     public LoadDataDTO loadXML(String xmlContent){
         try {
             HttpURLConnection con = getConnection(LOAD_XML, "POST", "application/xml");
@@ -137,6 +136,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         }
         return null;
     }
+
     public StartUpStatus isAdminOnline() {
         try {
             HttpURLConnection con = getConnection(ADMIN_STATUS, "GET", null);

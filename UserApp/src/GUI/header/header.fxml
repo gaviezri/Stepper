@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.header.HeaderController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.header.HeaderController">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" />
       <ColumnConstraints hgrow="ALWAYS" />
@@ -22,7 +25,7 @@
         <RowConstraints vgrow="ALWAYS" />
     </rowConstraints>
     <children>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="674.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="288.0" spacing="50.0" styleClass="container" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                <children>
@@ -62,19 +65,15 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Text>
-                        <Text fx:id="isManagerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <Text fx:id="isManagerText" strokeType="OUTSIDE" strokeWidth="0.0" text="false" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="100.0" spacing="15.0">
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="specialText" text="roles assigned:">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Text>
-                        <Text fx:id="rolesAssignedText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <ComboBox fx:id="rolesCombo" prefHeight="0.0" prefWidth="50.0" />
+                        <Button fx:id="rolesButton" mnemonicParsing="false" prefHeight="33.0" prefWidth="91.0" text="roles assigned" />
                      </children>
-                  </HBox>
+                  </StackPane>
                </children>
             </HBox>
          </children>

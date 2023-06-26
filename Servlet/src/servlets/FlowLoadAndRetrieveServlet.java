@@ -15,8 +15,8 @@ import java.io.IOException;
 import static communication.Utils.GSON_INSTANCE;
 
 
-@WebServlet(name = "LoadXMLServlet", urlPatterns = "/loadXML")
-public class LoadXMLServlet extends HttpServlet {
+@WebServlet(name = "LoadXMLServlet", urlPatterns = {"/loadXML", "/flows/names"})
+public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,6 +31,14 @@ public class LoadXMLServlet extends HttpServlet {
 //      create json from DTO
         String jsonDTO = GSON_INSTANCE.toJson(loadDataDTO);
         resp.getWriter().println(jsonDTO);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("a call to 'flows/names' endpoint was made...");
+        resp.setContentType("application/json");
+        resp.getWriter().println(GSON_INSTANCE.toJson(EngineController.getInstance().getFlowDefinitionsNames()));
+        System.out.println("response sent");
     }
 }
 

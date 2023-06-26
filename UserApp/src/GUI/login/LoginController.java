@@ -21,19 +21,14 @@ public class LoginController {
     @FXML
     private TextField userNameTextField;
     @FXML
-    private Text forgotPasswordText;
-    @FXML
     private Label userExistsLabel;
     @FXML
     private AnchorPane loginPane;
     private Stage loginStage;
     private Stage mainStage;
 
-    private Consumer<String> onLogin;
-
     private boolean loggedIn = false;
 
-    private Font defaultForgotPassFont;
     public void setStage(Stage loginStage) {
         this.loginStage = loginStage;
     }
@@ -48,7 +43,6 @@ public class LoginController {
 
 
     public void initialize() {
-        defaultForgotPassFont = forgotPasswordText.getFont();
         userNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 0) {
                 loginButton.setDisable(false);
@@ -58,15 +52,6 @@ public class LoginController {
         });
     }
 
-    public void makeTextDarker(MouseEvent mouseEvent) {
-        // make text bold
-        forgotPasswordText.setFont(Font.font(defaultForgotPassFont.getFamily(), FontWeight.BOLD, FontPosture.REGULAR, defaultForgotPassFont.getSize()));
-    }
-
-    public void makeTextBrighter(MouseEvent mouseEvent) {
-        // make text normal
-        forgotPasswordText.setFont(Font.font(defaultForgotPassFont.getFamily(), FontWeight.NORMAL, FontPosture.REGULAR, defaultForgotPassFont.getSize()));
-    }
 
     public void tryLogin(MouseEvent mouseEvent) {
         boolean result = UserRequestsDispatcher.getInstance().login(userNameTextField.getText());

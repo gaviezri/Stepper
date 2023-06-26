@@ -2,8 +2,12 @@ package GUI.body;
 
 import GUI.app.AppController;
 import GUI.body.history.HistoryController;
+import communication.Role;
 import GUI.body.roles.RolesController;
 import GUI.body.statistics.StatisticsController;
+import GUI.body.users.management.UsersManagementController;
+import dto.flow.FlowNamesDTO;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -11,16 +15,18 @@ import javafx.scene.layout.AnchorPane;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.statistics.StatisticsDTO;
 
+import java.util.List;
+import java.util.Map;
+
 public class BodyController {
     public static final int USERS_MANAGEMENT_TAB = 0;
     public static final int ROLES_MANAGEMENT_TAB = 1;
     public static final int FLOW_HIST_TAB = 2;
     public static final int FLOW_STAT_TAB = 3;
     private AppController mainController;
-    @FXML private RolesController rolesManagementTabComponentController;
 
-//    @FXML private LibraryController flowLibComponentController;
-//    @FXML private ExecutionController flowExecComponentController;
+    @FXML private UsersManagementController usersManagementTabComponentController;
+    @FXML private RolesController rolesManagementTabComponentController;
     @FXML private StatisticsController flowStatComponentController;
     @FXML private HistoryController flowHistoryComponentController;
 
@@ -54,6 +60,7 @@ public class BodyController {
         flowHistoTab.setDisable(true);
         flowStatTab.setDisable(true);
         rolesManagementTabComponentController.setBodyController(this);
+        usersManagementTabComponentController.setBodyController(this);
     }
 
     private void initializeTab(Tab flowHistoTab) {
@@ -95,6 +102,28 @@ public class BodyController {
     public void updateHistory(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO){
         flowHistoTab.setDisable(false);
         flowHistoryComponentController.updateTable(flowsExecutionHistoryDTO);
+    }
+
+    public void updateFlowNames(FlowNamesDTO flowNames) {
+        rolesManagementTabComponentController.updateFlowNames(flowNames);
+    }
+
+    public void createRoleOnServer(List<Role> newRole) {
+        mainController.createRoleOnServer(newRole);
+    }
+
+    public void updateRoles(List<Map> roles) {
+        rolesManagementTabComponentController.updateRoles(roles);
+    }
+
+
+    public void bindRolesTabSelectionToRolesAndFlowsFetching(BooleanProperty fetchedRoles, Runnable getRoles, Runnable getFlows) {
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == rolesManagementTab && !fetchedRoles.get()) {
+                getRoles.run();
+                getFlows.run();
+            }
+        });
     }
 
 

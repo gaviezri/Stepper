@@ -24,4 +24,8 @@ public class UsersManagementController extends BodyControllerComponent {
     @FXML
     private Button saveChangesButton;
 
+    public void initialize() {
+
+    }
+
 }

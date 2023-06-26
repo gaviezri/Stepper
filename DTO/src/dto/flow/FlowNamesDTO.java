@@ -14,7 +14,9 @@ public class FlowNamesDTO extends AbstractDTO {
         super(errorMessage);
     }
 
-
+    public int size() {
+        return flowNames == null ? 0 : flowNames.size();
+    }
     public List<String> getFlowNames() {
         return flowNames;
     }

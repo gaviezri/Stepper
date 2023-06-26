@@ -1,9 +1,13 @@
 package GUI.app;
 
+import communication.Role;
 import communication.AdminRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
+import dto.flow.FlowNamesDTO;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -11,9 +15,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import dto.execution.history.FlowsExecutionHistoryDTO;
-import dto.statistics.StatisticsDTO;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,16 +43,41 @@ public class AppController {
 
     @FXML
     private BodyController bodyComponentController;
-    AdminRequestsDispatcher reqDispatcher = AdminRequestsDispatcher.getInstance();
+
+    private BooleanProperty fetchedRoles = new SimpleBooleanProperty(false);
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
-    ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private AdminRequestsDispatcher reqDispatcher = AdminRequestsDispatcher.getInstance();
 
     public void initialize(){
         this.headerComponentController.setMainController(this);
         this.bodyComponentController.setMainController(this);
         initializePollingExecutions();
+        initializeTabPane();
     }
+
+    private void initializeTabPane() {
+        bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
+        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(fetchedRoles, this::initializeRoles, this::updateFlows);
+    }
+
+    public void initializeRoles() {
+        List<Map> roles = reqDispatcher.getRoles();
+        if (roles.size() > 0)
+        {
+            bodyComponentController.updateRoles(roles);
+        }
+    }
+
+    public void updateFlows() {
+        FlowNamesDTO flows = reqDispatcher.getFlowDefinitionNames();
+        if (flows.size() > 0)
+        {
+            bodyComponentController.updateFlowNames(flows);
+        }
+    }
+
     @Override
     protected void finalize() {
         executorServiceForPollingExecutions.shutdown();
@@ -61,13 +90,20 @@ public class AppController {
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
-                StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
-                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
+                //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
+                //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
+                FlowNamesDTO flowNamesDTO = reqDispatcher.getFlowDefinitionNames();
+//                List<String> usersName = reqDispatcher.getUsersNames();
 
-                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
-                    bodyComponentController.updateStatistics(reqDispatcher.getStatisticsDTO());
-                    bodyComponentController.updateHistory(reqDispatcher.getHistoryDTO());
-                }
+//                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
+//                    bodyComponentController.updateStatistics(sDTO);
+//                    bodyComponentController.updateHistory(hDTO);
+//                }
+//                if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
+//                    bodyComponentController.updateFlowNames(flowNamesDTO);
+//                }
+
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -92,6 +128,10 @@ public class AppController {
 
     public void shutdownPollingExecutions() {
         executorServiceForPollingExecutions.shutdown();
+    }
+
+    public void createRoleOnServer(List<Role> newRole) {
+        reqDispatcher.createRoles(newRole);
     }
 
 //    public BodyController getBodyController() {

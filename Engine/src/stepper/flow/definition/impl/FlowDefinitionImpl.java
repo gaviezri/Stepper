@@ -390,10 +390,6 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         return freeInputsUserString;
     }
 
-    private List<String> getFreeInputsNames() {
-       return freeInputNames;
-    }
-
     @Override
     public List<String> getFreeInputsTypes() {
         return flowFreeInputs2StepsThatUseThem.stream()
@@ -502,4 +498,8 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
         return null;
     }
 
+    @Override
+    public String toString(){
+        return name;
+    }
 }

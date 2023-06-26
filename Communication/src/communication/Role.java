@@ -7,18 +7,61 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Role {
+    public static class RoleManager{
+        private Map<Integer,Role> rolesMap;
+
+        public void setRolesMap(Map<Integer, Role> rolesMap) {
+            this.rolesMap = rolesMap;
+        }
+
+        public Map<Integer,Role> getRolesMap() {
+            return rolesMap;
+        }
+
+        public void addRole(Role role){
+            rolesMap.put(role.getId(),role);
+        }
+
+        public List<Role> getRolesListFromCumulativeRoleValue(Integer cumulativeRoleValue){
+            List<Role> rolesList = new LinkedList<>();
+            for (Map.Entry<Integer,Role> entry : rolesMap.entrySet()){
+                if ((cumulativeRoleValue & entry.getKey()) != 0){
+                    rolesList.add(entry.getValue());
+                }
+            }
+            return rolesList;
+        }
+
+    }
+
+
+
     private static int bitwiseId = 1;
+    private static Map<Integer,Role> rolesMap;
     private String Name;
     private String Description;
     private List<String> assignedFlowNames;
     private int id;
 
+
+
     public Role(String Name, String Description) {
         this.Name = Name;
         this.Description = Description;
         this.assignedFlowNames = new LinkedList<>();
-        this .id = bitwiseId;
+        this.id = bitwiseId;
         bitwiseId *=2;
+    }
+
+    public Role(String Name, String Description, List<String> assignedFlowNames, int id) {
+        this.Name = Name;
+        this.Description = Description;
+        this.assignedFlowNames = assignedFlowNames;
+        this.id = id;
+    }
+
+    private Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -43,17 +86,15 @@ public class Role {
         }
     }
 
-    public static List<Role> createRoleListFromJson(List<Map> rawRolesAsMaps) {
-        List<Role> newRoles = new LinkedList<>();
-        for (Map rawRoleAsMap : rawRolesAsMaps) {
-            try {
-                Role role = Utils.GSON_INSTANCE.fromJson(Utils.GSON_INSTANCE.toJson(rawRoleAsMap), Role.class);
-                newRoles.add(role);
-            } catch (Exception e) {
-            }
-        }
-        return newRoles;
+
+    public List<String> getFlows() {
+        return assignedFlowNames;
     }
+
+    public void unassignOldFlow(String flowName) {
+        assignedFlowNames.remove(flowName);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,11 +108,5 @@ public class Role {
         return Objects.hash(Name, Description);
     }
 
-    public List<String> getFlows() {
-        return assignedFlowNames;
-    }
 
-    public void unassignOldFlow(String flowName) {
-        assignedFlowNames.remove(flowName);
-    }
 }

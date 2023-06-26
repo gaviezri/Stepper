@@ -18,10 +18,7 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
 
     public FlowBuilderImpl(){
         /** EVERY STEP WITH ENUM-INPUT NEEDS TO BE MAPPED HERE FOR FUTURE VALIDATION!*/
-//        List<Enum> curEnum = new ArrayList<>();
-//
-//        curEnum.add(ZipperStep.OperationType.ZIP);
-//        curEnum.add(ZipperStep.OperationType.UNZIP);
+
         enumInputName2InputVal.put("OPERATION", ZipperStep.OperationType.class);
 
 //          curEnum.clear();
@@ -95,7 +92,7 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
     }
 
     public void reset() {
-        flowDefinitions.clear();
+        flowDefinitions = new LinkedList<>();
     }
 
     @Override

@@ -4,6 +4,7 @@ import communication.Role;
 import communication.AdminRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
+import communication.UserSystemInfo;
 import dto.flow.FlowNamesDTO;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -44,7 +45,7 @@ public class AppController {
     @FXML
     private BodyController bodyComponentController;
 
-    private BooleanProperty fetchedRoles = new SimpleBooleanProperty(false);
+    private Boolean fetchedRoles = false;
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
     private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
@@ -63,7 +64,7 @@ public class AppController {
     }
 
     public void initializeRoles() {
-        List<Map> roles = reqDispatcher.getRoles();
+        List<Role> roles = reqDispatcher.getRoles();
         if (roles.size() > 0)
         {
             bodyComponentController.updateRoles(roles);
@@ -80,8 +81,8 @@ public class AppController {
 
     @Override
     protected void finalize() {
-        executorServiceForPollingExecutions.shutdown();
         reqDispatcher.logoutAdmin();
+        executorServiceForPollingExecutions.shutdown();
     }
     public void doFinalize(){
         finalize();
@@ -93,7 +94,16 @@ public class AppController {
                 //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
                 //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
                 FlowNamesDTO flowNamesDTO = reqDispatcher.getFlowDefinitionNames();
-//                List<String> usersName = reqDispatcher.getUsersNames();
+                List<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
+                if (!fetchedRoles) {
+                    List<Role> roles = reqDispatcher.getRoles();
+                    if (roles.size() > 0)
+                    {
+                        bodyComponentController.updateRoles(roles);
+                        fetchedRoles = true;
+                    }
+                }
+
 
 //                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
 //                    bodyComponentController.updateStatistics(sDTO);
@@ -102,6 +112,9 @@ public class AppController {
 //                if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
 //                    bodyComponentController.updateFlowNames(flowNamesDTO);
 //                }
+                if (userSystemInfos.size() > 0) {
+                    bodyComponentController.updateOnlineUsers(userSystemInfos);
+                }
 
 
 

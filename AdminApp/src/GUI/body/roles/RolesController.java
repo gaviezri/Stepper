@@ -3,6 +3,7 @@ package GUI.body.roles;
 import GUI.body.BodyControllerComponent;
 import GUI.body.roles.create.role.NewRoleModalController;
 import communication.Role;
+import communication.UserSystemInfo;
 import dto.flow.FlowNamesDTO;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -41,8 +42,14 @@ public class RolesController extends BodyControllerComponent {
 
     @FXML private ListView<String> assignedUsersListView;
 
+    private ObservableList<UserSystemInfo> onlineUsers;
+
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
+
+    public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
+        onlineUsers = FXCollections.observableArrayList(userSystemInfos);
+    }
 
     public class FlowListItem {
         private final StringProperty name = new SimpleStringProperty();
@@ -156,7 +163,6 @@ public class RolesController extends BodyControllerComponent {
                    FlowListItem listItem = assignedFlowsListView.getItems().get(i);
                    listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
                }
-                changesMade.setValue(false);
             }
         });
     }
@@ -214,13 +220,13 @@ public class RolesController extends BodyControllerComponent {
         }));
     }
 
-public void updateFlowNames(FlowNamesDTO flowNames) {
-        ObservableList<String> fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
-        for (String flowName : fetchedFlowNames) {
-            if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
-                assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
+    public void updateFlowNames(FlowNamesDTO flowNames) {
+            ObservableList<String> fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
+            for (String flowName : fetchedFlowNames) {
+                if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
+                    assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
+                }
             }
-        }
     }
 
     private FlowListItem createNewFlowListItem(String flowName) {
@@ -244,17 +250,8 @@ public void updateFlowNames(FlowNamesDTO flowNames) {
         return item;
     }
 
-    private void extendListWithNewFlowNamesIfFound(ObservableList fetchedFlowNames) {
-        ObservableList alreadyInside = assignedFlowsListView.getItems();
-        for (Object flowName : fetchedFlowNames) {
-            if (!alreadyInside.contains(flowName)) {
-                alreadyInside.add(flowName);
-            }
-        }
-    }
 
-    public void updateRoles(List<Map> roles) {
-        ObservableList adequateRoles = FXCollections.observableArrayList(Role.createRoleListFromJson(roles));
-        availableRolesListView.setItems(adequateRoles);
+    public void updateRoles(List<Role> roles) {
+        availableRolesListView.setItems(FXCollections.observableList(roles));
     }
 }

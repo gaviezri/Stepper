@@ -12,10 +12,12 @@ import stepper.controller.EngineController;
 import static communication.Utils.GSON_INSTANCE;
 
 import java.io.IOException;
+import static servlets.HistoryStatisticsServlet.*;
 
-
-@WebServlet(name="HistoryStatisticsServlet",urlPatterns = {"/statistics","/history"})
+@WebServlet(name="HistoryStatisticsServlet",urlPatterns = {STATISTICS_ENDPOINT,HISTORY_ENDPOINT})
 public class HistoryStatisticsServlet extends HttpServlet {
+    static final String STATISTICS_ENDPOINT = "/statistics";
+    static final String HISTORY_ENDPOINT = "/history";
 
     @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

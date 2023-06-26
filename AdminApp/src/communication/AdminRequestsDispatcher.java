@@ -10,7 +10,6 @@ import dto.user.system.info.UsersSystemInfoDTO;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
-import java.util.Map;
 
 import static communication.Utils.GSON_INSTANCE;
 
@@ -32,7 +31,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     private static final String USER = "/user";
     private static final String ADMIN_STATUS = ADMIN + "/status";
     private static final String ADMIN_LOGOUT = ADMIN + "/logout";
-    private static final String FLOW_NAMES = "/flows/names";
+    private static final String FLOWS_NAMES = "/flow/names";
     private static final String USERS_INFO_ALL = USER + "/info/all";
     private static final String ROLES = "/roles";
 
@@ -99,9 +98,9 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
-    public FlowNamesDTO getFlowDefinitionNames() {
+    synchronized public FlowNamesDTO getFlowDefinitionNames() {
         try {
-            HttpURLConnection con = getConnection(FLOW_NAMES, "GET", "application/json");
+            HttpURLConnection con = getConnection(FLOWS_NAMES, "GET", "application/json");
 
             FlowNamesDTO flowNames = GSON_INSTANCE.fromJson(getResponse(con), FlowNamesDTO.class);
             return flowNames;
@@ -125,7 +124,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public List<Role> getRoles() {
+    synchronized public List<Role> getRoles() {
         try {
             HttpURLConnection con = getConnection(ROLES, "GET", null);
             List<Role> roles = GSON_INSTANCE.fromJson(getResponse(con), RolesDTO.class).getRoles();

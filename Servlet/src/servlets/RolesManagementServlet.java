@@ -19,9 +19,11 @@ import java.util.Map;
 
 
 import static communication.Utils.GSON_INSTANCE;
-
-@WebServlet(name = "RolesManagementServlet", urlPatterns = {"/roles", "/roles/user"})
+import static servlets.RolesManagementServlet.*;
+@WebServlet(name = "RolesManagementServlet", urlPatterns = {ROLES_ENDPOINT, ROLES_USER_ENDPOINT})
 public class RolesManagementServlet extends HttpServlet {
+    static final String ROLES_ENDPOINT = "/roles";
+    static final String ROLES_USER_ENDPOINT = "/roles/user";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -81,7 +83,7 @@ public class RolesManagementServlet extends HttpServlet {
 
     private void handleRoleGet(HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
-        String results = "[]";
+        String results = GSON_INSTANCE.toJson(new RolesDTO());
         synchronized (context) {
             if(context.getAttribute(Utils.ROLES_CHANGED).equals(true) ||
                     context.getAttribute(Utils.FETCH_STARTUP_DATA_ADMIN).equals(true)){

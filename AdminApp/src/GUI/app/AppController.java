@@ -93,28 +93,15 @@ public class AppController {
             try {
                 //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
                 //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
-                FlowNamesDTO flowNamesDTO = reqDispatcher.getFlowDefinitionNames();
-                List<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
-                if (!fetchedRoles) {
-                    List<Role> roles = reqDispatcher.getRoles();
-                    if (roles.size() > 0)
-                    {
-                        bodyComponentController.updateRoles(roles);
-                        fetchedRoles = true;
-                    }
-                }
 
 
+                fetchRoles();
+                fetchFlowNames();
+                fetchOnlineUsersInfo();
 //                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
 //                    bodyComponentController.updateStatistics(sDTO);
 //                    bodyComponentController.updateHistory(hDTO);
 //                }
-//                if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
-//                    bodyComponentController.updateFlowNames(flowNamesDTO);
-//                }
-                if (userSystemInfos.size() > 0) {
-                    bodyComponentController.updateOnlineUsers(userSystemInfos);
-                }
 
 
 
@@ -124,8 +111,30 @@ public class AppController {
         }, 0, 1, TimeUnit.SECONDS);
     }
 
+    private void fetchOnlineUsersInfo() {
+        List<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
+        if (userSystemInfos.size() > 0) {
+            bodyComponentController.updateOnlineUsers(userSystemInfos);
+        }
+    }
 
+    private void fetchFlowNames() {
+        FlowNamesDTO flowNamesDTO = reqDispatcher.getFlowDefinitionNames();
+        if (flowNamesDTO.size() > 0 && flowNamesDTO.getStatus()) {
+            bodyComponentController.updateFlowNames(flowNamesDTO);
+        }
+    }
 
+    private void fetchRoles() {
+        if (!fetchedRoles) {
+            List<Role> roles = reqDispatcher.getRoles();
+            if (roles.size() > 0)
+            {
+                bodyComponentController.updateRoles(roles);
+            }
+            fetchedRoles = true;
+        }
+    }
 
 
     public Window getPrimaryStage() {

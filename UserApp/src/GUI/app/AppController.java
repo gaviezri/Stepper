@@ -83,7 +83,7 @@ public class AppController {
 
     private void updateManagerAndRoles() {
         UserSystemInfo userInfo = reqDispatcher.getUsersCurrentInfo(headerComponentController.getUserName());
-        headerComponentController.updateManagerAndRoleText(userInfo.getManager().toString());
+        headerComponentController.updateManagerAndRoleText(userInfo.isManager().toString());
     }
 
 

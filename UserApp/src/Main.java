@@ -1,5 +1,6 @@
 
 import GUI.app.AppController;
+import communication.StepperRequestsDispatcher;
 import communication.UserRequestsDispatcher;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,24 +16,40 @@ import java.io.IOException;
 public class Main extends Application {
     private AppController mainController;
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(AppController.class.getResource("app.fxml"));
-        ScrollPane root = loader.load();
-        mainController = loader.getController();
+    public void start(Stage primaryStage) {
+        try {
+            if(serverIsRunning()) {
+                FXMLLoader loader = new FXMLLoader(AppController.class.getResource("app.fxml"));
+                ScrollPane root = loader.load();
+                mainController = loader.getController();
 
-        startLoginModal(primaryStage);
+                startLoginModal(primaryStage);
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Stepper");
-        primaryStage.setOnCloseRequest(event -> {
-            UserRequestsDispatcher.getInstance().logout();
-            mainController.stop();
-        });
-        Thread.setDefaultUncaughtExceptionHandler((thread,throwable) -> {
-            mainController.doFinalize();
-        });
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Stepper");
+                primaryStage.setOnCloseRequest(event -> {
+                    UserRequestsDispatcher.getInstance().logout();
+                    mainController.stop();
+                });
+                Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+                    mainController.doFinalize();
+                });
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
+    private boolean serverIsRunning() {
+        UserRequestsDispatcher.StartUpStatus sus = UserRequestsDispatcher.getInstance().pingServer();
+        if (sus.equals(UserRequestsDispatcher.StartUpStatus.FAILURE)) {
+            GUI.utils.Utils.ShowError("Error",
+                    "Application failed to start",
+                    "Please check if server is running.");
+            return false;
+        }
+        return true;
     }
 
     private void startLoginModal(Stage primaryStage) throws IOException {
@@ -45,6 +62,7 @@ public class Main extends Application {
         loginController.setStage(loginStage);
         loginController.setMainStage(primaryStage);
         mainController.bindUserNameToText(loginController.getUserNameTextField());
+        mainController.bindPollingToSuccessfulLogin(loginController);
         loginStage.show();
 
         loginStage.setOnCloseRequest(event -> {

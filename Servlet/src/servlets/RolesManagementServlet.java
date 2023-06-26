@@ -3,6 +3,7 @@ package servlets;
 import communication.Role;
 import communication.UserSystemInfo;
 import communication.Utils;
+import dto.roles.map.RolesMapDTO;
 import dto.user.roles.RolesDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -20,21 +21,38 @@ import java.util.Map;
 
 import static communication.Utils.GSON_INSTANCE;
 import static servlets.RolesManagementServlet.*;
-@WebServlet(name = "RolesManagementServlet", urlPatterns = {ROLES_ENDPOINT, ROLES_USER_ENDPOINT})
+@WebServlet(name = "RolesManagementServlet", urlPatterns = {ROLES_ENDPOINT, ROLES_USER_ENDPOINT, ROLES_MAP_ENDPOINT})
 public class RolesManagementServlet extends HttpServlet {
     static final String ROLES_ENDPOINT = "/roles";
     static final String ROLES_USER_ENDPOINT = "/roles/user";
+    static final String ROLES_MAP_ENDPOINT = "/roles/map";
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        switch (req.getServletPath()) {
+            case ROLES_ENDPOINT:
+                handleRoleGet(resp);
+                break;
+            case ROLES_USER_ENDPOINT:
+                handleRolesUserGet(req, resp);
+                break;
+            case ROLES_MAP_ENDPOINT:
+                handleRolesMapGet(resp);
+                break;
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        handleRolesPost(req);
+        handleRolesPost(req,resp);
     }
 
-    private void handleRolesPost(HttpServletRequest req) throws IOException {
+    private void handleRolesPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
         synchronized (context) {
             context.setAttribute(Utils.ROLES_CHANGED, true);
         }
+        Role.RoleManager theManager = (Role.RoleManager) context.getAttribute(Utils.ROLES_MANAGER);
         List<Role> allRoles = (List) context.getAttribute(Utils.ROLES);
         List<Role> newRoles = Utils.GSON_INSTANCE.fromJson(req.getReader(), RolesDTO.class).getRoles();
 
@@ -44,25 +62,21 @@ public class RolesManagementServlet extends HttpServlet {
             } else {
                 allRoles.add(role);
             }
+            theManager.addRole(role);
         }
         allRoles.sort(Comparator.comparing(Role::getName));
 
         synchronized (context) {
             context.setAttribute(Utils.ROLES, allRoles);
         }
+        resp.getWriter().println(GSON_INSTANCE.toJson(new RolesMapDTO(theManager.getRolesMap())));
     }
 
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        switch (req.getServletPath()) {
-            case "/roles":
-                handleRoleGet(resp);
-                break;
-            case "/roles/user":
-                handleRolesUserGet(req, resp);
-                break;
-        }
+    private void handleRolesMapGet(HttpServletResponse resp) throws IOException {
+        ServletContext context = getServletContext();
+        Role.RoleManager theManager = (Role.RoleManager) context.getAttribute(Utils.ROLES_MANAGER);
+        String results = GSON_INSTANCE.toJson(new RolesMapDTO(theManager.getRolesMap()));
+        resp.getWriter().println(results);
     }
 
     private void handleRolesUserGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

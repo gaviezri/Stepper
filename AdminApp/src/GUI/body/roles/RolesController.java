@@ -5,6 +5,7 @@ import GUI.body.roles.create.role.NewRoleModalController;
 import communication.Role;
 import communication.UserSystemInfo;
 import dto.flow.FlowNamesDTO;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -51,6 +52,10 @@ public class RolesController extends BodyControllerComponent {
         onlineUsers = FXCollections.observableArrayList(userSystemInfos);
     }
 
+    public ListView getRolesListView() {
+        return availableRolesListView;
+    }
+
     public class FlowListItem {
         private final StringProperty name = new SimpleStringProperty();
         private final BooleanProperty assigned = new SimpleBooleanProperty();
@@ -59,6 +64,7 @@ public class RolesController extends BodyControllerComponent {
             this.name.set(name);
             this.assigned.set(assigned);
         }
+
         public String getName() {
             return name.get();
         }
@@ -222,11 +228,12 @@ public class RolesController extends BodyControllerComponent {
 
     public void updateFlowNames(FlowNamesDTO flowNames) {
             ObservableList<String> fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
+            Platform.runLater(() -> {
             for (String flowName : fetchedFlowNames) {
                 if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
                     assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
                 }
-            }
+            }});
     }
 
     private FlowListItem createNewFlowListItem(String flowName) {
@@ -252,6 +259,10 @@ public class RolesController extends BodyControllerComponent {
 
 
     public void updateRoles(List<Role> roles) {
-        availableRolesListView.setItems(FXCollections.observableList(roles));
+        Platform.runLater(() -> {
+            availableRolesListView.getItems().clear();
+            availableRolesListView.getItems().addAll(roles);
+            availableRolesListView.getItems().sort(Comparator.comparing(Role::getName));
+        });
     }
 }

@@ -1,6 +1,8 @@
 package GUI.login;
 
 import communication.UserRequestsDispatcher;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,7 +29,7 @@ public class LoginController {
     private Stage loginStage;
     private Stage mainStage;
 
-    private boolean loggedIn = false;
+    private BooleanProperty loggedIn = new SimpleBooleanProperty(false);
 
     public void setStage(Stage loginStage) {
         this.loginStage = loginStage;
@@ -37,6 +39,10 @@ public class LoginController {
     }
 
     public boolean isLoggedIn() {
+        return loggedIn.get();
+    }
+
+    public BooleanProperty loggedInProperty() {
         return loggedIn;
     }
 
@@ -56,7 +62,7 @@ public class LoginController {
     public void tryLogin(MouseEvent mouseEvent) {
         boolean result = UserRequestsDispatcher.getInstance().login(userNameTextField.getText());
         if (result) {
-            loggedIn = true;
+            loggedIn.setValue(true);
             userExistsLabel.setVisible(false);
             loginStage.close();
             mainStage.show();

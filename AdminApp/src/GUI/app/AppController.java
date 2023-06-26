@@ -6,9 +6,7 @@ import GUI.header.HeaderController;
 import GUI.body.BodyController;
 import communication.UserSystemInfo;
 import dto.flow.FlowNamesDTO;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -57,58 +55,41 @@ public class AppController {
         initializePollingExecutions();
         initializeTabPane();
     }
-
-    private void initializeTabPane() {
-        bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
-        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(fetchedRoles, this::initializeRoles, this::updateFlows);
-    }
-
-    public void initializeRoles() {
-        List<Role> roles = reqDispatcher.getRoles();
-        if (roles.size() > 0)
-        {
-            bodyComponentController.updateRoles(roles);
-        }
-    }
-
-    public void updateFlows() {
-        FlowNamesDTO flows = reqDispatcher.getFlowDefinitionNames();
-        if (flows.size() > 0)
-        {
-            bodyComponentController.updateFlowNames(flows);
-        }
-    }
-
     @Override
     protected void finalize() {
-        reqDispatcher.logoutAdmin();
+        reqDispatcher.putLogoutAdmin();
         executorServiceForPollingExecutions.shutdown();
     }
     public void doFinalize(){
         finalize();
     }
 
+
+    private void initializeTabPane() {
+        bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
+        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(this::fetchRoles, this::fetchFlows);
+    }
+
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
-                //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO();
-                //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
-
-
+                //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO(); -- > fetchStatistics
+                //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO(); --> fetchHistory
                 fetchRoles();
                 fetchFlowNames();
                 fetchOnlineUsersInfo();
-//                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
-//                    bodyComponentController.updateStatistics(sDTO);
-//                    bodyComponentController.updateHistory(hDTO);
-//                }
-
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void fetchFlows() {
+        FlowNamesDTO flows = reqDispatcher.getFlowDefinitionNames();
+        if (flows.size() > 0)
+        {
+            bodyComponentController.updateFlowNames(flows);
+        }
     }
 
     private void fetchOnlineUsersInfo() {
@@ -126,34 +107,21 @@ public class AppController {
     }
 
     private void fetchRoles() {
-        if (!fetchedRoles) {
-            List<Role> roles = reqDispatcher.getRoles();
-            if (roles.size() > 0)
-            {
-                bodyComponentController.updateRoles(roles);
-            }
-            fetchedRoles = true;
+        List<Role> roles = reqDispatcher.getRoles();
+        bodyComponentController.getRoleManager().setRolesMap(reqDispatcher.getRolesMap());
+        if (roles.size() > 0)
+        {
+            bodyComponentController.updateRoles(roles);
         }
     }
-
 
     public Window getPrimaryStage() {
         return sceneMainPane.getScene().getWindow();
     }
 
-    public synchronized IntegerProperty numOfFlowsExecutedProperty() {
-        return numOfFlowsExecuted;
-    }
-    public IntegerProperty numOfFlowsFinishedProperty() {
-        return numOfFlowsFinished;
-    }
-
-    public void shutdownPollingExecutions() {
-        executorServiceForPollingExecutions.shutdown();
-    }
-
     public void createRoleOnServer(List<Role> newRole) {
-        reqDispatcher.createRoles(newRole);
+        Map updatedRoleMap = reqDispatcher.postRoles(newRole);
+        bodyComponentController.getRoleManager().setRolesMap(updatedRoleMap);
     }
 
 //    public BodyController getBodyController() {
@@ -224,13 +192,5 @@ public class AppController {
 //
 //    public Map getLastFlowOutputs() {
 //        return lastExecutedDataCenter.getLastFlowOutputs();
-//    }
-//
-//    public void stop() {
-//        if (executorServiceForPollingExecutions != null) {
-//            executorServiceForPollingExecutions.shutdown();
-//            bodyComponentController.stop();
-//        }
-//
 //    }
 }

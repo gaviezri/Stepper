@@ -1,6 +1,7 @@
 package GUI.app;
 
 import GUI.body.BodyController;
+import GUI.login.LoginController;
 import communication.UserRequestsDispatcher;
 import GUI.header.HeaderController;
 import communication.UserSystemInfo;
@@ -51,7 +52,6 @@ public class AppController {
     public void initialize(){
         this.headerComponentController.setMainController(this);
         this.bodyComponentController.setMainController(this);
-        initializePollingExecutions();
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
     }
     @Override
@@ -183,5 +183,13 @@ public class AppController {
 
     public void bindUserNameToText(TextField userNameTextField) {
         headerComponentController.bindUserNameToText(userNameTextField);
+    }
+
+    public void bindPollingToSuccessfulLogin(LoginController loginController) {
+        loginController.loggedInProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                initializePollingExecutions();
+            }
+        });
     }
 }

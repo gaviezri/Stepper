@@ -67,6 +67,7 @@ public class BodyController {
         flowStatTab.setDisable(true);
         rolesManagementTabComponentController.setBodyController(this);
         usersManagementTabComponentController.setBodyController(this);
+        usersManagementTabComponentController.initializeRolesListView(rolesManagementTabComponentController);
     }
 
     private void initializeTab(Tab flowHistoTab) {
@@ -116,6 +117,7 @@ public class BodyController {
 
     public void createRoleOnServer(List<Role> newRole) {
         mainController.createRoleOnServer(newRole);
+        roleManager.addRoles(newRole);
     }
 
     public void updateRoles(List<Role> roles) {
@@ -123,13 +125,13 @@ public class BodyController {
     }
 
 
-    public void bindRolesTabSelectionToRolesAndFlowsFetching(Boolean fetchedRoles, Runnable getRoles, Runnable getFlows) {
-        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == rolesManagementTab && !fetchedRoles) {
-                getRoles.run();
-                getFlows.run();
-            }
-        });
+    public void bindRolesTabSelectionToRolesAndFlowsFetching(Runnable getRoles, Runnable getFlows) {
+//        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == rolesManagementTab) {
+////                getRoles.run();
+//                getFlows.run();
+//            }
+//        });
     }
 
     public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {

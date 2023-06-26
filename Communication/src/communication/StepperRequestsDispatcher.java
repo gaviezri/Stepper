@@ -9,6 +9,11 @@ import java.net.URL;
 
 
 public abstract class StepperRequestsDispatcher {
+    public enum StartUpStatus {
+        SUCCESS,
+        FAILURE,
+        ALREADY_RUNNING
+    }
 
     protected static final String PORT = "8080";
 
@@ -34,7 +39,7 @@ public abstract class StepperRequestsDispatcher {
 
 
 
-    protected String getResponse(HttpURLConnection con) throws Exception{
+    protected String getBodyResponseFromConnectio(HttpURLConnection con) throws Exception{
         StringBuilder sb = new StringBuilder();
         String line;
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));

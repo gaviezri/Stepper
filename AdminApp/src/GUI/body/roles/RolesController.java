@@ -56,24 +56,8 @@ public class RolesController extends BodyControllerComponent {
             return name.get();
         }
 
-        public StringProperty nameProperty() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name.set(name);
-        }
-
-        public boolean isAssigned() {
-            return assigned.get();
-        }
-
         public BooleanProperty assignedProperty() {
             return assigned;
-        }
-
-        public void setAssigned(boolean assigned) {
-            this.assigned.set(assigned);
         }
 
         @Override

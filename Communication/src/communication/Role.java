@@ -7,14 +7,18 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Role {
+    private static int bitwiseId = 1;
     private String Name;
     private String Description;
     private List<String> assignedFlowNames;
+    private int id;
 
     public Role(String Name, String Description) {
         this.Name = Name;
         this.Description = Description;
         this.assignedFlowNames = new LinkedList<>();
+        this .id = bitwiseId;
+        bitwiseId *=2;
     }
 
     public String getName() {

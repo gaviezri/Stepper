@@ -1,5 +1,7 @@
 package communication;
 
+import java.util.Objects;
+
 public class UserSystemInfo {
     String name;
     Boolean isManager;
@@ -22,11 +24,29 @@ public class UserSystemInfo {
         return name;
     }
 
-    public Boolean getManager() {
+    public Boolean isManager() {
         return isManager;
     }
 
     public int getRoles() {
         return roles;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserSystemInfo that = (UserSystemInfo) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

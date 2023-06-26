@@ -22,8 +22,6 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        System.out.println("a call to 'loadXML' endpoint was made...");
 //      load XML via Input Stream received from request body
         /** each servlet is a singleton and this is the ONLY servlet that make changes to the flow library data structure and therefore there is no need for synchronized */
         LoadDataDTO loadDataDTO = EngineController.getInstance().readXML(req.getInputStream());
@@ -51,6 +49,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
                 break;
 
         }
+
         System.out.println("response sent");
     }
 }

@@ -24,6 +24,10 @@ import java.util.stream.Stream;
 //TODO: if errors occured throw exception to be caught and transmitted into UI instead of nulls
 
 public class FlowLoader implements Serializable {
+    public void reset() {
+        builder.reset();
+    }
+
     public class StepNameExistenceException extends Exception {
         public StepNameExistenceException(String flowName, String StepName) {
             super(StepName + " step does not exist in flow: " + flowName);
@@ -82,8 +86,13 @@ public class FlowLoader implements Serializable {
         // and will work along the validations to minimize the number of iterations over the xml
 
         // get all flow elements from xml
-        NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
-        validateFlowDefinitionsInXML(flowDefinitionsNodeList);
+        try {
+            NodeList flowDefinitionsNodeList = document.getElementsByTagName("ST-Flow");
+            validateFlowDefinitionsInXML(flowDefinitionsNodeList);
+        } catch (Exception e) {
+            builder.reset();
+            throw new Exception(e.getMessage());
+        }
     }
 
     private void validateFlowDefinitionsInXML(NodeList flowDefinitionsNodeList) throws Exception {

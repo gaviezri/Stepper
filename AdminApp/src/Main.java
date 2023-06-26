@@ -11,26 +11,26 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if(qualifiesForStartup()) {
-            FXMLLoader appLoader = new FXMLLoader(AppController.class.getResource("app.fxml"));
-            ScrollPane root = appLoader.load();
-            mainController = appLoader.getController();
-            Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Stepper");
+        try {
+            if (qualifiesForStartup()) {
+                FXMLLoader appLoader = new FXMLLoader(AppController.class.getResource("app.fxml"));
+                ScrollPane root = appLoader.load();
+                mainController = appLoader.getController();
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Stepper");
 
-            Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-                try {
+                Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
                     mainController.doFinalize();
-                } catch (Throwable t) {
-                    AdminRequestsDispatcher.getInstance().logoutAdmin();
-                }
-            });
+                });
 
-            primaryStage.setOnCloseRequest(event -> {
-                mainController.doFinalize();
-            });
-            primaryStage.show();
+                primaryStage.setOnCloseRequest(event -> {
+                    mainController.doFinalize();
+                });
+                primaryStage.show();
+            }
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

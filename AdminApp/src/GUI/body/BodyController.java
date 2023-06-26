@@ -6,6 +6,7 @@ import communication.Role;
 import GUI.body.roles.RolesController;
 import GUI.body.statistics.StatisticsController;
 import GUI.body.users.management.UsersManagementController;
+import communication.UserSystemInfo;
 import dto.flow.FlowNamesDTO;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
@@ -40,6 +41,9 @@ public class BodyController {
     @FXML private Tab flowHistoTab;
     @FXML private  AnchorPane flowHistoryComponent;
 
+    private Role.RoleManager roleManager;
+    private boolean fetchedRolesMap;
+
     public void setActiveTab(int activeTab) {
         this.mainTabPane.getSelectionModel().select(activeTab);
     }
@@ -57,6 +61,8 @@ public class BodyController {
     }
 
     public void initialize() throws Exception{
+        fetchedRolesMap = false;
+        roleManager = new Role.RoleManager();
         flowHistoTab.setDisable(true);
         flowStatTab.setDisable(true);
         rolesManagementTabComponentController.setBodyController(this);
@@ -112,18 +118,27 @@ public class BodyController {
         mainController.createRoleOnServer(newRole);
     }
 
-    public void updateRoles(List<Map> roles) {
+    public void updateRoles(List<Role> roles) {
         rolesManagementTabComponentController.updateRoles(roles);
     }
 
 
-    public void bindRolesTabSelectionToRolesAndFlowsFetching(BooleanProperty fetchedRoles, Runnable getRoles, Runnable getFlows) {
+    public void bindRolesTabSelectionToRolesAndFlowsFetching(Boolean fetchedRoles, Runnable getRoles, Runnable getFlows) {
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == rolesManagementTab && !fetchedRoles.get()) {
+            if (newValue == rolesManagementTab && !fetchedRoles) {
                 getRoles.run();
                 getFlows.run();
             }
         });
+    }
+
+    public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
+        usersManagementTabComponentController.updateOnlineUsers(userSystemInfos);
+        rolesManagementTabComponentController.updateOnlineUsers(userSystemInfos);
+    }
+
+    public Role.RoleManager getRoleManager() {
+        return roleManager;
     }
 
 

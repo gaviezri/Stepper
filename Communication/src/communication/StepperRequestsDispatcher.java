@@ -39,7 +39,7 @@ public abstract class StepperRequestsDispatcher {
 
 
 
-    protected String getBodyResponseFromConnectio(HttpURLConnection con) throws Exception{
+    protected String getBodyResponseFromConnection(HttpURLConnection con) throws Exception{
         StringBuilder sb = new StringBuilder();
         String line;
         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));

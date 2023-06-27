@@ -8,8 +8,7 @@ public class UserSystemInfo {
     String name;
     Boolean isManager;
 //    the roles will be handled bit-wise
-    int roles;
-    List<String> assignedRoles;
+    List<Role> assignedRoles;
 
     public UserSystemInfo(String name) {
         this.name = name;
@@ -17,7 +16,7 @@ public class UserSystemInfo {
         assignedRoles = new LinkedList<>();
     }
 
-    public UserSystemInfo(String name, Boolean isManager, List<String> roles) {
+    public UserSystemInfo(String name, Boolean isManager, List<Role> roles) {
         this.name = name;
         this.isManager = isManager;
         assignedRoles = roles;
@@ -35,7 +34,7 @@ public class UserSystemInfo {
         isManager = manager;
     }
 
-    public List<String> getRoles() {
+    public List<Role> getRoles() {
         return assignedRoles;
     }
 
@@ -58,10 +57,12 @@ public class UserSystemInfo {
     }
 
     public void assignNewRole(Role x) {
-        assignedRoles.add(x.getName());
+        if (!assignedRoles.contains(x)) {
+            assignedRoles.add(x);
+        }
     }
 
     public void unAssignNewRole(Role x) {
-        assignedRoles.remove(x.getName());
+        assignedRoles.remove(x);
     }
 }

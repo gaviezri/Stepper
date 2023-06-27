@@ -4,6 +4,7 @@ import communication.Role;
 import communication.UserSystemInfo;
 import dto.roles.map.RolesMapDTO;
 import dto.user.roles.RolesDTO;
+import dto.user.system.info.UsersSystemInfoDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,7 +40,32 @@ public class RolesManagementServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        handleRolesPost(req,resp);
+        switch (req.getServletPath()) {
+            case ROLES_ENDPOINT:
+                handleRolesPost(req, resp);
+                break;
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        switch (req.getServletPath()) {
+            case ROLES_USER_ENDPOINT:
+                handleRolesUserPut(req, resp);
+                break;
+        }
+    }
+
+    private void handleRolesUserPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        ServletContext context = getServletContext();
+        Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(USERS_IN_SYSTEM);
+        UsersSystemInfoDTO usersSystemInfoDTO = GSON_INSTANCE.fromJson(req.getReader(),UsersSystemInfoDTO.class);
+        synchronized (context) {
+            for (UserSystemInfo userSystemInfo : usersSystemInfoDTO.getUsersSystemInfo()) {
+                name2info.put(userSystemInfo.getName(), userSystemInfo);
+            }
+        }
     }
 
     private void handleRolesPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -84,7 +110,7 @@ public class RolesManagementServlet extends HttpServlet {
         if (cookie[0] != null){
             String user = cookie2User.get(Integer.parseInt(cookie[0].getValue()));
             UserSystemInfo userInfo = user2Info.get(user);
-            List<Role> rolesList = rolesManager.getRolesListFromStringsValue(userInfo.getRoles());
+            List<Role> rolesList = userInfo.getRoles();
             res = GSON_INSTANCE.toJson(new RolesDTO(rolesList));
         }
         resp.getWriter().println(res);

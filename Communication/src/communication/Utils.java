@@ -17,6 +17,7 @@ public class Utils {
     public static final String ROLES_MANAGER = "rolesManager";
     public static final String JSON_CONTENT_TYPE = "application/json";
     public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
+    public static final String XML_CONTENT_TYPE = "application/xml";
     public static final String COOKIE_BAKER= "getCookieByName";
 
     /*#################### endpoints ####################*/

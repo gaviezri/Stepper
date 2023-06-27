@@ -2,6 +2,8 @@ package communication;
 
 import com.google.gson.reflect.TypeToken;
 import dto.flow.FlowDefinitionDTO;
+import dto.user.roles.RolesDTO;
+
 import java.net.HttpURLConnection;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(FLOWS_DEFINITIONS, "GET", "application/json");
             con.getOutputStream().flush();
 
-            List<FlowDefinitionDTO> allFlowDefs = Utils.GSON_INSTANCE.fromJson(getResponse(con),
+            List<FlowDefinitionDTO> allFlowDefs = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),
                                                         new TypeToken<List<FlowDefinitionDTO>>(){}.getType());
             con.disconnect();
             return allFlowDefs;
@@ -37,7 +39,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(USER_LOGOUT, "DELETE", "text/plain");
             con.getOutputStream().flush();
 
-            boolean status = Boolean.parseBoolean(getResponse(con));
+            boolean status = Boolean.parseBoolean(getBodyResponseFromConnectio(con));
             con.disconnect();
             return status;
         } catch (Exception e) {
@@ -51,7 +53,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(USER_LOGIN + userName, "POST", "text/plain");
             con.getOutputStream().flush();
             try {
-                cookieIDValue = Integer.parseInt(getResponse(con));
+                cookieIDValue = Integer.parseInt(getBodyResponseFromConnectio(con));
             } catch (Exception e) {
                 cookieIDValue = -1;
             }
@@ -70,7 +72,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     public List getUserRolesList(){
         try {
             HttpURLConnection con = getConnection(ROLES_USER, "GET", "application/json");
-            List userRoles = Utils.GSON_INSTANCE.fromJson(getResponse(con),List.class);
+            List userRoles = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con), RolesDTO.class).getRoles();
             con.disconnect();
             return userRoles;
         }
@@ -82,7 +84,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     public UserSystemInfo getUsersCurrentInfo(String userName){
         try {
             HttpURLConnection con = getConnection(USER_STATUS + "?name=" + userName, "GET", "application/json");
-            UserSystemInfo userInfo = Utils.GSON_INSTANCE.fromJson(getResponse(con),UserSystemInfo.class);
+            UserSystemInfo userInfo = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),UserSystemInfo.class);
             con.disconnect();
             return userInfo; //could be null if username not in system!
         }
@@ -90,6 +92,17 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public StartUpStatus pingServer() {
+        try {
+            HttpURLConnection con = getConnection(USER_STATUS, "GET", "text/plain");
+            con.getResponseMessage();
+            con.disconnect();
+            return StartUpStatus.SUCCESS;
+        } catch (Exception e) {
+            return StartUpStatus.FAILURE;
+        }
     }
 }
 

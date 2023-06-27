@@ -18,7 +18,7 @@ public class Main extends Application {
                 mainController = appLoader.getController();
                 Scene scene = new Scene(root);
                 primaryStage.setScene(scene);
-                primaryStage.setTitle("Stepper");
+                primaryStage.setTitle("Stepper - Admin");
 
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
                     mainController.doFinalize();
@@ -35,7 +35,7 @@ public class Main extends Application {
     }
 
     private static boolean qualifiesForStartup() {
-        AdminRequestsDispatcher.StartUpStatus sus = AdminRequestsDispatcher.getInstance().isAdminOnline();
+        AdminRequestsDispatcher.StartUpStatus sus = AdminRequestsDispatcher.getInstance().getIsAdminOnline();
         if (sus.equals(AdminRequestsDispatcher.StartUpStatus.ALREADY_RUNNING)) {
             GUI.utils.Utils.ShowError("Error",
                     "Application is already running",

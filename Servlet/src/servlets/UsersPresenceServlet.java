@@ -31,6 +31,7 @@ public class UsersPresenceServlet extends HttpServlet {
     static final String USER_LOGIN_ENDPOINT = "/user/login";
     static final String USER_LOGOUT_ENDPOINT = "/user/logout";
     static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
+    @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
         String res = null;
@@ -38,21 +39,55 @@ public class UsersPresenceServlet extends HttpServlet {
             case ADMIN_STATUS_ENDPOINT:
                 res = handleAdminStatus();
                 break;
-            case ADMIN_LOGOUT_ENDPOINT:
-                res = handleAdminLogout();
-                break;
             case USER_STATUS_ENDPOINT:
                 res = handleUserStatus(req.getParameter("name"));
                 break;
             case USER_INFO_ALL_ENDPOINT:
-                res = handleUserInfo(req);
+                res = handleUserInfo();
                 break;
         }
         resp.getWriter().println(res);
     }
 
-    private String handleUserInfo(HttpServletRequest req) {
+    @Override
+    final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getServletPath();
+        if(path.equals(USER_LOGIN_ENDPOINT)) {
+            handleNewUserLogin(req, resp);
+        }
+    }
 
+    @Override
+    final protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getServletPath();
+        if(path.equals(ADMIN_LOGOUT_ENDPOINT)) {
+            handleAdminLogout();
+        }
+    }
+
+    private void handleNewUserLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String name = req.getParameter("name");
+        Integer id = -1;
+        if (name != null) {
+            Map<String,UserSystemInfo> usersInfoMap =  (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
+            if(!usersInfoMap.containsKey(name)) {  // if given name is not already logged in
+                UserSystemInfo userSystemInfo = new UserSystemInfo(name);  // create new user with given name and default values
+                synchronized (this.getServletContext()) {
+                    id = addNewUserToContext(name, usersInfoMap, userSystemInfo);
+                }
+                System.out.println(String.format("New user with \"{0}\" with id \"{1}\" was logged in...",name,id));
+            }
+            else {
+                System.out.println(String.format("Something went wrong probably user with name {0} already logged in",name));
+            }
+        }
+        else{
+            System.out.println("Something went wrong... no name was given");
+        }
+        resp.getWriter().println(id);
+    }
+
+    private String handleUserInfo() {
         ServletContext context = getServletContext();
         Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(Utils.USERS_IN_SYSTEM);
         List<UserSystemInfo> usersInfo = Arrays.asList(name2info.values().toArray(new UserSystemInfo[0]));
@@ -71,30 +106,6 @@ public class UsersPresenceServlet extends HttpServlet {
         return res;
     }
 
-    final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath();
-        if(path.equals(USER_LOGIN_ENDPOINT)) {
-            String name = req.getParameter("name");
-            Integer id = -1;
-            if (name != null) {
-                Map<String,UserSystemInfo> usersInfoMap =  (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
-                if(!usersInfoMap.containsKey(name)) {  // if given name is not already logged in
-                    UserSystemInfo userSystemInfo = new UserSystemInfo(name);  // create new user with given name and default values
-                    synchronized (this.getServletContext()) {
-                        id = addNewUserToContext(name, usersInfoMap, userSystemInfo);
-                    }
-                    System.out.println(String.format("New user with \"{0}\" with id \"{1}\" was logged in...",name,id));
-                }
-                else {
-                    System.out.println(String.format("Something went wrong probably user with name {0} already logged in",name));
-                }
-            }
-            else{
-                System.out.println("Something went wrong... no name was given");
-            }
-            resp.getWriter().println(id);
-        }
-    }
 
     private Integer addNewUserToContext(String name, Map<String, UserSystemInfo> usersInfoMap, UserSystemInfo userSystemInfo) {
         Integer id;
@@ -143,7 +154,7 @@ public class UsersPresenceServlet extends HttpServlet {
     private String handleUserStatus(String name) {
         if(name != null) {
             Map usersInSystemInfo = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);
-            return Utils.GSON_INSTANCE.toJson(usersInSystemInfo.containsKey(name));
+            return Utils.GSON_INSTANCE.toJson(usersInSystemInfo.get(name));
         }
         return null; //=name
     }

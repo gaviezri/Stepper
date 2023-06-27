@@ -1,14 +1,11 @@
 package communication;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Role {
     public static class RoleManager{
-        private Map<Integer,Role> rolesMap;
+        private Map<Integer,Role> rolesMap = new LinkedHashMap<>();
 
         public void setRolesMap(Map<Integer, Role> rolesMap) {
             this.rolesMap = rolesMap;
@@ -22,7 +19,7 @@ public class Role {
             rolesMap.put(role.getId(),role);
         }
 
-        public List<Role> getRolesListFromCumulativeRoleValue(Integer cumulativeRoleValue){
+         synchronized public List<Role> getRolesListFromCumulativeRoleValue(Integer cumulativeRoleValue){
             List<Role> rolesList = new LinkedList<>();
             for (Map.Entry<Integer,Role> entry : rolesMap.entrySet()){
                 if ((cumulativeRoleValue & entry.getKey()) != 0){
@@ -32,6 +29,11 @@ public class Role {
             return rolesList;
         }
 
+        public void addRoles(List<Role> newRole) {
+            for (Role role : newRole) {
+                rolesMap.put(role.getId(), role);
+            }
+        }
     }
 
 

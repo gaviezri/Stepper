@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -91,6 +92,11 @@ public class DefinitionController extends LibraryControllerComponent {
             }
         }));
 
+    }
+
+    public void updateAccessibleFlows(List<FlowDefinitionDTO> flowDto){
+        ObservableList<String> flows =FXCollections.observableArrayList(flowDto.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()));
+        flowDefAvailableFlowsList.setItems(flows);
     }
 
     private void initializeContinuationsLabel(){

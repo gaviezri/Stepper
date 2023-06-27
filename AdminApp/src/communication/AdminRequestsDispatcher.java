@@ -17,11 +17,7 @@ import java.util.Map;
 import static communication.Utils.GSON_INSTANCE;
 
 
-
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
-
-
-
     private static final String LOAD_XML = "/loadXML";
     private static final String STATISTICS = "/statistics";
     private static final String HISTORY = "/history";

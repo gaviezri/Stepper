@@ -78,6 +78,11 @@ public class HeaderController {
         }
 
         List roles = UserRequestsDispatcher.getInstance().getUserRolesList();
-        rolesCombo.setItems(FXCollections.observableArrayList(roles));
+        if(roles.isEmpty()){
+            rolesCombo.setItems(FXCollections.observableArrayList("None"));
+        }
+        else {
+            rolesCombo.setItems(FXCollections.observableArrayList(roles));
+        }
     }
 }

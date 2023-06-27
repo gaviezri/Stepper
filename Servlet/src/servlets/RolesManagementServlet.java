@@ -89,7 +89,7 @@ public class RolesManagementServlet extends HttpServlet {
         if (cookie[0] != null){
             String user = cookie2User.get(Integer.parseInt(cookie[0].getValue()));
             UserSystemInfo userInfo = user2Info.get(user);
-            List<Role> rolesList = rolesManager.getRolesListFromCumulativeRoleValue(userInfo.getRoles());
+            List<Role> rolesList = rolesManager.getRolesListFromStringsValue(userInfo.getRoles());
             res = GSON_INSTANCE.toJson(new RolesDTO(rolesList));
         }
         resp.getWriter().println(res);

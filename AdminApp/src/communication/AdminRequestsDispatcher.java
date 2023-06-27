@@ -56,10 +56,10 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
-    public Map<Integer, Role> getRolesMap() {
+    public Map<String, Role> getRolesMap() {
         try {
             HttpURLConnection con = getConnection(ROLES, "GET", "application/json");
-            Map<Integer, Role> roleMap = GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con), RolesMapDTO.class).getRolesMap();
+            Map<String, Role> roleMap = GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con), RolesMapDTO.class).getRolesMap();
             con.disconnect();
             return roleMap;
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
-    public Map<Integer, Role> postRoles(List<Role> newRole) {
+    public Map<String, Role> postRoles(List<Role> newRole) {
         try {
             HttpURLConnection con = getConnection(ROLES, "POST", "application/json");
             OutputStream os = con.getOutputStream();
@@ -160,6 +160,18 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public void putLogoutAdmin() {
         try {
             HttpURLConnection con = getConnection(ADMIN_LOGOUT, "PUT", null);
+            getBodyResponseFromConnectio(con);
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void putUsers(List<UserSystemInfo> modifiedUsers) {
+        try {
+HttpURLConnection con = getConnection(USER, "PUT", "application/json");
+            OutputStream os = con.getOutputStream();
+            os.write(GSON_INSTANCE.toJson(new UsersSystemInfoDTO(modifiedUsers)).getBytes("UTF-8"));
             getBodyResponseFromConnectio(con);
             con.disconnect();
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package communication;
 
 import com.google.gson.reflect.TypeToken;
 import dto.flow.FlowDefinitionDTO;
+import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
 
 import java.net.HttpURLConnection;
@@ -20,11 +21,9 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
 
     public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){
         try {
-            HttpURLConnection con = getConnection(FLOW_DEFINITIONS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-            con.getOutputStream().flush();
-
+            HttpURLConnection con = getConnection(FLOW_DEFINITIONS_ENDPOINT, "GET", null);
             List<FlowDefinitionDTO> allAccessibleFlowDefs = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con),
-                                                        new TypeToken<List<FlowDefinitionDTO>>(){}.getType());
+                                                        ManyFlowDefinitionsDTO.class).getFlowDefinitions();
             con.disconnect();
             return allAccessibleFlowDefs;
         } catch (Exception e){

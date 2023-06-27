@@ -37,11 +37,11 @@ public class StepperServletContextListener implements ServletContextListener {
         servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
         servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, LinkedList<UUID>>());
 
-        Function<Pair<HttpServletRequest,String>,String> cookieBaker = (pair) -> {
+        Function<Pair<HttpServletRequest,String>,Integer> cookieBaker = (pair) -> {
             Cookie[] cookies = pair.getKey().getCookies();
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(pair.getValue())) {
-                    return cookie.getValue();
+                    return Integer.parseInt(cookie.getValue());
                 }
             }
             return null;

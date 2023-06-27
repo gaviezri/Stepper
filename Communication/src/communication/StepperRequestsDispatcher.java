@@ -37,8 +37,6 @@ public abstract class StepperRequestsDispatcher {
         return con;
     }
 
-
-
     protected String getBodyResponseFromConnection(HttpURLConnection con) throws Exception{
         StringBuilder sb = new StringBuilder();
         String line;
@@ -46,10 +44,6 @@ public abstract class StepperRequestsDispatcher {
         while ((line = br.readLine()) != null) {
             sb.append(line);
         }
-
         return sb.toString();
     }
-
-
-
 }

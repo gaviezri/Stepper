@@ -4,6 +4,7 @@ import communication.Role;
 import communication.UserSystemInfo;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.LoadDataDTO;
+import dto.flow.ManyFlowDefinitionsDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,10 +15,7 @@ import javafx.util.Pair;
 import stepper.controller.EngineController;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -51,11 +49,12 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
                 System.out.println("a call to 'flows/definitions' endpoint was made...");
                 resp.setContentType(JSON_CONTENT_TYPE);
                 resp.getWriter().println(GSON_INSTANCE.toJson(getUserSpecificFilteredFlowDefinitionDTOS(req)));
+                break;
         }
         System.out.println("response sent");
     }
 
-    private List<FlowDefinitionDTO> getUserSpecificFilteredFlowDefinitionDTOS(HttpServletRequest req) {
+    private ManyFlowDefinitionsDTO getUserSpecificFilteredFlowDefinitionDTOS(HttpServletRequest req) {
         ServletContext context = getServletContext();
         // get cookie getter function from Context
         Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
@@ -71,10 +70,16 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
         }
         // get flows definitions according to accessible flows of user (if user is manager bring all flows.)
         EngineController engineInstance = (EngineController) context.getAttribute(ENGINE_CONTROLLER);
-        return userInfo.isManager() ?
+        List<FlowDefinitionDTO> flowDefinitionDTOS = filterFlowDefinitionsByUsersAccessLevel(userInfo, userAccessibleFlows, engineInstance);
+        return new ManyFlowDefinitionsDTO(flowDefinitionDTOS);
+    }
+
+    private static List<FlowDefinitionDTO> filterFlowDefinitionsByUsersAccessLevel(UserSystemInfo userInfo, Set<String> userAccessibleFlows, EngineController engineInstance) {
+        List<FlowDefinitionDTO> flowDefinitionDTOS = userInfo.isManager() ?
                 engineInstance.getAllFlowDefinitionsData() :
                 engineInstance.getAllFlowDefinitionsData().stream().
-                filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
+                        filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
+        return flowDefinitionDTOS;
     }
 }
 

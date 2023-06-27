@@ -41,8 +41,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             case FLOW_DEFINITIONS_ENDPOINT:
                 System.out.println("a call to 'flows/definitions' endpoint was made...");
                 resp.setContentType(JSON_CONTENT_TYPE);
-                List<FlowDefinitionDTO> allFlowDefinitionsData = EngineController.getInstance().getAllFlowDefinitionsData();
-                // need to filter FDs by users role before sending back
+
                 break;
 
         }

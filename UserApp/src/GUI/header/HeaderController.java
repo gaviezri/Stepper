@@ -77,7 +77,7 @@ public class HeaderController {
             isManagerText.setText(isManager);
         }
 
-        List roles = UserRequestsDispatcher.getInstance().getUserRolesList();
+        List roles = mainController.getUserRolesList();
         if(roles.isEmpty()){
             rolesCombo.setItems(FXCollections.observableArrayList("None"));
         }

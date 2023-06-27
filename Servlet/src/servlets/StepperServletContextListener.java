@@ -7,9 +7,15 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.function.Function;
+
+import static communication.Utils.*;
 
 @WebListener
 public class StepperServletContextListener implements ServletContextListener {
@@ -18,14 +24,28 @@ public class StepperServletContextListener implements ServletContextListener {
         // Called when the ServletContext is initialized
         ServletContext servletContext = servletContextEvent.getServletContext();
         synchronized (servletContext) {
-        servletContext.setAttribute(Utils.ADMIN_LOGGED_IN,false);
-        servletContext.setAttribute(Utils.USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
-        servletContext.setAttribute(Utils.COOKIE_2_USER, new HashMap<Integer, String>());
-        servletContext.setAttribute(Utils.NEXT_FREE_ID,1);
-        servletContext.setAttribute(Utils.ROLES, new LinkedList<Role>());
-        servletContext.setAttribute(Utils.ROLES_CHANGED, false);
-        servletContext.setAttribute(Utils.FETCH_STARTUP_DATA_ADMIN, true);
-        servletContext.setAttribute(Utils.ROLES_MANAGER, new Role.RoleManager());
+        servletContext.setAttribute(ADMIN_LOGGED_IN,false);
+        servletContext.setAttribute(USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
+        servletContext.setAttribute(COOKIE_2_USER, new HashMap<Integer, String>());
+        servletContext.setAttribute(NEXT_FREE_ID,1);
+        servletContext.setAttribute(ROLES, new LinkedList<Role>());
+        servletContext.setAttribute(ROLES_CHANGED, false);
+        servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, true);
+        servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
+
+        Function<Pair<HttpServletRequest,String>,String> cookieBaker = (pair) -> {
+            Cookie[] cookies = pair.getKey().getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(pair.getValue())) {
+                    return cookie.getValue();
+                }
+            }
+            return null;
+        };
+
+        servletContext.setAttribute(COOKIE_BAKER, cookieBaker);
+
+
         }
     }
 

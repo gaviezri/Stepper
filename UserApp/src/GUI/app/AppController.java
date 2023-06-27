@@ -2,9 +2,11 @@ package GUI.app;
 
 import GUI.body.BodyController;
 import GUI.login.LoginController;
+import communication.Role;
 import communication.UserRequestsDispatcher;
 import GUI.header.HeaderController;
 import communication.UserSystemInfo;
+import dto.flow.FlowDefinitionDTO;
 import dto.statistics.StatisticsDTO;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,10 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import javafx.util.Pair;
 
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -64,11 +64,15 @@ public class AppController {
     {
         finalize();
     }
+    public List<Role> getUserRolesList(){
+        return reqDispatcher.getUserRolesList();
+    }
+
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
                 updateManagerAndRoles();
-
+                updateAccessibleFlows();
 //                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
 //
 //                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
@@ -79,6 +83,11 @@ public class AppController {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateAccessibleFlows() {
+        List<FlowDefinitionDTO> allAccessibleFlowDefinitionsData = reqDispatcher.getAllAccessibleFlowDefinitionsData();
+        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateAccessibleFlows(allAccessibleFlowDefinitionsData);
     }
 
     private void updateManagerAndRoles() {

@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 public class Utils {
     // Create a single instance of Gson object
     final static public Gson GSON_INSTANCE = new GsonBuilder().create();
+    final static public String ENGINE_CONTROLLER = "engineController";
     final static public String ADMIN_LOGGED_IN = "isAdminLoggedIn";
     final static public String USERS_IN_SYSTEM = "usersLoggedInMap";
     final static public String COOKIE_2_USER = "userName2Id";
@@ -24,6 +25,7 @@ public class Utils {
     public static final String USER_LOGIN = "/user/login?name=";
     public static final  String LOAD_XML_ENDPOINT = "/loadXML";
     public static final String FLOW_NAMES_ENDPOINT = "/flow/names";
+    public static final String FLOW_EXECUTION_ENDPOINT = "/flow/execution";
     public static final String FLOW_DEFINITIONS_ENDPOINT = "/flow/definitions";
     public static final String STATISTICS_ENDPOINT = "/statistics";
     public static final String HISTORY_ENDPOINT = "/history";
@@ -37,4 +39,5 @@ public class Utils {
     public static final String USER_LOGOUT_ENDPOINT = "/user/logout";
     public static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
     public static final String SINGLE_USER_INFO_ENDPOINT = "/user/info";
+
 }

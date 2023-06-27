@@ -100,8 +100,7 @@ public class UsersManagementController extends BodyControllerComponent {
                 rolesListView.setDisable(false);
                 selectedUserLabel.setText(newValue.getName());
                 managerCheckbox.setSelected(newValue.isManager());
-                List<Role> rolesList = bodyController.getRoleManager()
-                        .getRolesListFromStringsValue(newValue.getRoles());
+                List<Role> rolesList = newValue.getRoles();
 
                 Platform.runLater(()-> {
                     rolesListView.getItems().forEach(x->x.assignedProperty().set(rolesList.contains(x.getName())));
@@ -110,18 +109,22 @@ public class UsersManagementController extends BodyControllerComponent {
             }
         });
     }
-
-
     private RoleListItem createNewRoleListItem(Role x) {
         RoleListItem item = new RoleListItem(x.getName(), false);
         item.assignedProperty().addListener((observable, oldValue, newValue) -> {
             changesMade.setValue(true);
             UserSystemInfo selectedUser = onlineUsersListView.getSelectionModel().getSelectedItem();
             if (newValue != null) {
-                if (newValue) { selectedUser.assignNewRole(x);}
-                else        { selectedUser.unAssignNewRole(x);}
-                if(!modifiedUsers.contains(selectedUser)) { modifiedUsers.add(selectedUser); }
-                else { modifiedUsers.set(modifiedUsers.indexOf(selectedUser), selectedUser); }
+                if (newValue) {
+                    selectedUser.assignNewRole(x);
+                } else {
+                    selectedUser.unAssignNewRole(x);
+                }
+                if(!modifiedUsers.contains(selectedUser)) {
+                    modifiedUsers.add(selectedUser);
+                } else {
+                    modifiedUsers.set(modifiedUsers.indexOf(selectedUser), selectedUser);
+                }
             }
         });
         return item;

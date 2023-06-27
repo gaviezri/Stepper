@@ -82,7 +82,10 @@ public class Role {
     public void unassignOldFlow(String flowName) {
         assignedFlowNames.remove(flowName);
     }
-
+    @Override
+    public String toString() {
+        return Name;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,7 +96,7 @@ public class Role {
 
     @Override
     public int hashCode() {
-        return Objects.hash(Name, Description);
+        return Objects.hash(Name);
     }
 
 

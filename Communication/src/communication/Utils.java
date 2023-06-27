@@ -15,4 +15,23 @@ public class Utils {
     public static final String ROLES_CHANGED = "rolesChanged";
     public static final String FETCH_STARTUP_DATA_ADMIN = "fetchStartupDataAdmin";
     public static final String ROLES_MANAGER = "rolesManager";
+    public static final String JSON_CONTENT_TYPE = "application/json";
+    public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
+
+    /*#################### endpoints ####################*/
+    public static final String USER_LOGIN = "/user/login?name=";
+    public static final  String LOAD_XML_ENDPOINT = "/loadXML";
+    public static final String FLOW_NAMES_ENDPOINT = "/flow/names";
+    public static final String FLOW_DEFINITIONS_ENDPOINT = "/flow/definitions";
+    public static final String STATISTICS_ENDPOINT = "/statistics";
+    public static final String HISTORY_ENDPOINT = "/history";
+    public static final String ROLES_ENDPOINT = "/roles";
+    public static final String ROLES_USER_ENDPOINT = "/roles/user";
+    public static final String ROLES_MAP_ENDPOINT = "/roles/map";
+    public static final String ADMIN_STATUS_ENDPOINT = "/admin/status";
+    public static final String ADMIN_LOGOUT_ENDPOINT = "/admin/logout";
+    public static final String USER_STATUS_ENDPOINT = "/user/status";
+    public static final String USER_LOGIN_ENDPOINT = "/user/login";
+    public static final String USER_LOGOUT_ENDPOINT = "/user/logout";
+    public static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
 }

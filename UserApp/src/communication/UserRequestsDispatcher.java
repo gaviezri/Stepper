@@ -7,12 +7,10 @@ import dto.user.roles.RolesDTO;
 import java.net.HttpURLConnection;
 import java.util.List;
 
+import static communication.Utils.*;
+
+
 public class UserRequestsDispatcher extends StepperRequestsDispatcher{
-    private static final String USER_LOGOUT = "/user/logout";
-    private static final String USER_LOGIN= "/user/login?name=";
-    private static final String FLOWS_DEFINITIONS = "/flow/definitions";
-    private static final String USER_STATUS = "/user/status";
-    private static final String ROLES_USER = "/roles/user";
 
     private static UserRequestsDispatcher instance = new UserRequestsDispatcher();
     public static UserRequestsDispatcher getInstance() {
@@ -20,15 +18,15 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     private UserRequestsDispatcher() {}
 
-    public List<FlowDefinitionDTO> getAllFlowDefinitionsData(){
+    public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){
         try {
-            HttpURLConnection con = getConnection(FLOWS_DEFINITIONS, "GET", "application/json");
+            HttpURLConnection con = getConnection(FLOW_DEFINITIONS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
             con.getOutputStream().flush();
 
-            List<FlowDefinitionDTO> allFlowDefs = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),
+            List<FlowDefinitionDTO> allAccessibleFlowDefs = GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),
                                                         new TypeToken<List<FlowDefinitionDTO>>(){}.getType());
             con.disconnect();
-            return allFlowDefs;
+            return allAccessibleFlowDefs;
         } catch (Exception e){
             return null;
         }
@@ -36,7 +34,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
 
     public boolean logout(){
         try {
-            HttpURLConnection con = getConnection(USER_LOGOUT, "DELETE", "text/plain");
+            HttpURLConnection con = getConnection(USER_LOGOUT_ENDPOINT, "DELETE", PLAIN_TEXT_CONTENT_TYPE);
             con.getOutputStream().flush();
 
             boolean status = Boolean.parseBoolean(getBodyResponseFromConnectio(con));
@@ -50,7 +48,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
 
     public boolean login(String userName) {
         try {
-            HttpURLConnection con = getConnection(USER_LOGIN + userName, "POST", "text/plain");
+            HttpURLConnection con = getConnection(USER_LOGIN + userName, "POST", PLAIN_TEXT_CONTENT_TYPE);
             con.getOutputStream().flush();
             try {
                 cookieIDValue = Integer.parseInt(getBodyResponseFromConnectio(con));
@@ -71,8 +69,8 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     public List getUserRolesList(){
         try {
-            HttpURLConnection con = getConnection(ROLES_USER, "GET", "application/json");
-            List userRoles = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con), RolesDTO.class).getRoles();
+            HttpURLConnection con = getConnection(ROLES_USER_ENDPOINT, "GET", JSON_CONTENT_TYPE);
+            List userRoles = GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con), RolesDTO.class).getRoles();
             con.disconnect();
             return userRoles;
         }
@@ -83,8 +81,8 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     public UserSystemInfo getUsersCurrentInfo(String userName){
         try {
-            HttpURLConnection con = getConnection(USER_STATUS + "?name=" + userName, "GET", "application/json");
-            UserSystemInfo userInfo = Utils.GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),UserSystemInfo.class);
+            HttpURLConnection con = getConnection(USER_STATUS_ENDPOINT + "?name=" + userName, "GET", JSON_CONTENT_TYPE);
+            UserSystemInfo userInfo = GSON_INSTANCE.fromJson(getBodyResponseFromConnectio(con),UserSystemInfo.class);
             con.disconnect();
             return userInfo; //could be null if username not in system!
         }
@@ -96,7 +94,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
 
     public StartUpStatus pingServer() {
         try {
-            HttpURLConnection con = getConnection(USER_STATUS, "GET", "text/plain");
+            HttpURLConnection con = getConnection(USER_STATUS_ENDPOINT, "GET", PLAIN_TEXT_CONTENT_TYPE);
             con.getResponseMessage();
             con.disconnect();
             return StartUpStatus.SUCCESS;

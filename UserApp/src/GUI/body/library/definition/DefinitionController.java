@@ -23,10 +23,6 @@ import java.util.stream.IntStream;
 
 
 public class DefinitionController extends LibraryControllerComponent {
-
-
-
-
     @FXML private ListView<String> flowDefAvailableFlowsList;
     @FXML private AnchorPane flowPresentationAnchorPane;
     @FXML private ScrollPane flowDataScrollPane;

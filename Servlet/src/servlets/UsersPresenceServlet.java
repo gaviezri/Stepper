@@ -1,7 +1,6 @@
 package servlets;
 
 import communication.UserSystemInfo;
-import communication.Utils;
 import dto.user.system.info.UsersSystemInfoDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -14,7 +13,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import static servlets.UsersPresenceServlet.*;
+
+import static communication.Utils.*;
+
 
 @WebServlet(name="UsersPresenceServlet", urlPatterns = {ADMIN_STATUS_ENDPOINT,ADMIN_LOGOUT_ENDPOINT,USER_STATUS_ENDPOINT,
                                                         USER_LOGIN_ENDPOINT,USER_LOGOUT_ENDPOINT, USER_INFO_ALL_ENDPOINT})
@@ -25,12 +26,7 @@ public class UsersPresenceServlet extends HttpServlet {
      * 2. /admin/logout -> sets the admin login status to false
      * 3. /user/status  ->
      * */
-    static final String ADMIN_STATUS_ENDPOINT = "/admin/status";
-    static final String ADMIN_LOGOUT_ENDPOINT = "/admin/logout";
-    static final String USER_STATUS_ENDPOINT = "/user/status";
-    static final String USER_LOGIN_ENDPOINT = "/user/login";
-    static final String USER_LOGOUT_ENDPOINT = "/user/logout";
-    static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
+
     @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
@@ -69,7 +65,7 @@ public class UsersPresenceServlet extends HttpServlet {
         String name = req.getParameter("name");
         Integer id = -1;
         if (name != null) {
-            Map<String,UserSystemInfo> usersInfoMap =  (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
+            Map<String,UserSystemInfo> usersInfoMap =  (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);  // get current logged in users
             if(!usersInfoMap.containsKey(name)) {  // if given name is not already logged in
                 UserSystemInfo userSystemInfo = new UserSystemInfo(name);  // create new user with given name and default values
                 synchronized (this.getServletContext()) {
@@ -89,18 +85,18 @@ public class UsersPresenceServlet extends HttpServlet {
 
     private String handleUserInfo() {
         ServletContext context = getServletContext();
-        Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(Utils.USERS_IN_SYSTEM);
+        Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(USERS_IN_SYSTEM);
         List<UserSystemInfo> usersInfo = Arrays.asList(name2info.values().toArray(new UserSystemInfo[0]));
         UsersSystemInfoDTO dto = new UsersSystemInfoDTO(usersInfo);
-        return Utils.GSON_INSTANCE.toJson(dto);
+        return GSON_INSTANCE.toJson(dto);
     }
 
     private String handleAdminLogout() {
         String res;
         ServletContext context = getServletContext();
         synchronized (context) {
-            context.setAttribute(Utils.FETCH_STARTUP_DATA_ADMIN, true);
-            context.setAttribute(Utils.ADMIN_LOGGED_IN, false);
+            context.setAttribute(FETCH_STARTUP_DATA_ADMIN, true);
+            context.setAttribute(ADMIN_LOGGED_IN, false);
         }
         res = "false";
         return res;
@@ -110,10 +106,10 @@ public class UsersPresenceServlet extends HttpServlet {
     private Integer addNewUserToContext(String name, Map<String, UserSystemInfo> usersInfoMap, UserSystemInfo userSystemInfo) {
         Integer id;
         usersInfoMap.put(name, userSystemInfo); // add new user
-        id = (Integer) this.getServletContext().getAttribute(Utils.NEXT_FREE_ID); // get the next available ID
-        Map<Integer,String> cookies2User = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
+        id = (Integer) this.getServletContext().getAttribute(NEXT_FREE_ID); // get the next available ID
+        Map<Integer,String> cookies2User = (Map) this.getServletContext().getAttribute(COOKIE_2_USER); // get users in system ID map
         cookies2User.put(id, name); // add user
-        this.getServletContext().setAttribute(Utils.NEXT_FREE_ID, id + 1); // update next available ID
+        this.getServletContext().setAttribute(NEXT_FREE_ID, id + 1); // update next available ID
         return id;
     }
 
@@ -129,7 +125,7 @@ public class UsersPresenceServlet extends HttpServlet {
         Cookie[] cookies = req.getCookies();
         if(cookies != null) {
             Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
-            Map<Integer, String> usersCookies = (Map) this.getServletContext().getAttribute(Utils.COOKIE_2_USER); // get users in system ID map
+            Map<Integer, String> usersCookies = (Map) this.getServletContext().getAttribute(COOKIE_2_USER); // get users in system ID map
             String userName = usersCookies.get(id);
             if (userName != null) {
                 deleteUserFromContext(resp, id, usersCookies, userName);
@@ -144,7 +140,7 @@ public class UsersPresenceServlet extends HttpServlet {
     }
 
     private void deleteUserFromContext(HttpServletResponse resp, Integer id, Map<Integer, String> usersCookies, String userName) throws IOException {
-        Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);  // get current logged in users
+        Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);  // get current logged in users
         usersInfoMap.remove(userName);
         usersCookies.remove(id);
         resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
@@ -153,22 +149,22 @@ public class UsersPresenceServlet extends HttpServlet {
 
     private String handleUserStatus(String name) {
         if(name != null) {
-            Map usersInSystemInfo = (Map) this.getServletContext().getAttribute(Utils.USERS_IN_SYSTEM);
-            return Utils.GSON_INSTANCE.toJson(usersInSystemInfo.get(name));
+            Map usersInSystemInfo = (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);
+            return GSON_INSTANCE.toJson(usersInSystemInfo.get(name));
         }
         return null; //=name
     }
 
     private String handleAdminStatus() {
         String res;
-        Boolean isAdminLoggedIn = (Boolean) this.getServletContext().getAttribute(Utils.ADMIN_LOGGED_IN);
+        Boolean isAdminLoggedIn = (Boolean) this.getServletContext().getAttribute(ADMIN_LOGGED_IN);
         res = isAdminLoggedIn.toString();
 
         if(!isAdminLoggedIn){
             ServletContext context = getServletContext();
             synchronized (context) {
-                context.setAttribute(Utils.ADMIN_LOGGED_IN, true);
-                context.setAttribute(Utils.FETCH_STARTUP_DATA_ADMIN, true);
+                context.setAttribute(ADMIN_LOGGED_IN, true);
+                context.setAttribute(FETCH_STARTUP_DATA_ADMIN, true);
             }
         }
         return res;

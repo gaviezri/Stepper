@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static communication.Utils.*;
 
@@ -49,28 +50,32 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             case FLOW_DEFINITIONS_ENDPOINT:
                 System.out.println("a call to 'flows/definitions' endpoint was made...");
                 resp.setContentType(JSON_CONTENT_TYPE);
-
-                ServletContext context = getServletContext();
-
-                Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
-                Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
-
-                UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
-
-                List<Role> userRoles = userInfo.getRoles();
-
-                Set<String> userAccessibleFlows = new HashSet<String>();
-
-                for (Role role: userRoles) {
-                    userAccessibleFlows.addAll(role.getFlows());
-                }
-
-
+                resp.getWriter().println(GSON_INSTANCE.toJson(getUserSpecificFilteredFlowDefinitionDTOS(req)));
                 break;
-
         }
-
         System.out.println("response sent");
+    }
+
+    private List<FlowDefinitionDTO> getUserSpecificFilteredFlowDefinitionDTOS(HttpServletRequest req) {
+        ServletContext context = getServletContext();
+        // get cookie getter function from Context
+        Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
+        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
+        // get current user info by cookie id
+        UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
+        // get current users assigned roles
+        List<Role> userRoles = userInfo.getRoles();
+        // create current users accessible flow names set
+        Set<String> userAccessibleFlows = new HashSet<String>();
+        for (Role role: userRoles) {
+            userAccessibleFlows.addAll(role.getFlows());
+        }
+        // get flows definitions according to accessible flows of user (if user is manager bring all flows.)
+        EngineController engineInstance = (EngineController) context.getAttribute("engineInstance");
+        return userInfo.isManager() ?
+                engineInstance.getAllFlowDefinitionsData() :
+                engineInstance.getAllFlowDefinitionsData().stream().
+                filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
     }
 }
 

@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import javafx.util.Pair;
+import stepper.controller.EngineController;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -44,7 +45,7 @@ public class StepperServletContextListener implements ServletContextListener {
         };
 
         servletContext.setAttribute(COOKIE_BAKER, cookieBaker);
-
+        servletContext.setAttribute("engineInstance", EngineController.getInstance());
 
         }
     }

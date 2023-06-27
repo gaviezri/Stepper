@@ -46,17 +46,20 @@ public class UsersPresenceServlet extends HttpServlet {
                 res = handleAllUsersInfo();
                 break;
             case SINGLE_USER_INFO_ENDPOINT:
-                ServletContext context = getServletContext();
-
-                Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
-                Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
-
-                UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
-//                List<Role> userRoles = userInfo.getRoles();
-                // need to create a list of accessible flows from according to the roles list and get them
-                break;
+                res = handleSingleUserInfo(req);
+            break;
         }
         resp.getWriter().println(res);
+    }
+
+    private String handleSingleUserInfo(HttpServletRequest req) {
+        ServletContext context = getServletContext();
+
+        Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
+        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
+
+        UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
+        return GSON_INSTANCE.toJson(userInfo);
     }
 
     @Override

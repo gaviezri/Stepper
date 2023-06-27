@@ -46,7 +46,7 @@ public class StepperServletContextListener implements ServletContextListener {
         };
 
         servletContext.setAttribute(COOKIE_BAKER, cookieBaker);
-
+        servletContext.setAttribute("engineInstance", EngineController.getInstance());
 
         }
     }

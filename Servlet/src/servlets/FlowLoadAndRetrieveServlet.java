@@ -61,10 +61,13 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
     private ManyFlowDefinitionsDTO getUserSpecificFilteredFlowDefinitionDTOS(HttpServletRequest req) {
         ServletContext context = getServletContext();
         // get cookie getter function from Context
-        Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
-        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
+        Function<Pair<HttpServletRequest,String>,Integer> cookieBaker =  (Function<Pair<HttpServletRequest,String>,Integer>)context.getAttribute(COOKIE_BAKER);
+        Integer userCookie = cookieBaker.apply(new Pair(req,"ID"));
         // get current user info by cookie id
-        UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
+        String userName = ((Map<Integer,String>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
+
+        UserSystemInfo userInfo = ((Map<String,UserSystemInfo>) context.getAttribute(USERS_IN_SYSTEM)).get(userName);
+
         // get current users assigned roles
         List<Role> userRoles = userInfo.getRoles();
         // create current users accessible flow names set

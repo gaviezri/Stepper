@@ -1,6 +1,5 @@
 package dto.flow;
 
-<<<<<<< HEAD
 import javafx.util.Pair;
 import java.util.Map;
 
@@ -20,8 +19,5 @@ public class FlowExecutionRequestDTO {
     public int getFlowInd() {
         return flowInd;
     }
-=======
-public class FlowExecutionRequestDTO {
 
->>>>>>> origin/admin-app-wip
 }

@@ -41,7 +41,7 @@ public class LoadedFlowsLibrary implements Serializable {
     }
 
     public int getCountOfLoadedFlows(){
-        return loadedflowDefinitions.size();
+        return loadedflowDefinitions == null ? 0 : loadedflowDefinitions.size();
     }
 
     public boolean isLoaded() {

@@ -26,6 +26,7 @@ public class StepperServletContextListener implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
         synchronized (servletContext) {
         servletContext.setAttribute(ADMIN_LOGGED_IN,false);
+        servletContext.setAttribute(ENGINE_CONTROLLER, EngineController.getInstance());
         servletContext.setAttribute(USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
         servletContext.setAttribute(COOKIE_2_USER, new HashMap<Integer, String>());
         servletContext.setAttribute(NEXT_FREE_ID,1);

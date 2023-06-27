@@ -51,7 +51,6 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
                 System.out.println("a call to 'flows/definitions' endpoint was made...");
                 resp.setContentType(JSON_CONTENT_TYPE);
                 resp.getWriter().println(GSON_INSTANCE.toJson(getUserSpecificFilteredFlowDefinitionDTOS(req)));
-                break;
         }
         System.out.println("response sent");
     }

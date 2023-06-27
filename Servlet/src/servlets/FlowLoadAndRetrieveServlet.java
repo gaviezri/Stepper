@@ -41,7 +41,6 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             case FLOW_DEFINITIONS_ENDPOINT:
                 System.out.println("a call to 'flows/definitions' endpoint was made...");
                 resp.setContentType(JSON_CONTENT_TYPE);
-
                 break;
 
         }

@@ -17,6 +17,7 @@ public class Utils {
     public static final String ROLES_MANAGER = "rolesManager";
     public static final String JSON_CONTENT_TYPE = "application/json";
     public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
+    public static final String COOKIE_BAKER= "getCookieByName";
 
     /*#################### endpoints ####################*/
     public static final String USER_LOGIN = "/user/login?name=";
@@ -34,4 +35,5 @@ public class Utils {
     public static final String USER_LOGIN_ENDPOINT = "/user/login";
     public static final String USER_LOGOUT_ENDPOINT = "/user/logout";
     public static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
+    public static final String SINGLE_USER_INFO_ENDPOINT = "/user/info";
 }

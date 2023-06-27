@@ -154,6 +154,7 @@ public class UsersManagementController extends BodyControllerComponent {
             try { onlineUsersListView.getSelectionModel().select(selectedUsi);}
             catch (Exception e) { onlineUsersListView.getSelectionModel().clearSelection();
             }
+
         }
 
         Platform.runLater(()-> {

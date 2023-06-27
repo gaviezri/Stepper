@@ -95,8 +95,14 @@ public class DefinitionController extends LibraryControllerComponent {
     }
 
     public void updateAccessibleFlows(List<FlowDefinitionDTO> flowDto){
-        ObservableList<String> flows = FXCollections.observableArrayList(flowDto.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()));
-        flowDefAvailableFlowsList.setItems(flows);
+        ObservableList<String> flows =FXCollections.observableArrayList(
+                                                            flowDto.stream().
+                                                            map(FlowDefinitionDTO::getFlowName).
+                                                            collect(Collectors.toList())
+                                                    );
+        Platform.runLater(()->{
+            flowDefAvailableFlowsList.setItems(flows);
+        });
     }
 
     private void initializeContinuationsLabel(){
@@ -133,7 +139,6 @@ public class DefinitionController extends LibraryControllerComponent {
     }
 
     public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefDTOlist) {
-
             clearAllData();
             flowDefinitionDTOList = flowDefDTOlist;
 
@@ -143,15 +148,17 @@ public class DefinitionController extends LibraryControllerComponent {
                 setFlowInputsData(dto);
                 setFlowOutputsData(dto);
             }
-
     }
+
     // --FLOW HEADERS--
     private void setFlowsHeadersData(FlowDefinitionDTO dto) {
-        flowDefAvailableFlowsList.getItems().add(dto.getFlowName());
-        flowDescriptionsProperty.add(dto.getDescription());
-        flowFormalOutputsProperty.addAll(dto.getFormalOutputs().stream()
-                .map(SimpleStringProperty::new)
-                .collect(Collectors.toList()));
+        Platform.runLater(()->{
+            flowDefAvailableFlowsList.getItems().add(dto.getFlowName());
+            flowDescriptionsProperty.add(dto.getDescription());
+            flowFormalOutputsProperty.addAll(dto.getFormalOutputs().stream()
+                    .map(SimpleStringProperty::new)
+                    .collect(Collectors.toList()));
+        });
     }
     // -- STEPS --
     private void setFlowsStepsData(FlowDefinitionDTO dto) {
@@ -163,7 +170,9 @@ public class DefinitionController extends LibraryControllerComponent {
             content.getChildren().size();
             content.getChildren().add(createStepPane(stepDTO, stepsReadonly.get(content.getChildren().size())));
         }
-        stepsVBoxByFlowIdx.add(content);
+        Platform.runLater(()->{
+            stepsVBoxByFlowIdx.add(content);
+        });
     }
     private TitledPane createStepPane(SingleStepDTO stepDTO, Boolean isReadOnly) {
         TitledPane stepPane = new TitledPane();

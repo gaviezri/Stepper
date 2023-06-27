@@ -5,7 +5,12 @@ import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import static communication.Utils.*;
@@ -19,13 +24,36 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     private UserRequestsDispatcher() {}
 
+    public String getBodyResponseFromConnection(HttpURLConnection connection) throws IOException {
+        StringBuilder response = new StringBuilder();
+        try {
+            BufferedReader br = null;
+            if (100 <= connection.getResponseCode() && connection.getResponseCode() <= 399){
+                br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            }else {
+                br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            }
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                response.append(line);
+            }
+        }
+        catch (Exception e){
+            return e.getMessage();
+        }
+        return response.toString();
+    }
+
+
     public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){
         try {
-            HttpURLConnection con = getConnection(FLOW_DEFINITIONS_ENDPOINT, "GET", null);
-            List<FlowDefinitionDTO> allAccessibleFlowDefs = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con),
-                                                        ManyFlowDefinitionsDTO.class).getFlowDefinitions();
+            HttpURLConnection con = getConnection(FLOW_DEFINITIONS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
+            String bodyContent = this.getBodyResponseFromConnection(con);
+            ManyFlowDefinitionsDTO manyFlowDefinitionsDTO = GSON_INSTANCE.fromJson(bodyContent,ManyFlowDefinitionsDTO.class);
+            List<FlowDefinitionDTO> flowDefinitionDTOs = manyFlowDefinitionsDTO.getFlowDefinitions();
             con.disconnect();
-            return allAccessibleFlowDefs;
+            return flowDefinitionDTOs;
         } catch (Exception e){
             return null;
         }

@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -87,7 +88,11 @@ public class AppController {
 
     private void updateAccessibleFlows() {
         List<FlowDefinitionDTO> allAccessibleFlowDefinitionsData = reqDispatcher.getAllAccessibleFlowDefinitionsData();
-        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateAccessibleFlows(allAccessibleFlowDefinitionsData);
+        if(allAccessibleFlowDefinitionsData == null) {
+            allAccessibleFlowDefinitionsData = new ArrayList<FlowDefinitionDTO>();
+        }
+//        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateAccessibleFlows(allAccessibleFlowDefinitionsData);
+        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateFlowDefinitions(allAccessibleFlowDefinitionsData);
     }
 
     private void updateManagerAndRoles() {

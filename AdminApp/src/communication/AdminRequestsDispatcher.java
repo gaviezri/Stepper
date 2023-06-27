@@ -18,9 +18,6 @@ import static communication.Utils.*;
 
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
-
-
-
     private static AdminRequestsDispatcher instance = new AdminRequestsDispatcher();
     public static AdminRequestsDispatcher getInstance() {
         return instance;

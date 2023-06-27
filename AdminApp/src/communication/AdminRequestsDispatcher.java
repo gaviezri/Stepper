@@ -165,4 +165,16 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             e.printStackTrace();
         }
     }
+
+    public FlowsExecutionHistoryDTO getHistory() {
+        try {
+            HttpURLConnection con = getConnection(HISTORY_ENDPOINT, "GET", JSON_CONTENT_TYPE);
+            FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), FlowsExecutionHistoryDTO.class);
+            con.disconnect();
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

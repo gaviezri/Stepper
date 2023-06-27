@@ -17,26 +17,29 @@ public class HistoryStatisticsServlet extends HttpServlet {
 
     @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath();
-            if (path.equals(STATISTICS_ENDPOINT)) {
+        switch (req.getServletPath()){
+            case STATISTICS_ENDPOINT:
                 System.out.println("a call to 'statistics' endpoint was made...");
                 //  handling statistics request
                 resp.getWriter().println(handleStatisticsRequest());
-        } else if (path.equals(HISTORY_ENDPOINT)) {
+                break;
+            case HISTORY_ENDPOINT:
                 System.out.println("a call to 'history' endpoint was made...");
-            // handling history request
+                // handling history request
                 resp.getWriter().println(handleHistoryRequest());
-        } else {
-        // Handle unknown endpoints
-            resp.getWriter().println("Invalid endpoint");
+                break;
         }
     }
 
     private String handleStatisticsRequest(){
-//        get statistics DTO and turn it to Json
-        return GSON_INSTANCE.toJson(EngineController.getInstance().getCurrentLoadedFlowsStatisticsDetails());
+        return GSON_INSTANCE.toJson(
+                ((EngineController)getServletContext().getAttribute(ENGINE_CONTROLLER))
+                .getCurrentLoadedFlowsStatisticsDetails()
+        );
     }
     private String handleHistoryRequest(){
-        return GSON_INSTANCE.toJson(EngineController.getInstance().getExecutedFlowsHistoryDetails());
+        return GSON_INSTANCE.toJson(((EngineController)getServletContext().getAttribute(ENGINE_CONTROLLER))
+                .getExecutedFlowsHistoryDetails()
+        );
     }
 }

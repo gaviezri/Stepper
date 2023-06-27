@@ -5,6 +5,7 @@ import communication.AdminRequestsDispatcher;
 import GUI.header.HeaderController;
 import GUI.body.BodyController;
 import communication.UserSystemInfo;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.flow.FlowNamesDTO;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -78,10 +79,17 @@ public class AppController {
                 fetchRoles();
                 fetchFlowNames();
                 fetchOnlineUsersInfo();
+                fetchHistory();
+                //fetchStatistics();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void fetchHistory() {
+        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistory();
+        bodyComponentController.updateHistory(historyDTO);
     }
 
     public void fetchFlows() {
@@ -94,9 +102,7 @@ public class AppController {
 
     private void fetchOnlineUsersInfo() {
         List<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
-        if (userSystemInfos.size() > 0) {
-            bodyComponentController.updateOnlineUsers(userSystemInfos);
-        }
+        bodyComponentController.updateOnlineUsers(userSystemInfos);
     }
 
     private void fetchFlowNames() {

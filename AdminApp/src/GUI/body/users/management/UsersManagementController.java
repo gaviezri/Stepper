@@ -18,6 +18,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UsersManagementController extends BodyControllerComponent {
     private class RoleListItem {
@@ -100,12 +102,11 @@ public class UsersManagementController extends BodyControllerComponent {
                 rolesListView.setDisable(false);
                 selectedUserLabel.setText(newValue.getName());
                 managerCheckbox.setSelected(newValue.isManager());
-                List<Role> rolesList = newValue.getRoles();
+                Set<String> rolesNamesSet = newValue.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
-                Platform.runLater(()-> {
-                    rolesListView.getItems().forEach(x->x.assignedProperty().set(rolesList.contains(x.getName())));
-                });
-
+                Platform.runLater(()-> rolesListView.getItems()
+                        .forEach(x->x.assignedProperty()
+                        .set(rolesNamesSet.contains(x.getName()))));
             }
         });
     }
@@ -147,21 +148,38 @@ public class UsersManagementController extends BodyControllerComponent {
     }
 
     public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
-        ObservableList<UserSystemInfo> usiInListView =  onlineUsersListView.getItems();
+;
         UserSystemInfo selectedUsi = onlineUsersListView.getSelectionModel().getSelectedItem();
-        Platform.runLater(()-> {
-            for (UserSystemInfo usi : userSystemInfos) {
-                if (!usiInListView.contains(usi)) {
-                    usiInListView.add(usi);
-                }
-            }
-        });
-
         if (selectedUsi != null) {
             try { onlineUsersListView.getSelectionModel().select(selectedUsi);}
-            catch (Exception e) { onlineUsersListView.getSelectionModel().select(0);
+            catch (Exception e) { onlineUsersListView.getSelectionModel().clearSelection();
             }
         }
 
+        Platform.runLater(()-> {
+            ObservableList<UserSystemInfo> items = onlineUsersListView.getItems();
+            if (userSystemInfos.size()>0){
+                for (UserSystemInfo userSystemInfo : userSystemInfos) {
+                    if (!items.contains(userSystemInfo)) {
+                        items.add(userSystemInfo);
+                    } else {
+                        items.set(items.indexOf(userSystemInfo), userSystemInfo);
+                    }
+                }
+            } else {
+                items.clear();
+            }
+        });
+
+
+    }
+
+    public void OnSelection() {
+        Platform.runLater(()-> {
+            onlineUsersListView.getSelectionModel().clearSelection();
+            rolesListView.getItems().forEach(x->x.assignedProperty().set(false));
+            rolesListView.setDisable(true);
+            managerCheckbox.setSelected(false);
+        });
     }
 }

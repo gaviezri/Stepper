@@ -70,7 +70,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             userAccessibleFlows.addAll(role.getFlows());
         }
         // get flows definitions according to accessible flows of user (if user is manager bring all flows.)
-        EngineController engineInstance = (EngineController) context.getAttribute("engineInstance");
+        EngineController engineInstance = (EngineController) context.getAttribute(ENGINE_CONTROLLER);
         return userInfo.isManager() ?
                 engineInstance.getAllFlowDefinitionsData() :
                 engineInstance.getAllFlowDefinitionsData().stream().

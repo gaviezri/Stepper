@@ -1,49 +1,43 @@
 package communication;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Role {
     public static class RoleManager{
-        private Map<Integer,Role> rolesMap = new LinkedHashMap<>();
+        private Map<String,Role> rolesMap = new LinkedHashMap<>();
 
-        public void setRolesMap(Map<Integer, Role> rolesMap) {
+        public void setRolesMap(Map<String, Role> rolesMap) {
             this.rolesMap = rolesMap;
         }
 
-        public Map<Integer,Role> getRolesMap() {
+        public Map<String,Role> getRolesMap() {
             return rolesMap;
         }
 
         public void addRole(Role role){
-            rolesMap.put(role.getId(),role);
+            rolesMap.put(role.getName(),role);
         }
 
-         synchronized public List<Role> getRolesListFromCumulativeRoleValue(Integer cumulativeRoleValue){
+         synchronized public List<Role> getRolesListFromStringsValue(List<String> roleNames){
             List<Role> rolesList = new LinkedList<>();
-            for (Map.Entry<Integer,Role> entry : rolesMap.entrySet()){
-                if ((cumulativeRoleValue & entry.getKey()) != 0){
-                    rolesList.add(entry.getValue());
-                }
+            for (String roleName : roleNames) {
+                rolesList.add(rolesMap.get(roleName));
             }
             return rolesList;
         }
 
         public void addRoles(List<Role> newRole) {
             for (Role role : newRole) {
-                rolesMap.put(role.getId(), role);
+                rolesMap.put(role.getName(), role);
             }
         }
     }
 
 
-
-    private static int bitwiseId = 1;
-    private static Map<Integer,Role> rolesMap;
     private String Name;
     private String Description;
     private List<String> assignedFlowNames;
-    private int id;
+
 
 
 
@@ -51,21 +45,13 @@ public class Role {
         this.Name = Name;
         this.Description = Description;
         this.assignedFlowNames = new LinkedList<>();
-        this.id = bitwiseId;
-        bitwiseId *=2;
     }
 
     public Role(String Name, String Description, List<String> assignedFlowNames, int id) {
         this.Name = Name;
         this.Description = Description;
         this.assignedFlowNames = assignedFlowNames;
-        this.id = id;
     }
-
-    private Integer getId() {
-        return id;
-    }
-
     public String getName() {
         return Name;
     }

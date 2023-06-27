@@ -1,5 +1,7 @@
 package communication;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class UserSystemInfo {
@@ -7,17 +9,18 @@ public class UserSystemInfo {
     Boolean isManager;
 //    the roles will be handled bit-wise
     int roles;
+    List<String> assignedRoles;
 
     public UserSystemInfo(String name) {
         this.name = name;
         this.isManager = false;
-        this.roles = 0;
+        assignedRoles = new LinkedList<>();
     }
 
-    public UserSystemInfo(String name, Boolean isManager, int roles) {
+    public UserSystemInfo(String name, Boolean isManager, List<String> roles) {
         this.name = name;
         this.isManager = isManager;
-        this.roles = roles;
+        assignedRoles = roles;
     }
 
     public String getName() {
@@ -28,8 +31,12 @@ public class UserSystemInfo {
         return isManager;
     }
 
-    public int getRoles() {
-        return roles;
+    public void setManager(Boolean manager) {
+        isManager = manager;
+    }
+
+    public List<String> getRoles() {
+        return assignedRoles;
     }
 
     @Override
@@ -48,5 +55,13 @@ public class UserSystemInfo {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public void assignNewRole(Role x) {
+        assignedRoles.add(x.getName());
+    }
+
+    public void unAssignNewRole(Role x) {
+        assignedRoles.remove(x.getName());
     }
 }

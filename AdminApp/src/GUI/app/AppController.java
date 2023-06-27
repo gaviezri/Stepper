@@ -124,6 +124,10 @@ public class AppController {
         bodyComponentController.getRoleManager().setRolesMap(updatedRoleMap);
     }
 
+    public void updateUsersOnServer(List<UserSystemInfo> modifiedUsers) {
+        reqDispatcher.putUsers(modifiedUsers);
+    }
+
 //    public BodyController getBodyController() {
 //        return bodyComponentController;
 //    }

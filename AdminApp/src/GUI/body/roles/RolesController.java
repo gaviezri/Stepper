@@ -42,9 +42,7 @@ public class RolesController extends BodyControllerComponent {
     @FXML private ListView<FlowListItem> assignedFlowsListView;
 
     @FXML private ListView<String> assignedUsersListView;
-
     private ObservableList<UserSystemInfo> onlineUsers;
-
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
 
@@ -218,12 +216,7 @@ public class RolesController extends BodyControllerComponent {
     private void initializeAssignedFlowsListView() {
         assignedFlowsListView.setDisable(true);
 
-        assignedFlowsListView.setCellFactory(CheckBoxListCell.forListView(new Callback<FlowListItem, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(FlowListItem param) {
-                return param.assignedProperty();
-            }
-        }));
+        assignedFlowsListView.setCellFactory(CheckBoxListCell.forListView(FlowListItem::assignedProperty));
     }
 
     public void updateFlowNames(FlowNamesDTO flowNames) {
@@ -242,7 +235,7 @@ public class RolesController extends BodyControllerComponent {
             changesMade.setValue(true);
             Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
             if (selectedRole != null) {
-                if (newValue == true) {
+                if (newValue) {
                     selectedRole.assignNewFlow(flowName);
                 } else {
                     selectedRole.unassignOldFlow(flowName);

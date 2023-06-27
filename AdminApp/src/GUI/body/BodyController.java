@@ -143,6 +143,10 @@ public class BodyController {
         return roleManager;
     }
 
+    public void updateUsersOnServer(List<UserSystemInfo> modifiedUsers) {
+        mainController.updateUsersOnServer(modifiedUsers);
+    }
+
 
 //    public void bindDefinitionTabComponents() {
 //        flowLibComponentController.bindLibraryTabComponents();

@@ -51,17 +51,21 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath();
-        if(path.equals(USER_LOGIN_ENDPOINT)) {
-            handleNewUserLogin(req, resp);
+        switch (req.getServletPath()) {
+            case USER_LOGIN_ENDPOINT:
+                handleNewUserLogin(req, resp);
+                break;
         }
     }
 
     @Override
     final protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath();
-        if(path.equals(ADMIN_LOGOUT_ENDPOINT)) {
-            handleAdminLogout();
+        switch (req.getServletPath()){
+            case ADMIN_LOGOUT_ENDPOINT:
+                handleAdminLogout();
+                break;
+
+
         }
     }
 

@@ -68,12 +68,28 @@ public class BodyController {
         rolesManagementTabComponentController.setBodyController(this);
         usersManagementTabComponentController.setBodyController(this);
         usersManagementTabComponentController.initializeRolesListView(rolesManagementTabComponentController);
+        this.initializeTabPane();
     }
 
-    private void initializeTab(Tab flowHistoTab) {
-        flowHistoTab.setDisable(true);
-        flowHistoTab.getStyleClass().add("tab");
+    private void initializeTabPane() {
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (mainTabPane.getSelectionModel().getSelectedIndex()){
+                case USERS_MANAGEMENT_TAB:
+                    usersManagementTabComponentController.OnSelection();
+                    break;
+                case ROLES_MANAGEMENT_TAB:
+                    //rolesManagementTabComponentController.initializeRolesListView(rolesManagementTabComponentController);
+                    break;
+                case FLOW_STAT_TAB:
+                    //flowStatComponentController.initialize();
+                    break;
+                case FLOW_HIST_TAB:
+                    //flowHistoryComponentController.initialize();
+                    break;
+            }
+        });
     }
+
 
 //    public LibraryController getFlowLibComponentController() {
 //        return flowLibComponentController;
@@ -106,9 +122,11 @@ public class BodyController {
         flowStatComponentController.updateBarChars(statistics);
     }
 
-    public void updateHistory(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO){
-        flowHistoTab.setDisable(false);
-        flowHistoryComponentController.updateTable(flowsExecutionHistoryDTO);
+    public void updateHistory(FlowsExecutionHistoryDTO historyDTO){
+        if (historyDTO != null) {
+            flowHistoTab.setDisable(false);
+            flowHistoryComponentController.updateTable(historyDTO);
+        }
     }
 
     public void updateFlowNames(FlowNamesDTO flowNames) {

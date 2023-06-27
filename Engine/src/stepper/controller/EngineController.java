@@ -18,10 +18,7 @@ import stepper.statistics.StatisticsManager;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 
 public class EngineController implements Serializable {
@@ -109,7 +106,7 @@ public class EngineController implements Serializable {
         }
     }
 
-    public void executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
+    public UUID executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
 
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinitionByIndex(flowIdx);
         FlowExecutor flowExecutor = new FlowExecutor();
@@ -119,7 +116,7 @@ public class EngineController implements Serializable {
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.setFlowExecution(executionArchive.peek());
 
-        flowsExecutorsManager.executeFlow(flowExecutor);
+        return flowsExecutorsManager.executeFlow(flowExecutor);
     }
 
     public List<Map<String,String>> getExecutedFlowHeaders() {

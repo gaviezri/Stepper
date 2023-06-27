@@ -95,7 +95,7 @@ public class DefinitionController extends LibraryControllerComponent {
     }
 
     public void updateAccessibleFlows(List<FlowDefinitionDTO> flowDto){
-        ObservableList<String> flows =FXCollections.observableArrayList(flowDto.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()));
+        ObservableList<String> flows = FXCollections.observableArrayList(flowDto.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()));
         flowDefAvailableFlowsList.setItems(flows);
     }
 

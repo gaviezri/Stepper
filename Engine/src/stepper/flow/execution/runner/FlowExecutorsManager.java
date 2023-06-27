@@ -66,13 +66,14 @@ public class FlowExecutorsManager implements Serializable {
         executorService = Executors.newFixedThreadPool(this.workersCount);
     }
 
-    public void executeFlow(FlowExecutor flowExecutor) {
+    public UUID executeFlow(FlowExecutor flowExecutor) {
         UUID latestUUID = flowExecutor.getFlowUUID();
         LastExecutedDataCenter.setLastExecutedFlowUUID(latestUUID);
         if (executorService == null){
             executorService = Executors.newFixedThreadPool(workersCount);
         }
         UUID2Execution.put(latestUUID, executorService.submit(flowExecutor));
+        return latestUUID;
     }
 
     public FlowExecutionStatus getFlowExecutionStatus(UUID flowUUID) {

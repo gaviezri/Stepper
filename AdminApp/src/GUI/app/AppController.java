@@ -114,11 +114,13 @@ public class AppController {
     }
 
     private void fetchRoles() {
-        List<Role> roles = reqDispatcher.getRoles();
-        bodyComponentController.getRoleManager().setRolesMap(reqDispatcher.getRolesMap());
-        if (roles.size() > 0)
-        {
-            bodyComponentController.updateRoles(roles);
+        if(!fetchedRoles) {
+            List<Role> roles = reqDispatcher.getRoles();
+            bodyComponentController.getRoleManager().setRolesMap(reqDispatcher.getRolesMap());
+            if (roles.size() > 0) {
+                bodyComponentController.updateRoles(roles);
+            }
+            fetchedRoles = true;
         }
     }
 

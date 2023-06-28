@@ -75,7 +75,7 @@ public class DefinitionController extends LibraryControllerComponent {
         selectedFlowNameLabel.textProperty().bind(Bindings.select(flowDefAvailableFlowsList.getSelectionModel().selectedItemProperty()));
         // selected flow index is binded to the index of the selected item in the list
         flowDefAvailableFlowsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
-            selectedFlowIdx.set(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex());
+            selectedFlowIdx.set(getSelectedFlowIndex());
         });
         // label and stepview are bound to the selected flow index
         selectedFlowIdx.addListener(((observable, oldValue, newValue) -> {
@@ -340,20 +340,16 @@ public class DefinitionController extends LibraryControllerComponent {
             Platform.runLater(() -> {
                 inputPane.setVisible(true);
                 definitionPane.setVisible(false);
-                libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex()), null,false);
+                libraryController.setInputsToSelectedFlow(flowDefinitionDTOList.get(getSelectedFlowIndex()),
+                        null,
+                        false);
             });
         });
     }
 
-
     public int getSelectedFlowIndex() {
         return flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex();
     }
-
-    public FlowDefinitionDTO getSelectedFlow() {
-        return flowDefinitionDTOList.get(flowDefAvailableFlowsList.getSelectionModel().getSelectedIndex());
-    }
-
     public void setContinuationFlowInputs(String flowNameContinuedTo, List<Pair<String,String>> output2InputMapping) {
         OptionalInt index = IntStream.range(0, flowDefinitionDTOList.size())
                 .filter(i -> flowDefinitionDTOList.get(i).getFlowName().equals(flowNameContinuedTo))

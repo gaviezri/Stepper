@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.function.Function;
 import static communication.Utils.*;
 
-
 @WebServlet(name="UsersPresenceServlet", urlPatterns = {ADMIN_STATUS_ENDPOINT,ADMIN_LOGOUT_ENDPOINT,USER_STATUS_ENDPOINT,
                                                         USER_LOGIN_ENDPOINT,USER_LOGOUT_ENDPOINT, USER_INFO_ALL_ENDPOINT,
                                                         SINGLE_USER_INFO_ENDPOINT})
@@ -52,16 +51,6 @@ public class UsersPresenceServlet extends HttpServlet {
         resp.getWriter().println(res);
     }
 
-    private String handleSingleUserInfo(HttpServletRequest req) {
-        ServletContext context = getServletContext();
-
-        Function<Pair<HttpServletRequest,String>,String> cookieBaker =  (Function<Pair<HttpServletRequest,String>,String>)context.getAttribute(COOKIE_BAKER);
-        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
-
-        UserSystemInfo userInfo = ((Map<Integer,UserSystemInfo>) context.getAttribute(COOKIE_2_USER)).get(userCookie);
-        return GSON_INSTANCE.toJson(userInfo);
-    }
-
     @Override
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         switch (req.getServletPath()) {
@@ -77,22 +66,39 @@ public class UsersPresenceServlet extends HttpServlet {
             case ADMIN_LOGOUT_ENDPOINT:
                 handleAdminLogout();
                 break;
-
-
         }
+    }
+
+    @Override
+    final protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getServletPath();
+        if(path.equals(USER_LOGOUT_ENDPOINT)) {
+            // Retrieve cookies from the request
+            handleUserLogout(req, resp);
+        }
+    }
+
+    private String handleSingleUserInfo(HttpServletRequest req) {
+        ServletContext context = getServletContext();
+
+        Function<Pair<HttpServletRequest, String>, Integer> cookieBaker =  Servlet.getCookieBaker();
+        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
+
+        UserSystemInfo userInfo = Servlet.getUserName2Info().get(userCookie);
+        return GSON_INSTANCE.toJson(userInfo);
     }
 
     private void handleNewUserLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("name");
         Integer id = -1;
         if (name != null) {
-            Map<String,UserSystemInfo> usersInfoMap =  (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);  // get current logged in users
+            Map<String,UserSystemInfo> usersInfoMap =  Servlet.getUserName2Info();  // get current logged in users
             if(!usersInfoMap.containsKey(name)) {  // if given name is not already logged in
                 UserSystemInfo userSystemInfo = new UserSystemInfo(name);  // create new user with given name and default values
                 synchronized (this.getServletContext()) {
                     id = addNewUserToContext(name, usersInfoMap, userSystemInfo);
                 }
-                System.out.println(String.format("New user with \"{0}\" with id \"{1}\" was logged in...",name,id));
+                System.out.println(String.format("New user \"%s\" with id \"%d\" was logged in...",name,id));
             }
             else {
                 System.out.println(String.format("Something went wrong probably user with name {0} already logged in",name));
@@ -106,7 +112,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     private String handleAllUsersInfo() {
         ServletContext context = getServletContext();
-        Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(USERS_IN_SYSTEM);
+        Map<String, UserSystemInfo> name2info = Servlet.getUserName2Info();
         List<UserSystemInfo> usersInfo = Arrays.asList(name2info.values().toArray(new UserSystemInfo[0]));
         UsersSystemInfoDTO dto = new UsersSystemInfoDTO(usersInfo);
         return GSON_INSTANCE.toJson(dto);
@@ -127,32 +133,29 @@ public class UsersPresenceServlet extends HttpServlet {
     private Integer addNewUserToContext(String name, Map<String, UserSystemInfo> usersInfoMap, UserSystemInfo userSystemInfo) {
         Integer id;
         usersInfoMap.put(name, userSystemInfo); // add new user
-        id = (Integer) this.getServletContext().getAttribute(NEXT_FREE_ID); // get the next available ID
-        Map<Integer,String> cookies2User = (Map) this.getServletContext().getAttribute(COOKIE_2_USER); // get users in system ID map
+        id = Servlet.getNextFreeId(); // get the next available ID
+        Map<Integer,String> cookies2User = Servlet.getCookie2User(); // get users in system ID map
         cookies2User.put(id, name); // add user
-        this.getServletContext().setAttribute(NEXT_FREE_ID, id + 1); // update next available ID
+        ServletContext context = getServletContext();
+        synchronized (context){
+            context.setAttribute(NEXT_FREE_ID, id + 1); // update next available ID
+        }
         return id;
     }
 
-    final protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath();
-        if(path.equals(USER_LOGOUT_ENDPOINT)) {
-            // Retrieve cookies from the request
-            handleUserLogout(req, resp);
-        }
-    }
+
 
     private void handleUserLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Cookie[] cookies = req.getCookies();
         if(cookies != null) {
             Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
-            Map<Integer, String> usersCookies = (Map) this.getServletContext().getAttribute(COOKIE_2_USER); // get users in system ID map
+            Map<Integer, String> usersCookies = Servlet.getCookie2User();// get users in system ID map
             String userName = usersCookies.get(id);
             if (userName != null) {
                 deleteUserFromContext(resp, id, usersCookies, userName);
             } else {
-                resp.getWriter().println(String.format("user with id {0} was not found in system", id));
-                System.out.println(String.format("user with id {0} was not found in system", id));
+                resp.getWriter().println(String.format("user with id %d was not found in system", id));
+                System.out.println(String.format("user with id %d was not found in system", id));
             }
         } else {
             resp.getWriter().println(String.format("no cookie found... please login first"));
@@ -161,16 +164,16 @@ public class UsersPresenceServlet extends HttpServlet {
     }
 
     private void deleteUserFromContext(HttpServletResponse resp, Integer id, Map<Integer, String> usersCookies, String userName) throws IOException {
-        Map<String, UserSystemInfo> usersInfoMap = (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);  // get current logged in users
+        Map<String, UserSystemInfo> usersInfoMap = Servlet.getUserName2Info();  // get current logged in users
         usersInfoMap.remove(userName);
         usersCookies.remove(id);
-        resp.getWriter().println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
-        System.out.println(String.format("{0} with id {1} was logged out (deleted)", userName, id));
+        resp.getWriter().println(String.format("%s with id %d was logged out (deleted)", userName, id));
+        System.out.println(String.format("%s with id %d was logged out (deleted)", userName, id));
     }
 
     private String handleUserStatus(String name) {
         if(name != null) {
-            Map usersInSystemInfo = (Map) this.getServletContext().getAttribute(USERS_IN_SYSTEM);
+            Map usersInSystemInfo = Servlet.getUserName2Info();
             return GSON_INSTANCE.toJson(usersInSystemInfo.get(name));
         }
         return null; //=name
@@ -178,7 +181,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     private String handleAdminStatus() {
         String res;
-        Boolean isAdminLoggedIn = (Boolean) this.getServletContext().getAttribute(ADMIN_LOGGED_IN);
+        Boolean isAdminLoggedIn = Servlet.getIsAdminLoggedIn();
         res = isAdminLoggedIn.toString();
 
         if(!isAdminLoggedIn){

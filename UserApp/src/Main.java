@@ -1,5 +1,6 @@
 
 import GUI.app.AppController;
+import GUI.utils.Utils;
 import communication.StepperRequestsDispatcher;
 import communication.UserRequestsDispatcher;
 import javafx.application.Application;
@@ -33,7 +34,10 @@ public class Main extends Application {
                     mainController.stop();
                 });
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-                    mainController.doFinalize();
+                    UserRequestsDispatcher.getInstance().logout();
+                    mainController.stop();
+                    Utils.ShowError("Error", "Application failed.", "Internal app error.");
+                    System.exit(0);
                 });
             }
         } catch (Exception e) {

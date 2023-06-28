@@ -1,8 +1,8 @@
 package servlets;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import communication.Role;
 import communication.UserSystemInfo;
-import communication.Utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -26,17 +26,23 @@ public class StepperServletContextListener implements ServletContextListener {
         // Called when the ServletContext is initialized
         ServletContext servletContext = servletContextEvent.getServletContext();
         synchronized (servletContext) {
-        servletContext.setAttribute(ADMIN_LOGGED_IN,false);
+        servletContext.setAttribute(ADMIN_LOGGED_IN, Boolean.FALSE);
         servletContext.setAttribute(ENGINE_CONTROLLER, EngineController.getInstance());
         servletContext.setAttribute(USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
         servletContext.setAttribute(COOKIE_2_USER, new HashMap<Integer, String>());
         servletContext.setAttribute(NEXT_FREE_ID,1);
         servletContext.setAttribute(ROLES, new LinkedList<Role>());
-        servletContext.setAttribute(ROLES_CHANGED, false);
-        servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, true);
+        servletContext.setAttribute(ROLES_CHANGED, Boolean.FALSE);
+        servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, Boolean.TRUE);
         servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
         servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, LinkedList<UUID>>());
+        servletContext.setAttribute(COOKIE_BAKER,  createCookieBaker());
+        Servlet.initialize(servletContext);
+        }
 
+    }
+
+    private static Function<Pair<HttpServletRequest, String>, Integer> createCookieBaker() {
         Function<Pair<HttpServletRequest,String>,Integer> cookieBaker = (pair) -> {
             Cookie[] cookies = pair.getKey().getCookies();
             for (Cookie cookie : cookies) {
@@ -46,9 +52,7 @@ public class StepperServletContextListener implements ServletContextListener {
             }
             return null;
         };
-
-        servletContext.setAttribute(COOKIE_BAKER, cookieBaker);
-        }
+        return cookieBaker;
     }
 
     @Override

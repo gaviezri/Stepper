@@ -91,13 +91,10 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
        return false;
     }
 
-    public List<FlowDefinitionDTO> getUserRoleData() {
-         return null;
-    }
-    public List getUserRolesList(){
+    public List<Role> getUserRolesList(){
         try {
             HttpURLConnection con = getConnection(ROLES_USER_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-            List userRoles = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), RolesDTO.class).getRoles();
+            List<Role> userRoles = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), RolesDTO.class).getRoles();
             con.disconnect();
             return userRoles;
         }

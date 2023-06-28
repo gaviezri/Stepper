@@ -56,13 +56,11 @@ public class AppController {
         bodyComponentController.bindFlowExecutionElementsToSelectButton();
     }
     @Override
-    protected void finalize()
-    {
+    protected void finalize() {
         UserRequestsDispatcher.getInstance().logout();
         executorServiceForPollingExecutions.shutdown();
     }
-    public void doFinalize()
-    {
+    public void doFinalize() {
         finalize();
     }
     public List<Role> getUserRolesList(){
@@ -88,11 +86,9 @@ public class AppController {
 
     private void updateAccessibleFlows() {
         List<FlowDefinitionDTO> allAccessibleFlowDefinitionsData = reqDispatcher.getAllAccessibleFlowDefinitionsData();
-        if(allAccessibleFlowDefinitionsData == null) {
-            allAccessibleFlowDefinitionsData = new ArrayList<FlowDefinitionDTO>();
+        if(allAccessibleFlowDefinitionsData.size() > 0 ) {
+            bodyComponentController.updateFlowDefinitions(allAccessibleFlowDefinitionsData);
         }
-//        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateAccessibleFlows(allAccessibleFlowDefinitionsData);
-        bodyComponentController.getFlowLibComponentController().getDefinitionController().updateFlowDefinitions(allAccessibleFlowDefinitionsData);
     }
 
     private void updateManagerAndRoles() {

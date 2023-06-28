@@ -16,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.statistics.StatisticsDTO;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +153,7 @@ public class BodyController {
 //        });
     }
 
-    public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
+    public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
         usersManagementTabComponentController.updateOnlineUsers(userSystemInfos);
         rolesManagementTabComponentController.updateOnlineUsers(userSystemInfos);
     }
@@ -161,7 +162,7 @@ public class BodyController {
         return roleManager;
     }
 
-    public void updateUsersOnServer(List<UserSystemInfo> modifiedUsers) {
+    public void updateUsersOnServer(Collection<UserSystemInfo> modifiedUsers) {
         mainController.updateUsersOnServer(modifiedUsers);
     }
 

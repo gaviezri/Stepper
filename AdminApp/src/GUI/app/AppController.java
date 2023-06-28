@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -101,7 +102,7 @@ public class AppController {
     }
 
     private void fetchOnlineUsersInfo() {
-        List<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
+        Collection<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
         bodyComponentController.updateOnlineUsers(userSystemInfos);
     }
 
@@ -130,8 +131,12 @@ public class AppController {
         bodyComponentController.getRoleManager().setRolesMap(updatedRoleMap);
     }
 
-    public void updateUsersOnServer(List<UserSystemInfo> modifiedUsers) {
+    public void updateUsersOnServer(Collection<UserSystemInfo> modifiedUsers) {
         reqDispatcher.putUsers(modifiedUsers);
+    }
+
+    public void setActiveTab(int rolesManagementTab) {
+        bodyComponentController.setActiveTab(rolesManagementTab);
     }
 
 //    public BodyController getBodyController() {

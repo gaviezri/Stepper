@@ -105,7 +105,7 @@ public class RolesManagementServlet extends HttpServlet {
         Cookie[] cookie = req.getCookies();
         ServletContext context = getServletContext();
         Map<Integer, String> cookie2User = (Map) context.getAttribute(COOKIE_2_USER);
-        Map<String, UserSystemInfo> user2Info = (Map) context.getAttribute(USERS_IN_SYSTEM);
+         Map<String, UserSystemInfo> user2Info = (Map) context.getAttribute(USERS_IN_SYSTEM);
         Role.RoleManager rolesManager = (Role.RoleManager) context.getAttribute(ROLES_MANAGER);
         if (cookie[0] != null){
             String user = cookie2User.get(Integer.parseInt(cookie[0].getValue()));

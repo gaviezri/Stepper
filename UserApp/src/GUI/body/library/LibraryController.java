@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class LibraryController extends BodyControllerComponent {
@@ -63,5 +64,9 @@ public class LibraryController extends BodyControllerComponent {
 
     public FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
         return definitionComponentController.getFlowDefinitionsDataByIndex(flowIndex);
+    }
+
+    public void setInputsToSelectedFlow(FlowDefinitionDTO flowDefinitionDTO, Map<String,Object> continuationValues, boolean isRerun) {
+        inputComponentController.setInputsToSelectedFlow(flowDefinitionDTO, continuationValues, isRerun);
     }
 }

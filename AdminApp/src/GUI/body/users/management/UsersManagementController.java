@@ -139,7 +139,9 @@ public class UsersManagementController extends BodyControllerComponent {
         managerCheckbox.disableProperty().bind(onlineUsersListView.getSelectionModel().selectedItemProperty().isNull());
         managerCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                onlineUsersListView.getSelectionModel().getSelectedItem().setManager(newValue);
+                UserSystemInfo selectedUser = onlineUsersListView.getSelectionModel().getSelectedItem();
+                selectedUser.setManager(newValue);
+                modifiedUsers.add(selectedUser);
                 changesMade.setValue(true);
             }
         });
@@ -174,7 +176,7 @@ public class UsersManagementController extends BodyControllerComponent {
         return items.stream()
                 .map(UserSystemInfo::getName)
                 .collect(Collectors.toList())
-                .indexOf(userSystemInfo.getName()) != -1
+                .contains(userSystemInfo.getName())
                 &&
                 !items.get(items.indexOf(userSystemInfo)).equals(userSystemInfo);
     }

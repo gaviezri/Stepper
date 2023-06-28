@@ -172,7 +172,7 @@ public class InputController extends LibraryControllerComponent {
         }
 
         private List<String> createEnumOptions() {
-            if (userString == "Operation type") {
+            if (userString.equals("Operation type")) {
                 List<String> zipOptions = new LinkedList<>();
                 zipOptions.add("ZIP");
                 zipOptions.add("UNZIP");

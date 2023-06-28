@@ -1,5 +1,4 @@
 
-
-.container {
-    -fx-background-color: #2b2b2b;
+.readonly-combobox .arrow-button {
+    pointer-events: none;
 }

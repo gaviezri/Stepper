@@ -86,7 +86,7 @@ public class AppController {
 
     private void updateAccessibleFlows() {
         List<FlowDefinitionDTO> allAccessibleFlowDefinitionsData = reqDispatcher.getAllAccessibleFlowDefinitionsData();
-        if(allAccessibleFlowDefinitionsData.size() > 0 ) {
+        if(allAccessibleFlowDefinitionsData != null ) {
             bodyComponentController.updateFlowDefinitions(allAccessibleFlowDefinitionsData);
         }
     }

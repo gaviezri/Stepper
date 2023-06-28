@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,12 +60,12 @@ public class UsersManagementController extends BodyControllerComponent {
     @FXML
     private Button saveChangesButton;
 
-    private List<UserSystemInfo> modifiedUsers;
+    private Set<UserSystemInfo> modifiedUsers;
     private BooleanProperty changesMade;
 
     public void initialize() {
         changesMade = new SimpleBooleanProperty(false);
-        modifiedUsers = FXCollections.observableArrayList();
+        modifiedUsers = FXCollections.observableSet();
         initializeRolesListView();
         initializeIsManagerCheckBox();
         initializeSaveChangesButton();
@@ -107,6 +108,10 @@ public class UsersManagementController extends BodyControllerComponent {
                 Platform.runLater(()-> rolesListView.getItems()
                         .forEach(x->x.assignedProperty()
                         .set(rolesNamesSet.contains(x.getName()))));
+            } else {
+                rolesListView.setDisable(true);
+                selectedUserLabel.setText("");
+                managerCheckbox.setSelected(false);
             }
         });
     }
@@ -123,8 +128,6 @@ public class UsersManagementController extends BodyControllerComponent {
                 }
                 if(!modifiedUsers.contains(selectedUser)) {
                     modifiedUsers.add(selectedUser);
-                } else {
-                    modifiedUsers.set(modifiedUsers.indexOf(selectedUser), selectedUser);
                 }
             }
         });
@@ -147,32 +150,40 @@ public class UsersManagementController extends BodyControllerComponent {
        rolesListView.setCellFactory(CheckBoxListCell.forListView(RoleListItem::assignedProperty));
     }
 
-    public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
-;
-        UserSystemInfo selectedUsi = onlineUsersListView.getSelectionModel().getSelectedItem();
+    public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
+        Platform.runLater(()-> {
+            UserSystemInfo selectedUsi = onlineUsersListView.getSelectionModel().getSelectedItem();
+            ObservableList<UserSystemInfo> items = onlineUsersListView.getItems();
+            if (userSystemInfos.size()>0){
+                // insert new items only if they are not in the list
+                for (UserSystemInfo userSystemInfo : userSystemInfos) {
+                    if (!items.contains(userSystemInfo)) {
+                        items.add(userSystemInfo);
+                        reselectSelectedUserAfterUpdate(selectedUsi);
+                        // or update existing items if they are not equal
+                    } else if (aUserInfoHasBeenUpdated(items, userSystemInfo)) {
+                        items.set(items.indexOf(userSystemInfo), userSystemInfo);
+                        reselectSelectedUserAfterUpdate(selectedUsi);
+                    }
+                }
+            } else { items.clear();}
+        });
+    }
+
+    private static boolean aUserInfoHasBeenUpdated(ObservableList<UserSystemInfo> items, UserSystemInfo userSystemInfo) {
+        return items.stream()
+                .map(UserSystemInfo::getName)
+                .collect(Collectors.toList())
+                .indexOf(userSystemInfo.getName()) != -1
+                &&
+                !items.get(items.indexOf(userSystemInfo)).equals(userSystemInfo);
+    }
+    private void reselectSelectedUserAfterUpdate(UserSystemInfo selectedUsi) {
         if (selectedUsi != null) {
             try { onlineUsersListView.getSelectionModel().select(selectedUsi);}
             catch (Exception e) { onlineUsersListView.getSelectionModel().clearSelection();
             }
-
         }
-
-        Platform.runLater(()-> {
-            ObservableList<UserSystemInfo> items = onlineUsersListView.getItems();
-            if (userSystemInfos.size()>0){
-                for (UserSystemInfo userSystemInfo : userSystemInfos) {
-                    if (!items.contains(userSystemInfo)) {
-                        items.add(userSystemInfo);
-                    } else {
-                        items.set(items.indexOf(userSystemInfo), userSystemInfo);
-                    }
-                }
-            } else {
-                items.clear();
-            }
-        });
-
-
     }
 
     public void OnSelection() {

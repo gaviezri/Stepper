@@ -19,12 +19,10 @@ public class HistoryStatisticsServlet extends HttpServlet {
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         switch (req.getServletPath()){
             case STATISTICS_ENDPOINT:
-                System.out.println("a call to 'statistics' endpoint was made...");
                 //  handling statistics request
                 resp.getWriter().println(handleStatisticsRequest());
                 break;
             case HISTORY_ENDPOINT:
-                System.out.println("a call to 'history' endpoint was made...");
                 // handling history request
                 resp.getWriter().println(handleHistoryRequest());
                 break;
@@ -32,14 +30,9 @@ public class HistoryStatisticsServlet extends HttpServlet {
     }
 
     private String handleStatisticsRequest(){
-        return GSON_INSTANCE.toJson(
-                ((EngineController)getServletContext().getAttribute(ENGINE_CONTROLLER))
-                .getCurrentLoadedFlowsStatisticsDetails()
-        );
+        return GSON_INSTANCE.toJson(Servlet.getEngineController().getCurrentLoadedFlowsStatisticsDetails());
     }
     private String handleHistoryRequest(){
-        return GSON_INSTANCE.toJson(((EngineController)getServletContext().getAttribute(ENGINE_CONTROLLER))
-                .getExecutedFlowsHistoryDetails()
-        );
+        return GSON_INSTANCE.toJson(Servlet.getEngineController().getExecutedFlowsHistoryDetails());
     }
 }

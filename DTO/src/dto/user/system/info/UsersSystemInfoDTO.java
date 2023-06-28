@@ -2,16 +2,17 @@ package dto.user.system.info;
 
 import communication.UserSystemInfo;
 
+import java.util.Collection;
 import java.util.List;
 
 public class UsersSystemInfoDTO {
-    private List<UserSystemInfo> usersSystemInfo;
+    private Collection<UserSystemInfo> usersSystemInfo;
 
-    public UsersSystemInfoDTO(List<UserSystemInfo> usersSystemInfo) {
+    public UsersSystemInfoDTO(Collection<UserSystemInfo> usersSystemInfo) {
         this.usersSystemInfo = usersSystemInfo;
     }
 
-    public List<UserSystemInfo> getUsersSystemInfo() {
+    public Collection<UserSystemInfo> getUsersSystemInfo() {
         return usersSystemInfo;
     }
 }

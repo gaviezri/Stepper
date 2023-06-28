@@ -65,4 +65,15 @@ public class UserSystemInfo {
     public void unAssignNewRole(Role x) {
         assignedRoles.remove(x);
     }
+
+    public void updateRoles(List<Role> allRoles) {
+        for (Role role : assignedRoles) {
+            if (!allRoles.contains(role)) {
+                assignedRoles.remove(role);
+            } else {
+                assignedRoles.set(assignedRoles.indexOf(role), allRoles.get(allRoles.indexOf(role)));
+            }
+        }
+
+    }
 }

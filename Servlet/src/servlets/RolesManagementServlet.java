@@ -59,7 +59,7 @@ public class RolesManagementServlet extends HttpServlet {
     private void handleRolesUserPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         ServletContext context = getServletContext();
-        Map<String, UserSystemInfo> name2info = (Map) context.getAttribute(USERS_IN_SYSTEM);
+        Map<String, UserSystemInfo> name2info = Servlet.getUserName2Info();
         UsersSystemInfoDTO usersSystemInfoDTO = GSON_INSTANCE.fromJson(req.getReader(),UsersSystemInfoDTO.class);
         synchronized (context) {
             for (UserSystemInfo userSystemInfo : usersSystemInfoDTO.getUsersSystemInfo()) {
@@ -73,8 +73,8 @@ public class RolesManagementServlet extends HttpServlet {
         synchronized (context) {
             context.setAttribute(ROLES_CHANGED, true);
         }
-        Role.RoleManager theManager = (Role.RoleManager) context.getAttribute(ROLES_MANAGER);
-        List<Role> allRoles = (List) context.getAttribute(ROLES);
+        Role.RoleManager theManager = Servlet.getRoleManager();
+        List<Role> allRoles = Servlet.getRoles();
         List<Role> newRoles = GSON_INSTANCE.fromJson(req.getReader(), RolesDTO.class).getRoles();
 
         for (Role role : newRoles) {
@@ -86,27 +86,30 @@ public class RolesManagementServlet extends HttpServlet {
             theManager.addRole(role);
         }
         allRoles.sort(Comparator.comparing(Role::getName));
-
+        Map<String, UserSystemInfo> users = Servlet.getUserName2Info();
+        for (UserSystemInfo user : users.values()) {
+            user.updateRoles(allRoles);
+        }
         synchronized (context) {
             context.setAttribute(ROLES, allRoles);
         }
         resp.getWriter().println(GSON_INSTANCE.toJson(new RolesMapDTO(theManager.getRolesMap())));
+        System.out.println("Roles updated");
     }
 
     private void handleRolesMapGet(HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
-        Role.RoleManager theManager = (Role.RoleManager) context.getAttribute(ROLES_MANAGER);
+        Role.RoleManager theManager = Servlet.getRoleManager();
         String results = GSON_INSTANCE.toJson(new RolesMapDTO(theManager.getRolesMap()));
         resp.getWriter().println(results);
     }
 
     private void handleRolesUserGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String res = "[]";
+        String res = "";
         Cookie[] cookie = req.getCookies();
         ServletContext context = getServletContext();
-        Map<Integer, String> cookie2User = (Map) context.getAttribute(COOKIE_2_USER);
-         Map<String, UserSystemInfo> user2Info = (Map) context.getAttribute(USERS_IN_SYSTEM);
-        Role.RoleManager rolesManager = (Role.RoleManager) context.getAttribute(ROLES_MANAGER);
+        Map<Integer, String> cookie2User = Servlet.getCookie2User();
+         Map<String, UserSystemInfo> user2Info = Servlet.getUserName2Info();
         if (cookie[0] != null){
             String user = cookie2User.get(Integer.parseInt(cookie[0].getValue()));
             UserSystemInfo userInfo = user2Info.get(user);
@@ -124,7 +127,7 @@ public class RolesManagementServlet extends HttpServlet {
                     context.getAttribute(FETCH_STARTUP_DATA_ADMIN).equals(true)){
                 context.setAttribute(ROLES_CHANGED, false);
                 context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
-                List<Role> roles = (List) context.getAttribute(ROLES);
+                List<Role> roles = Servlet.getRoles();
                 results = GSON_INSTANCE.toJson(new RolesDTO(roles));
             }
             // send the updated roles to admin

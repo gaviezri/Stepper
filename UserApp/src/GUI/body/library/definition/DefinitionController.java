@@ -46,12 +46,18 @@ public class DefinitionController extends LibraryControllerComponent {
         return flowDefAvailableFlowsList;
     }
     private void clearAllData() {
-        flowDefAvailableFlowsList.getItems().clear();
-        flowDescriptionsProperty.clear();
-        flowFormalOutputsProperty.clear();
-        stepsVBoxByFlowIdx.clear();
-        inputsVBoxByFlowIdx.clear();
-        outputsVBoxByFlowIdx.clear();
+        Platform.runLater(() -> {
+            try {
+                flowDefAvailableFlowsList.getItems().clear();
+                flowDescriptionsProperty.clear();
+                flowFormalOutputsProperty.clear();
+                stepsVBoxByFlowIdx.clear();
+                inputsVBoxByFlowIdx.clear();
+                outputsVBoxByFlowIdx.clear();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
     public TitledPane getStepsTitledPane() {
         return stepsTitledPane;
@@ -73,7 +79,7 @@ public class DefinitionController extends LibraryControllerComponent {
         });
         // label and stepview are bound to the selected flow index
         selectedFlowIdx.addListener(((observable, oldValue, newValue) -> {
-            if(newValue!=null){
+            if(newValue!=null && newValue.intValue() > -1) {
 
                 if(!selectFlowButton.isVisible()) {
                     selectFlowButton.visibleProperty().set(true);
@@ -91,18 +97,6 @@ public class DefinitionController extends LibraryControllerComponent {
                 outputsTitledPane.setContent(outputsVBoxByFlowIdx.get(theIdx));
             }
         }));
-
-    }
-
-    public void updateAccessibleFlows(List<FlowDefinitionDTO> flowDto){
-        ObservableList<String> flows =FXCollections.observableArrayList(
-                                                            flowDto.stream().
-                                                            map(FlowDefinitionDTO::getFlowName).
-                                                            collect(Collectors.toList())
-                                                    );
-        Platform.runLater(()->{
-            flowDefAvailableFlowsList.setItems(flows);
-        });
     }
 
     private void initializeContinuationsLabel(){
@@ -138,11 +132,18 @@ public class DefinitionController extends LibraryControllerComponent {
         });
     }
 
+
+
     public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefDTOlist) {
+            if (flowDefDTOlist.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList())
+                    .equals(flowDefinitionDTOList.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()))) {
+                return;
+            }
             clearAllData();
             flowDefinitionDTOList = flowDefDTOlist;
-
+            // add a reset method
             for(FlowDefinitionDTO dto : flowDefinitionDTOList){
+
                 setFlowsHeadersData(dto);
                 setFlowsStepsData(dto);
                 setFlowInputsData(dto);

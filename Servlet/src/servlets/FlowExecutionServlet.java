@@ -27,8 +27,8 @@ public class FlowExecutionServlet extends HttpServlet {
 
     private void handleFlowExecutionPost(HttpServletRequest req, HttpServletResponse resp) {
 
-        Function<Pair,String> baker = (Function) getServletContext().getAttribute(COOKIE_BAKER);
-        String cookie = baker.apply(new Pair<>(req,"ID"));
+        Function<Pair<HttpServletRequest, String>, Integer> baker = Servlet.getCookieBaker();
+        Integer cookie = baker.apply(new Pair<>(req,"ID"));
 
 
     }

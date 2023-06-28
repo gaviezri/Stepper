@@ -46,7 +46,7 @@ public class RolesController extends BodyControllerComponent {
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
 
-    public void updateOnlineUsers(List<UserSystemInfo> userSystemInfos) {
+    public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
         onlineUsers = FXCollections.observableArrayList(userSystemInfos);
     }
 

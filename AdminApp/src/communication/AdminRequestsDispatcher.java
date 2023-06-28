@@ -10,9 +10,7 @@ import dto.user.system.info.UsersSystemInfoDTO;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static communication.Utils.*;
 
@@ -45,7 +43,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(ROLES_ENDPOINT, "GET", JSON_CONTENT_TYPE);
             Map<String, Role> roleMap = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), RolesMapDTO.class).getRolesMap();
             con.disconnect();
-            return roleMap;
+            return roleMap == null ? new LinkedHashMap<>() : roleMap;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,10 +64,10 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         return null;
     }
 
-    public List<UserSystemInfo> getOnlineUsers() {
+    public Collection<UserSystemInfo> getOnlineUsers() {
         try {
             HttpURLConnection con = getConnection(USER_INFO_ALL_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-            List<UserSystemInfo> users = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), UsersSystemInfoDTO.class).getUsersSystemInfo();
+            Collection<UserSystemInfo> users = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), UsersSystemInfoDTO.class).getUsersSystemInfo();
             con.disconnect();
             return users;
         } catch (Exception e) {
@@ -121,7 +119,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             HttpURLConnection con = getConnection(ROLES_ENDPOINT, "GET", null);
             List<Role> roles = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), RolesDTO.class).getRoles();
             con.disconnect();
-            return roles;
+            return roles == null ? new LinkedList<>() : roles;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,7 +149,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public void putUsers(List<UserSystemInfo> modifiedUsers) {
+    public void putUsers(Collection<UserSystemInfo> modifiedUsers) {
         try {
             HttpURLConnection con = getConnection(ROLES_USER_ENDPOINT, "PUT", JSON_CONTENT_TYPE);
             OutputStream os = con.getOutputStream();

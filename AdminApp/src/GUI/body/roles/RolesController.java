@@ -24,6 +24,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RolesController extends BodyControllerComponent {
 
@@ -32,6 +33,8 @@ public class RolesController extends BodyControllerComponent {
     @FXML private ListView<Role> availableRolesListView;
 
     @FXML private Button newRoleButton;
+
+    @FXML private Button deleteRoleButton;
 
     @FXML private Label chosenRoleLabel;
 
@@ -42,17 +45,18 @@ public class RolesController extends BodyControllerComponent {
     @FXML private ListView<FlowListItem> assignedFlowsListView;
 
     @FXML private ListView<String> assignedUsersListView;
-    private ObservableList<UserSystemInfo> onlineUsers;
+    private List<UserSystemInfo> onlineUsers;
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
 
     public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
-        onlineUsers = FXCollections.observableArrayList(userSystemInfos);
+        onlineUsers = new ArrayList<>(userSystemInfos);
     }
 
     public ListView getRolesListView() {
         return availableRolesListView;
     }
+
 
     public class FlowListItem {
         private final StringProperty name = new SimpleStringProperty();
@@ -86,6 +90,24 @@ public class RolesController extends BodyControllerComponent {
         initializeAvailableRolesListView();
         initializeNewRoleButton();
         initializeSaveChangesButton();
+        initializeAssignedUsersListView();
+        initializeDeleteRoleButton();
+    }
+
+    private void initializeDeleteRoleButton() {
+
+        deleteRoleButton.setOnMouseClicked(event -> {
+            Platform.runLater(() -> {
+                Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
+                availableRolesListView.getItems().remove(selectedRole);
+                if (selectedRole != null) {
+                    bodyController.deleteRoleOnServer(selectedRole);
+                }
+            });
+        });
+    }
+
+    private void initializeAssignedUsersListView() {
     }
 
     private void initializeChosenRoleLabels() {
@@ -158,17 +180,25 @@ public class RolesController extends BodyControllerComponent {
 
         availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Get the selected role and its assigned flows
-                Role selectedRole = newValue;
-                List<String> assignedFlows = selectedRole.getAssignedFlowNames();
+                        Platform.runLater(()->{
+                            Role selectedRole = newValue;
+                            List<String> AssignedUsers = onlineUsers.stream()
+                                    .filter(user -> user.getRoles().contains(selectedRole))
+                                    .map(UserSystemInfo::getName)
+                                    .collect(Collectors.toList());
+                            assignedUsersListView.setItems(FXCollections.observableList(AssignedUsers));
 
-                // recheck the assigned flows based on the selected role
-                for (int i = 0; i < assignedFlowsListView.getItems().size(); i++) {
-                   FlowListItem listItem = assignedFlowsListView.getItems().get(i);
-                   listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
-               }
+                            List<String> assignedFlows = selectedRole.getAssignedFlowNames();
+
+                            // recheck the assigned flows based on the selected role
+                            for (int i = 0; i < assignedFlowsListView.getItems().size(); i++) {
+                                FlowListItem listItem = assignedFlowsListView.getItems().get(i);
+                                listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
+                            }
+                        });
             }
         });
+                // Get the selected role and its assigned flows
     }
 
 
@@ -251,11 +281,17 @@ public class RolesController extends BodyControllerComponent {
     }
 
 
-    public void updateRoles(List<Role> roles) {
+    public void updateRoles(List<Role> rolesFromServer) {
         Platform.runLater(() -> {
-            availableRolesListView.getItems().clear();
-            availableRolesListView.getItems().addAll(roles);
-            availableRolesListView.getItems().sort(Comparator.comparing(Role::getName));
+            ObservableList<Role> rolesFromListView = availableRolesListView.getItems();
+
+            for (Role role : rolesFromServer) {
+                if (rolesFromListView.stream()
+                        .noneMatch(item -> item.getName().equals(role.getName()))) {
+                    rolesFromListView.add(role);
+                }
+            }
+            rolesFromListView.sort(Comparator.comparing(Role::getName));
         });
     }
 }

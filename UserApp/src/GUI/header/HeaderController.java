@@ -1,6 +1,7 @@
 package GUI.header;
 
 import GUI.app.AppController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -19,30 +20,15 @@ public class HeaderController {
     @FXML
     private Text isManagerText;
     @FXML
-    private ToggleButton rolesButton;
-    @FXML
-    private ComboBox<String> rolesCombo;
+    private ListView<String> rolesListView;
 
     public void initialize() {
         initializeRolesButton();
-        rolesCombo.setMouseTransparent(true);
-        rolesCombo.setFocusTraversable(false);
     }
 
     private void initializeRolesButton() {
-        rolesCombo.setItems(FXCollections.observableArrayList("None"));
-
-        rolesButton.setOnAction(event -> {
-            if (rolesButton.isSelected()) {
-                rolesCombo.show();
-            } else {
-                rolesCombo.hide();
-            }
-        });
-
-        rolesButton.setOnMouseExited(event -> {
-            rolesButton.setSelected(false);
-        });
+        rolesListView.setDisable(true);
+        rolesListView.setItems(FXCollections.observableArrayList("None"));
     }
     public String getUserName() {
         return userNameText.getText();
@@ -62,10 +48,12 @@ public class HeaderController {
         }
 
         List roles = mainController.getUserRolesList();
-        if (roles.isEmpty()) {
-            rolesCombo.setItems(FXCollections.observableArrayList("None"));
-        } else {
-            rolesCombo.setItems(FXCollections.observableArrayList(roles));
-        }
+        Platform.runLater(()->{
+            if (roles.isEmpty()) {
+                rolesListView.setItems(FXCollections.observableArrayList("None"));
+            } else {
+                rolesListView.setItems(FXCollections.observableArrayList(roles));
+            }
+        });
     }
 }

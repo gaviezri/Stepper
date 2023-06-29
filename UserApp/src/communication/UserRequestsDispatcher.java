@@ -1,6 +1,7 @@
 package communication;
 
 import dto.execution.FlowExecutionRequestDTO;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import static communication.Utils.*;
 
@@ -46,6 +48,17 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         return response.toString();
     }
 
+    public FlowsExecutionHistoryDTO getHistory() {
+        try {
+            HttpURLConnection con = getConnection(HISTORY_ENDPOINT, "GET", JSON_CONTENT_TYPE);
+            FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), FlowsExecutionHistoryDTO.class);
+            con.disconnect();
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new FlowsExecutionHistoryDTO(new Stack<>());
+    }
 
     public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){
         try {
@@ -72,6 +85,15 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void filterHistory(FlowsExecutionHistoryDTO.SortFilter filter){
+        try {
+            HttpURLConnection con = getConnection(FILTER_HISTORY_FILTER_ENDPOINT, "GET", PLAIN_TEXT_CONTENT_TYPE);
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean login(String userName) {

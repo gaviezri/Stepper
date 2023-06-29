@@ -7,6 +7,7 @@ import GUI.body.library.definition.DefinitionController;
 import GUI.body.library.input.InputController;
 import GUI.body.statistics.StatisticsController;
 import GUI.body.history.HistoryController;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import javafx.application.Platform;
@@ -49,9 +50,11 @@ public class BodyController {
         this.flowStatComponentController.updateBarChars();
     }
 
-    public void updateHistory(Stack<FlowExecution> flowExecutionStack){
-        this.flowHistoryComponentController.updateTable(flowExecutionStack);
-    }
+    public void updateHistory(FlowsExecutionHistoryDTO historyDTO){
+        if (historyDTO != null) {
+            flowHistoTab.setDisable(false);
+            flowHistoryComponentController.updateTable(historyDTO);
+        }    }
 
     public void setMainController(AppController appController) {
         mainController = appController;

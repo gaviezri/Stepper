@@ -5,11 +5,10 @@ import dto.AbstractDTO;
 import dto.step.StepsDTO;
 import stepper.flow.definition.api.FlowDefinition;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class FlowDefinitionDTO extends AbstractDTO {
+public class FlowDefinitionDTO extends AbstractDTO implements Cloneable {
     /* see command definition in word document pg 19 */
     /* 1 */ String flowName;
     /* 2 */ String description;
@@ -47,10 +46,31 @@ public class FlowDefinitionDTO extends AbstractDTO {
     public List<String> freeInputUserString() {
         return freeInputUserString;
     }
+//
+//    public FlowDefinitionDTO(Map<String, Object> dataName2value, String name) {
+//        this.initialInputName2Value = dataName2value;
+//        this.flowName = name;
+//    }
 
-    public FlowDefinitionDTO(Map<String, Object> dataName2value, String name) {
-        this.initialInputName2Value = dataName2value;
-        this.flowName = name;
+    public FlowDefinitionDTO(FlowDefinitionDTO other){
+        flowName = new String(other.flowName);
+        description = new String(other.description);
+        formalOutputs = new ArrayList<>(other.formalOutputs);
+        isFlowReadonly = Boolean.valueOf(other.isFlowReadonly);
+        continuationsCount = new Integer(other.continuationsCount);
+        step2alias = new ArrayList<>(other.step2alias);
+        isStepReadonly = new ArrayList<>(other.isStepReadonly);
+        stepsDTO = new StepsDTO(other.stepsDTO);
+        freeInputsFinalNames = new LinkedList<>(other.freeInputsFinalNames);
+        freeInputTypes = new ArrayList<>(other.freeInputTypes);
+        freeInputs2StepsThatUseThem = new ArrayList<>(other.freeInputs2StepsThatUseThem);
+        freeInputUserString = new ArrayList<>(other.freeInputUserString);
+        freeInputNecessity = new ArrayList<>(other.freeInputNecessity);
+        initialInputName2Value = new HashMap<>(other.initialInputName2Value);
+        outputsFinalNames = new ArrayList<>(other.outputsFinalNames);
+        outputTypes = new ArrayList<>(other.outputTypes);
+        finalStepNameThatProducedTheOutput = new ArrayList<>(other.finalStepNameThatProducedTheOutput);
+        targetFlowName2DataMappings = new HashMap<>(other.targetFlowName2DataMappings);
     }
 
     public FlowDefinitionDTO(FlowDefinition flowDef){
@@ -162,4 +182,7 @@ public class FlowDefinitionDTO extends AbstractDTO {
         return stepsDTO;
     }
 
+    public FlowDefinitionDTO clone(){
+       return  new FlowDefinitionDTO(this);
+    }
 }

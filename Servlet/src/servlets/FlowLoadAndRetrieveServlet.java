@@ -100,7 +100,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     private static List<FlowDefinitionDTO> filterFlows(Set<String> userAccessibleFlows) {
         return Servlet.getEngineController().getAllFlowDefinitionsData().stream().
-                filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
+                filter(x -> userAccessibleFlows.contains(x.getFlowName())).map(FlowDefinitionDTO::clone).collect(Collectors.toList());
     }
 }
 

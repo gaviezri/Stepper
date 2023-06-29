@@ -3,9 +3,7 @@ package dto.step;
 import javafx.util.Pair;
 import stepper.flow.definition.api.StepUsageDeclaration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SingleStepDTO {
     String stepName;
@@ -14,11 +12,11 @@ public class SingleStepDTO {
     List<String> inputsFinalNames = new ArrayList<>();
     List<Boolean> isMandatoryInput = new ArrayList<>();    //for input in index i, value in index i in list will be TRUE if input i is mandatory else FALSE
     List<Boolean> isConnectedInput = new ArrayList<>();    //for input in index i, value in index i in list will be TRUE if input i is connected to an output of another flow else FALSE
-    Map<String,Pair<String,String>> inputPostAliasName2SourceStepNameAndSourceOutputName;
+    Map<String,Pair<String,String>> inputPostAliasName2SourceStepNameAndSourceOutputName = new LinkedHashMap<>();
 
     // OUTPUTS INFO
     List<String> outputsNamesPostAliasing = new ArrayList<>();
-    Map<String,List<Pair<String,String>>> outputPostAliasName2AllTargetStepNameAndTargetInputName;
+    Map<String,List<Pair<String,String>>> outputPostAliasName2AllTargetStepNameAndTargetInputName = new LinkedHashMap<>();
 
     public SingleStepDTO(StepUsageDeclaration stepDec,
                          Map<String,List<Pair<String,String>>> stepOutputs2AllTargetStepAndTargetInputs,
@@ -33,6 +31,18 @@ public class SingleStepDTO {
 
         this.outputsNamesPostAliasing.addAll(stepDec.getAllOutputsFinalNames());
         this.outputPostAliasName2AllTargetStepNameAndTargetInputName = stepOutputs2AllTargetStepAndTargetInputs;
+    }
+
+    public SingleStepDTO(SingleStepDTO other) {
+        this.stepName = other.stepName;
+
+        this.inputsFinalNames.addAll(other.inputsFinalNames);
+        this.isMandatoryInput.addAll(other.isMandatoryInput);
+        this.isConnectedInput.addAll(other.isConnectedInput);
+        this.inputPostAliasName2SourceStepNameAndSourceOutputName.putAll(other.inputPostAliasName2SourceStepNameAndSourceOutputName);
+
+        this.outputsNamesPostAliasing.addAll(other.outputsNamesPostAliasing);
+        this.outputPostAliasName2AllTargetStepNameAndTargetInputName.putAll(other.outputPostAliasName2AllTargetStepNameAndTargetInputName);
     }
 
     private void setIsMandatoryInput(StepUsageDeclaration stepDec, List<String> inputsFinalNames){

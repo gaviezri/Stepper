@@ -11,7 +11,7 @@ public class StepsDTO {
     final List<SingleStepDTO> steps = new ArrayList<>();
 
     public StepsDTO(List<StepUsageDeclaration> stepsUsageDecl, MappingGraph mappingGraph)
- {
+    {
         for(StepUsageDeclaration step:stepsUsageDecl){
 
             steps.add(new SingleStepDTO(step,
@@ -19,6 +19,12 @@ public class StepsDTO {
                     mappingGraph.getSourceStepAndSourceOutputFinalNamesByTargetStepFinalName(step.getFinalStepName())));
         }
     }
+    public StepsDTO(StepsDTO other){
+        for(SingleStepDTO step:other.steps){
+            steps.add(new SingleStepDTO(step));
+        }
+    }
+
 //
 //    public Boolean doesThisStepExists(String stepName){
 //        return steps.stream().

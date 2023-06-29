@@ -81,6 +81,14 @@ public class FlowDefinitionDTO extends AbstractDTO {
         initialInputName2Value = flowDef.getInitialInputName2Value();
     }
 
+    public void deleteContinuation(String targetFlowName){
+        targetFlowName2DataMappings.remove(targetFlowName);
+        continuationsCount--;
+    }
+
+    public List<String> getContinuationFlowNames(){
+        return targetFlowName2DataMappings.keySet().stream().collect(Collectors.toList());
+    }
     public Map<String, Object> getInitialValues() {
         return initialInputName2Value;
     }

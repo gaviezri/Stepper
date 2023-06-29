@@ -70,17 +70,37 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             userAccessibleFlows.addAll(role.getFlows());
         }
         // get flows definitions according to accessible flows of user (if user is manager bring all flows.)
-        EngineController engineInstance = Servlet.getEngineController();
-        List<FlowDefinitionDTO> flowDefinitionDTOS = filterFlowDefinitionsByUsersAccessLevel(userInfo, userAccessibleFlows, engineInstance);
+        List<FlowDefinitionDTO> flowDefinitionDTOS = filterFlowDefinitionsByUsersAccessLevel(userInfo, userAccessibleFlows);
         return new ManyFlowDefinitionsDTO(flowDefinitionDTOS);
     }
 
-    private static List<FlowDefinitionDTO> filterFlowDefinitionsByUsersAccessLevel(UserSystemInfo userInfo, Set<String> userAccessibleFlows, EngineController engineInstance) {
-        List<FlowDefinitionDTO> flowDefinitionDTOS = userInfo.isManager() ?
-                engineInstance.getAllFlowDefinitionsData() :
-                engineInstance.getAllFlowDefinitionsData().stream().
-                        filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
+    private static List<FlowDefinitionDTO> filterFlowDefinitionsByUsersAccessLevel(UserSystemInfo userInfo, Set<String> userAccessibleFlows) {
+        List<FlowDefinitionDTO> flowDefinitionDTOS = userInfo.isManager() ? 
+                Servlet.getEngineController().getAllFlowDefinitionsData() :
+                filterFlowAndContinuationsByRolesAssigned(userAccessibleFlows);
         return flowDefinitionDTOS;
+    }
+
+    private static List<FlowDefinitionDTO> filterFlowAndContinuationsByRolesAssigned(Set<String> userAccessibleFlows) {
+        List<FlowDefinitionDTO> filteredFlows = filterFlows(userAccessibleFlows);
+        return filterContinuations(userAccessibleFlows, filteredFlows);
+    }
+
+    private static List<FlowDefinitionDTO> filterContinuations(Set<String> userAccessibleFlows, List<FlowDefinitionDTO> filteredFlows) {
+        for ( FlowDefinitionDTO flowDefinitionDTO : filteredFlows) {
+            List<String> continuations = flowDefinitionDTO.getContinuationFlowNames();
+            for (String continuation : continuations) {
+                if (!userAccessibleFlows.contains(continuation)) {
+                    flowDefinitionDTO.deleteContinuation(continuation);
+                }
+            }
+       }
+        return filteredFlows;
+    }
+
+    private static List<FlowDefinitionDTO> filterFlows(Set<String> userAccessibleFlows) {
+        return Servlet.getEngineController().getAllFlowDefinitionsData().stream().
+                filter(x -> userAccessibleFlows.contains(x.getFlowName())).collect(Collectors.toList());
     }
 }
 

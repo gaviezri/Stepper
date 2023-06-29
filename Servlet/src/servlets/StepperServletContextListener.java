@@ -14,6 +14,7 @@ import stepper.controller.EngineController;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -35,7 +36,7 @@ public class StepperServletContextListener implements ServletContextListener {
         servletContext.setAttribute(ROLES_CHANGED, Boolean.FALSE);
         servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, Boolean.TRUE);
         servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
-        servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, LinkedList<UUID>>());
+        servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, Stack<UUID>>());
         servletContext.setAttribute(COOKIE_BAKER,  createCookieBaker());
         Servlet.initialize(servletContext);
         }

@@ -1,4 +1,4 @@
-package dto.flow;
+package dto.execution;
 
 import javafx.util.Pair;
 import java.util.Map;

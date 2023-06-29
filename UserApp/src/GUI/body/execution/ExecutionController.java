@@ -4,6 +4,8 @@ import GUI.app.AppController;
 import GUI.body.BodyControllerComponent;
 import GUI.body.library.definition.DefinitionController;
 import GUI.utils.Utils;
+import dto.execution.progress.ExecutedFlowDetailsDTO;
+import dto.execution.progress.ExecutionProgressDTO;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -28,6 +30,7 @@ import stepper.dd.api.DataDefinition;
 import dto.flow.FlowDefinitionDTO;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -490,5 +493,10 @@ public class ExecutionController extends BodyControllerComponent {
         if (poller != null) {
             poller.shutdown();
         }
+    }
+
+    public void updateExecutionProgess(ExecutionProgressDTO executionProgressDTO) {
+        ExecutedFlowDetailsDTO flowDetailsDTO = executionProgressDTO.getExecutedFlowDetailsDTO();
+        throw new NotImplementedException();
     }
 }

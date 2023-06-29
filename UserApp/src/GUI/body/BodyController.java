@@ -7,6 +7,7 @@ import GUI.body.library.definition.DefinitionController;
 import GUI.body.library.input.InputController;
 import GUI.body.statistics.StatisticsController;
 import GUI.body.history.HistoryController;
+import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -100,7 +101,7 @@ public class BodyController {
             int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
             Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
             getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(flowIndex));
-//            mainController.executeFlow(flowIndex, valName2valType);
+            mainController.executeFlow(flowIndex, valName2valType);
 
         });
     }
@@ -128,5 +129,9 @@ public class BodyController {
 
     public void stop(){
         flowExecComponentController.stop();
+    }
+
+    public void updateExecutionProgess(ExecutionProgressDTO executionProgressDTO) {
+        flowExecComponentController.updateExecutionProgess(executionProgressDTO);
     }
 }

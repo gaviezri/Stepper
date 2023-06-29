@@ -6,6 +6,8 @@ import communication.Role;
 import communication.UserRequestsDispatcher;
 import GUI.header.HeaderController;
 import communication.UserSystemInfo;
+import dto.execution.progress.ExecutedFlowDetailsDTO;
+import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.statistics.StatisticsDTO;
 import javafx.beans.property.IntegerProperty;
@@ -17,6 +19,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import javafx.util.Pair;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 import java.util.ArrayList;
@@ -48,7 +52,9 @@ public class AppController {
     private UserRequestsDispatcher reqDispatcher = UserRequestsDispatcher.getInstance();
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
-    ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+
+    private Boolean isExecutionInProgess = false;
 
     public void initialize(){
         this.headerComponentController.setMainController(this);
@@ -60,9 +66,6 @@ public class AppController {
         UserRequestsDispatcher.getInstance().logout();
         executorServiceForPollingExecutions.shutdown();
     }
-    public void doFinalize() {
-        finalize();
-    }
     public List<Role> getUserRolesList(){
         return reqDispatcher.getUserRolesList();
     }
@@ -70,6 +73,7 @@ public class AppController {
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
+                updateExecutionProgress();
                 updateManagerAndRoles();
                 updateAccessibleFlows();
 //                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
@@ -82,6 +86,15 @@ public class AppController {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateExecutionProgress() {
+        if (isExecutionInProgess) {
+            ExecutionProgressDTO executionProgressDTO = reqDispatcher.getExecutionProgress();
+            isExecutionInProgess = executionProgressDTO.isExecutionInProgress();
+            bodyComponentController.updateExecutionProgess(executionProgressDTO);
+
+        }
     }
 
     private void updateAccessibleFlows() {
@@ -104,24 +117,11 @@ public class AppController {
     public synchronized IntegerProperty numOfFlowsExecutedProperty() {
         return numOfFlowsExecuted;
     }
-    public IntegerProperty numOfFlowsFinishedProperty() {
-        return numOfFlowsFinished;
-    }
-
-    public BodyController getBodyController() {
-        return bodyComponentController;
-    }
-    public HeaderController getHeaderController() {
-        return headerComponentController;
-    }
-
-//    public FlowNamesDTO getFlowNames() {
-//        return engineController.getFlowDefinitionsNames();
-//    }
 //
-//    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
-//        engineController.executeFlow(flowIndex, valName2valType);
-//    }
+    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
+        reqDispatcher.executeFlow(flowIndex, valName2valType);
+        isExecutionInProgess = true;
+    }
 //
 //    public List<FlowDefinitionDTO> getAllFlowDefinitionsData() {
 //        return engineController.getAllFlowDefinitionsData();

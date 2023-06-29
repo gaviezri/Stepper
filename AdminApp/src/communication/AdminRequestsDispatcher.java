@@ -20,7 +20,9 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public static AdminRequestsDispatcher getInstance() {
         return instance;
     }
-    private AdminRequestsDispatcher() {}
+    private AdminRequestsDispatcher() {
+        cookieIDValue = 0;
+    }
 
 
     public LoadDataDTO loadXML(String xmlContent){

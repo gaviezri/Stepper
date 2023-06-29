@@ -43,8 +43,8 @@ public class FlowExecutionServlet extends HttpServlet {
     }
 
     private void handleFlowExecutionPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Function<Pair<HttpServletRequest, String>, Integer> baker = Servlet.getCookieBaker();
-        Integer cookie = baker.apply(new Pair<>(req,"ID"));
+
+        Integer cookie = Servlet.idCookieBaker(req.getCookies());
         FlowExecutionRequestDTO flowExecutionRequestDTO = GSON_INSTANCE.fromJson(req.getReader(), FlowExecutionRequestDTO.class);
         UUID flowUUID = Servlet.getEngineController().executeFlow(flowExecutionRequestDTO.getFlowInd(), flowExecutionRequestDTO.getValName2ValType());
         synchronized (getServletContext()){

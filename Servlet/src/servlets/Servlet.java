@@ -3,16 +3,12 @@ package servlets;
 import communication.Role;
 import communication.UserSystemInfo;
 import communication.Utils;
+import dto.flow.FlowDefinitionDTO;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import javafx.util.Pair;
+import jakarta.servlet.http.Cookie;
 import stepper.controller.EngineController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.UUID;
-import java.util.function.Function;
+import java.util.*;
 
 import static communication.Utils.ENGINE_CONTROLLER;
 
@@ -71,9 +67,38 @@ public class Servlet {
         return (Stack<UUID>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
     }
 
-    public static Function<Pair<HttpServletRequest, String>, Integer> getCookieBaker() {
-        return (Function<Pair<HttpServletRequest, String>, Integer>)
-                instance.contextRef.getAttribute(Utils.COOKIE_BAKER);
+    public static Integer idCookieBaker(Cookie[] cookies){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("ID")) {
+                return Integer.parseInt(cookie.getValue());
+            }
+        }
+        return -1;
     }
 
+    public static Set<String> getUserAccessibleFlowNames(UserSystemInfo userInfo){
+        // get current users assigned roles
+        List<Role> userRoles = userInfo.getRoles();
+        // create current users accessible flow names set
+        Set<String> userAccessibleFlows = new HashSet<>();
+        for (Role role: userRoles) {
+            userAccessibleFlows.addAll(role.getAccessibleFlowsNames());
+        }
+        return userAccessibleFlows;
+    }
+
+    public static UserSystemInfo getUserSystemInfo(Cookie[] cookies) {
+        // get users cookie
+        Integer userCookie = Servlet.idCookieBaker(cookies);
+        // get current user info by cookie id
+        String userName = Servlet.getCookie2User().get(userCookie);
+        UserSystemInfo userInfo = Servlet.getUserName2Info().get(userName);
+        return userInfo;
+    }
+
+    public static Boolean isAdmin(Cookie[] cookies){
+        // get users cookie
+        Integer userCookie = Servlet.idCookieBaker(cookies);
+        return userCookie.equals(0);
+    }
 }

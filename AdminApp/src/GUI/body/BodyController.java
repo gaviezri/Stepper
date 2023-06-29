@@ -144,15 +144,6 @@ public class BodyController {
     }
 
 
-    public void bindRolesTabSelectionToRolesAndFlowsFetching(Runnable getRoles, Runnable getFlows) {
-//        mainTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue == rolesManagementTab) {
-////                getRoles.run();
-//                getFlows.run();
-//            }
-//        });
-    }
-
     public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
         usersManagementTabComponentController.updateOnlineUsers(userSystemInfos);
         rolesManagementTabComponentController.updateOnlineUsers(userSystemInfos);
@@ -164,6 +155,11 @@ public class BodyController {
 
     public void updateUsersOnServer(Collection<UserSystemInfo> modifiedUsers) {
         mainController.updateUsersOnServer(modifiedUsers);
+    }
+
+    public void deleteRoleOnServer(Role selectedRole) {
+        mainController.deleteRoleOnServer(selectedRole);
+        roleManager.deleteRole(selectedRole);
     }
 
 

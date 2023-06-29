@@ -37,7 +37,6 @@ public class RolesManagementServlet extends HttpServlet {
                 break;
         }
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         switch (req.getServletPath()) {
@@ -46,13 +45,52 @@ public class RolesManagementServlet extends HttpServlet {
                 break;
         }
     }
-
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         switch (req.getServletPath()) {
             case ROLES_USER_ENDPOINT:
                 handleRolesUserPut(req, resp);
                 break;
+        }
+    }
+
+    @Override
+    protected  void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        switch (req.getServletPath()) {
+            case ROLES_ENDPOINT:
+                handleRolesDelete(req, resp);
+                break;
+        }
+    }
+
+    private void handleRolesDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ServletContext context = getServletContext();
+        synchronized (context) {
+            context.setAttribute(ROLES_CHANGED, true);
+        }
+        Role.RoleManager theManager = Servlet.getRoleManager();
+        List<Role> allRoles = Servlet.getRoles();
+        List<Role> rolesToDelete = GSON_INSTANCE.fromJson(req.getReader(), RolesDTO.class).getRoles();
+        removeDeletedRolesFromManagerAndContext(theManager, allRoles, rolesToDelete);
+        removeDeletedRolesFromUsersSystemInfo(context, rolesToDelete);
+    }
+
+    private static void removeDeletedRolesFromManagerAndContext(Role.RoleManager theManager, List<Role> allRoles, List<Role> rolesToDelete) {
+        allRoles.sort(Comparator.comparing(Role::getName));
+        for (Role roleToDel : rolesToDelete) {
+            if (allRoles.contains(roleToDel)) {
+                allRoles.remove(roleToDel);
+                theManager.deleteRole(roleToDel);
+            }
+        }
+    }
+
+    private static void removeDeletedRolesFromUsersSystemInfo(ServletContext context, List<Role> rolesToDelete) {
+        Map<String, UserSystemInfo> name2info = Servlet.getUserName2Info();
+        synchronized (context) {
+            for (UserSystemInfo userSystemInfo : name2info.values()) {
+                userSystemInfo.getRoles().removeAll(rolesToDelete);
+            }
         }
     }
 
@@ -122,16 +160,16 @@ public class RolesManagementServlet extends HttpServlet {
     private void handleRoleGet(HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
         String results = GSON_INSTANCE.toJson(new RolesDTO());
-        synchronized (context) {
+
             if(context.getAttribute(ROLES_CHANGED).equals(true) ||
                     context.getAttribute(FETCH_STARTUP_DATA_ADMIN).equals(true)){
+                synchronized (context) {
                 context.setAttribute(ROLES_CHANGED, false);
                 context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
                 List<Role> roles = Servlet.getRoles();
                 results = GSON_INSTANCE.toJson(new RolesDTO(roles));
             }
-            // send the updated roles to admin
-            resp.getWriter().println(results);
         }
+        resp.getWriter().println(results);
     }
 }

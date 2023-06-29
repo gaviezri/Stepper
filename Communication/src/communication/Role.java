@@ -18,18 +18,14 @@ public class Role {
             rolesMap.put(role.getName(),role);
         }
 
-         synchronized public List<Role> getRolesListFromStringsValue(List<String> roleNames){
-            List<Role> rolesList = new LinkedList<>();
-            for (String roleName : roleNames) {
-                rolesList.add(rolesMap.get(roleName));
-            }
-            return rolesList;
-        }
-
         public void addRoles(List<Role> newRole) {
             for (Role role : newRole) {
                 rolesMap.put(role.getName(), role);
             }
+        }
+
+        public void deleteRole(Role selectedRole) {
+            rolesMap.remove(selectedRole.getName());
         }
     }
 

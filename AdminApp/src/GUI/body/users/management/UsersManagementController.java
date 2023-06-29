@@ -100,18 +100,21 @@ public class UsersManagementController extends BodyControllerComponent {
     private void initializeOnlineUsersListView() {
         onlineUsersListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                rolesListView.setDisable(false);
-                selectedUserLabel.setText(newValue.getName());
-                managerCheckbox.setSelected(newValue.isManager());
-                Set<String> rolesNamesSet = newValue.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
-
-                Platform.runLater(()-> rolesListView.getItems()
-                        .forEach(x->x.assignedProperty()
-                        .set(rolesNamesSet.contains(x.getName()))));
+                Platform.runLater(()-> {
+                    rolesListView.setDisable(false);
+                    selectedUserLabel.setText(newValue.getName());
+                    managerCheckbox.setSelected(newValue.isManager());
+                    Set<String> rolesNamesSet = newValue.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+                    rolesListView.getItems()
+                            .forEach(x->x.assignedProperty()
+                                    .set(rolesNamesSet.contains(x.getName())));
+                });
             } else {
-                rolesListView.setDisable(true);
-                selectedUserLabel.setText("");
-                managerCheckbox.setSelected(false);
+                Platform.runLater(()-> {
+                    rolesListView.setDisable(true);
+                    selectedUserLabel.setText("");
+                    managerCheckbox.setSelected(false);
+                });
             }
         });
     }

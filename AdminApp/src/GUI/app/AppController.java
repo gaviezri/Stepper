@@ -44,7 +44,6 @@ public class AppController {
     @FXML
     private BodyController bodyComponentController;
 
-    private Boolean fetchedRoles = false;
     private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
     private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
     private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
@@ -68,7 +67,6 @@ public class AppController {
 
     private void initializeTabPane() {
         bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
-        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(this::fetchRoles, this::fetchAllFlowsNames);
     }
 
     private void initializePollingExecutions() {
@@ -122,13 +120,10 @@ public class AppController {
     }
 
     private void fetchRoles() {
-        if(!fetchedRoles) {
-            List<Role> roles = reqDispatcher.getRoles();
-            bodyComponentController.getRoleManager().setRolesMap(reqDispatcher.getRolesMap());
-            if (roles.size() > 0) {
-                bodyComponentController.updateRoles(roles);
-            }
-            fetchedRoles = true;
+        List<Role> roles = reqDispatcher.getRoles();
+        bodyComponentController.getRoleManager().setRolesMap(reqDispatcher.getRolesMap());
+        if (roles.size() > 0) {
+            bodyComponentController.updateRoles(roles);
         }
     }
 
@@ -150,6 +145,9 @@ public class AppController {
     }
 
 
+    public void deleteRoleOnServer(Role selectedRole) {
+        reqDispatcher.deleteRole(selectedRole);
+    }
 //    public BodyController getBodyController() {
 //        return bodyComponentController;
 //    }

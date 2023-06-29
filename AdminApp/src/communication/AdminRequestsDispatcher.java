@@ -20,7 +20,9 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public static AdminRequestsDispatcher getInstance() {
         return instance;
     }
-    private AdminRequestsDispatcher() {}
+    private AdminRequestsDispatcher() {
+        cookieIDValue = 0;
+    }
 
 
     public LoadDataDTO loadXML(String xmlContent){
@@ -176,6 +178,18 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public void filterHistory(FlowsExecutionHistoryDTO.SortFilter filter){
         try {
             HttpURLConnection con = getConnection(FILTER_HISTORY_FILTER_ENDPOINT, "GET", PLAIN_TEXT_CONTENT_TYPE);
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteRole(Role selectedRole) {
+        try {
+            HttpURLConnection con = getConnection(ROLES_ENDPOINT, "DELETE", JSON_CONTENT_TYPE);
+            OutputStream os = con.getOutputStream();
+            os.write(GSON_INSTANCE.toJson(new RolesDTO(Arrays.asList(selectedRole))).getBytes("UTF-8"));
+            getBodyResponseFromConnection(con);
             con.disconnect();
         } catch (Exception e) {
             e.printStackTrace();

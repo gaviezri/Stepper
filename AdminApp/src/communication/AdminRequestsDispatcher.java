@@ -172,4 +172,16 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         }
         return null;
     }
+
+    public void deleteRole(Role selectedRole) {
+        try {
+            HttpURLConnection con = getConnection(ROLES_ENDPOINT, "DELETE", JSON_CONTENT_TYPE);
+            OutputStream os = con.getOutputStream();
+            os.write(GSON_INSTANCE.toJson(new RolesDTO(Arrays.asList(selectedRole))).getBytes("UTF-8"));
+            getBodyResponseFromConnection(con);
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

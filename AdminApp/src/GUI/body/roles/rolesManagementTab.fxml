@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -10,13 +11,21 @@
 
 <AnchorPane fx:id="rolesAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0" prefWidth="1159.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.body.roles.RolesController">
    <children>
-      <HBox layoutX="21.0" layoutY="38.0" prefHeight="355.0" prefWidth="1013.0" spacing="70.0">
+      <HBox layoutY="38.0" prefHeight="355.0" prefWidth="1013.0" spacing="70.0">
          <children>
             <VBox>
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="161.0" text="Available Roles" />
-                  <ListView fx:id="availableRolesListView" prefHeight="313.0" prefWidth="161.0" />
-                  <Button fx:id="newRoleButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="161.0" text="New Role" />
+                  <ListView fx:id="availableRolesListView" prefHeight="265.0" prefWidth="161.0" />
+                  <Button fx:id="newRoleButton" mnemonicParsing="false" prefHeight="38.0" prefWidth="161.0" style="-fx-background-color: #80C861;" text="New Role">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+                  <Button fx:id="deleteRoleButton" mnemonicParsing="false" prefHeight="37.0" prefWidth="161.0" style="-fx-background-color: #BB4732;" text="Delete Role">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
             </VBox>
             <VBox prefHeight="338.0" prefWidth="197.0">
@@ -38,7 +47,7 @@
             <VBox prefHeight="355.0" prefWidth="145.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="152.0" text="Assigned Users" />
-                  <ListView fx:id="assignedUsersListView" prefHeight="342.0" prefWidth="136.0" />
+                  <ListView fx:id="assignedUsersListView" editable="true" prefHeight="342.0" prefWidth="136.0" />
                </children>
             </VBox>
          </children>

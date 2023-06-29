@@ -7,6 +7,7 @@ import GUI.body.BodyController;
 import communication.UserSystemInfo;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.flow.FlowNamesDTO;
+import dto.statistics.StatisticsDTO;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -25,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class AppController {
-
-
     @FXML
     private ScrollPane sceneScrollPane;
 
@@ -69,7 +68,7 @@ public class AppController {
 
     private void initializeTabPane() {
         bodyComponentController.setActiveTab(BodyController.USERS_MANAGEMENT_TAB);
-        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(this::fetchRoles, this::fetchFlows);
+        bodyComponentController.bindRolesTabSelectionToRolesAndFlowsFetching(this::fetchRoles, this::fetchAllFlowsNames);
     }
 
     private void initializePollingExecutions() {
@@ -81,11 +80,16 @@ public class AppController {
                 fetchFlowNames();
                 fetchOnlineUsersInfo();
                 fetchHistory();
-                //fetchStatistics();
+                fetchStatistics();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void fetchStatistics() {
+        StatisticsDTO statisticsDTO = reqDispatcher.getStatisticsDTO();
+        bodyComponentController.updateStatistics(statisticsDTO);
     }
 
     private void fetchHistory() {
@@ -93,12 +97,16 @@ public class AppController {
         bodyComponentController.updateHistory(historyDTO);
     }
 
-    public void fetchFlows() {
+    public void fetchAllFlowsNames() {
         FlowNamesDTO flows = reqDispatcher.getFlowDefinitionNames();
         if (flows.size() > 0)
         {
             bodyComponentController.updateFlowNames(flows);
         }
+    }
+
+    public void filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter filter){
+        reqDispatcher.filterHistory(filter);
     }
 
     private void fetchOnlineUsersInfo() {
@@ -140,6 +148,7 @@ public class AppController {
     public void setActiveTab(int rolesManagementTab) {
         bodyComponentController.setActiveTab(rolesManagementTab);
     }
+
 
 //    public BodyController getBodyController() {
 //        return bodyComponentController;

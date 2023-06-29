@@ -20,7 +20,7 @@ public class Utils {
     public static final String JSON_CONTENT_TYPE = "application/json";
     public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
     public static final String XML_CONTENT_TYPE = "application/xml";
-    public static final String COOKIE_BAKER= "getCookieByName";
+    public static final String HISTORY_FILTER = "filter";
 
     /*#################### endpoints ####################*/
     public static final String USER_LOGIN = "/user/login?name=";
@@ -41,5 +41,6 @@ public class Utils {
     public static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
     public static final String SINGLE_USER_INFO_ENDPOINT = "/user/info";
     public static final String FLOW_EXECUTION_PROGRESS_ENDPOINT = "/flow/execution/progress";
+    public static final String FILTER_HISTORY_FILTER_ENDPOINT = "/history/filter";
 
 }

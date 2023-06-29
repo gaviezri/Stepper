@@ -111,11 +111,11 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 SortFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
                         if (SortFilters.getSelectedToggle() != null) {
                                 if (SortFilters.getSelectedToggle() == resultFilter) {
-                                        curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.RESULT);
+                                        getBodyController().getMainController().filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter.RESULT);
                                 } else if (SortFilters.getSelectedToggle() == nameFilter) {
-                                        curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.NAME);
+                                        getBodyController().getMainController().filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter.NAME);
                                 } else {
-                                       curFlowsExecutionHistoryDTO.sortFlowExecutionDTOsBy(FlowsExecutionHistoryDTO.SortFilter.TIME);
+                                        getBodyController().getMainController().filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter.TIME);
                                 }
                                 executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                                 Platform.runLater(()-> {

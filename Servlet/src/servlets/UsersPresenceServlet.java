@@ -81,8 +81,7 @@ public class UsersPresenceServlet extends HttpServlet {
     private String handleSingleUserInfo(HttpServletRequest req) {
         ServletContext context = getServletContext();
 
-        Function<Pair<HttpServletRequest, String>, Integer> cookieBaker =  Servlet.getCookieBaker();
-        Integer userCookie = Integer.valueOf(cookieBaker.apply(new Pair(req,"ID")));
+        Integer userCookie = Servlet.idCookieBaker(req.getCookies());
 
         UserSystemInfo userInfo = Servlet.getUserName2Info().get(userCookie);
         return GSON_INSTANCE.toJson(userInfo);

@@ -32,7 +32,6 @@ public class FlowsExecutionHistoryDTO {
             case NAME:
                 Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                         public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-                            // TODO: Handle possible null values
                             return x.getFlowName().compareTo(y.getFlowName());
                         }
                     });
@@ -40,7 +39,6 @@ public class FlowsExecutionHistoryDTO {
             case TIME:
                 Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                     public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-                        // TODO: Handle possible null values
                         return x.getStartTime().compareTo(y.getStartTime());
                     }
                 });
@@ -48,7 +46,6 @@ public class FlowsExecutionHistoryDTO {
             case RESULT:
                 Collections.sort(curFilteredExecutions,new Comparator<SingleFlowExecutionDTO>() {
                     public int compare(SingleFlowExecutionDTO x, SingleFlowExecutionDTO y) {
-                        // TODO: Handle possible null values
                         return x.getFlowExecutionResult().compareTo(y.getFlowExecutionResult());
                     }
                 });

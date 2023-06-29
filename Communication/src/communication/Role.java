@@ -75,7 +75,7 @@ public class Role {
     }
 
 
-    public List<String> getFlows() {
+    public List<String> getAccessibleFlowsNames() {
         return assignedFlowNames;
     }
 

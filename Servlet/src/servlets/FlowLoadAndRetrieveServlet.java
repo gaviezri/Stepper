@@ -1,22 +1,17 @@
 package servlets;
 
-import communication.Role;
 import communication.UserSystemInfo;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.LoadDataDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javafx.util.Pair;
-import stepper.controller.EngineController;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static communication.Utils.*;
@@ -55,22 +50,11 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
     }
 
     private ManyFlowDefinitionsDTO getUserSpecificFilteredFlowDefinitionDTOS(HttpServletRequest req) {
-        ServletContext context = getServletContext();
-        // get cookie getter function from Context
-        Function<Pair<HttpServletRequest,String>,Integer> cookieBaker = Servlet.getCookieBaker();
-        Integer userCookie = cookieBaker.apply(new Pair(req,"ID"));
-        // get current user info by cookie id
-        String userName = Servlet.getCookie2User().get(userCookie);
-        UserSystemInfo userInfo = Servlet.getUserName2Info().get(userName);
-        // get current users assigned roles
-        List<Role> userRoles = userInfo.getRoles();
-        // create current users accessible flow names set
-        Set<String> userAccessibleFlows = new HashSet<>();
-        for (Role role: userRoles) {
-            userAccessibleFlows.addAll(role.getFlows());
-        }
+        UserSystemInfo userInfo = Servlet.getUserSystemInfo(req.getCookies());
         // get flows definitions according to accessible flows of user (if user is manager bring all flows.)
-        List<FlowDefinitionDTO> flowDefinitionDTOS = filterFlowDefinitionsByUsersAccessLevel(userInfo, userAccessibleFlows);
+        List<FlowDefinitionDTO> flowDefinitionDTOS = filterFlowDefinitionsByUsersAccessLevel(
+                userInfo,
+                Servlet.getUserAccessibleFlowNames(userInfo));
         return new ManyFlowDefinitionsDTO(flowDefinitionDTOS);
     }
 

@@ -61,7 +61,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new StatisticsDTO(new HashMap<>(),new HashMap<>());
     }
 
     public Collection<UserSystemInfo> getOnlineUsers() {
@@ -170,6 +170,15 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new FlowsExecutionHistoryDTO(new Stack<>());
+    }
+
+    public void filterHistory(FlowsExecutionHistoryDTO.SortFilter filter){
+        try {
+            HttpURLConnection con = getConnection(FILTER_HISTORY_FILTER_ENDPOINT, "GET", PLAIN_TEXT_CONTENT_TYPE);
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

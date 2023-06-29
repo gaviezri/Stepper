@@ -135,8 +135,8 @@ public class DefinitionController extends LibraryControllerComponent {
 
 
     public void updateFlowDefinitions(List<FlowDefinitionDTO> flowDefDTOlist) {
-            if (flowDefDTOlist.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList())
-                    .equals(flowDefinitionDTOList.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()))) {
+            if (newFlowEqualsNamewise(flowDefDTOlist)) {
+                updateAnyContinuationAvailableBasedOnRoleModification(flowDefDTOlist);
                 return;
             }
             clearAllData();
@@ -149,6 +149,24 @@ public class DefinitionController extends LibraryControllerComponent {
                 setFlowInputsData(dto);
                 setFlowOutputsData(dto);
             }
+    }
+
+    private void updateAnyContinuationAvailableBasedOnRoleModification(List<FlowDefinitionDTO> flowDefDTOlist) {
+        for(int i = 0; i < flowDefDTOlist.size(); i++) {
+            FlowDefinitionDTO dto = flowDefDTOlist.get(i);
+            FlowDefinitionDTO oldDto = flowDefinitionDTOList.get(i);
+            if(dto.getContinuationsCount() != oldDto.getContinuationsCount()) {
+               //flowDefinitionDTOList.get(i).setContinuationsCount(dto.getContinuationsCount());
+                Platform.runLater(() -> {
+                    continuationsLabel.textProperty().set("Continuations: " + dto.getContinuationsCount());
+                });
+            }
+        }
+    }
+
+    private boolean newFlowEqualsNamewise(List<FlowDefinitionDTO> flowDefDTOlist) {
+        return flowDefDTOlist.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList())
+                .equals(flowDefinitionDTOList.stream().map(FlowDefinitionDTO::getFlowName).collect(Collectors.toList()));
     }
 
     // --FLOW HEADERS--

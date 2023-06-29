@@ -168,6 +168,8 @@ public class UsersManagementController extends BodyControllerComponent {
                         reselectSelectedUserAfterUpdate(selectedUsi);
                     }
                 }
+                // remove items that are not in the list
+                items.removeIf(x-> !userSystemInfos.contains(x));
             } else { items.clear();}
         });
     }

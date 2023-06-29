@@ -1,4 +1,4 @@
-package dto.flow;
+package dto.execution.progress;
 
 import javafx.util.Pair;
 import dto.AbstractDTO;

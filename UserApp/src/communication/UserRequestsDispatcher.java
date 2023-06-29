@@ -1,17 +1,18 @@
 package communication;
 
-import com.google.gson.reflect.TypeToken;
+import dto.execution.FlowExecutionRequestDTO;
+import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
+import javafx.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static communication.Utils.*;
 
@@ -125,6 +126,30 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             return StartUpStatus.FAILURE;
         }
+    }
+
+    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
+        try {
+            HttpURLConnection con = getConnection(FLOW_EXECUTION_ENDPOINT, "POST", JSON_CONTENT_TYPE);
+            con.getOutputStream().write(GSON_INSTANCE.toJson(new FlowExecutionRequestDTO(valName2valType, flowIndex)).getBytes());
+            con.getOutputStream().flush();
+            con.getResponseMessage();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ExecutionProgressDTO getExecutionProgress() {
+        try {
+            HttpURLConnection con = getConnection(FLOW_EXECUTION_PROGRESS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
+            ExecutionProgressDTO executionProgressDTO = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), ExecutionProgressDTO.class);
+            con.disconnect();
+            return executionProgressDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

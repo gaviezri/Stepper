@@ -101,7 +101,7 @@ public class UsersPresenceServlet extends HttpServlet {
                 System.out.println(String.format("New user \"%s\" with id \"%d\" was logged in...",name,id));
             }
             else {
-                System.out.println(String.format("Something went wrong probably user with name {0} already logged in",name));
+                System.out.println(String.format("Something went wrong probably user with name %s already logged in",name));
             }
         }
         else{

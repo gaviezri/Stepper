@@ -40,5 +40,6 @@ public class Utils {
     public static final String USER_LOGOUT_ENDPOINT = "/user/logout";
     public static final String USER_INFO_ALL_ENDPOINT = "/user/info/all";
     public static final String SINGLE_USER_INFO_ENDPOINT = "/user/info";
+    public static final String FLOW_EXECUTION_PROGRESS_ENDPOINT = "/flow/execution/progress";
 
 }

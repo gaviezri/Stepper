@@ -10,6 +10,8 @@ import stepper.controller.EngineController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static communication.Utils.ENGINE_CONTROLLER;
@@ -63,6 +65,10 @@ public class Servlet {
 
     public static Map<Integer, List<java.util.UUID>> getCookie2FlowExecId() {
         return (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
+    }
+
+    public static Stack<UUID> getFlowExecIdStack(Integer cookie) {
+        return (Stack<UUID>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
     }
 
     public static Function<Pair<HttpServletRequest, String>, Integer> getCookieBaker() {

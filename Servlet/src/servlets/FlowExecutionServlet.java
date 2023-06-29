@@ -36,7 +36,10 @@ public class FlowExecutionServlet extends HttpServlet {
     }
 
     private void handleFlowExecutionProgressGet(HttpServletRequest req, HttpServletResponse resp) {
-        // get user cookie
+        Integer cookie = Servlet.idCookieBaker(req.getCookies());
+        UUID flowUUID = Servlet.getFlowExecIdStack(cookie).peek();
+        // get the progress of the flow execution by UUID from engine
+        Servlet.getEngineController().getCurrentExecutedFlowDetailsByUUID(flowUUID);
         // by cookie get the top UUID in the stack
         // get the progress of the flow execution by UUID from engine
         // return the progress to the user using dto

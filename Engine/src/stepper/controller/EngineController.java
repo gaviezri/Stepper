@@ -171,4 +171,8 @@ public class EngineController implements Serializable {
         flowsExecutorsManager.stop();
 
     }
+
+    public void getCurrentExecutedFlowDetailsByUUID(UUID flowUUID) {
+        flowsExecutorsManager.getCurrentExecutedFlowDetailsByUUID(flowUUID);
+    }
 }

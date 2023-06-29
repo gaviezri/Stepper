@@ -27,6 +27,7 @@ public class Main extends Application {
                 startLoginModal(primaryStage);
 
                 Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("GUI/userApp.css").toExternalForm());
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Stepper");
                 primaryStage.setOnCloseRequest(event -> {

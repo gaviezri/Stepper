@@ -2,6 +2,7 @@ package stepper.flow.execution.runner;
 
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -51,6 +52,10 @@ public class FlowExecutorsManager implements Serializable {
         }
     }
 
+    public void getCurrentExecutedFlowDetailsByUUID(UUID flowUUID) {
+        throw new NotImplementedException();
+    }
+
     public enum FlowExecutionStatus {
         RUNNING, FINISHED, FAILED, NOT_FOUND
     }
@@ -72,6 +77,8 @@ public class FlowExecutorsManager implements Serializable {
         if (executorService == null){
             executorService = Executors.newFixedThreadPool(workersCount);
         }
+        // submit the flow to the thread pool
+        // TODO: Keep a reference to this flowExecutor Object in order to be able to query it's status
         UUID2Execution.put(latestUUID, executorService.submit(flowExecutor));
         return latestUUID;
     }

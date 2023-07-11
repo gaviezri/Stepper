@@ -1,7 +1,7 @@
 package communication;
 
 import dto.execution.FlowExecutionRequestDTO;
-import dto.execution.progress.ExecutionProgressDTO;
+import dto.execution.progress.ExecutedFlowDetailsDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
@@ -140,10 +140,11 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public ExecutionProgressDTO getExecutionProgress() {
+    public ExecutedFlowDetailsDTO getExecutionProgress() {
         try {
             HttpURLConnection con = getConnection(FLOW_EXECUTION_PROGRESS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-            ExecutionProgressDTO executionProgressDTO = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), ExecutionProgressDTO.class);
+            ExecutedFlowDetailsDTO executionProgressDTO = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con),
+                    ExecutedFlowDetailsDTO.class);
             con.disconnect();
             return executionProgressDTO;
         } catch (Exception e) {

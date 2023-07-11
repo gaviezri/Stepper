@@ -18,7 +18,7 @@ import dto.flow.FlowNamesDTO;
 import dto.flow.LoadDataDTO;
 import dto.statistics.StatisticsDTO;
 import stepper.flow.execution.FlowExecutionResult;
-import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
+import stepper.flow.execution.data.collector.ExecutionDataCollector;
 
 import java.time.Duration;
 import java.util.List;
@@ -36,7 +36,7 @@ public class AppController {
 
     private EngineController engineController;
 
-    private LastExecutedDataCenter lastExecutedDataCenter = LastExecutedDataCenter.getInstance();
+    private ExecutionDataCollector executionDataCollector = new ExecutionDataCollector();
 
     @FXML
     private ScrollPane sceneScrollPane;
@@ -121,51 +121,51 @@ public class AppController {
     }
 
     public FlowExecutionResult getFlowExecutionResult() {
-        return lastExecutedDataCenter.getFlowExecutionResult();
+        return executionDataCollector.getFlowExecutionResult();
     }
 
     public boolean isFlowExecutionInProgress() {
-        return lastExecutedDataCenter.isFlowExecutionInProgress();
+        return executionDataCollector.isFlowExecutionInProgress();
     }
 
     public String getLastExecutedFlowName() {
-        return lastExecutedDataCenter.getLastExecutedFlowName();
+        return executionDataCollector.getExecutedFlowName();
     }
 
     public int getCurrentStepIdx() {
-        return lastExecutedDataCenter.getCurrentStepIdx();
+        return executionDataCollector.getCurrentStepIdx();
     }
 
     public String getCurrentStepName() {
-        return lastExecutedDataCenter.getCurrentStepName();
+        return executionDataCollector.getCurrentStepName();
     }
 
     public int getStepsCount(){
-        return lastExecutedDataCenter.getStepsCount();
+        return executionDataCollector.getStepsCount();
     }
 
     public Map getExecutedStepsStatus(){
-        return lastExecutedDataCenter.getExecutedStepsStatus();
+        return executionDataCollector.getExecutedStepsStatus();
     }
 
     public Map<String,Map<String, Pair<DataDefinition, Object>>> getOutputsForAllSteps() {
-        return lastExecutedDataCenter.getOutputsForAllSteps();
+        return executionDataCollector.getOutputsForAllSteps();
     }
 
     public Map<String,List<String>> getAllStepsListOfLogs(){
-        return lastExecutedDataCenter.getAllStepsListOfLogs();
+        return executionDataCollector.getAllStepsListOfLogs();
     }
 
     public Map<String, Duration> getAllStepsDuration() {
-        return lastExecutedDataCenter.getAllStepsDuration();
+        return executionDataCollector.getAllStepsDuration();
     }
 
     public Map<String, String> getAllSummaryLines() {
-        return lastExecutedDataCenter.getAllSummaryLines();
+        return executionDataCollector.getAllSummaryLines();
     }
 
     public Map getLastFlowOutputs() {
-        return lastExecutedDataCenter.getLastFlowOutputs();
+        return executionDataCollector.getLastFlowOutputs();
     }
 
     public void stop() {

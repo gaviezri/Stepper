@@ -3,9 +3,7 @@ package GUI.body.execution;
 import GUI.app.AppController;
 import GUI.body.BodyControllerComponent;
 import GUI.body.library.definition.DefinitionController;
-import GUI.utils.Utils;
 import dto.execution.progress.ExecutedFlowDetailsDTO;
-import dto.execution.progress.ExecutionProgressDTO;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -28,7 +26,6 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import dto.flow.FlowDefinitionDTO;
-import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -495,8 +492,7 @@ public class ExecutionController extends BodyControllerComponent {
         }
     }
 
-    public void updateExecutionProgess(ExecutionProgressDTO executionProgressDTO) {
-        ExecutedFlowDetailsDTO flowDetailsDTO = executionProgressDTO.getExecutedFlowDetailsDTO();
-        throw new NotImplementedException();
+    public void updateExecutionProgess(ExecutedFlowDetailsDTO executionProgressDTO) {
+        System.out.println("updating Execution Progess");
     }
 }

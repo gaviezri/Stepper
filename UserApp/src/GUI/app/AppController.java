@@ -6,6 +6,7 @@ import communication.Role;
 import communication.UserRequestsDispatcher;
 import GUI.header.HeaderController;
 import communication.UserSystemInfo;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.progress.ExecutedFlowDetailsDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.statistics.StatisticsDTO;
@@ -106,6 +107,9 @@ public class AppController {
         headerComponentController.updateManagerAndRoleText(userInfo.isManager().toString());
     }
 
+    public void filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter filter){
+        reqDispatcher.filterHistory(filter);
+    }
 
     public Window getPrimaryStage() {
         return sceneMainPane.getScene().getWindow();
@@ -119,6 +123,12 @@ public class AppController {
         reqDispatcher.executeFlow(flowIndex, valName2valType);
         isExecutionInProgess = true;
     }
+
+    private void fetchHistory() {
+        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistory();
+        bodyComponentController.updateHistory(historyDTO);
+    }
+
 //
 //    public List<FlowDefinitionDTO> getAllFlowDefinitionsData() {
 //        return engineController.getAllFlowDefinitionsData();

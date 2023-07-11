@@ -7,8 +7,8 @@ import GUI.body.library.definition.DefinitionController;
 import GUI.body.library.input.InputController;
 import GUI.body.statistics.StatisticsController;
 import GUI.body.history.HistoryController;
+import dto.execution.progress.ExecutedFlowDetailsDTO;
 import dto.execution.history.FlowsExecutionHistoryDTO;
-import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -134,7 +134,7 @@ public class BodyController {
         flowExecComponentController.stop();
     }
 
-    public void updateExecutionProgess(ExecutionProgressDTO executionProgressDTO) {
+    public void updateExecutionProgess(ExecutedFlowDetailsDTO executionProgressDTO) {
         flowExecComponentController.updateExecutionProgess(executionProgressDTO);
     }
 }

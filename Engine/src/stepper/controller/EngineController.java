@@ -1,8 +1,8 @@
 package stepper.controller;
 
+import dto.execution.progress.ExecutedFlowDetailsDTO;
 import javafx.util.Pair;
 import dto.execution.history.FlowsExecutionHistoryDTO;
-import dto.execution.progress.ExecutedFlowDetailsDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.FlowNamesDTO;
 import dto.flow.LoadDataDTO;
@@ -129,13 +129,9 @@ public class EngineController implements Serializable {
     }
 
 
-    public boolean executionOccurred() {
-        return executionArchive.executionOccurred();
-    }
-
-    public ExecutedFlowDetailsDTO getExecutedFlowDetails(int flowIdx) {
-        return new ExecutedFlowDetailsDTO(executionArchive.get(flowIdx));
-    }
+//    public ExecutedFlowDetailsDTO getExecutedFlowDetails(int flowIdx) {
+//        return new ExecutedFlowDetailsDTO(executionArchive.get(flowIdx));
+//    }
 
     public StatisticsDTO getCurrentLoadedFlowsStatisticsDetails(){
         statisticsManager.collectStatistics();
@@ -172,7 +168,7 @@ public class EngineController implements Serializable {
 
     }
 
-    public void getCurrentExecutedFlowDetailsByUUID(UUID flowUUID) {
-        flowsExecutorsManager.getCurrentExecutedFlowDetailsByUUID(flowUUID);
+    public ExecutedFlowDetailsDTO getExecutedFlowDetailsByUUID(UUID flowUUID) {
+        return flowsExecutorsManager.getExecutedFlowDetailsByUUID(flowUUID);
     }
 }

@@ -1,16 +1,15 @@
 package servlets;
 
 import dto.execution.FlowExecutionRequestDTO;
+import dto.execution.progress.ExecutedFlowDetailsDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.function.Function;
 
 import static communication.Utils.*;
 
@@ -27,7 +26,7 @@ public class FlowExecutionServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)  {
         switch (req.getServletPath()) {
             case FLOW_EXECUTION_PROGRESS_ENDPOINT:
                 handleFlowExecutionProgressGet(req, resp);
@@ -38,11 +37,15 @@ public class FlowExecutionServlet extends HttpServlet {
     private void handleFlowExecutionProgressGet(HttpServletRequest req, HttpServletResponse resp) {
         Integer cookie = Servlet.idCookieBaker(req.getCookies());
         UUID flowUUID = Servlet.getFlowExecIdStack(cookie).peek();
-        // get the progress of the flow execution by UUID from engine
-        Servlet.getEngineController().getCurrentExecutedFlowDetailsByUUID(flowUUID);
+        ExecutedFlowDetailsDTO executionProgressDTO = Servlet.getEngineController().getExecutedFlowDetailsByUUID(flowUUID);
         // by cookie get the top UUID in the stack
         // get the progress of the flow execution by UUID from engine
         // return the progress to the user using dto
+        try {
+            resp.getWriter().println(GSON_INSTANCE.toJson(executionProgressDTO));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleFlowExecutionPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

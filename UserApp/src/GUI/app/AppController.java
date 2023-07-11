@@ -8,7 +8,6 @@ import GUI.header.HeaderController;
 import communication.UserSystemInfo;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.progress.ExecutedFlowDetailsDTO;
-import dto.execution.progress.ExecutionProgressDTO;
 import dto.flow.FlowDefinitionDTO;
 import dto.statistics.StatisticsDTO;
 import javafx.beans.property.IntegerProperty;
@@ -21,10 +20,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import javafx.util.Pair;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -91,7 +88,7 @@ public class AppController {
 
     private void updateExecutionProgress() {
         if (isExecutionInProgess) {
-            ExecutionProgressDTO executionProgressDTO = reqDispatcher.getExecutionProgress();
+            ExecutedFlowDetailsDTO executionProgressDTO = reqDispatcher.getExecutionProgress();
             isExecutionInProgess = executionProgressDTO.isExecutionInProgress();
             bodyComponentController.updateExecutionProgess(executionProgressDTO);
 

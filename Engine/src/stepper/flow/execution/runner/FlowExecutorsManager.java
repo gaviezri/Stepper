@@ -1,8 +1,8 @@
 package stepper.flow.execution.runner;
 
+import dto.execution.progress.ExecutedFlowDetailsDTO;
 import stepper.flow.execution.FlowExecutionResult;
-import stepper.flow.execution.last.executed.data.center.LastExecutedDataCenter;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import stepper.flow.execution.data.collector.ExecutionDataCollector;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
  * 3. Managing the status query of the flows.
  * */
 public class FlowExecutorsManager implements Serializable {
-
+    private Map<UUID, ExecutionDataCollector> UUID2ExecutionDataCollector = new HashMap<>();
     private int workersCount;
     private ExecutorService executorService = null;
     public void prepareForSerialization() {
@@ -52,8 +52,8 @@ public class FlowExecutorsManager implements Serializable {
         }
     }
 
-    public void getCurrentExecutedFlowDetailsByUUID(UUID flowUUID) {
-        throw new NotImplementedException();
+    public ExecutedFlowDetailsDTO getExecutedFlowDetailsByUUID(UUID flowUUID) {
+        return UUID2ExecutionDataCollector.get(flowUUID).getExecutionProgressDTO();
     }
 
     public enum FlowExecutionStatus {
@@ -73,7 +73,9 @@ public class FlowExecutorsManager implements Serializable {
 
     public UUID executeFlow(FlowExecutor flowExecutor) {
         UUID latestUUID = flowExecutor.getFlowUUID();
-        LastExecutedDataCenter.setLastExecutedFlowUUID(latestUUID);
+        ExecutionDataCollector executionDataCollector = new ExecutionDataCollector();
+        UUID2ExecutionDataCollector.put(latestUUID, executionDataCollector);
+        flowExecutor.setFlowExecutionCollector(executionDataCollector);
         if (executorService == null){
             executorService = Executors.newFixedThreadPool(workersCount);
         }
@@ -83,21 +85,21 @@ public class FlowExecutorsManager implements Serializable {
         return latestUUID;
     }
 
-    public FlowExecutionStatus getFlowExecutionStatus(UUID flowUUID) {
-        if (UUID2Execution.containsKey(flowUUID)) {
-            Future<FlowExecutionResult> future = UUID2Execution.get(flowUUID);
-            if (future.isDone()) {
-                try {
-                    future.get();
-                    return FlowExecutionStatus.FINISHED;
-                } catch (Exception e) {
-                    return FlowExecutionStatus.FAILED;
-                }
-            } else {
-                return FlowExecutionStatus.RUNNING;
-            }
-        } else {
-            return FlowExecutionStatus.NOT_FOUND;
-        }
-    }
+//    public FlowExecutionStatus getFlowExecutionStatus(UUID flowUUID) {
+//        if (UUID2Execution.containsKey(flowUUID)) {
+//            Future<FlowExecutionResult> future = UUID2Execution.get(flowUUID);
+//            if (future.isDone()) {
+//                try {
+//                    future.get();
+//                    return FlowExecutionStatus.FINISHED;
+//                } catch (Exception e) {
+//                    return FlowExecutionStatus.FAILED;
+//                }
+//            } else {
+//                return FlowExecutionStatus.RUNNING;
+//            }
+//        } else {
+//            return FlowExecutionStatus.NOT_FOUND;
+//        }
+//    }
 }

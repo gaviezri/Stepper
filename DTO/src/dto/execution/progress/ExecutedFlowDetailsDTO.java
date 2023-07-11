@@ -3,6 +3,7 @@ package dto.execution.progress;
 import javafx.util.Pair;
 import dto.AbstractDTO;
 import stepper.flow.execution.FlowExecution;
+import stepper.flow.execution.data.collector.ExecutionDataCollector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,23 +14,25 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
     /* 2 */ final private String flowName;
     /* 3 */ final private String flowExecutionResult;
     /* 4 */ final private String executionTimeInMillis;
-    /* 5.1 */ final List<String> freeInputsFinalNames;
-    /* 5.2 */ final List<String> freeInputsTypes;
-    /* 5.3 */ final List<String> freeInputsContent ;
-    /* 5.4 */ final List<String> freeInputsNecessity;
-    /* 6.1 */ final List<String> outputsFinalNames;
-    /* 6.2 */ final List<String> outputsTypes;
-    /* 6.3 */ final List<Object> outputsContent = new ArrayList<>();
-    /* 7.1 */ final List<String> stepsNamesWithAlias;
-    /* 7.2 */ final List<String> stepsDurationInMillis;
-    /* 7.3 */ final List<String> stepsResult;
-    /* 7.4 */ final List<String> stepsSummaryLine;
-    /* 7.5 */ final List<List<Pair<String,String>>> stepsLogs2TimeStamp;
+    /* 5.1 */ final private List<String> freeInputsFinalNames;
+    /* 5.2 */ final private List<String> freeInputsTypes;
+    /* 5.3 */ final private List<String> freeInputsContent ;
+    /* 5.4 */ final private List<String> freeInputsNecessity;
+    /* 6.1 */ final private List<String> outputsFinalNames;
+    /* 6.2 */ final private List<String> outputsTypes;
+    /* 6.3 */ final private List<Object> outputsContent = new ArrayList<>();
+    /* 7.1 */ final private List<String> stepsNamesWithAlias;
+    /* 7.2 */ final private List<String> stepsDurationInMillis;
+    /* 7.3 */ final private List<String> stepsResult;
+    /* 7.4 */ final private List<String> stepsSummaryLine;
+    /* 7.5 */ final private List<List<Pair<String,String>>> stepsLogs2TimeStamp;
+              private boolean isExecutionInProgress;
 
-    public ExecutedFlowDetailsDTO(FlowExecution flowExecution) {
+    public ExecutedFlowDetailsDTO(ExecutionDataCollector dataCollector) {
+        FlowExecution flowExecution = dataCollector.getFlowExecution();
         freeInputsContent = new ArrayList<>();
         Map<String,String> headers = flowExecution.getFlowHeader();
-
+        isExecutionInProgress = dataCollector.isFlowExecutionInProgress();
         flowExecutionId = headers.get("ID");
         flowName = headers.get("Name");
         executionTimeInMillis = flowExecution.getDurationInMillis().toString();
@@ -121,5 +124,9 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
 
     public String getFlowExecutionId() {
         return flowExecutionId;
+    }
+
+    public Boolean isExecutionInProgress() {
+        return isExecutionInProgress;
     }
 }

@@ -1,5 +1,6 @@
 package communication;
 
+import com.google.gson.reflect.TypeToken;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.flow.FlowNamesDTO;
 import dto.flow.LoadDataDTO;
@@ -55,8 +56,6 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public StatisticsDTO getStatisticsDTO(){
         try {
             HttpURLConnection con = getConnection(STATISTICS_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-            con.getOutputStream().flush();
-
             StatisticsDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), StatisticsDTO.class);
             con.disconnect();
             return dto;
@@ -72,19 +71,6 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
             Collection<UserSystemInfo> users = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), UsersSystemInfoDTO.class).getUsersSystemInfo();
             con.disconnect();
             return users;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public FlowsExecutionHistoryDTO getHistoryDTO(){
-        try {
-            HttpURLConnection con = getConnection(HISTORY_ENDPOINT, "GET", JSON_CONTENT_TYPE);
-
-            FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), FlowsExecutionHistoryDTO.class);
-            con.disconnect();
-            return dto;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,7 +149,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public FlowsExecutionHistoryDTO getHistory() {
+    public FlowsExecutionHistoryDTO getHistoryDTO() {
         try {
             HttpURLConnection con = getConnection(HISTORY_ENDPOINT, "GET", JSON_CONTENT_TYPE);
             FlowsExecutionHistoryDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), FlowsExecutionHistoryDTO.class);
@@ -172,7 +158,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new FlowsExecutionHistoryDTO(new Stack<>());
+        return new FlowsExecutionHistoryDTO(new ArrayList<>());
     }
 
     public void filterHistory(FlowsExecutionHistoryDTO.SortFilter filter){

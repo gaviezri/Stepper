@@ -2,6 +2,7 @@ package servlets;
 
 
 import communication.UserSystemInfo;
+import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.history.SingleFlowExecutionDTO;
 import dto.statistics.StatisticsDTO;
 import jakarta.servlet.ServletException;
@@ -56,7 +57,8 @@ public class HistoryStatisticsServlet extends HttpServlet {
                             contains(x.getUniqueId())).collect(Collectors.toList());
         }
 
-        return GSON_INSTANCE.toJson(accessibleFlowsHistoryDetails);
+
+        return GSON_INSTANCE.toJson(new FlowsExecutionHistoryDTO(accessibleFlowsHistoryDetails));
     }
 
     private void filterHistoryByParam(SortFilter filter){

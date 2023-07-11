@@ -64,7 +64,7 @@ public class Servlet {
     }
 
     public static Stack<UUID> getFlowExecIdStack(Integer cookie) {
-        return (Stack<UUID>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
+        return ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).get(cookie);
     }
 
     public static Integer idCookieBaker(Cookie[] cookies){

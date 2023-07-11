@@ -91,7 +91,7 @@ public class AppController {
     }
 
     private void fetchHistory() {
-        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistory();
+        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistoryDTO();
         bodyComponentController.updateHistory(historyDTO);
     }
 

@@ -8,6 +8,7 @@ import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
 import javafx.util.Pair;
+import stepper.flow.execution.FlowExecution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new FlowsExecutionHistoryDTO(new Stack<>());
+        return new FlowsExecutionHistoryDTO(new Stack<FlowExecution>());
     }
 
     public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){

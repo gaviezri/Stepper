@@ -3,7 +3,7 @@ package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -54,7 +54,7 @@ public class FilesDeleterStep extends AbstractStepDefinition {
         List<FileData> FILES_LIST = new ArrayList<>();
         List<String> DELETED_LIST = new ArrayList<>();
         StepResult res;
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         try {
             FILES_LIST = context.getDataValue("FILES_LIST",List.class);
         }catch (Exception e){

@@ -4,14 +4,13 @@ import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class CommandLineStep extends AbstractStepDefinition {
     @Override
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         String command = null;
         List<String> arguments = null;
         try {

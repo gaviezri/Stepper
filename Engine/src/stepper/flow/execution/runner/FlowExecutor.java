@@ -30,7 +30,6 @@ public class FlowExecutor implements Serializable, Callable<FlowExecutionResult>
         boolean breakFlowIfStepFails;
 
         executionDataCollector.setFlowExecution(flowExecution);
-
         flowExecution.setFreeInputContent(context.getExecutionData());
         flowExecution.setInitialValuesContent(context.getExecutionData());
         flowExecution.setFinalStepName2stepsManagers((Map<String, StepExecutionDataManager>) context.getStepsManagers());

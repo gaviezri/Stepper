@@ -5,7 +5,7 @@ import stepper.dd.api.DataDefinition;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.definition.api.StepUsageDeclaration;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
@@ -18,7 +18,7 @@ public interface StepExecutionContext {
     void storeDataValue(String dataName, Object data, DataDefinition value);
     String getCurrentStepName();
     void setCurrentStepName(String currentStepName);
-    AbstractLogger getStepLogger();
+    StepLogger getStepLogger();
     void setStepResult(String name, StepResult stepResult);
     void tick();
     void tock();

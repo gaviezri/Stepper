@@ -59,14 +59,13 @@ public class Servlet {
         return (Role.RoleManager) instance.contextRef.getAttribute(Utils.ROLES_MANAGER);
     }
 
-    public static Map<Integer, List<java.util.UUID>> getCookie2FlowExecId() {
-        return (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
-    }
-
     public static Stack<UUID> getFlowExecIdStack(Integer cookie) {
-        return (Stack<UUID>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID);
+        return ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).get(cookie);
     }
 
+    public static void createNewFlowExecStack(Integer cookie) {
+        ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).put(cookie, new Stack<>());
+    }
     public static Integer idCookieBaker(Cookie[] cookies){
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("ID")) {

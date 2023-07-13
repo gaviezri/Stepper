@@ -5,19 +5,19 @@ import java.util.Map;
 
 public class FlowExecutionRequestDTO {
     private Pair<Map,Map> valName2ValType;
-    private int flowInd;
+    private String flowName;
 
-    public FlowExecutionRequestDTO(Pair<Map,Map> valName2ValType, int flowInd) {
+    public FlowExecutionRequestDTO(Pair<Map,Map> valName2ValType, String flowName) {
         this.valName2ValType = valName2ValType;
-        this.flowInd = flowInd;
+        this.flowName = flowName;
     }
 
     public Pair<Map,Map> getValName2ValType() {
         return valName2ValType;
     }
 
-    public int getFlowInd() {
-        return flowInd;
+    public String getFlowName() {
+        return flowName;
     }
 
 }

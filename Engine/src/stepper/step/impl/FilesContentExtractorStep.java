@@ -3,7 +3,7 @@ import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -38,7 +38,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         }
     }
 
-    private RelationData createFilesContentRelation(List<FileData> filesList,AbstractLogger logger, Integer lineNumberToExtract){
+    private RelationData createFilesContentRelation(List<FileData> filesList, StepLogger logger, Integer lineNumberToExtract){
         FileData curFile;
         String line;
         RelationData data = new RelationData(COLUMNS_TITLES);
@@ -109,7 +109,7 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
     @Override
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         StepResult result = StepResult.FAILURE;
         try {
             List<FileData> filesList = context.getDataValue("FILES_LIST",List.class);

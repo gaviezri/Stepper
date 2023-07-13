@@ -92,8 +92,7 @@ public class FlowExecution implements Serializable {
     }
     
     public Long getDurationInMillis() {
-        return duration.toMillis();
-
+        return duration == null ? -1 : duration.toMillis();
     }
 
     public String getFormattedStartTime() {
@@ -120,15 +119,10 @@ public class FlowExecution implements Serializable {
         return flowDefinition.getStepsNamesWithAlias();
     }
 
-    public List<String> getStepsDurationInMillis() {
-        List<String> stepsDurationInMillis = new ArrayList<>();
+    public Map<String, Duration> getStepsDurationInMillis() {
+        Map<String, Duration> stepsDurationInMillis = new HashMap<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
-            StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            try {
-                stepsDurationInMillis.add(String.valueOf(stepExecutionDataManager.getDuration().toMillis()));
-            } catch (NullPointerException e) {
-                stepsDurationInMillis.add("0");
-            }
+            stepsDurationInMillis.put(entry.getKey(), entry.getValue().getDuration());
         }
         return stepsDurationInMillis;
     }
@@ -141,27 +135,15 @@ public class FlowExecution implements Serializable {
         this.executionOutputs = executionOutputs;
     }
 
-    public List<String> getStepsResult() {
-        List<String> stepsResult = new ArrayList<>();
+    public Map<String,String> getStepsSummaryLine() {
+        Map<String,String> stepsSummaryLine = new HashMap<>();
         for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
             StepExecutionDataManager stepExecutionDataManager = entry.getValue();
             try {
-                stepsResult.add(stepExecutionDataManager.getStepResult().toString());
+                stepsSummaryLine.put(entry.getKey(),
+                        stepExecutionDataManager.getStepSummaryLine());
             } catch (NullPointerException e) {
-                stepsResult.add("step did not run.");
-            }
-        }
-        return stepsResult;
-    }
-
-    public List<String> getStepsSummaryLine() {
-        List<String> stepsSummaryLine = new ArrayList<>();
-        for (Map.Entry<String, StepExecutionDataManager> entry : finalStepName2stepsManagers.entrySet()) {
-            StepExecutionDataManager stepExecutionDataManager = entry.getValue();
-            try {
-                stepsSummaryLine.add(stepExecutionDataManager.getStepSummaryLine());
-            } catch (NullPointerException e) {
-                stepsSummaryLine.add("step did not run.");
+                stepsSummaryLine.put(entry.getKey(),"step did not run.");
             }
         }
         return stepsSummaryLine;
@@ -183,9 +165,7 @@ public class FlowExecution implements Serializable {
     public Collection<Object> getAllOutputsContent() {
         return this.executionOutputs.values();
     }
-    private Object getOutputContentByName(String outputName) {
-        return executionOutputs.get(outputName);
-    }
+
 
     public void setInitialValuesContent(Map<String, Object> executionData) {
         for(String inputName : this.flowDefinition.getInitialInputName2Value().keySet()){

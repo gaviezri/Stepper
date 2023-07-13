@@ -8,7 +8,7 @@ import stepper.flow.definition.aliasing.manager.DataAliasingManager;
 import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.definition.mapping.MappingGraph;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.enums.StepResult;
 import stepper.step.manager.StepExecutionDataManager;
 
@@ -49,10 +49,15 @@ public class StepExecutionContextImpl implements StepExecutionContext {
         }
         ExecutionDataValues = inputFinalName2Value;
 
+
+
         for (Map.Entry<String, String> entry : inputFinalName2Definition.entrySet()) {
             String finalName = entry.getKey();
             String value = entry.getValue().equals("Integer") ? "Number" : entry.getValue();
             try {
+                if (value.equals("Number")) {
+                    ExecutionDataValues.put(finalName, ((Double)ExecutionDataValues.get(finalName)).intValue());
+                }
                 stepper.dd.api.DataDefinition dataDefinition = DataDefinitionRegistry.valueOf(value.toUpperCase());
                 ExecutionDataName2Definition.put(finalName, dataDefinition);
             } catch (IllegalArgumentException e) {
@@ -71,7 +76,7 @@ public class StepExecutionContextImpl implements StepExecutionContext {
     }
 
     @Override
-    public AbstractLogger getStepLogger() {
+    public StepLogger getStepLogger() {
         // assuming that from the step we can get to its data manager
         StepExecutionDataManager theManager = step2Manager.get(currentStepName);
         return theManager.getStepLogger();

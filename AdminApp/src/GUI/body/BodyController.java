@@ -119,12 +119,14 @@ public class BodyController {
     }
 
     public void updateStatistics(StatisticsDTO statistics) {
-        flowStatTab.setDisable(false);
-        flowStatComponentController.updateBarChars(statistics);
+        if (statistics.getFlowStatistics().size()>0) {
+            flowStatTab.setDisable(false);
+            flowStatComponentController.updateBarChars(statistics);
+        }
     }
 
     public void updateHistory(FlowsExecutionHistoryDTO historyDTO){
-        if (historyDTO != null) {
+        if (historyDTO.getFlowExecutionDTOs().size()>0) {
             flowHistoTab.setDisable(false);
             flowHistoryComponentController.updateTable(historyDTO);
         }

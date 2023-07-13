@@ -2,9 +2,12 @@ package dto.execution.progress;
 
 import javafx.util.Pair;
 import dto.AbstractDTO;
+import stepper.dd.api.DataDefinition;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.data.collector.ExecutionDataCollector;
+import stepper.step.api.enums.StepResult;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,15 +23,19 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
     /* 5.4 */ final private List<String> freeInputsNecessity;
     /* 6.1 */ final private List<String> outputsFinalNames;
     /* 6.2 */ final private List<String> outputsTypes;
-    /* 6.3 */ final private List<Object> outputsContent = new ArrayList<>();
+    /* 6.3 */ final private Map outputsContent;
     /* 7.1 */ final private List<String> stepsNamesWithAlias;
-    /* 7.2 */ final private List<String> stepsDurationInMillis;
-    /* 7.3 */ final private List<String> stepsResult;
-    /* 7.4 */ final private List<String> stepsSummaryLine;
+    /* 7.2 */ final private Map<String, Duration> steps2DurationInMillis;
+    /* 7.3 */ final private Map<String,StepResult> stepsResult;
+    /* 7.4 */ final private Map<String,String> stepsSummaryLine;
     /* 7.5 */ final private List<List<Pair<String,String>>> stepsLogs2TimeStamp;
-              private boolean isExecutionInProgress;
+              final private boolean isExecutionInProgress;
+              final private int currentStepIdx;
+              final private String currentStepName;
+
 
     public ExecutedFlowDetailsDTO(ExecutionDataCollector dataCollector) {
+
         FlowExecution flowExecution = dataCollector.getFlowExecution();
         freeInputsContent = new ArrayList<>();
         Map<String,String> headers = flowExecution.getFlowHeader();
@@ -52,14 +59,16 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         outputsTypes = flowExecution.getFlowDefinition().getAllOutputsTypes();
         // TODO: The root function " FlowExecution.getAllOutputsContent() " was changed so that the return value will
         //  be Objects and not there string representatives
-        outputsContent.addAll(flowExecution.getAllOutputsContent());
+        outputsContent = dataCollector.getOutputsForAllSteps();
 
         stepsNamesWithAlias = flowExecution.getStepsNamesWithAlias();
-        stepsDurationInMillis = flowExecution.getStepsDurationInMillis();
-        stepsResult = flowExecution.getStepsResult();
+        steps2DurationInMillis = flowExecution.getStepsDurationInMillis();
+
         stepsSummaryLine = flowExecution.getStepsSummaryLine();
         stepsLogs2TimeStamp = flowExecution.getStepsLogs2TimeStamp();
-
+        stepsResult = dataCollector.getExecutedStepsStatus();
+        currentStepIdx = dataCollector.getCurrentStepIdx();
+        currentStepName = dataCollector.getCurrentStepName();
     }
 
     public String getFlowName() {
@@ -98,23 +107,19 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         return outputsTypes;
     }
 
-    public List<Object> getOutputsContent() {
-        return outputsContent;
-    }
-
     public List<String> getStepsNamesWithAlias() {
         return stepsNamesWithAlias;
     }
 
-    public List<String> getStepsDurationInMillis() {
-        return stepsDurationInMillis;
+    public Map<String,Duration> getSteps2DurationInMillis() {
+        return steps2DurationInMillis;
     }
 
-    public List<String> getStepsResult() {
+    public Map<String,StepResult> getStepsResult() {
         return stepsResult;
     }
 
-    public List<String> getStepsSummaryLine() {
+    public Map<String,String> getStepsSummaryLine() {
         return stepsSummaryLine;
     }
 
@@ -128,5 +133,25 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
 
     public Boolean isExecutionInProgress() {
         return isExecutionInProgress;
+    }
+
+    public int getStepsCount(){
+        return stepsNamesWithAlias.size();
+    }
+
+    public float getFlowExecutionProgress(){
+        return (currentStepIdx + 1.0f) / getStepsCount();
+    }
+
+    public Map<String,List<String>> getAllStepsListOfLogs(){
+        return null;
+    }
+
+    public String getCurrentStepName() {
+        return currentStepName;
+    }
+
+    public Map<String, Map<String, Pair<DataDefinition, Object>>> getOutputsForAllSteps() {
+        return outputsContent;
     }
 }

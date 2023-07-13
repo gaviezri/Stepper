@@ -2,7 +2,7 @@ package stepper.flow.execution.logger;
 
 import java.util.List;
 
-public interface AbstractLogger {
+public interface StepLogger {
 
     public void log(String logLine);
     public void addSummaryLine(String summaryLine);

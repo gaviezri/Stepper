@@ -8,6 +8,7 @@ import dto.flow.FlowDefinitionDTO;
 import dto.flow.ManyFlowDefinitionsDTO;
 import dto.user.roles.RolesDTO;
 import javafx.util.Pair;
+import stepper.flow.execution.FlowExecution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new FlowsExecutionHistoryDTO(new Stack<>());
+        return new FlowsExecutionHistoryDTO(new Stack<FlowExecution>());
     }
 
     public List<FlowDefinitionDTO> getAllAccessibleFlowDefinitionsData(){
@@ -151,10 +152,10 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
+    public void executeFlow(String flowName, Pair<Map, Map> valName2valType) {
         try {
             HttpURLConnection con = getConnection(FLOW_EXECUTION_ENDPOINT, "POST", JSON_CONTENT_TYPE);
-            con.getOutputStream().write(GSON_INSTANCE.toJson(new FlowExecutionRequestDTO(valName2valType, flowIndex)).getBytes());
+            con.getOutputStream().write(GSON_INSTANCE.toJson(new FlowExecutionRequestDTO(valName2valType, flowName)).getBytes());
             con.getOutputStream().flush();
             con.getResponseMessage();
             con.disconnect();

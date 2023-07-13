@@ -22,6 +22,10 @@ public class FlowsExecutionHistoryDTO {
             this.flowExecutionDTOs.add(flowExDTO);
         }
     }
+
+    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList){
+        this.flowExecutionDTOs.addAll(flowExecutionsList);
+    }
     public List<SingleFlowExecutionDTO> filterFlowExecutionDTOsBy(FlowExecutionResult filter){
         curFilteredExecutions =  filter.equals(FlowExecutionResult.NONE) ? flowExecutionDTOs : flowExecutionDTOs.stream().filter(x->x.getFlowExecutionResult().equals(filter)).collect(Collectors.toList());
         return curFilteredExecutions;

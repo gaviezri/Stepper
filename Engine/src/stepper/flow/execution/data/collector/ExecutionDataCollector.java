@@ -19,10 +19,10 @@ public class ExecutionDataCollector {
     private String currentStepName;
     private Integer currentStepIdx;
     private Integer stepsCount;
-    private Map<String, Object> executionDataValues;
-    private Map<String, StepResult> stepResults;
-    private Map<String, List<String>> step2ListOfLogs;
-    private Map<String ,Map<String,Pair<DataDefinition,Object>>> step2MapOfOutputsNames2DataDefAndValue;
+    private Map<String, Object> executionDataValues = new HashMap<>();
+    private Map<String, StepResult> stepResults = new HashMap<>();
+    private Map<String, List<String>> step2ListOfLogs = new HashMap<>();
+    private Map<String ,Map<String,Pair<DataDefinition,Object>>> step2MapOfOutputsNames2DataDefAndValue = new HashMap<>();
     private Map<String, Duration> step2Duration = new HashMap<>();
     private Map<String,String> step2SummaryLine = new HashMap<>();
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.NONE;
@@ -122,8 +122,7 @@ public class ExecutionDataCollector {
     }
 
     public ExecutedFlowDetailsDTO getExecutionProgressDTO() {
-        return null;
-        //return new ExecutionProgressDTO();
+        return new ExecutedFlowDetailsDTO(this);
     }
 
     public String setFlowUUID(UUID uniqueId) {
@@ -133,9 +132,11 @@ public class ExecutionDataCollector {
 
     public void setFlowExecution(FlowExecution flowExecution) {
         this.flowExecution = flowExecution;
+        this.executedFlowName = flowExecution.getName();
 
     }
     public FlowExecution getFlowExecution() {
         return flowExecution;
     }
+
 }

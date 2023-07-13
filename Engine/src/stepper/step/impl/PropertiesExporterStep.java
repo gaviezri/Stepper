@@ -3,7 +3,7 @@ package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -47,7 +47,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
 
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         StepResult stepResult = validateInputs(context);
         RelationData source;
         try{

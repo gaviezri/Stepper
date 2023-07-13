@@ -105,18 +105,27 @@ public class EngineController implements Serializable {
             return new FlowNamesDTO("No Flows Loaded Yet!");
         }
     }
-
+    
+    
+    public UUID executeFlow(String flowName, Pair<Map,Map> valName2valType){
+        FlowDefinition flowToExecute = flowLibrary.getFlowDefinitionByName(flowName);
+        FlowExecutor flowExecutor = createFlowExecutor(valName2valType, flowToExecute);
+        return flowsExecutorsManager.executeFlow(flowExecutor);
+    }
+    
     public UUID executeFlow(Integer flowIdx, Pair<Map,Map> valName2valType){
-
         FlowDefinition flowToExecute = flowLibrary.getFlowDefinitionByIndex(flowIdx);
+        FlowExecutor flowExecutor = createFlowExecutor(valName2valType, flowToExecute);
+        return flowsExecutorsManager.executeFlow(flowExecutor);
+    }
+
+    private FlowExecutor createFlowExecutor(Pair<Map, Map> valName2valType, FlowDefinition flowToExecute) {
         FlowExecutor flowExecutor = new FlowExecutor();
         flowExecutor.setActiveFlow(flowToExecute);
         flowExecutor.setFlowFreeInputs(valName2valType);
-
         executionArchive.push(new FlowExecution(flowToExecute));
         flowExecutor.setFlowExecution(executionArchive.peek());
-
-        return flowsExecutorsManager.executeFlow(flowExecutor);
+        return flowExecutor;
     }
 
     public List<Map<String,String>> getExecutedFlowHeaders() {

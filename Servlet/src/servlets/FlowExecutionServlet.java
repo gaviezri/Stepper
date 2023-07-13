@@ -9,7 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Stack;
 import java.util.UUID;
+import java.util.Vector;
 
 import static communication.Utils.*;
 
@@ -52,8 +54,11 @@ public class FlowExecutionServlet extends HttpServlet {
 
         Integer cookie = Servlet.idCookieBaker(req.getCookies());
         FlowExecutionRequestDTO flowExecutionRequestDTO = GSON_INSTANCE.fromJson(req.getReader(), FlowExecutionRequestDTO.class);
-        UUID flowUUID = Servlet.getEngineController().executeFlow(flowExecutionRequestDTO.getFlowInd(), flowExecutionRequestDTO.getValName2ValType());
+        UUID flowUUID = Servlet.getEngineController().executeFlow(flowExecutionRequestDTO.getFlowName(), flowExecutionRequestDTO.getValName2ValType());
         synchronized (getServletContext()){
+            if ( Servlet.getFlowExecIdStack(cookie) == null){
+                Servlet.createNewFlowExecStack(cookie);
+            }
             Servlet.getFlowExecIdStack(cookie).push(flowUUID);
         }
         resp.setStatus(HttpServletResponse.SC_OK);

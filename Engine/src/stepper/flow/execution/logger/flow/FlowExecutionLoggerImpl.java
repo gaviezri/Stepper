@@ -1,12 +1,12 @@
 package stepper.flow.execution.logger.flow;
 
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.flow.execution.logger.LogLine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlowExecutionLoggerImpl implements AbstractLogger {
+public class FlowExecutionLoggerImpl implements StepLogger {
     final private String FlowName;
     final private String FlowId;
     private List<LogLine> logs = new ArrayList<>();

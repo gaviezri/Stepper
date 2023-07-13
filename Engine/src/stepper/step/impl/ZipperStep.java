@@ -4,7 +4,7 @@ import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.exception.GivenValueTypeDontMatchException;
 import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -37,7 +37,7 @@ public class ZipperStep extends AbstractStepDefinition {
     @Override
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         String source = null;
         String operationOutcome = null;
         OperationType operation = null;
@@ -130,7 +130,7 @@ public class ZipperStep extends AbstractStepDefinition {
             }
         }
     }
-    private StepResult handleZip(AbstractLogger logger, String source) {
+    private StepResult handleZip(StepLogger logger, String source) {
         StepResult result;
         logger.log("Zip operation being invoked");
         try {
@@ -143,7 +143,7 @@ public class ZipperStep extends AbstractStepDefinition {
         return result;
     }
 
-    private StepResult handleUnzip(AbstractLogger logger, String source) {
+    private StepResult handleUnzip(StepLogger logger, String source) {
         StepResult result;
         logger.log("Unzip operation being invoked");
         try {
@@ -156,7 +156,7 @@ public class ZipperStep extends AbstractStepDefinition {
         return result;
     }
 
-    private static StepResult handleZipError(AbstractLogger logger, Exception e) {
+    private static StepResult handleZipError(StepLogger logger, Exception e) {
         StepResult result;
         logger.log("Error while performing operation: " + e.getMessage());
         logger.addSummaryLine("Operation failed due to external error. ");

@@ -53,6 +53,8 @@ public class BodyController {
         this.flowHistoryComponentController.updateTable(flowExecutionStack);
     }
 
+
+
     public void setMainController(AppController appController) {
         mainController = appController;
     }
@@ -98,12 +100,19 @@ public class BodyController {
             flowHistoTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
 
-            int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
             Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
-            getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(flowIndex));
-            mainController.executeFlow(flowIndex, valName2valType);
+            getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(getSelectedFlowIndex()));
+            mainController.executeFlow(getSelectedFlowName(), valName2valType);
 
         });
+    }
+
+    private String getSelectedFlowName(){
+        return flowLibComponentController.getSelectedFlowName();
+    }
+
+    private Integer getSelectedFlowIndex(){
+        return flowLibComponentController.getSelectedFlowIndex();
     }
 
     private FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {

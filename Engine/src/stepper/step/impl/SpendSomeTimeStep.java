@@ -2,7 +2,7 @@ package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -49,7 +49,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
     public StepResult invoke(StepExecutionContext context){
         String finalName = context.getCurrentStepName();
         context.tick();
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         StepResult result = validateInputs(context);
         long timeToSleep = -1;
         if ( result == StepResult.SUCCESS){

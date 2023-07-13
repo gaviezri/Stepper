@@ -88,9 +88,10 @@ public class AppController {
     private void updateExecutionProgress() {
         if (isExecutionInProgess) {
             ExecutedFlowDetailsDTO executionProgressDTO = reqDispatcher.getExecutionProgress();
-            isExecutionInProgess = executionProgressDTO.isExecutionInProgress();
-            bodyComponentController.updateExecutionProgess(executionProgressDTO);
-
+            if (executionProgressDTO != null) {
+                isExecutionInProgess = executionProgressDTO.isExecutionInProgress();
+                bodyComponentController.updateExecutionProgess(executionProgressDTO);
+            }
         }
     }
 
@@ -115,8 +116,8 @@ public class AppController {
         return numOfFlowsExecuted;
     }
 //
-    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
-        reqDispatcher.executeFlow(flowIndex, valName2valType);
+    public void executeFlow(String flowName, Pair<Map, Map> valName2valType) {
+        reqDispatcher.executeFlow(flowName, valName2valType);
         isExecutionInProgess = true;
     }
 //

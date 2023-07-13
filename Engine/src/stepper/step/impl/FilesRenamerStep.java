@@ -4,7 +4,7 @@ import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.dd.impl.relation.RelationData;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
@@ -69,7 +69,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
         RelationData renameResult = null;
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         StepResult result = StepResult.SUCCESS;
         StepResult subResult;
         List<FileData> filesToRename;
@@ -149,7 +149,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         return result;
     }
 
-    private StepResult renameFile(Path oldPath, Path newPath, AbstractLogger logger, RelationData renameResult) {
+    private StepResult renameFile(Path oldPath, Path newPath, StepLogger logger, RelationData renameResult) {
 
         List<String> data = new ArrayList<>();
         StepResult result = StepResult.SUCCESS;

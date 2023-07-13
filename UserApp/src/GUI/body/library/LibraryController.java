@@ -69,4 +69,12 @@ public class LibraryController extends BodyControllerComponent {
     public void setInputsToSelectedFlow(FlowDefinitionDTO flowDefinitionDTO, Map<String,Object> continuationValues, boolean isRerun) {
         inputComponentController.setInputsToSelectedFlow(flowDefinitionDTO, continuationValues, isRerun);
     }
+
+    public String getSelectedFlowName() {
+        return definitionComponentController.getSelectedFlowName();
+    }
+
+    public Integer getSelectedFlowIndex() {
+        return definitionComponentController.getSelectedFlowIndex();
+    }
 }

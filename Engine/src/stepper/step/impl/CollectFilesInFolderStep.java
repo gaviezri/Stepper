@@ -3,12 +3,11 @@ package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
 import stepper.flow.execution.context.StepExecutionContext;
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
-import stepper.step.manager.StepExecutionDataManager;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -68,7 +67,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
 
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         String folderName;
         String filter;
         StepResult result;
@@ -131,7 +130,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
         String finalName = context.getCurrentStepName();
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         StepResult result = validateInputs(context);
         switch (result) {
             case SUCCESS:
@@ -158,7 +157,7 @@ public class CollectFilesInFolderStep extends AbstractStepDefinition {
 
     public StepResult handleSUCCESS(StepExecutionContext context) {
 
-        AbstractLogger logger = context.getStepLogger();
+        StepLogger logger = context.getStepLogger();
         String folderName;
         String filter;
         try {

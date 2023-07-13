@@ -27,7 +27,6 @@ import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import dto.flow.FlowDefinitionDTO;
 import stepper.step.api.enums.StepResult;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -78,7 +77,6 @@ public class ExecutionController extends BodyControllerComponent {
 
     private static final int POLLING_INTERVAL = 200;
     private ScheduledExecutorService poller = Executors.newScheduledThreadPool(1);
-    private boolean notified = false;
     private boolean fooled = false;
     private BooleanProperty gotContinuations = new SimpleBooleanProperty(false);
 
@@ -436,7 +434,6 @@ public class ExecutionController extends BodyControllerComponent {
             bodyController.getMainController().numOfFlowsExecutedProperty().addListener(((observable, oldValue, newValue) -> {
                 startExecutionPaneSwitch();
                 Platform.runLater(() -> {
-                    notified = false;
                     executedStepsStatusListView.getItems().clear();
                     VBox stepsNames = (VBox) definitionController.getStepsTitledPane().getContent();
                     for (int i = 0; i < stepsNames.getChildren().size(); i++) {
@@ -493,6 +490,57 @@ public class ExecutionController extends BodyControllerComponent {
     }
 
     public void updateExecutionProgess(ExecutedFlowDetailsDTO executionProgressDTO) {
-        System.out.println("updating Execution Progess");
+        try {
+            if (executionProgressDTO.getFlowExecutionProgress() != flowProgressBar.getProgress()) {
+                Platform.runLater(() -> {
+                    synchronized (this) {
+                        updateFlowProgressIndicators(executionProgressDTO);
+                        updateStepsDetailsSection(executionProgressDTO);
+                    }
+                });
+            }
+        } catch (NullPointerException ignored) {}
+
+//                    if (!appController.isFlowExecutionInProgress()
+//                            && !notified
+//                            && numOfFlowExecuted > 0) {
+//                        notified = true;
+//                        FlowExecutionResult flowResult = appController.getFlowExecutionResult();
+//                        StringBuilder message = new StringBuilder("Flow execution ended with ");
+//                        switch (flowResult) {
+//                            case SUCCESS:
+//                                message.append("success");
+//                                break;
+//                            case FAILURE:
+//                                message.append("failure");
+//                                break;
+//                            default:
+//                                message.append("warnings");
+//                                break;
+//                        }
+//
+//                        Platform.runLater(() -> {
+//                            executionEndLabel.setText("\"" + appController.getLastExecutedFlowName() + "\" " + message.toString() + "!");
+//                            Utils.ShowInformation("Heads up!", message.toString(), "");
+//                            flowProgressBar.setProgress(0);
+//                            doneExecutionPaneSwitch();
+//                        });
+//                    }
+    }
+
+    private void updateStepsDetailsSection(ExecutedFlowDetailsDTO executionProgressDTO) {
+        updateStepInProgressLabel(executionProgressDTO.getCurrentStepName());
+        updateExecutedStepsStatusListView(executionProgressDTO.getStepsResult());
+        updateSingleStepExecutionData(executionProgressDTO.getAllStepsListOfLogs(),
+                executionProgressDTO.getOutputsForAllSteps(),
+                executionProgressDTO.getStepsResult(),
+                executionProgressDTO.getSteps2DurationInMillis(),
+                executionProgressDTO.getStepsSummaryLine());
+    }
+
+    private void updateFlowProgressIndicators(ExecutedFlowDetailsDTO executionProgressDTO) {
+        float flowProgressPercentage = executionProgressDTO.getFlowExecutionProgress();
+        updateFlowProgressPercentageLabel(flowProgressPercentage);
+        updateFlowProgressBar(flowProgressPercentage);
     }
 }

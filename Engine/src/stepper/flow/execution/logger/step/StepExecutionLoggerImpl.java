@@ -1,13 +1,13 @@
 package stepper.flow.execution.logger.step;
 
-import stepper.flow.execution.logger.AbstractLogger;
+import stepper.flow.execution.logger.StepLogger;
 import stepper.flow.execution.logger.LogLine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepExecutionLoggerImpl implements AbstractLogger, Serializable {
+public class StepExecutionLoggerImpl implements StepLogger, Serializable {
     private List<LogLine> logs = new ArrayList<>();
     private LogLine summaryLine;
     private final String step;

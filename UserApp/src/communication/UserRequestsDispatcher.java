@@ -128,10 +128,10 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
         }
     }
 
-    public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
+    public void executeFlow(String flowName, Pair<Map, Map> valName2valType) {
         try {
             HttpURLConnection con = getConnection(FLOW_EXECUTION_ENDPOINT, "POST", JSON_CONTENT_TYPE);
-            con.getOutputStream().write(GSON_INSTANCE.toJson(new FlowExecutionRequestDTO(valName2valType, flowIndex)).getBytes());
+            con.getOutputStream().write(GSON_INSTANCE.toJson(new FlowExecutionRequestDTO(valName2valType, flowName)).getBytes());
             con.getOutputStream().flush();
             con.getResponseMessage();
             con.disconnect();

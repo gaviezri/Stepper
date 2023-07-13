@@ -67,13 +67,20 @@ public class UserSystemInfo {
     }
 
     public void updateRoles(List<Role> allRoles) {
+        List<Role> toDelete = new LinkedList<>();
+        gatherRolesToRemove(allRoles, toDelete);
+        for (Role role : toDelete) {
+            assignedRoles.remove(role);
+        }
+    }
+
+    private void gatherRolesToRemove(List<Role> allRoles, List<Role> toDelete) {
         for (Role role : assignedRoles) {
             if (!allRoles.contains(role)) {
-                assignedRoles.remove(role);
+                toDelete.add(role);
             } else {
                 assignedRoles.set(assignedRoles.indexOf(role), allRoles.get(allRoles.indexOf(role)));
             }
         }
-
     }
 }

@@ -21,6 +21,14 @@ public class RelationData extends RelationDataDefinition implements Serializable
         rowSize = totalSize = 0;
         colSize = columnsNames.size();
     }
+
+    public RelationData(List<String> columnsNames, List<List<String>> rows, Map<String,List<String>> columns) {
+        this.columnsNames = columnsNames;
+        columnsNames.forEach(columnName -> columns.put(columnName, new ArrayList<>()));
+        rowSize = totalSize = 0;
+        colSize = columnsNames.size();
+        rows.forEach(this::addRow);
+    }
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -44,9 +52,6 @@ public class RelationData extends RelationDataDefinition implements Serializable
         return dataFromRow;
     }
 
-    public List<String> getColumnNames(){
-        return columnsNames;
-    }
     public List getDataFromColumn(String columnName){
         return columns.get(columnName);
     }

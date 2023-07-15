@@ -5,6 +5,7 @@ import stepper.flow.definition.mapping.MappingGraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class StepsDTO {
@@ -53,4 +54,7 @@ public class StepsDTO {
         return steps;
     }
 
+    public List<String> getStepNames(){
+        return steps.stream().map(SingleStepDTO::getStepName).collect(Collectors.toList());
+    }
 }

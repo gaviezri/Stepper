@@ -102,13 +102,17 @@ public class BodyController {
             flowStatTab.setDisable(false);
             flowHistoTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
-
-            Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
-            getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(getSelectedFlowIndex()));
-            mainController.executeFlow(getSelectedFlowName(), valName2valType);
-            flowExecComponentController.reset();
-
+            flowExecComponentController.setActiveFlowDetails(getFlowDefinitionsDataByIndex(getSelectedFlowIndex()));
+            executeFlow();
         });
+    }
+
+    private void executeFlow() {
+        mainController.executeFlow(getSelectedFlowName(), getExecutionValueAndExecutionTypes());
+    }
+
+    private Pair<Map, Map> getExecutionValueAndExecutionTypes() {
+        return flowLibComponentController.getInputComponentController().getValName2ValType();
     }
 
     private String getSelectedFlowName(){
@@ -138,10 +142,6 @@ public class BodyController {
             mainTabPane.getSelectionModel().select(BodyController.FLOW_LIB_TAB);
             flowLibComponentController.showInputComponent();
         });
-    }
-
-    public void stop(){
-        flowExecComponentController.stop();
     }
 
     public void updateExecutionProgess(ExecutedFlowDetailsDTO executionProgressDTO) {

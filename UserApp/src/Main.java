@@ -35,9 +35,10 @@ public class Main extends Application {
                     mainController.stop();
                 });
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+                    throwable.printStackTrace();
                     UserRequestsDispatcher.getInstance().logout();
-                    mainController.stop();
                     Utils.ShowError("Error", "Application failed.", "Internal app error.");
+                    mainController.stop();
                     System.exit(0);
                 });
             }

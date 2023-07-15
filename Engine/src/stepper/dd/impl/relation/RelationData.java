@@ -92,6 +92,10 @@ public class RelationData extends RelationDataDefinition implements Serializable
         return rows.stream().map(row -> row.data).collect(Collectors.toList());
     }
 
+    public Map<String,List<String>> getColumns() {
+        return columns;
+    }
+
 
     public static class SingleRow implements Serializable{
 

@@ -288,7 +288,7 @@ public class ExecutionController extends BodyControllerComponent {
         }, 0, POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
     private void updateSingleStepExecutionData(Map<String, List<String>> allStepsListOfLogs, Map<String,
-                                               Map<String, Pair<DataDefinition, Object>>> outputsForAllSteps,
+                                               Map<String, Pair<String, Object>>> outputsForAllSteps,
                                                Map<String,StepResult> executedStepsStatus,
                                                Map<String, java.time.Duration> allStepsDuration,
                                                Map<String, String> allSummaryLines) {
@@ -310,7 +310,7 @@ public class ExecutionController extends BodyControllerComponent {
                             allStepsJavaFXDuration.get(stepName),
                             allStepsListOfLogs.get(stepName),
                             allSummaryLines.get(stepName),
-                            outputsForAllSteps.get(stepName));
+                            outputsForAllSteps.get(stepName), true);
                 };
             }
             else{
@@ -320,7 +320,7 @@ public class ExecutionController extends BodyControllerComponent {
                                 allStepsJavaFXDuration.get(stepName),
                                 allStepsListOfLogs.get(stepName),
                                 allSummaryLines.get(stepName),
-                                outputsForAllSteps.get(stepName)));
+                                outputsForAllSteps.get(stepName),true));
             }
         }
     }

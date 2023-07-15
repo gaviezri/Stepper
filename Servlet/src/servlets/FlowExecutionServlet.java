@@ -43,7 +43,9 @@ public class FlowExecutionServlet extends HttpServlet {
         // by cookie get the top UUID in the stack
         // get the progress of the flow execution by UUID from engine
         // return the progress to the user using dto
+
         try {
+            System.out.println(GSON_INSTANCE.toJson(executionProgressDTO));
             resp.getWriter().println(GSON_INSTANCE.toJson(executionProgressDTO));
         } catch (IOException e) {
             e.printStackTrace();

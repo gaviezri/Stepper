@@ -27,9 +27,9 @@ public class GsonCreator {
           return new FileData(Paths.get(path));
       }
       @Override
-      public JsonElement serialize(FileData dataDefinition, Type type, JsonSerializationContext jsonSerializationContext) {
+      public JsonElement serialize(FileData fData, Type type, JsonSerializationContext jsonSerializationContext) {
           JsonObject jsonObject = new JsonObject();
-          jsonObject.addProperty("filePath", dataDefinition.getPath());
+          jsonObject.addProperty("filePath", fData.getPath());
           return jsonObject;
       }
   }
@@ -46,7 +46,11 @@ public class GsonCreator {
       }
       @Override
       public JsonElement serialize(RelationData obj, Type type, JsonSerializationContext jsonSerializationContext) {
-          return jsonSerializationContext.serialize(obj);
+          JsonObject jsonObject = new JsonObject();
+          jsonObject.add("columnsNames", jsonSerializationContext.serialize(obj.getColumnsNames()));
+          jsonObject.add("rows", jsonSerializationContext.serialize(obj.getRows()));
+          jsonObject.add("columns", jsonSerializationContext.serialize(obj.getColumns()));
+          return jsonObject;
       }
   }
 }

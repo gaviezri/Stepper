@@ -30,6 +30,9 @@ public class Servlet {
     public static Map<String, UserSystemInfo> getUserName2Info() {
         return (Map) instance.contextRef.getAttribute(Utils.USERS_IN_SYSTEM);
     }
+    public static Map<UUID, Integer> getUuid2Cookie() {
+        return (Map) instance.contextRef.getAttribute(Utils.UUID_2_COOKIE);
+    }
 
     public static Boolean getIsAdminLoggedIn() {
         return (Boolean) instance.contextRef.getAttribute(Utils.ADMIN_LOGGED_IN);

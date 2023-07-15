@@ -27,17 +27,18 @@ public class StepperServletContextListener implements ServletContextListener {
         // Called when the ServletContext is initialized
         ServletContext servletContext = servletContextEvent.getServletContext();
         synchronized (servletContext) {
-        servletContext.setAttribute(ADMIN_LOGGED_IN, Boolean.FALSE);
-        servletContext.setAttribute(ENGINE_CONTROLLER, EngineController.getInstance());
-        servletContext.setAttribute(USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
-        servletContext.setAttribute(COOKIE_2_USER, new HashMap<Integer, String>());
-        servletContext.setAttribute(NEXT_FREE_ID,1);
-        servletContext.setAttribute(ROLES, new LinkedList<Role>());
-        servletContext.setAttribute(ROLES_CHANGED, Boolean.FALSE);
-        servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, Boolean.TRUE);
-        servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
-        servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, Stack<UUID>>());
-        Servlet.initialize(servletContext);
+            servletContext.setAttribute(ADMIN_LOGGED_IN, Boolean.FALSE);
+            servletContext.setAttribute(ENGINE_CONTROLLER, EngineController.getInstance());
+            servletContext.setAttribute(USERS_IN_SYSTEM, new HashMap<String, UserSystemInfo>());
+            servletContext.setAttribute(COOKIE_2_USER, new HashMap<Integer, String>());
+            servletContext.setAttribute(NEXT_FREE_ID,1);
+            servletContext.setAttribute(ROLES, new LinkedList<Role>());
+            servletContext.setAttribute(ROLES_CHANGED, Boolean.FALSE);
+            servletContext.setAttribute(FETCH_STARTUP_DATA_ADMIN, Boolean.TRUE);
+            servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
+            servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, Stack<UUID>>());
+            servletContext.setAttribute(UUID_2_COOKIE, new HashMap<UUID,Integer>());
+            Servlet.initialize(servletContext);
         }
     }
 

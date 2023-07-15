@@ -105,7 +105,9 @@ public class AppController {
 
     private void updateManagerAndRoles() {
         UserSystemInfo userInfo = reqDispatcher.getUsersCurrentInfo(headerComponentController.getUserName());
-        headerComponentController.updateManagerAndRoleText(userInfo.isManager().toString());
+        if (userInfo != null){
+            headerComponentController.updateManagerAndRoleText(userInfo.isManager().toString());
+        }
     }
 
     public void filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter filter){
@@ -186,9 +188,7 @@ public class AppController {
     public void stop() {
         if (executorServiceForPollingExecutions != null) {
             executorServiceForPollingExecutions.shutdown();
-            bodyComponentController.stop();
         }
-
     }
 
     public StatisticsDTO getCurrentLoadedFlowsStatisticsDetails() {

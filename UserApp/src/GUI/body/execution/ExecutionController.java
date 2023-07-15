@@ -1,6 +1,5 @@
 package GUI.body.execution;
 
-import GUI.app.AppController;
 import GUI.body.BodyControllerComponent;
 import GUI.body.library.definition.DefinitionController;
 import dto.execution.progress.ExecutedFlowDetailsDTO;
@@ -25,14 +24,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import dto.flow.FlowDefinitionDTO;
-import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class ExecutionController extends BodyControllerComponent {
     // fake section
@@ -72,14 +68,13 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private ListView<String> continuationListView;
     @FXML private Label continuationLabel;
 
-    private boolean updatedAfterExecutionEnd = true;
 
     private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
     private Map<String, List<Pair<String,String>>> continuationDataMap;
 
     private static final int POLLING_INTERVAL = 200;
-    private ScheduledExecutorService poller = Executors.newScheduledThreadPool(1);
     private boolean fooled = false;
+    private Boolean notifiedFlowEnd = false;
     private BooleanProperty gotContinuations = new SimpleBooleanProperty(false);
 
 
@@ -90,7 +85,6 @@ public class ExecutionController extends BodyControllerComponent {
         executionEndLabel.setWrapText(true);
 
         initializeStepsStatusToolTip();
-        bindExecutionTabComponents();
         bindSelectionOfStepInListViewToStepDetails();
         bindSelectionOfOutputInListViewToOutputDetails();
         initializeContinuationSection();
@@ -126,7 +120,11 @@ public class ExecutionController extends BodyControllerComponent {
     }
 
     public void reset(){
-        updatedAfterExecutionEnd = true;
+        notifiedFlowEnd = false;
+        continuationListView.getItems().clear();
+        logsListView.getItems().clear();
+        outputsListView.getItems().clear();
+        executedStepsStatusListView.getItems().clear();
     }
     private void initializeContinuationSection(){
         continueButton.setDisable(true);
@@ -226,72 +224,8 @@ public class ExecutionController extends BodyControllerComponent {
         stepDetailsResultLabel.setText(resultText);
         stepDetailsResultLabel.setTextFill(getColorBasedOnResult(stepResult));
     }
-    @Override
-    protected void finalize() {
-        poller.shutdown();
-    }
 
-    public void bindExecutionTabComponents() {
-        poller.scheduleAtFixedRate(() -> {
-            if (bodyController != null) {
-                AppController appController = bodyController.getMainController();
-                if (bodyController.getMainController() != null) {
-                    int numOfFlowExecuted = bodyController.getMainController().numOfFlowsExecutedProperty().get();
-                    if (realExecutionAnchorPane.isVisible() && numOfFlowExecuted > 0) {
-//                        try {
-//                            float flowProgressPercentage = (appController.getCurrentStepIdx() + 1.f) / appController.getStepsCount();
-//                            if (flowProgressPercentage != flowProgressBar.getProgress()) {
-//                                Platform.runLater(() -> {
-//                                    synchronized (this) {
-//                                        updateFlowProgressPercentageLabel(flowProgressPercentage);
-//                                        updateFlowProgressBar(flowProgressPercentage);
-//                                        updateStepInProgressLabel(appController.getCurrentStepName());
-//                                        updateExecutedStepsStatusListView(appController.getExecutedStepsStatus());
-//
-//                                        // update step details section
-//
-//                                        updateSingleStepExecutionData(appController.getAllStepsListOfLogs(),
-//                                                appController.getOutputsForAllSteps(),
-//                                                appController.getExecutedStepsStatus(),
-//                                                appController.getAllStepsDuration(),
-//                                                appController.getAllSummaryLines());
-//                                        // check it out ^^^^
-//                                    }
-//                                });
-//                            }
-//                        } catch (NullPointerException ignored) {
-//                        }
-                    }
-//                    if (!appController.isFlowExecutionInProgress()
-//                            && !notified
-//                            && numOfFlowExecuted > 0) {
-//                        notified = true;
-//                        FlowExecutionResult flowResult = appController.getFlowExecutionResult();
-//                        StringBuilder message = new StringBuilder("Flow execution ended with ");
-//                        switch (flowResult) {
-//                            case SUCCESS:
-//                                message.append("success");
-//                                break;
-//                            case FAILURE:
-//                                message.append("failure");
-//                                break;
-//                            default:
-//                                message.append("warnings");
-//                                break;
-//                        }
-//
-//                        Platform.runLater(() -> {
-//                            executionEndLabel.setText("\"" + appController.getLastExecutedFlowName() + "\" " + message.toString() + "!");
-//                            Utils.ShowInformation("Heads up!", message.toString(), "");
-//                            flowProgressBar.setProgress(0);
-//                            doneExecutionPaneSwitch();
-//                        });
-//                    }
-                }
-            }
 
-        }, 0, POLLING_INTERVAL, java.util.concurrent.TimeUnit.MILLISECONDS);
-    }
     private void updateSingleStepExecutionData(Map<String, List<String>> allStepsListOfLogs, Map<String,
                                                Map<String, Pair<String, Object>>> outputsForAllSteps,
                                                Map<String,StepResult> executedStepsStatus,
@@ -345,8 +279,6 @@ public class ExecutionController extends BodyControllerComponent {
             executionEndLabel.setVisible(!value);
             continuationAnchorPane.setVisible(!value && gotContinuations.get());
 
-            // continuation pane.setvisible
-            // bind continuation pane and execution summary label progressbar
         });
     }
     private void updateExecutedStepsStatusListView(Map<String, StepResult> executedStepsStatus) {
@@ -488,13 +420,10 @@ public class ExecutionController extends BodyControllerComponent {
         }
     }
 
-    public void stop() {
-        if (poller != null) {
-            poller.shutdown();
-        }
-    }
+
 
     public void updateExecutionProgess(ExecutedFlowDetailsDTO executionProgressDTO) {
+        Boolean notified = false;
         try {
             if (executionProgressDTO.getFlowExecutionProgress() != flowProgressBar.getProgress()) {
                 Platform.runLater(() -> {
@@ -505,8 +434,8 @@ public class ExecutionController extends BodyControllerComponent {
                 });
             }
         } catch (NullPointerException ignored) {}
-        if (executionProgressDTO.isExecutionInProgress() || updatedAfterExecutionEnd) {
-            updatedAfterExecutionEnd = executionProgressDTO.isExecutionInProgress();
+        if (!executionProgressDTO.isExecutionInProgress() && !notified) {
+            notified = true;
             String message = "execution ended with " + executionProgressDTO.getFlowExecutionResult() + "!";
             Platform.runLater(() -> {
                 executionEndLabel.setText("\"" + executionProgressDTO.getFlowName() + "\" " + message + "!");
@@ -531,5 +460,18 @@ public class ExecutionController extends BodyControllerComponent {
         float flowProgressPercentage = executionProgressDTO.getFlowExecutionProgress();
         updateFlowProgressPercentageLabel(flowProgressPercentage);
         updateFlowProgressBar(flowProgressPercentage);
+    }
+
+    public void setActiveFlowDetails(FlowDefinitionDTO flowDefinition) {
+        reset();
+        setContinuationProperty(flowDefinition);
+        Platform.runLater(()->{
+            flowDefinition.getStepsDTO().getStepNames().forEach(stepName -> {
+                Label stepNameLabel = new Label(stepName);
+                stepNameLabel.setTextFill(Color.GREY);
+                executedStepsStatusListView.getItems().add(stepNameLabel);
+            });
+        });
+
     }
 }

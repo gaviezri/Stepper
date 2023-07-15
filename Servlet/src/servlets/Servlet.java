@@ -16,6 +16,12 @@ public class Servlet {
     private ServletContext contextRef;
     private Servlet() {
     }
+
+
+    public static void userCheckOut(Integer cookie){
+        // redirect to user logout procedure servlet...
+        // if user last timestamp exceeds threshold
+    }
     private static Servlet instance;
 
     public static void initialize(ServletContext context) {

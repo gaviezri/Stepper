@@ -17,6 +17,7 @@ public class FlowsExecutionHistoryDTO {
     private final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
     private final List<String> executorsNames = new ArrayList<>();
     private List<SingleFlowExecutionDTO> curFilteredExecutions = flowExecutionDTOs;
+
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
         for(FlowExecution flowExecution:flowExecutionStack){
             SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flowExecution);

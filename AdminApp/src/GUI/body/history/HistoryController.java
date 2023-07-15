@@ -157,9 +157,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 }
         }
 
-
-
-
         public void updateTable(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO) {
                 curFlowsExecutionHistoryDTO = flowsExecutionHistoryDTO;
                 executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());

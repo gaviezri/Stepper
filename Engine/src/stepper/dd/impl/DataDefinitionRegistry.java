@@ -2,6 +2,7 @@ package stepper.dd.impl;
 
 import com.sun.istack.internal.NotNull;
 import stepper.dd.impl.enumeration.EnumerationDataDefinition;
+import stepper.dd.impl.json.JSONDataDefinition;
 import stepper.dd.impl.list.ListDataDefinition;
 import stepper.dd.impl.number.DoubleDataDefinition;
 import stepper.dd.impl.mapping.MappingDataDefinition;
@@ -16,7 +17,8 @@ public enum DataDefinitionRegistry implements stepper.dd.api.DataDefinition {
     RELATION(new RelationDataDefinition()),
     LIST(new ListDataDefinition()),
     MAPPING(new MappingDataDefinition()),
-    ENUMERATION(new EnumerationDataDefinition());
+    ENUMERATION(new EnumerationDataDefinition()),
+    JSON(new JSONDataDefinition());
 
     DataDefinitionRegistry(stepper.dd.api.DataDefinition dataDefinition) {
         this.dataDefinition = dataDefinition;

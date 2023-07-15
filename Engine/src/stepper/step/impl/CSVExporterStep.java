@@ -68,7 +68,7 @@ public class CSVExporterStep extends AbstractStepDefinition {
             } else {
                 int i = 0;
                 // insert column names
-                for (String columnName : relation.getColumnNames()) {
+                for (String columnName : relation.getColumnsNames()) {
                     CSV.append(columnName).append(',');
                 }
                 // delete last comma and add new line

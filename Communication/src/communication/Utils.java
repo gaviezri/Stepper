@@ -1,12 +1,17 @@
 package communication;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import stepper.dd.api.DataDefinition;
+
+import java.lang.reflect.Type;
 
 
 public class Utils {
+
+
+
     // Create a single instance of Gson object
-    final static public Gson GSON_INSTANCE = new GsonBuilder().create();
+    final static public Gson GSON_INSTANCE = GsonCreator.createGson();
     final static public String ENGINE_CONTROLLER = "engineController";
     final static public String COOKIE_2_FLOW_EXEC_ID = "cookie2FlowExecId";
     final static public String UUID_2_COOKIE = "uuid2Cookie";

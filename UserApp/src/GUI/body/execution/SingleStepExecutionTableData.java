@@ -58,6 +58,15 @@ public class SingleStepExecutionTableData {
         updateOutputs(outputName2DefAndVal);
     }
 
+    public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String,Pair<String,Object>> outputName2DefAndVal, boolean a) {
+        Name = stepName;
+        Result = stepResult;
+        Duration = duration;
+        Logs = logs;
+        SummaryLine = summaryLine;
+        updateOutputs(outputName2DefAndVal, a);
+    }
+
     private void updateOutputs(Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
         for (Map.Entry<String, Pair<DataDefinition, Object>> entry : outputName2DefAndVal.entrySet()) {
             if (OutputsThatWereTakenCareOf.contains(entry.getKey()))
@@ -65,6 +74,18 @@ public class SingleStepExecutionTableData {
             OutputsThatWereTakenCareOf.add(entry.getKey());
             OutputsNodes.add(createOutputNode(entry.getKey(), entry.getValue().getKey(), entry.getValue().getValue()));
             TypeOfOutputsThatWereTakenCareOf.add(entry.getValue().getKey().toString());
+            outputNamesAndTypes.add(OutputsThatWereTakenCareOf.get(OutputsThatWereTakenCareOf.size()-1) +
+                    " -- (" + TypeOfOutputsThatWereTakenCareOf.get(TypeOfOutputsThatWereTakenCareOf.size()-1) + ")");
+        }
+    }
+
+    private void updateOutputs(Map<String,Pair<String,Object>> outputName2StrDefAndVal, boolean a){
+        for (Map.Entry<String, Pair<String, Object>> entry : outputName2StrDefAndVal.entrySet()) {
+            if (OutputsThatWereTakenCareOf.contains(entry.getKey()))
+                continue;
+            OutputsThatWereTakenCareOf.add(entry.getKey());
+            OutputsNodes.add(createOutputNode(entry.getKey(), entry.getValue().getKey(), entry.getValue().getValue()));
+            TypeOfOutputsThatWereTakenCareOf.add(entry.getValue().getKey());
             outputNamesAndTypes.add(OutputsThatWereTakenCareOf.get(OutputsThatWereTakenCareOf.size()-1) +
                     " -- (" + TypeOfOutputsThatWereTakenCareOf.get(TypeOfOutputsThatWereTakenCareOf.size()-1) + ")");
         }
@@ -100,9 +121,6 @@ public class SingleStepExecutionTableData {
         return replica;
     }
 
-    public void setStepResult(StepResult stepResult) {
-        Result = stepResult;
-    }
 
     public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<DataDefinition, Object>> output2DefinitionAndValue) {
         Result = stepResult;
@@ -112,6 +130,17 @@ public class SingleStepExecutionTableData {
         updateOutputs(output2DefinitionAndValue);
     }
 
+    public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<String, Object>> output2DefinitionAndValue, boolean a) {
+        Result = stepResult;
+        Duration = duration;
+        Logs = logs;
+        SummaryLine =  summaryLine;
+        updateOutputs(output2DefinitionAndValue, a);
+    }
+
+    public VBox createOutputNode(String name, String strDataDef, Object value){
+        return createOutputNode(name, DataDefinitionRegistry.valueOf(strDataDef), value);
+    }
     public VBox createOutputNode(String name, DataDefinition dataDefinition, Object value) {
         VBox backBone = new VBox();
         backBone.setSpacing(10);

@@ -18,6 +18,7 @@ public class FileData extends FileDataDefinition implements Serializable {
     public FileData(Path path) {
         file = path.toFile();
         filePath = file.getPath();
+
     }
     public boolean exists(){
         return file.exists();

@@ -1,7 +1,7 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.dd.impl.relation.RelationDataDefinition;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
@@ -53,10 +53,10 @@ public class CSVExporterStep extends AbstractStepDefinition {
 
         context.tick();
         StepLogger logger = context.getStepLogger();
-        RelationData relation;
+        Relation relation;
         StepResult result;
         try {
-            relation = (RelationData) context.getDataValue("SOURCE", RelationDataDefinition.class);
+            relation = (Relation) context.getDataValue("SOURCE", RelationDataDefinition.class);
 
             StringBuilder CSV = new StringBuilder();
 

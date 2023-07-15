@@ -6,21 +6,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.step.api.enums.StepResult;
-import sun.plugin.javascript.navig.Anchor;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static stepper.dd.impl.DataDefinitionRegistry.LIST;
-import static stepper.dd.impl.DataDefinitionRegistry.STRING;
 
 public class SingleStepExecutionTableData {
     public class TableEntry {
@@ -140,7 +135,7 @@ public class SingleStepExecutionTableData {
                 ((TextArea) outputNode).editableProperty().set(false);
                 break;
             case RELATION:
-                RelationData relationData = ((RelationData) value);
+                Relation relationData = ((Relation) value);
                 // get list of rows (maps)
                 List<Map<String, String>> relationRows = relationData.getRows();
                 // extract unique keys as row columns

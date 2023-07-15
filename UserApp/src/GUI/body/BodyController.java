@@ -106,6 +106,7 @@ public class BodyController {
             Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
             getFlowExecutionController().setContinuationProperty(getFlowDefinitionsDataByIndex(getSelectedFlowIndex()));
             mainController.executeFlow(getSelectedFlowName(), valName2valType);
+            flowExecComponentController.reset();
 
         });
     }

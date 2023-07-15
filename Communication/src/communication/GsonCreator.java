@@ -2,9 +2,8 @@ package communication;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
@@ -16,7 +15,7 @@ public class GsonCreator {
     public static Gson createGson(){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(FileData.class, new FileDataAdapter());
-        gsonBuilder.registerTypeAdapter(RelationData.class, new RelationDataAdapter());
+        gsonBuilder.registerTypeAdapter(Relation.class, new RelationDataAdapter());
         return gsonBuilder.create();
     }
   public static class FileDataAdapter implements JsonSerializer<FileData>, JsonDeserializer<FileData> {
@@ -34,19 +33,20 @@ public class GsonCreator {
       }
   }
 
-  public static class RelationDataAdapter implements JsonSerializer<RelationData>, JsonDeserializer<RelationData> {
+  public static class RelationDataAdapter implements JsonSerializer<Relation>, JsonDeserializer<Relation> {
       @Override
-      public RelationData deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+      public Relation deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
           JsonObject jsonObject = jsonElement.getAsJsonObject();
           List<String> colNames = jsonDeserializationContext.deserialize(jsonObject.get("columnsNames"), new TypeToken<List<String>>(){}.getType());
           List<List<String>> rows = jsonDeserializationContext.deserialize(jsonObject.get("rows"), new TypeToken<List<List<String>>>(){}.getType());
           Map<String,List<String>> columns = jsonDeserializationContext.deserialize(jsonObject.get("columns"), new TypeToken<Map<String,List<String>>>(){}.getType());
 
-          return new RelationData(colNames, rows, columns);
+          return new Relation(colNames, rows, columns);
       }
       @Override
-      public JsonElement serialize(RelationData obj, Type type, JsonSerializationContext jsonSerializationContext) {
+      public JsonElement serialize(Relation obj, Type type, JsonSerializationContext jsonSerializationContext) {
           JsonObject jsonObject = new JsonObject();
+          jsonObject.addProperty("type", "Relation");
           jsonObject.add("columnsNames", jsonSerializationContext.serialize(obj.getColumnsNames()));
           jsonObject.add("rows", jsonSerializationContext.serialize(obj.getRows()));
           jsonObject.add("columns", jsonSerializationContext.serialize(obj.getColumns()));

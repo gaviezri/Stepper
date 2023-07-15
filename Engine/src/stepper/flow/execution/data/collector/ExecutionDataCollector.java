@@ -86,11 +86,17 @@ public class ExecutionDataCollector {
         step2MapOfOutputsNames2DataDefAndValue.forEach((stepName, mapOfOutputsNames2DataDefAndValue) -> {
             Map<String,Pair<String,Object>> mapOfOutputsNames2StringDataDefAndValue = new HashMap<>();
             mapOfOutputsNames2DataDefAndValue.forEach((outputName, pairOfDataDefAndValue) -> {
-                mapOfOutputsNames2StringDataDefAndValue.put(outputName, new Pair<>(pairOfDataDefAndValue.getKey().toString(), pairOfDataDefAndValue.getValue()));
+                mapOfOutputsNames2StringDataDefAndValue.put(outputName, new Pair<>(replaceDataDefinitionWithProperString(pairOfDataDefAndValue), pairOfDataDefAndValue.getValue()));
             });
             step2MapOfOutputsNames2StringDataDefAndValue.put(stepName, mapOfOutputsNames2StringDataDefAndValue);
         });
         return step2MapOfOutputsNames2StringDataDefAndValue;
+    }
+
+    private static String replaceDataDefinitionWithProperString(Pair<DataDefinition, Object> pairOfDataDefAndValue) {
+        String dataDefName = pairOfDataDefAndValue.getKey().getType().getSimpleName();
+        String finalDataDefName = dataDefName.equals("Integer") ? "Number" : dataDefName;
+        return finalDataDefName.toUpperCase();
     }
 
     public String getCurrentStepName() {

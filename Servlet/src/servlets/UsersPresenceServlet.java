@@ -79,10 +79,7 @@ public class UsersPresenceServlet extends HttpServlet {
     }
 
     private String handleSingleUserInfo(HttpServletRequest req) {
-        ServletContext context = getServletContext();
-
         Integer userCookie = Servlet.idCookieBaker(req.getCookies());
-
         UserSystemInfo userInfo = Servlet.getUserName2Info().get(userCookie);
         return GSON_INSTANCE.toJson(userInfo);
     }
@@ -110,7 +107,6 @@ public class UsersPresenceServlet extends HttpServlet {
     }
 
     private String handleAllUsersInfo() {
-        ServletContext context = getServletContext();
         Map<String, UserSystemInfo> name2info = Servlet.getUserName2Info();
         List<UserSystemInfo> usersInfo = Arrays.asList(name2info.values().toArray(new UserSystemInfo[0]));
         UsersSystemInfoDTO dto = new UsersSystemInfoDTO(usersInfo);

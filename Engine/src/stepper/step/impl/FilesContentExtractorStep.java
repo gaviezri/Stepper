@@ -1,7 +1,7 @@
 package stepper.step.impl;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -38,10 +38,10 @@ public class FilesContentExtractorStep extends AbstractStepDefinition {
         }
     }
 
-    private RelationData createFilesContentRelation(List<FileData> filesList, StepLogger logger, Integer lineNumberToExtract){
+    private Relation createFilesContentRelation(List<FileData> filesList, StepLogger logger, Integer lineNumberToExtract){
         FileData curFile;
         String line;
-        RelationData data = new RelationData(COLUMNS_TITLES);
+        Relation data = new Relation(COLUMNS_TITLES);
 
         /*
          * for every File object in the input list:

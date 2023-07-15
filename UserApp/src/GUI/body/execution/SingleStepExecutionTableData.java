@@ -1,5 +1,7 @@
 package GUI.body.execution;
 
+import com.google.gson.internal.LinkedTreeMap;
+import communication.Utils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -16,14 +18,11 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.step.api.enums.StepResult;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static stepper.dd.impl.DataDefinitionRegistry.LIST;
-import static stepper.dd.impl.DataDefinitionRegistry.STRING;
 
 public class SingleStepExecutionTableData {
     public class TableEntry {
@@ -107,7 +106,6 @@ public class SingleStepExecutionTableData {
         return Duration;
     }
 
-
     public List<String> getLogs() {
         return Logs;
     }
@@ -122,14 +120,6 @@ public class SingleStepExecutionTableData {
     }
 
 
-    public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<DataDefinition, Object>> output2DefinitionAndValue) {
-        Result = stepResult;
-        Duration = duration;
-        Logs = logs;
-        SummaryLine =  summaryLine;
-        updateOutputs(output2DefinitionAndValue);
-    }
-
     public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<String, Object>> output2DefinitionAndValue, boolean a) {
         Result = stepResult;
         Duration = duration;
@@ -142,9 +132,15 @@ public class SingleStepExecutionTableData {
         return createOutputNode(name, DataDefinitionRegistry.valueOf(strDataDef), value);
     }
     public VBox createOutputNode(String name, DataDefinition dataDefinition, Object value) {
+        if (dataDefinition.getName().equals("Relation")) {
+            LinkedTreeMap<String, Object> theRelationAsMap = (LinkedTreeMap<String, Object>) value;
+            Relation relation = new Relation((List<String>) theRelationAsMap.get("columnsNames"),
+                                                (List<LinkedTreeMap>) theRelationAsMap.get("rows"),
+                                                (LinkedTreeMap) theRelationAsMap.get("columns"));
+            value = relation;
+        }
         VBox backBone = new VBox();
         backBone.setSpacing(10);
-
         HBox nameAndType = new HBox();
         nameAndType.setSpacing(10);
         backBone.getChildren().add(nameAndType);
@@ -172,7 +168,7 @@ public class SingleStepExecutionTableData {
                 ((TextArea) outputNode).editableProperty().set(false);
                 break;
             case RELATION:
-                RelationData relationData = ((RelationData) value);
+                Relation relationData = ((Relation) value);
                 // get list of rows (maps)
                 List<Map<String, String>> relationRows = relationData.getRows();
                 // extract unique keys as row columns

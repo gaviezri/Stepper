@@ -1,7 +1,7 @@
 package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -49,11 +49,11 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
 
         StepLogger logger = context.getStepLogger();
         StepResult stepResult = validateInputs(context);
-        RelationData source;
+        Relation source;
         try{
             if (stepResult == StepResult.SUCCESS) {
 
-                source = context.getDataValue("SOURCE", RelationData.class);
+                source = context.getDataValue("SOURCE", Relation.class);
                 List<String> properties = source.getColumnsNames();
                 List row;
                 StringBuilder result = new StringBuilder();
@@ -94,7 +94,7 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
         try {
-            return  context.getDataValue("SOURCE", RelationData.class).getRowSize() != 0 ?
+            return  context.getDataValue("SOURCE", Relation.class).getRowSize() != 0 ?
                     StepResult.SUCCESS : StepResult.WARNING;
         } catch (Exception e) {
             return StepResult.FAILURE;

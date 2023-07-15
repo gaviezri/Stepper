@@ -1,10 +1,12 @@
 package stepper.dd.impl.relation;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RelationData extends RelationDataDefinition implements Serializable {
+public class Relation extends RelationDataDefinition implements Serializable {
 
     private List<String> columnsNames;
     private List<SingleRow> rows = new ArrayList<>();
@@ -15,19 +17,39 @@ public class RelationData extends RelationDataDefinition implements Serializable
     int totalSize = 0;
 
 
-    public RelationData(List<String> columnsNames) {
+    public Relation(List<String> columnsNames) {
         this.columnsNames = columnsNames;
         columnsNames.forEach(columnName -> columns.put(columnName, new ArrayList<>()));
         rowSize = totalSize = 0;
         colSize = columnsNames.size();
     }
 
-    public RelationData(List<String> columnsNames, List<List<String>> rows, Map<String,List<String>> columns) {
+    public Relation(List<String> columnsNames, List<List<String>> rows, Map<String,List<String>> columns) {
         this.columnsNames = columnsNames;
-        columnsNames.forEach(columnName -> columns.put(columnName, new ArrayList<>()));
+        columnsNames.forEach(columnName -> this.columns.put(columnName, new ArrayList<>()));
         rowSize = totalSize = 0;
         colSize = columnsNames.size();
         rows.forEach(this::addRow);
+    }
+
+    public Relation(List<String> colNames, List<LinkedTreeMap> rows, LinkedTreeMap columns){
+        this.columnsNames = colNames;
+        this.columnsNames.forEach(columnName -> this.columns.put(columnName, new ArrayList<>()));
+        rowSize = totalSize = 0;
+        colSize = columnsNames.size();
+        // check what is the type of the rows
+        rows.forEach(row -> {
+            List<String> rowList = createRowFromJson(row);
+            addRow(rowList);
+        });
+    }
+
+    private List<String> createRowFromJson(LinkedTreeMap row) {
+        List<String> rowList = new ArrayList<>();
+        for (String columnName : columnsNames) {
+            rowList.add(row.get(columnName).toString());
+        }
+        return rowList;
     }
     @Override
     public String toString(){
@@ -52,9 +74,6 @@ public class RelationData extends RelationDataDefinition implements Serializable
         return dataFromRow;
     }
 
-    public List getDataFromColumn(String columnName){
-        return columns.get(columnName);
-    }
     public String getDataFromCell(int rowIndex, int columnIndex){
         List<String> column = columns.get(columnsNames.get(columnIndex));
         return column.get(rowIndex);
@@ -66,6 +85,18 @@ public class RelationData extends RelationDataDefinition implements Serializable
             singleRow.addData(columnsNames.get(i), row.get(i));
             totalSize++;
         }
+        rows.add(singleRow);
+        rowSize ++;
+    }
+
+    public void addRow(LinkedTreeMap jsonRow){
+        SingleRow singleRow = new SingleRow();
+        columnsNames.forEach(columnName -> {
+            String value = (String) jsonRow.get(columnName);
+            columns.get(columnName).add(value);
+            singleRow.addData(columnName, value);
+            totalSize++;
+        });
         rows.add(singleRow);
         rowSize ++;
     }
@@ -122,8 +153,8 @@ public class RelationData extends RelationDataDefinition implements Serializable
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RelationData)) return false;
-        RelationData that = (RelationData) o;
+        if (!(o instanceof Relation)) return false;
+        Relation that = (Relation) o;
         return getRowSize() == that.getRowSize() && getColSize() == that.getColSize() && getTotalSize() == that.getTotalSize() && Objects.equals(getColumnsNames(), that.getColumnsNames()) && Objects.equals(rows, that.rows) && Objects.equals(columns, that.columns);
     }
 

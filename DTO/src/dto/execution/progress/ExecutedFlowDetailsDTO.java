@@ -9,6 +9,7 @@ import stepper.step.api.enums.StepResult;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +145,16 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
     }
 
     public Map<String,List<String>> getAllStepsListOfLogs(){
-        return null;
+        // create a map of step name to list of logs
+        Map<String,List<String>> stepsLogs = new HashMap<>();
+        for (String stepName : stepsNamesWithAlias){
+            stepsLogs.put(stepName, new ArrayList<>());
+            for (Pair<String,String> log2TimeStamp : stepsLogs2TimeStamp.get(stepsNamesWithAlias.indexOf(stepName))){
+                stepsLogs.get(stepName).add(log2TimeStamp.getKey());
+            }
+        }
+
+        return stepsLogs;
     }
 
     public String getCurrentStepName() {

@@ -24,8 +24,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
-import stepper.dd.api.DataDefinition;
 import dto.flow.FlowDefinitionDTO;
+import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
 import java.util.LinkedHashMap;
@@ -71,6 +71,8 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private Button continueButton;
     @FXML private ListView<String> continuationListView;
     @FXML private Label continuationLabel;
+
+    private boolean updatedAfterExecutionEnd = true;
 
     private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
     private Map<String, List<Pair<String,String>>> continuationDataMap;
@@ -123,6 +125,9 @@ public class ExecutionController extends BodyControllerComponent {
         }));
     }
 
+    public void reset(){
+        updatedAfterExecutionEnd = true;
+    }
     private void initializeContinuationSection(){
         continueButton.setDisable(true);
 
@@ -500,32 +505,16 @@ public class ExecutionController extends BodyControllerComponent {
                 });
             }
         } catch (NullPointerException ignored) {}
-
-//                    if (!appController.isFlowExecutionInProgress()
-//                            && !notified
-//                            && numOfFlowExecuted > 0) {
-//                        notified = true;
-//                        FlowExecutionResult flowResult = appController.getFlowExecutionResult();
-//                        StringBuilder message = new StringBuilder("Flow execution ended with ");
-//                        switch (flowResult) {
-//                            case SUCCESS:
-//                                message.append("success");
-//                                break;
-//                            case FAILURE:
-//                                message.append("failure");
-//                                break;
-//                            default:
-//                                message.append("warnings");
-//                                break;
-//                        }
-//
-//                        Platform.runLater(() -> {
-//                            executionEndLabel.setText("\"" + appController.getLastExecutedFlowName() + "\" " + message.toString() + "!");
-//                            Utils.ShowInformation("Heads up!", message.toString(), "");
-//                            flowProgressBar.setProgress(0);
-//                            doneExecutionPaneSwitch();
-//                        });
-//                    }
+        if (executionProgressDTO.isExecutionInProgress() || updatedAfterExecutionEnd) {
+            updatedAfterExecutionEnd = executionProgressDTO.isExecutionInProgress();
+            String message = "execution ended with " + executionProgressDTO.getFlowExecutionResult() + "!";
+            Platform.runLater(() -> {
+                executionEndLabel.setText("\"" + executionProgressDTO.getFlowName() + "\" " + message + "!");
+                GUI.utils.Utils.ShowInformation("Heads up!", message, "");
+                flowProgressBar.setProgress(0);
+                doneExecutionPaneSwitch();
+            });
+        }
     }
 
     private void updateStepsDetailsSection(ExecutedFlowDetailsDTO executionProgressDTO) {

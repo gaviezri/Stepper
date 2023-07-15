@@ -109,7 +109,7 @@ public class AppController {
 
     private void fetchOnlineUsersInfo() {
         Collection<UserSystemInfo> userSystemInfos = reqDispatcher.getOnlineUsers();
-        bodyComponentController.updateOnlineUsers(userSystemInfos);
+         bodyComponentController.updateOnlineUsers(userSystemInfos);
     }
 
     private void fetchFlowNames() {

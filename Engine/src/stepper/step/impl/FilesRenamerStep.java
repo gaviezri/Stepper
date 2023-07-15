@@ -2,7 +2,7 @@ package stepper.step.impl;
 
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.file.FileData;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -68,7 +68,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
     @Override
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
-        RelationData renameResult = null;
+        Relation renameResult = null;
         StepLogger logger = context.getStepLogger();
         StepResult result = StepResult.SUCCESS;
         StepResult subResult;
@@ -80,7 +80,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
             columnsName.add("Ordinal Number");
             columnsName.add("Old File Name");
             columnsName.add("New File Name");
-            renameResult = new RelationData(columnsName);
+            renameResult = new Relation(columnsName);
             filesToRename = context.getDataValue("FILES_TO_RENAME", List.class);
             try {
                 prefix = context.getDataValue("PREFIX", String.class);
@@ -149,7 +149,7 @@ public class FilesRenamerStep extends AbstractStepDefinition {
         return result;
     }
 
-    private StepResult renameFile(Path oldPath, Path newPath, StepLogger logger, RelationData renameResult) {
+    private StepResult renameFile(Path oldPath, Path newPath, StepLogger logger, Relation renameResult) {
 
         List<String> data = new ArrayList<>();
         StepResult result = StepResult.SUCCESS;

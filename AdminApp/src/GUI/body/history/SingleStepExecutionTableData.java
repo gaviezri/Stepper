@@ -16,7 +16,7 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.dd.impl.relation.RelationData;
+import stepper.dd.impl.relation.Relation;
 import stepper.step.api.enums.StepResult;
 
 import java.util.*;
@@ -140,7 +140,7 @@ public class SingleStepExecutionTableData {
                 ((TextArea) outputNode).editableProperty().set(false);
                 break;
             case RELATION:
-                RelationData relationData = ((RelationData) value);
+                Relation relationData = ((Relation) value);
                 // get list of rows (maps)
                 List<Map<String, String>> relationRows = relationData.getRows();
                 // extract unique keys as row columns

@@ -45,7 +45,6 @@ public class FlowExecutionServlet extends HttpServlet {
         // return the progress to the user using dto
 
         try {
-            System.out.println(GSON_INSTANCE.toJson(executionProgressDTO));
             resp.getWriter().println(GSON_INSTANCE.toJson(executionProgressDTO));
         } catch (IOException e) {
             e.printStackTrace();

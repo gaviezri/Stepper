@@ -9,6 +9,7 @@ public class Utils {
     final static public Gson GSON_INSTANCE = new GsonBuilder().create();
     final static public String ENGINE_CONTROLLER = "engineController";
     final static public String COOKIE_2_FLOW_EXEC_ID = "cookie2FlowExecId";
+    final static public String UUID_2_COOKIE = "uuid2Cookie";
     final static public String ADMIN_LOGGED_IN = "isAdminLoggedIn";
     final static public String USERS_IN_SYSTEM = "usersLoggedInMap";
     final static public String COOKIE_2_USER = "userName2Id";

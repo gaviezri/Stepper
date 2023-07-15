@@ -14,8 +14,9 @@ public class FlowsExecutionHistoryDTO {
         RESULT,
     }
 
-    final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
-    List<SingleFlowExecutionDTO> curFilteredExecutions = flowExecutionDTOs;
+    private final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
+    private final List<String> executorsNames = new ArrayList<>();
+    private List<SingleFlowExecutionDTO> curFilteredExecutions = flowExecutionDTOs;
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
         for(FlowExecution flowExecution:flowExecutionStack){
             SingleFlowExecutionDTO flowExDTO = new SingleFlowExecutionDTO(flowExecution);
@@ -23,9 +24,19 @@ public class FlowsExecutionHistoryDTO {
         }
     }
 
+    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList, Map<UUID,Integer> uuid2Cookie, Map<Integer,String> cookie2Name){
+        this.flowExecutionDTOs.addAll(flowExecutionsList);
+        this.flowExecutionDTOs.stream().
+                map(SingleFlowExecutionDTO::getUniqueId).
+                forEach(x-> this.executorsNames.
+                        add(cookie2Name.
+                                get(uuid2Cookie.get(x)
+                                )));
+    }
     public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList){
         this.flowExecutionDTOs.addAll(flowExecutionsList);
     }
+
     public List<SingleFlowExecutionDTO> filterFlowExecutionDTOsBy(FlowExecutionResult filter){
         curFilteredExecutions =  filter.equals(FlowExecutionResult.NONE) ? flowExecutionDTOs : flowExecutionDTOs.stream().filter(x->x.getFlowExecutionResult().equals(filter)).collect(Collectors.toList());
         return curFilteredExecutions;

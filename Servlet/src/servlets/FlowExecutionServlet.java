@@ -60,6 +60,7 @@ public class FlowExecutionServlet extends HttpServlet {
                 Servlet.createNewFlowExecStack(cookie);
             }
             Servlet.getFlowExecIdStack(cookie).push(flowUUID);
+            Servlet.getUuid2Cookie().put(flowUUID,cookie);
         }
         resp.setStatus(HttpServletResponse.SC_OK);
     }

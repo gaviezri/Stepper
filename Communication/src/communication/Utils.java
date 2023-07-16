@@ -48,5 +48,6 @@ public class Utils {
     public static final String SINGLE_USER_INFO_ENDPOINT = "/user/info";
     public static final String FLOW_EXECUTION_PROGRESS_ENDPOINT = "/flow/execution/progress";
     public static final String FILTER_HISTORY_FILTER_ENDPOINT = "/history/filter";
-
+    public static final String COOKIE_2_LAST_ACCESS = "cookie2LastAccess";
+    public static final long THREE_SECONDS = 3000;
 }

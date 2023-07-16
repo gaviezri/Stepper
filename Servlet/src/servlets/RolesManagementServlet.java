@@ -25,6 +25,7 @@ import static communication.Utils.*;
 public class RolesManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case ROLES_ENDPOINT:
                 handleRoleGet(resp);
@@ -39,6 +40,7 @@ public class RolesManagementServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case ROLES_ENDPOINT:
                 handleRolesPost(req, resp);
@@ -47,15 +49,16 @@ public class RolesManagementServlet extends HttpServlet {
     }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case ROLES_USER_ENDPOINT:
                 handleRolesUserPut(req, resp);
                 break;
         }
     }
-
     @Override
     protected  void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case ROLES_ENDPOINT:
                 handleRolesDelete(req, resp);

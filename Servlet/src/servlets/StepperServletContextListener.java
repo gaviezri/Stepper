@@ -38,6 +38,7 @@ public class StepperServletContextListener implements ServletContextListener {
             servletContext.setAttribute(ROLES_MANAGER, new Role.RoleManager());
             servletContext.setAttribute(COOKIE_2_FLOW_EXEC_ID, new HashMap<Integer, Stack<UUID>>());
             servletContext.setAttribute(UUID_2_COOKIE, new HashMap<UUID,Integer>());
+            servletContext.setAttribute(COOKIE_2_LAST_ACCESS, new HashMap<Integer,Long>());
             Servlet.initialize(servletContext);
         }
     }

@@ -32,6 +32,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         String path = req.getServletPath();
         String res = null;
         switch (path) {
@@ -53,6 +54,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case USER_LOGIN_ENDPOINT:
                 handleNewUserLogin(req, resp);
@@ -62,6 +64,7 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()){
             case ADMIN_LOGOUT_ENDPOINT:
                 handleAdminLogout();
@@ -137,8 +140,6 @@ public class UsersPresenceServlet extends HttpServlet {
         }
         return id;
     }
-
-
 
     private void handleUserLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Cookie[] cookies = req.getCookies();

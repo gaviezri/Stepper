@@ -205,11 +205,13 @@ public class ExecutionController extends BodyControllerComponent {
     }
 
     private void updateStepLogs(List<String> logs) {
-        Platform.runLater(()->{
-            logsListView.visibleProperty().set(true);
-            logsListView.getItems().clear();
-            logsListView.getItems().addAll(logs);
-        });
+        if (logs != null) {
+            Platform.runLater(() -> {
+                logsListView.visibleProperty().set(true);
+                logsListView.getItems().clear();
+                logsListView.getItems().addAll(logs);
+            });
+        }
     }
 
     private void updateStepDetails(String stepPresentationName) {

@@ -141,29 +141,20 @@ public class UsersPresenceServlet extends HttpServlet {
         return id;
     }
 
-    private void handleUserLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Cookie[] cookies = req.getCookies();
-        if(cookies != null) {
-            Integer id = Integer.parseInt(Arrays.stream(cookies).filter(x -> x.getName().equals("ID")).findFirst().get().getValue());
-            Map<Integer, String> usersCookies = Servlet.getCookie2User();// get users in system ID map
-            String userName = usersCookies.get(id);
-            if (userName != null) {
-                deleteUserFromContext(resp, id, usersCookies, userName);
-            } else {
-                resp.getWriter().println(String.format("user with id %d was not found in system", id));
-                System.out.println(String.format("user with id %d was not found in system", id));
-            }
-        } else {
-            resp.getWriter().println(String.format("no cookie found... please login first"));
-            System.out.println(String.format("no cookie found... please login first"));
-        }
-    }
 
-    private void deleteUserFromContext(HttpServletResponse resp, Integer id, Map<Integer, String> usersCookies, String userName) throws IOException {
-        Map<String, UserSystemInfo> usersInfoMap = Servlet.getUserName2Info();  // get current logged in users
-        usersInfoMap.remove(userName);
-        usersCookies.remove(id);
-        resp.getWriter().println(String.format("%s with id %d was logged out (deleted)", userName, id));
+
+    private void handleUserLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Map<String, UserSystemInfo> usersInfoMap = Servlet.getUserName2Info();
+        Map<Integer, String> usersCookies = Servlet.getCookie2User();
+        Map<Integer, Long> usersLastSeen = Servlet.getCookie2LastAccessMap();
+        Integer id = Servlet.idCookieBaker(req.getCookies());
+        String userName = new String(usersCookies.get(id));
+        synchronized (getServletContext()){
+             // get current logged in users
+            usersInfoMap.remove(userName);
+            usersCookies.remove(id);
+            usersLastSeen.remove(id);
+        }
         System.out.println(String.format("%s with id %d was logged out (deleted)", userName, id));
     }
 

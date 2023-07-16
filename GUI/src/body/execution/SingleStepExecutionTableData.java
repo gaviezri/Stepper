@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import stepper.dd.api.AbstractDataDefinition;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.dd.impl.relation.Relation;
@@ -41,7 +42,7 @@ public class SingleStepExecutionTableData {
    private List<String> TypeOfOutputsThatWereTakenCareOf  = new ArrayList<>();
    private List<String> outputNamesAndTypes = new ArrayList<>();
 
-    public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine ,Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
+    public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine ,Map<String, Pair<AbstractDataDefinition, Object>> outputName2DefAndVal) {
         Name = stepName;
         Result = stepResult;
         Duration = duration;
@@ -50,8 +51,8 @@ public class SingleStepExecutionTableData {
         updateOutputs(outputName2DefAndVal);
     }
 
-    private void updateOutputs(Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
-        for (Map.Entry<String, Pair<DataDefinition, Object>> entry : outputName2DefAndVal.entrySet()) {
+    private void updateOutputs(Map<String, Pair<AbstractDataDefinition, Object>> outputName2DefAndVal) {
+        for (Map.Entry<String, Pair<AbstractDataDefinition, Object>> entry : outputName2DefAndVal.entrySet()) {
             if (OutputsThatWereTakenCareOf.contains(entry.getKey()))
                 continue;
             OutputsThatWereTakenCareOf.add(entry.getKey());
@@ -96,7 +97,7 @@ public class SingleStepExecutionTableData {
         Result = stepResult;
     }
 
-    public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<DataDefinition, Object>> output2DefinitionAndValue) {
+    public void updateData(StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine, Map<String, Pair<AbstractDataDefinition, Object>> output2DefinitionAndValue) {
         Result = stepResult;
         Duration = duration;
         Logs = logs;

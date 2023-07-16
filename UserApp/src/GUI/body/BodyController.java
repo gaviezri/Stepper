@@ -102,9 +102,13 @@ public class BodyController {
             flowStatTab.setDisable(false);
             flowHistoTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
-            flowExecComponentController.setActiveFlowDetails(getFlowDefinitionsDataByIndex(getSelectedFlowIndex()));
+            flowExecComponentController.setActiveFlowDetails(getFlowDefinitionsDataByName(getSelectedFlowName()));
             executeFlow();
         });
+    }
+
+    private FlowDefinitionDTO getFlowDefinitionsDataByName(String selectedFlowName) {
+        return flowLibComponentController.getFlowDefinitionsDataByName(selectedFlowName);
     }
 
     private void executeFlow() {

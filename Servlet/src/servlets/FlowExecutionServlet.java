@@ -20,6 +20,7 @@ public class FlowExecutionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case FLOW_EXECUTION_ENDPOINT:
                 handleFlowExecutionPost(req, resp);
@@ -29,6 +30,7 @@ public class FlowExecutionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)  {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case FLOW_EXECUTION_PROGRESS_ENDPOINT:
                 handleFlowExecutionProgressGet(req, resp);

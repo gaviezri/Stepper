@@ -22,6 +22,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //      load XML via Input Stream received from request body
+        Servlet.userCheckIn(req);
         /** each servlet is a singleton and this is the ONLY servlet that make changes to the flow library data structure and therefore there is no need for synchronized */
         LoadDataDTO loadDataDTO = Servlet.getEngineController().readXML(req.getInputStream());
 //      set response message
@@ -35,6 +36,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch(req.getServletPath()){
             case FLOW_NAMES_ENDPOINT:
                 resp.setContentType(JSON_CONTENT_TYPE);

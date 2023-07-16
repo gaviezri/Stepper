@@ -28,6 +28,7 @@ public class HistoryStatisticsServlet extends HttpServlet {
 
     @Override
     final protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Servlet.userCheckIn(req);
         switch (req.getServletPath()){
             case STATISTICS_ENDPOINT:
                 //  handling statistics request

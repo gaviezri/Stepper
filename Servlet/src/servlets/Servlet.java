@@ -6,27 +6,55 @@ import communication.Utils;
 import dto.flow.FlowDefinitionDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import stepper.controller.EngineController;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static communication.Utils.ENGINE_CONTROLLER;
 
 public class Servlet {
     private ServletContext contextRef;
+    private static ScheduledExecutorService userLogoutExecutorService;
     private Servlet() {
+
     }
 
 
-    public static void userCheckOut(Integer cookie){
-        // redirect to user logout procedure servlet...
-        // if user last timestamp exceeds threshold
+    public static void userCheckIn(HttpServletRequest req){
+        Integer cookie = idCookieBaker(req.getCookies());
+        synchronized (instance.contextRef){
+            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+            cookie2LastAccessMap.put(cookie, System.currentTimeMillis());
+        }
     }
     private static Servlet instance;
 
     public static void initialize(ServletContext context) {
         instance = new Servlet();
         instance.contextRef = context;
+        userLogoutExecutorService = Executors.newSingleThreadScheduledExecutor();
+        userLogoutExecutorService.scheduleAtFixedRate(()->{
+            Collection<Integer> cookiesToRemove = new LinkedList<>();
+            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+            for (Map.Entry<Integer,Long> entry : cookie2LastAccessMap.entrySet()){
+                if (System.currentTimeMillis() - entry.getValue() > Utils.THREE_SECONDS){
+                    cookiesToRemove.add(entry.getKey());
+                }
+            }
+            synchronized (instance.contextRef) {
+                for (Integer cookie : cookiesToRemove) {
+                    cookie2LastAccessMap.remove(cookie);
+                    String userName = getCookie2User().get(cookie);
+                    getCookie2User().remove(cookie);
+                    getUserName2Info().remove(userName);
+
+                }
+            }
+        }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     public static EngineController getEngineController() {

@@ -39,7 +39,7 @@ public class Servlet {
         userLogoutExecutorService = Executors.newSingleThreadScheduledExecutor();
         userLogoutExecutorService.scheduleAtFixedRate(()->{
             Collection<Integer> cookiesToRemove = new LinkedList<>();
-            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+            Map<Integer,Long> cookie2LastAccessMap = getCookie2LastAccessMap();
             for (Map.Entry<Integer,Long> entry : cookie2LastAccessMap.entrySet()){
                 if (System.currentTimeMillis() - entry.getValue() > Utils.THREE_SECONDS){
                     cookiesToRemove.add(entry.getKey());
@@ -49,14 +49,17 @@ public class Servlet {
                 for (Integer cookie : cookiesToRemove) {
                     cookie2LastAccessMap.remove(cookie);
                     String userName = getCookie2User().get(cookie);
-                    getCookie2User().remove(cookie);
                     getUserName2Info().remove(userName);
-
+                    getCookie2User().remove(cookie);
                 }
+
             }
         }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
+    public static Map<Integer, Long> getCookie2LastAccessMap() {
+        return (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+    }
     public static EngineController getEngineController() {
         return (EngineController)instance.contextRef.getAttribute(ENGINE_CONTROLLER);
     }

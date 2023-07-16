@@ -77,4 +77,8 @@ public class LibraryController extends BodyControllerComponent {
     public Integer getSelectedFlowIndex() {
         return definitionComponentController.getSelectedFlowIndex();
     }
+
+    public FlowDefinitionDTO getFlowDefinitionsDataByName(String selectedFlowName) {
+        return definitionComponentController.getFlowDefinitionsDataByName(selectedFlowName);
+    }
 }

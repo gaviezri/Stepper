@@ -148,13 +148,22 @@ public class ExecutedFlowDetailsDTO extends AbstractDTO {
         // create a map of step name to list of logs
         Map<String,List<String>> stepsLogs = new HashMap<>();
         for (String stepName : stepsNamesWithAlias){
-            stepsLogs.put(stepName, new ArrayList<>());
+            String cleanStepName = cleanStepNameFromParanthesis(stepName);
+            stepsLogs.put(cleanStepName, new ArrayList<>());
             for (Pair<String,String> log2TimeStamp : stepsLogs2TimeStamp.get(stepsNamesWithAlias.indexOf(stepName))){
-                stepsLogs.get(stepName).add(log2TimeStamp.getKey());
+                stepsLogs.get(cleanStepName).add(log2TimeStamp.getKey());
             }
         }
 
         return stepsLogs;
+    }
+
+    private static String cleanStepNameFromParanthesis(String stepName) {
+        String cleanStepName = stepName;
+        if (stepName.contains("(")) {
+            cleanStepName = stepName.substring(0, stepName.indexOf("(")-1);
+        }
+        return cleanStepName;
     }
 
     public String getCurrentStepName() {

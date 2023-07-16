@@ -72,8 +72,6 @@ public class AppController {
     private void initializePollingExecutions() {
         executorServiceForPollingExecutions.scheduleAtFixedRate(() -> {
             try {
-                //StatisticsDTO  sDTO = reqDispatcher.getStatisticsDTO(); -- > fetchStatistics
-                //FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO(); --> fetchHistory
                 fetchRoles();
                 fetchFlowNames();
                 fetchOnlineUsersInfo();

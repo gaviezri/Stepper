@@ -394,4 +394,8 @@ public class DefinitionController extends LibraryControllerComponent {
     public FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
         return flowDefinitionDTOList.get(flowIndex);
     }
+
+    public FlowDefinitionDTO getFlowDefinitionsDataByName(String selectedFlowName) {
+        return flowDefinitionDTOList.stream().filter(flow -> flow.getFlowName().equals(selectedFlowName)).findFirst().orElse(null);
+    }
 }

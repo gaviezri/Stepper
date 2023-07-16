@@ -77,7 +77,7 @@ public class AppController {
                 fetchRoles();
                 fetchFlowNames();
                 fetchOnlineUsersInfo();
-                fetchHistory();
+                fetchAndUpdateHistory();
                 fetchStatistics();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,9 +90,12 @@ public class AppController {
         bodyComponentController.updateStatistics(statisticsDTO);
     }
 
-    private void fetchHistory() {
+    private void fetchAndUpdateHistory() {
         FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistoryDTO();
         bodyComponentController.updateHistory(historyDTO);
+    }
+    public FlowsExecutionHistoryDTO fetchHistory() {
+       return reqDispatcher.getHistoryDTO();
     }
 
     public void fetchAllFlowsNames() {

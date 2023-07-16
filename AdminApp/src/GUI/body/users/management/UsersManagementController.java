@@ -70,7 +70,6 @@ public class UsersManagementController extends BodyControllerComponent {
         initializeIsManagerCheckBox();
         initializeSaveChangesButton();
         initializeOnlineUsersListView();
-
     }
 
     public void initializeSaveChangesButton(){
@@ -171,9 +170,16 @@ public class UsersManagementController extends BodyControllerComponent {
                         reselectSelectedUserAfterUpdate(selectedUsi);
                     }
                 }
+//                for (UserSystemInfo item : items){
+//                    if(!userSystemInfos.contains(item)){
+//                        items.remove(item);
+//                    }
+//                }
                 // remove items that are not in the list
                 items.removeIf(x-> !userSystemInfos.contains(x));
-            } else { items.clear();}
+            } else {
+                items.clear();
+            }
         });
     }
 

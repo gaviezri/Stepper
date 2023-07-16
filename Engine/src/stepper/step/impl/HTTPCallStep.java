@@ -8,8 +8,8 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-public class HTTPCall extends AbstractStepDefinition {
-    public HTTPCall(String stepName, boolean readonly) {
+public class HTTPCallStep extends AbstractStepDefinition {
+    public HTTPCallStep() {
         super("HTTP call", false);
 
         //inputs
@@ -42,7 +42,13 @@ public class HTTPCall extends AbstractStepDefinition {
         context.getCurrentStepManager().setStepResult(result);
         return result;
     }
-        @Override
+
+    @Override
+    public StepResult validateInputs(StepExecutionContext context) {
+        return null;
+    }
+
+    @Override
     public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
         switch (dataOriginalName) {
             case "RESOURCE":

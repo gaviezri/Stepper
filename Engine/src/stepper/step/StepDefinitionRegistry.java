@@ -18,7 +18,8 @@ public enum StepDefinitionRegistry {
     PROPERTIES_EXPORTER(new PropertiesExporterStep()),
     FILES_CONTENT_EXTRACTOR(new FilesContentExtractorStep()),
     ZIPPER(new ZipperStep()),
-    COMMAND_LINE(new CommandLineStep())
+    COMMAND_LINE(new CommandLineStep()),
+    HTTP_CALL(new HTTPCallStep()),
     ;
 
     private final StepDefinition stepDefinition;

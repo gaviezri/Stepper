@@ -39,7 +39,6 @@ public class Main extends Application {
                     UserRequestsDispatcher.getInstance().logout();
                     Utils.ShowError("Error", "Application failed.", "Internal app error.");
                     mainController.stop();
-                    System.exit(0);
                 });
             }
         } catch (Exception e) {

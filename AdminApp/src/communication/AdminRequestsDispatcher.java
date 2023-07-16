@@ -1,6 +1,5 @@
 package communication;
 
-import com.google.gson.reflect.TypeToken;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.flow.FlowNamesDTO;
 import dto.flow.LoadDataDTO;

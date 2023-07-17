@@ -25,9 +25,11 @@ public class Servlet {
 
     public static void userCheckIn(HttpServletRequest req){
         Integer cookie = idCookieBaker(req.getCookies());
-        synchronized (instance.contextRef){
-            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
-            cookie2LastAccessMap.put(cookie, System.currentTimeMillis());
+        if (!cookie.equals(-1)) {
+            synchronized (instance.contextRef){
+                Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+                cookie2LastAccessMap.put(cookie, System.currentTimeMillis());
+            }
         }
     }
     private static Servlet instance;
@@ -112,12 +114,11 @@ public class Servlet {
         ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).put(cookie, new Stack<>());
     }
     public static Integer idCookieBaker(Cookie[] cookies){
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("ID")) {
-                return Integer.parseInt(cookie.getValue());
-            }
-        }
-        return -1;
+       try {
+              return Integer.parseInt(Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("ID")).findFirst().get().getValue());
+       } catch (Exception e) {
+           return -1;
+       }
     }
 
     public static Set<String> getUserAccessibleFlowNames(UserSystemInfo userInfo){

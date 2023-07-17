@@ -198,6 +198,7 @@ public class HistoryController extends BodyControllerComponent implements Initia
                                 bodyController.setActiveTab(BodyController.FLOW_LIB_TAB);
                                 inputPane.setVisible(true);
                                 definitionPane.setVisible(false);
+                                bodyController.getFlowLibComponentController().getDefinitionController().setSelectedFlowByName(selectedFlow.getFlowName());
                                 bodyController.getFlowLibComponentController().
                                         getInputComponentController().
                                         setInputsToSelectedFlow(getBodyController()
@@ -205,6 +206,7 @@ public class HistoryController extends BodyControllerComponent implements Initia
                                                         .getFlowDefinitionsDataByName(selectedFlow.getFlowName()),
                                                 selectedFlow.getDataName2value(),
                                                 true);
+//                                bodyController.getFlowLibComponentController().setSelectedFlow(selectedFlow.getFlowName());
 
                         });
                 });

@@ -439,7 +439,6 @@ public class ExecutionController extends BodyControllerComponent {
 
         }
         if (!executionProgressDTO.isExecutionInProgress() && !notified) {
-            notified = true;
             String message = "execution ended with " + executionProgressDTO.getFlowExecutionResult() + "!";
             Platform.runLater(() -> {
                 executionEndLabel.setText("\"" + executionProgressDTO.getFlowName() + "\" " + message + "!");

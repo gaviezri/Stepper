@@ -86,16 +86,25 @@ public class UsersManagementController extends BodyControllerComponent {
         rolesListView.getItems().addListener((ListChangeListener<? super Role>) (observabe)-> {
             List<Role> newValue = rolesListView.getItems();
             if (newValue != null) {
-                Platform.runLater(()-> this.rolesListView.setItems(
-                                                            newValue.stream()
-                                                                    .map(x-> createNewRoleListItem(x))
-                                                                    .collect(java.util.stream.Collectors
-                                                                    .toCollection(FXCollections::observableArrayList))
-                        )
-                );
+                Platform.runLater(() -> {
+                    deleteRolesFromUserManagementListViewWhichAreAbscentInRolesTab(newValue);
+                    addRolesToUserManagementListViewWhichArePresentInRolesTab(newValue);
+                });
             }
         });
     }
+
+    private void addRolesToUserManagementListViewWhichArePresentInRolesTab(List<Role> newValue) {
+        newValue.stream()
+                .filter(x->!rolesListView.getItems().stream().map(RoleListItem::getName).collect(Collectors.toList()).contains(x.getName()))
+                .forEach(x->rolesListView.getItems().add(createNewRoleListItem(x)));
+    }
+
+    private void deleteRolesFromUserManagementListViewWhichAreAbscentInRolesTab(List<Role> newValue) {
+        List<String> definedRolesNames = newValue.stream().map(Role::getName).collect(Collectors.toList());
+        rolesListView.getItems().removeIf(x->!definedRolesNames.contains(x.getName()));
+    }
+
     private void initializeOnlineUsersListView() {
         onlineUsersListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

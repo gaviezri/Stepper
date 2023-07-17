@@ -198,12 +198,13 @@ public class HistoryController extends BodyControllerComponent implements Initia
                                 bodyController.setActiveTab(BodyController.FLOW_LIB_TAB);
                                 inputPane.setVisible(true);
                                 definitionPane.setVisible(false);
-//                                bodyController.getFlowLibComponentController().
-//                                        getInputComponentController().
-//                                        setInputsToSelectedFlow(
-//                                                bodyController.getMainController().getEngineController().
-//                                                        getFlowDefinitionDtoByName(selectedFlow.getFlowName()),
-//                                                selectedFlow.getDataName2value(),true);
+                                bodyController.getFlowLibComponentController().
+                                        getInputComponentController().
+                                        setInputsToSelectedFlow(getBodyController()
+                                                        .getFlowLibComponentController()
+                                                        .getFlowDefinitionsDataByName(selectedFlow.getFlowName()),
+                                                selectedFlow.getDataName2value(),
+                                                true);
 
                         });
                 });

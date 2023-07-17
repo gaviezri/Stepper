@@ -87,13 +87,23 @@ public class SingleFlowExecutionDTO {
         return finalStepName2stepsManagers.get(stepName).getStepOutputs();
     }
 
-    public String getExecutingUserName() {
-        return executingUserName;
-    }
-
     public String setExecutingUserName(String executorName) {
         return this.executingUserName = executorName;
     }
 
+    public String getExecutingUserName() {
+        return executingUserName;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SingleFlowExecutionDTO that = (SingleFlowExecutionDTO) o;
+        return Objects.equals(flowName, that.flowName) && Objects.equals(uniqueId, that.uniqueId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(flowName, uniqueId);
+    }
 }

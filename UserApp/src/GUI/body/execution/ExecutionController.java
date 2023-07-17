@@ -435,7 +435,9 @@ public class ExecutionController extends BodyControllerComponent {
                     }
                 });
             }
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException ignored) {
+
+        }
         if (!executionProgressDTO.isExecutionInProgress() && !notified) {
             notified = true;
             String message = "execution ended with " + executionProgressDTO.getFlowExecutionResult() + "!";

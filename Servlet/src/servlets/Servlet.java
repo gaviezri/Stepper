@@ -3,7 +3,6 @@ package servlets;
 import communication.Role;
 import communication.UserSystemInfo;
 import communication.Utils;
-import dto.flow.FlowDefinitionDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,10 +40,11 @@ public class Servlet {
             Collection<Integer> cookiesToRemove = new LinkedList<>();
             Map<Integer,Long> cookie2LastAccessMap = getCookie2LastAccessMap();
             for (Map.Entry<Integer,Long> entry : cookie2LastAccessMap.entrySet()){
-                if (System.currentTimeMillis() - entry.getValue() > Utils.THREE_SECONDS){
+                if (System.currentTimeMillis() - entry.getValue() > Utils.ONE_MINUTE){
                     cookiesToRemove.add(entry.getKey());
                 }
             }
+
             synchronized (instance.contextRef) {
                 for (Integer cookie : cookiesToRemove) {
                     cookie2LastAccessMap.remove(cookie);
@@ -52,7 +52,6 @@ public class Servlet {
                     getUserName2Info().remove(userName);
                     getCookie2User().remove(cookie);
                 }
-
             }
         }, 0, 500, TimeUnit.MILLISECONDS);
     }

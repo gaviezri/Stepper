@@ -129,65 +129,6 @@ public class AppController {
         reqDispatcher.executeFlow(flowName, valName2valType);
         isExecutionInProgess = true;
     }
-
-    private void fetchHistory() {
-        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistory();
-        bodyComponentController.updateHistory(historyDTO);
-    }
-
-//
-//    public List<FlowDefinitionDTO> getAllFlowDefinitionsData() {
-//        return engineController.getAllFlowDefinitionsData();
-//    }
-//
-//    public FlowExecutionResult getFlowExecutionResult() {
-//        return lastExecutedDataCenter.getFlowExecutionResult();
-//    }
-//
-//    public boolean isFlowExecutionInProgress() {
-//        return lastExecutedDataCenter.isFlowExecutionInProgress();
-//    }
-//
-//    public String getLastExecutedFlowName() {
-//        return lastExecutedDataCenter.getLastExecutedFlowName();
-//    }
-//
-//    public int getCurrentStepIdx() {
-//        return lastExecutedDataCenter.getCurrentStepIdx();
-//    }
-//
-//    public String getCurrentStepName() {
-//        return lastExecutedDataCenter.getCurrentStepName();
-//    }
-//
-//    public int getStepsCount(){
-//        return lastExecutedDataCenter.getStepsCount();
-//    }
-//
-//    public Map getExecutedStepsStatus(){
-//        return lastExecutedDataCenter.getExecutedStepsStatus();
-//    }
-//
-//    public Map<String,Map<String, Pair<DataDefinition, Object>>> getOutputsForAllSteps() {
-//        return lastExecutedDataCenter.getOutputsForAllSteps();
-//    }
-//
-//    public Map<String,List<String>> getAllStepsListOfLogs(){
-//        return lastExecutedDataCenter.getAllStepsListOfLogs();
-//    }
-//
-//    public Map<String, Duration> getAllStepsDuration() {
-//        return lastExecutedDataCenter.getAllStepsDuration();
-//    }
-//
-//    public Map<String, String> getAllSummaryLines() {
-//        return lastExecutedDataCenter.getAllSummaryLines();
-//    }
-//
-//    public Map getLastFlowOutputs() {
-//        return lastExecutedDataCenter.getLastFlowOutputs();
-//    }
-
     public void stop() {
         if (executorServiceForPollingExecutions != null) {
             executorServiceForPollingExecutions.shutdown();

@@ -196,7 +196,6 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                                         outputsListView.getSelectionModel().clearSelection();
                                 }
                         });
-
                 }));
         }
 

@@ -54,7 +54,6 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Servlet.userCheckIn(req);
         switch (req.getServletPath()) {
             case USER_LOGIN_ENDPOINT:
                 handleNewUserLogin(req, resp);

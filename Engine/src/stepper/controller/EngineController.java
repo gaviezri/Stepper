@@ -98,9 +98,9 @@ public class EngineController implements Serializable {
         }
     }
 
-    public FlowNamesDTO getFlowDefinitionsNames(){
+    public FlowNamesDTO getFlowDefinitionsNames(boolean readonly){
         try {
-            return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
+            return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames(readonly));
         }catch (Exception e){
             return new FlowNamesDTO("No Flows Loaded Yet!");
         }

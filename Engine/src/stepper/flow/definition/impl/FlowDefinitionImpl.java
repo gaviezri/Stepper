@@ -333,14 +333,12 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
                 .getStepDefinition()
                 .getResourceNecessity(dataName);
     }
-
-
     @Override
-    public void setAccessibility(){
+    public void setReadonly(){
         isReadOnly = stepsUsageDecl.stream().allMatch(step -> step.getStepDefinition().isReadonly());
     }
     @Override
-    public Boolean getAccessibility(){
+    public Boolean isReadOnly(){
         return isReadOnly;
     }
     @Override

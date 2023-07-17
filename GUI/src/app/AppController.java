@@ -108,10 +108,7 @@ public class AppController {
     public LoadDataDTO readXML(String path) {
         return engineController.readXML(path);
     }
-    public FlowNamesDTO getFlowNames() {
-        return engineController.getFlowDefinitionsNames();
-    }
-
+    
     public void executeFlow(int flowIndex, Pair<Map, Map> valName2valType) {
         engineController.executeFlow(flowIndex, valName2valType);
     }

@@ -53,7 +53,7 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
         for (FlowDefinition flowDefinition : flowDefinitions) {
             flowDefinition.createMapping();
             flowDefinition.validateFlowStructure();
-            flowDefinition.setAccessibility();
+            flowDefinition.setReadonly();
             flowDefinition.setFreeInputs();
 //            flowDefinition.setInitialInputs();
         }

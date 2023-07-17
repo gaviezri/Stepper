@@ -4,6 +4,8 @@ import stepper.flow.definition.api.FlowDefinition;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LoadedFlowsLibrary implements Serializable {
     private List<FlowDefinition> loadedflowDefinitions = null;
@@ -34,10 +36,11 @@ public class LoadedFlowsLibrary implements Serializable {
     }
 
 
-    public List<String> getFlowDefinitionsNames() {
+    public List<String> getFlowDefinitionsNames(boolean readonly) {
         return loadedflowDefinitions.stream()
+                .flatMap(x -> readonly && !x.isReadOnly() ? Stream.empty() : Stream.of(x))
                 .map(FlowDefinition::getName)
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public int getCountOfLoadedFlows(){

@@ -77,7 +77,7 @@ public class FlowDefinitionDTO extends AbstractDTO implements Cloneable {
         flowName = flowDef.getName();
         description = flowDef.getDescription();
         formalOutputs = flowDef.getFlowFormalOutputs();
-        isFlowReadonly = flowDef.getAccessibility();
+        isFlowReadonly = flowDef.isReadOnly();
         step2alias = flowDef.getFlowSteps().stream()
                                 .map( stepusgdecl -> new Pair<>(stepusgdecl.getStepDefinition().getStepName(), stepusgdecl.getFinalStepName()))
                                 .collect(Collectors.toList());

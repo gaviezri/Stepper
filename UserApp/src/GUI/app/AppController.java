@@ -74,16 +74,19 @@ public class AppController {
                 updateExecutionProgress();
                 updateManagerAndRoles();
                 updateAccessibleFlows();
-//                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
-//
-//                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
-//                    bodyComponentController.updateHistory(reqDispatcher.getHistoryDTO());
-//                }
+                updateHistory();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateHistory() {
+        FlowsExecutionHistoryDTO flowsExecutionHistoryDTO = reqDispatcher.getHistory();
+        if (flowsExecutionHistoryDTO.getFlowExecutionDTOs().size() > 0) {
+            bodyComponentController.updateHistory(flowsExecutionHistoryDTO);
+        }
     }
 
     private void updateExecutionProgress() {

@@ -18,6 +18,8 @@ public class SingleFlowExecutionDTO {
     private  UUID uniqueId;
     private Map<String, Object> dataName2value;
 
+    private String executingUserName;
+
     private Map<String, StepExecutionDataManager> finalStepName2stepsManagers = new LinkedHashMap<>();
 
     public UUID getUniqueId() {
@@ -84,4 +86,14 @@ public class SingleFlowExecutionDTO {
     public Map<String, Pair<DataDefinition, Object>> getStepOutputs(String stepName) {
         return finalStepName2stepsManagers.get(stepName).getStepOutputs();
     }
+
+    public String getExecutingUserName() {
+        return executingUserName;
+    }
+
+    public String setExecutingUserName(String executorName) {
+        return this.executingUserName = executorName;
+    }
+
+
 }

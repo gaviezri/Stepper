@@ -51,10 +51,9 @@ public class BodyController {
     }
 
     public void updateHistory(FlowsExecutionHistoryDTO historyDTO){
-        if (historyDTO != null) {
             flowHistoTab.setDisable(false);
             flowHistoryComponentController.updateTable(historyDTO);
-        }    }
+        }
 
 
 

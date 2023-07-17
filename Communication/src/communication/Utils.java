@@ -27,6 +27,8 @@ public class Utils {
     public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
     public static final String XML_CONTENT_TYPE = "application/xml";
     public static final String HISTORY_FILTER = "filter";
+    public static final String ALL_FLOWS = "All Flows";
+    public static final String READ_ONLY_FLOWS = "Read Only Flows";
 
     /*#################### endpoints ####################*/
     public static final String USER_LOGIN = "/user/login?name=";

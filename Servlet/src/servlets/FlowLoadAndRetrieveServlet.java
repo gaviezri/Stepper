@@ -1,5 +1,7 @@
 package servlets;
 
+import com.sun.org.apache.regexp.internal.RE;
+import communication.Role;
 import communication.UserSystemInfo;
 import dto.flow.FlowDefinitionDTO;
 import dto.flow.LoadDataDTO;
@@ -9,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import stepper.controller.EngineController;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,12 +26,17 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //      load XML via Input Stream received from request body
         Servlet.userCheckIn(req);
-        /** each servlet is a singleton and this is the ONLY servlet that make changes to the flow library data structure and therefore there is no need for synchronized */
-        LoadDataDTO loadDataDTO = Servlet.getEngineController().readXML(req.getInputStream());
-//      set response message
+        EngineController engineController = Servlet.getEngineController();
+        Role.RoleManager roleManager = Servlet.getRoleManager();
+
+        LoadDataDTO loadDataDTO = engineController.readXML(req.getInputStream());
+
+        roleManager.AssignFlowsToRole(ALL_FLOWS, engineController.getFlowDefinitionsNames(false).getFlowNames());
+        roleManager.AssignFlowsToRole(READ_ONLY_FLOWS, engineController.getFlowDefinitionsNames(true).getFlowNames());
+        roleManager.addRolesToContext(Servlet.getRoles());
+//      Servlet.setRolesChanged(true);
         resp.setContentType(JSON_CONTENT_TYPE);
-//        this.getServletContext().getAttribute(Utils.GSON);
-//      create json from DTO
+
         String jsonDTO = GSON_INSTANCE.toJson(loadDataDTO);
         resp.getWriter().println(jsonDTO);
         System.out.println("XML loaded successfully");
@@ -41,7 +49,7 @@ public class FlowLoadAndRetrieveServlet extends HttpServlet {
             case FLOW_NAMES_ENDPOINT:
                 resp.setContentType(JSON_CONTENT_TYPE);
                 resp.getWriter().println(GSON_INSTANCE.toJson(Servlet.getEngineController()
-                                                                .getFlowDefinitionsNames()));
+                                                                .getFlowDefinitionsNames(false)));
                 break;
             case FLOW_DEFINITIONS_ENDPOINT:
                 resp.setContentType(JSON_CONTENT_TYPE);

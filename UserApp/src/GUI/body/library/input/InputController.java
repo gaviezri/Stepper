@@ -172,15 +172,28 @@ public class InputController extends LibraryControllerComponent {
         }
 
         private List<String> createEnumOptions() {
-            if (userString.equals("Operation type")) {
-                List<String> zipOptions = new LinkedList<>();
-                zipOptions.add("ZIP");
-                zipOptions.add("UNZIP");
-                return zipOptions;
-            }
-            // TODO: add HTTP Call Step options
+            List<String> options = new LinkedList<>();
 
-            return null;
+            switch (userString) {
+                case "Operation type":
+                    options.add("ZIP");
+                    options.add("UNZIP");
+                    break;
+                case ("Method"):
+                    options.add("GET");
+                    options.add("POST");
+                    options.add("PUT");
+                    options.add("DELETE");
+                    break;
+                case ("protocol"):
+                    options.add("HTTP");
+                    options.add("HTTPS");
+                    break;
+                default:
+                    throw(new IllegalArgumentException("No such enum in system. client InputController Line 190."));
+            }
+
+            return options;
         }
 
         public Node getInputFieldElementWithWrapper() {
@@ -425,18 +438,25 @@ public class InputController extends LibraryControllerComponent {
         Map<String, Object> Name2Val = new HashMap<>();
         Map<String, String> Name2Type = new HashMap<>();
 
-        InputField.allFields.forEach(inputField -> {
-            String content = inputField.getContent();
-            if (!content.equals("")) {
-                String inputName = inputField.getName();
-                String inputType = inputField.getType();
-                if (inputType.equals("Enum")) {
-                    inputType = "Enumeration";
+        try {
+            InputField.allFields.forEach(inputField -> {
+                String content = inputField.getContent();
+                if (!content.equals("")) {
+                    String inputName = inputField.getName();
+                    String inputType = inputField.getType();
+                    if (inputType.equals("Enum")) {
+                        inputType = "Enumeration";
+                    }
+                    Name2Type.put(inputName, inputType);
+                    Name2Val.put(inputName, finalizeInputByType(inputType, content));
                 }
-                Name2Type.put(inputName, inputType);
-                Name2Val.put(inputName, finalizeInputByType(inputType, content));
-            }
-        });
+            });
+        }
+        catch(Exception e){
+            System.out.println("it was the stream all alonng");
+        }
+
+
         return new Pair<>(Name2Val, Name2Type);
     }
 

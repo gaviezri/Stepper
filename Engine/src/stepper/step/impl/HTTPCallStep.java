@@ -62,7 +62,7 @@ public class HTTPCallStep extends AbstractStepDefinition {
             body = context.getDataValue("BODY", String.class);
         }catch (Exception e){}
 
-        logger.log(protocol + "://" + address + resource);
+        logger.log(protocol + "://" + address + "/" + resource);
          return EngineRequestsDispatcher.getInstance().createHTTPRequestAndReturnOutput(protocol, resource,
                 address, method, JSON_CONTENT_TYPE, body);
     }
@@ -98,12 +98,15 @@ public class HTTPCallStep extends AbstractStepDefinition {
         switch (dataOriginalName) {
             case "RESOURCE":
             case "ADDRESS":
+            case "RESPONSE_BODY":
                 return DataDefinitionRegistry.STRING;
             case "PROTOCOL":
             case "METHOD":
                 return DataDefinitionRegistry.ENUMERATION;
             case "BODY":
                 return DataDefinitionRegistry.JSON;
+            case "CODE":
+                return DataDefinitionRegistry.NUMBER;
             default:
                 throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
         }

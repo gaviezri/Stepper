@@ -36,10 +36,12 @@ public class Main extends Application {
                 });
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
                     throwable.printStackTrace();
-                    UserRequestsDispatcher.getInstance().logout();
-                    Utils.ShowError("Error", "Application failed.", "Internal app error.");
+//                    UserRequestsDispatcher.getInstance().logout();
+                    Platform.runLater(()->{Utils.ShowError("Error", "Application failed.", "Internal app error.");
+                        System.exit(1);
+                    });
                     mainController.stop();
-                    System.exit(1);
+
                 });
             }
         } catch (Exception e) {

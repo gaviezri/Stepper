@@ -66,6 +66,8 @@ public class BodyController {
         roleManager = new Role.RoleManager();
         flowHistoTab.setDisable(true);
         flowStatTab.setDisable(true);
+        flowHistoryComponentController.setBodyController(this);
+        flowStatComponentController.setBodyController(this);
         rolesManagementTabComponentController.setBodyController(this);
         usersManagementTabComponentController.setBodyController(this);
         usersManagementTabComponentController.initializeRolesListView(rolesManagementTabComponentController);
@@ -92,27 +94,6 @@ public class BodyController {
     }
 
 
-//    public LibraryController getFlowLibComponentController() {
-//        return flowLibComponentController;
-//    }
-
-    private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
-//        flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
-
-            flowStatTab.setDisable(false);
-            flowHistoTab.setDisable(false);
-
-//            int flowIndex = flowLibComponentController.getDefinitionController().getSelectedFlowIndex();
-//            Pair<Map, Map> valName2valType = flowLibComponentController.getInputComponentController().getValName2ValType();
-//            getFlowExecutionController().setContinuationProperty(mainController.getAllFlowDefinitionsData().get(flowIndex));
-//            mainController.executeFlow(flowIndex, valName2valType);
-//
-//        });
-    }
-
-    public void bindFlowExecutionElementsToSelectButton() {
-//        flowExecComponentController.bindFlowExecutionElementsToSelectButton(flowLibComponentController.getDefinitionController());
-    }
 
     public AppController getMainController() {
         return mainController;
@@ -133,6 +114,7 @@ public class BodyController {
     }
 
     public void updateFlowNames(FlowNamesDTO flowNames) {
+        rolesManagementTabComponentController.enableRolesListView();
         rolesManagementTabComponentController.updateFlowNames(flowNames);
     }
 

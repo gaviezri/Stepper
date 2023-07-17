@@ -1,9 +1,6 @@
 package communication;
 
 import com.google.gson.*;
-import stepper.dd.api.DataDefinition;
-
-import java.lang.reflect.Type;
 
 
 public class Utils {
@@ -51,5 +48,5 @@ public class Utils {
     public static final String FLOW_EXECUTION_PROGRESS_ENDPOINT = "/flow/execution/progress";
     public static final String FILTER_HISTORY_FILTER_ENDPOINT = "/history/filter";
     public static final String COOKIE_2_LAST_ACCESS = "cookie2LastAccess";
-    public static final long THREE_SECONDS = 3000;
+    public static final long ONE_MINUTE = 60000;
 }

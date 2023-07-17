@@ -91,6 +91,12 @@ public class Servlet {
         return (Boolean) instance.contextRef.getAttribute(Utils.ROLES_CHANGED);
     }
 
+    public static void setRolesChanged(Boolean rolesChanged) {
+        synchronized (instance.contextRef){
+            instance.contextRef.setAttribute(Utils.ROLES_CHANGED, rolesChanged);
+        }
+    }
+
     public static Boolean getFetchStartupDataAdmin() {
         return (Boolean) instance.contextRef.getAttribute(Utils.FETCH_STARTUP_DATA_ADMIN);
     }
@@ -139,5 +145,9 @@ public class Servlet {
         // get users cookie
         Integer userCookie = Servlet.idCookieBaker(cookies);
         return userCookie.equals(0);
+    }
+
+    public static void shutdown() {
+        userLogoutExecutorService.shutdown();
     }
 }

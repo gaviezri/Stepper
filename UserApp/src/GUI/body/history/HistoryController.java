@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import dto.execution.history.FlowsExecutionHistoryDTO;
 import dto.execution.history.SingleFlowExecutionDTO;
-import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
 
@@ -27,7 +26,6 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 public class HistoryController extends BodyControllerComponent implements Initializable{
 
@@ -37,13 +35,16 @@ public class HistoryController extends BodyControllerComponent implements Initia
         private TableView<SingleFlowExecutionDTO> historyTable;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, String> flowName;
+        private TableColumn<SingleFlowExecutionDTO, String> flowNameColumn;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, FlowExecutionResult> flowExecutionResult;
+        private TableColumn<SingleFlowExecutionDTO, FlowExecutionResult> flowExecutionResultColumn;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, String> startTime;
+        private TableColumn<SingleFlowExecutionDTO, String> startTimeColumn;
+
+        @FXML
+        private TableColumn<SingleFlowExecutionDTO, String> userColumn;
 
         @FXML
         private ListView executedStepsStatusListView;
@@ -84,7 +85,7 @@ public class HistoryController extends BodyControllerComponent implements Initia
         private RadioButton warningFilter;
         @FXML
         private RadioButton noneFilter;
-        private ObservableList executedFlows;
+        private ObservableList<SingleFlowExecutionDTO> fetchedItems;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
         private RadioButton curFilteringElement = noneFilter;
@@ -94,9 +95,10 @@ public class HistoryController extends BodyControllerComponent implements Initia
         @Override
         public void initialize(URL location, ResourceBundle resources) {
                 Platform.runLater(()-> {
-                        flowName.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
-                        flowExecutionResult.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
-                        startTime.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                        flowNameColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
+                        flowExecutionResultColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
+                        startTimeColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                        userColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("executingUserName"));
                         noneFilter.setSelected(true);
                 });
 
@@ -117,15 +119,14 @@ public class HistoryController extends BodyControllerComponent implements Initia
                                 } else {
                                         getBodyController().getMainController().filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter.TIME);
                                 }
-                                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                                fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                                 Platform.runLater(()-> {
-                                        historyTable.setItems(executedFlows);
+                                        historyTable.setItems(fetchedItems);
                                 });
                         }
                 });
 
                 resFilters.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                        FlowExecutionResult filter = FlowExecutionResult.NONE;
                         if(oldValue != null) {
                                 filterExecutions(oldValue, newValue);
                         }
@@ -162,9 +163,9 @@ public class HistoryController extends BodyControllerComponent implements Initia
                                 filter = FlowExecutionResult.NONE;
                         }
 
-                        executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.filterFlowExecutionDTOsBy(filter));
+                        fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.filterFlowExecutionDTOsBy(filter));
                         Platform.runLater(() -> {
-                                historyTable.setItems(executedFlows);
+                                historyTable.setItems(fetchedItems);
                         });
                 }
         }
@@ -210,9 +211,18 @@ public class HistoryController extends BodyControllerComponent implements Initia
 
         public void updateTable(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO){
                 curFlowsExecutionHistoryDTO = flowsExecutionHistoryDTO;
-                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                 Platform.runLater(()-> {
-                        historyTable.setItems(executedFlows);
+                        ObservableList<SingleFlowExecutionDTO> itemsInTable = historyTable.getItems();
+                        SingleFlowExecutionDTO selectedItem = historyTable.getSelectionModel().getSelectedItem();
+                        for (SingleFlowExecutionDTO flow : fetchedItems) {
+                                if (!itemsInTable.contains(flow)) {
+                                        itemsInTable.add(flow);
+                                }
+                        }
+                        if (selectedItem != null) {
+                                historyTable.getSelectionModel().select(selectedItem);
+                        }
                 });
         }
 

@@ -22,9 +22,10 @@
    <children>
       <TableView fx:id="historyTable" layoutY="6.0" prefHeight="361.0" prefWidth="450.0">
         <columns>
-          <TableColumn fx:id="flowName" editable="false" prefWidth="150.0" resizable="false" text="Name" />
-          <TableColumn fx:id="startTime" prefWidth="150.0" resizable="false" text="Start Time" />
-            <TableColumn fx:id="flowExecutionResult" prefWidth="150.0" resizable="false" text="Result" />
+          <TableColumn fx:id="flowNameColumn" editable="false" prefWidth="114.6666259765625" resizable="false" text="Name" />
+          <TableColumn fx:id="startTimeColumn" prefWidth="122.66668701171875" resizable="false" text="Start Time" />
+            <TableColumn fx:id="flowExecutionResultColumn" prefWidth="105.3333740234375" resizable="false" text="Result" />
+            <TableColumn fx:id="userColumn" prefWidth="106.6666259765625" text="User" />
         </columns>
       </TableView>
       <HBox layoutX="10.0" layoutY="373.05078125" spacing="10.0">

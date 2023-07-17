@@ -48,7 +48,7 @@ public class HistoryStatisticsServlet extends HttpServlet {
         return GSON_INSTANCE.toJson(allCurrentLoadedFlowsStatisticsDetails);
     }
     private String handleHistoryRequest(Cookie[] cookies){
-        List<SingleFlowExecutionDTO> accessibleFlowsHistoryDetails = Servlet.getEngineController().getExecutedFlowsHistoryDetails().getFlowExecutionDTOs();;
+        List<SingleFlowExecutionDTO> accessibleFlowsHistoryDetails = Servlet.getEngineController().getExecutedFlowsHistoryDetails().getFlowExecutionDTOs();
         UserSystemInfo userInfo = Servlet.getUserSystemInfo(cookies);
 
         if(!(Servlet.isAdmin(cookies) || userInfo.isManager())){

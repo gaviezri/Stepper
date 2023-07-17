@@ -162,17 +162,16 @@ public class RolesManagementServlet extends HttpServlet {
 
     private void handleRoleGet(HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
-        String results = GSON_INSTANCE.toJson(new RolesDTO());
+        String results;
 
-            if(context.getAttribute(ROLES_CHANGED).equals(true) ||
-                    context.getAttribute(FETCH_STARTUP_DATA_ADMIN).equals(true)){
-                synchronized (context) {
-                context.setAttribute(ROLES_CHANGED, false);
-                context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
-                List<Role> roles = Servlet.getRoles();
-                results = GSON_INSTANCE.toJson(new RolesDTO(roles));
-            }
+
+        synchronized (context) {
+            context.setAttribute(ROLES_CHANGED, false);
+            context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
+            List<Role> roles = Servlet.getRoles();
+            results = GSON_INSTANCE.toJson(new RolesDTO(roles));
         }
+
         resp.getWriter().println(results);
     }
 }

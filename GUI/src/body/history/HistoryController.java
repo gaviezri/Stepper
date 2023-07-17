@@ -103,7 +103,7 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 initializeHistoryTable();
                 initializeRerunButton();
                 bindStepDetailsToSelectedStep();
-                bindStepsListViewToSelectedFlow();
+               // bindStepsListViewToSelectedFlow();
                 bindSelectionOfOutputInListViewToOutputDetailsModal();
         }
 
@@ -266,30 +266,30 @@ public class HistoryController extends body.BodyControllerComponent implements I
                 catch (NullPointerException e) { return "N/A";}
         }
 
-        private void bindStepsListViewToSelectedFlow() {
-                historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                        if (newSelection != null && newSelection != oldSelection) {
-                                currentFlowStepsExecutionTableDataMap.clear();
-                                SingleFlowExecutionDTO selectedFlow = newSelection;
-                                for (String stepName : selectedFlow.getFinalStepsName()) {
-                                        StepResult result = selectedFlow.getStepExecutionResult(stepName);
-                                        Duration duration = getDuration(selectedFlow, stepName);
-
-                                        currentFlowStepsExecutionTableDataMap.put(stepName,
-                                                new SingleStepExecutionTableData(stepName,
-                                                        result,
-                                                        duration,
-                                                        selectedFlow.getStepLogs(stepName),
-                                                        selectedFlow.getStepSummaryLine(stepName),
-                                                        selectedFlow.getStepOutputs(stepName)));
-                                }
-                                Platform.runLater(()-> {
-                                        executedStepsStatusListView.setItems(FXCollections.observableArrayList(currentFlowStepsExecutionTableDataMap.keySet()));
-                                });
-
-                        }
-                });
-        }
+//        private void bindStepsListViewToSelectedFlow() {
+//                historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+//                        if (newSelection != null && newSelection != oldSelection) {
+//                                currentFlowStepsExecutionTableDataMap.clear();
+//                                SingleFlowExecutionDTO selectedFlow = newSelection;
+//                                for (String stepName : selectedFlow.getFinalStepsName()) {
+//                                        StepResult result = selectedFlow.getStepExecutionResult(stepName);
+//                                        Duration duration = getDuration(selectedFlow, stepName);
+//
+//                                        currentFlowStepsExecutionTableDataMap.put(stepName,
+//                                                new SingleStepExecutionTableData(stepName,
+//                                                        result,
+//                                                        duration,
+//                                                        selectedFlow.getStepLogs(stepName),
+//                                                        selectedFlow.getStepSummaryLine(stepName),
+//                                                        selectedFlow.getStepOutputs(stepName)));
+//                                }
+//                                Platform.runLater(()-> {
+//                                        executedStepsStatusListView.setItems(FXCollections.observableArrayList(currentFlowStepsExecutionTableDataMap.keySet()));
+//                                });
+//
+//                        }
+//                });
+//        }
 
         private static Duration getDuration(SingleFlowExecutionDTO selectedFlow, String stepName) {
                 try { return new Duration(selectedFlow.getStepDuration(stepName).toMillis()); }

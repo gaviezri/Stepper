@@ -33,13 +33,16 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         private TableView<SingleFlowExecutionDTO> historyTable;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, String> flowName;
+        private TableColumn<SingleFlowExecutionDTO, String> flowNameColumn;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, FlowExecutionResult> flowExecutionResult;
+        private TableColumn<SingleFlowExecutionDTO, FlowExecutionResult> flowExecutionResultColumn;
 
         @FXML
-        private TableColumn<SingleFlowExecutionDTO, String> startTime;
+        private TableColumn<SingleFlowExecutionDTO, String> startTimeColumn;
+
+        @FXML
+        private TableColumn<SingleFlowExecutionDTO, String> userColumn;
 
         @FXML
         private ListView executedStepsStatusListView;
@@ -78,7 +81,7 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         private RadioButton warningFilter;
         @FXML
         private RadioButton noneFilter;
-        private ObservableList executedFlows;
+        private ObservableList<SingleFlowExecutionDTO> fetchedItems;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
         private RadioButton curFilteringElement = noneFilter;
@@ -88,9 +91,10 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         @Override
         public void initialize(URL location, ResourceBundle resources) {
                 Platform.runLater(()-> {
-                        flowName.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
-                        flowExecutionResult.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
-                        startTime.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                        flowNameColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
+                        flowExecutionResultColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
+                        startTimeColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                        userColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("executingUserName"));
                         noneFilter.setSelected(true);
                 });
 
@@ -117,9 +121,9 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                                 } else {
                                         getBodyController().getMainController().filterHistoryByFilter(FlowsExecutionHistoryDTO.SortFilter.TIME);
                                 }
-                                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                                fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                                 Platform.runLater(()-> {
-                                        historyTable.setItems(executedFlows);
+                                        historyTable.setItems(fetchedItems);
                                 });
                         }
                 });
@@ -150,18 +154,26 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                                 filter = FlowExecutionResult.NONE;
                         }
 
-                        executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.filterFlowExecutionDTOsBy(filter));
+                        fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.filterFlowExecutionDTOsBy(filter));
                         Platform.runLater(() -> {
-                                historyTable.setItems(executedFlows);
+                                historyTable.setItems(fetchedItems);
                         });
                 }
         }
-
-        public void updateTable(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO) {
+        public void updateTable(FlowsExecutionHistoryDTO flowsExecutionHistoryDTO){
                 curFlowsExecutionHistoryDTO = flowsExecutionHistoryDTO;
-                executedFlows = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
-                Platform.runLater(() -> {
-                        historyTable.setItems(executedFlows);
+                fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
+                Platform.runLater(()-> {
+                        ObservableList<SingleFlowExecutionDTO> itemsInTable = historyTable.getItems();
+                        SingleFlowExecutionDTO selectedItem = historyTable.getSelectionModel().getSelectedItem();
+                        for (SingleFlowExecutionDTO flow : fetchedItems) {
+                                if (!itemsInTable.contains(flow)) {
+                                        itemsInTable.add(flow);
+                                }
+                        }
+                        if (selectedItem != null) {
+                                historyTable.getSelectionModel().select(selectedItem);
+                        }
                 });
         }
 

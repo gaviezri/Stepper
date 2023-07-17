@@ -59,7 +59,7 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
                 logger.log("About to sleep for " + timeToSleep + " seconds...");
                 Thread.sleep(timeToSleep);
                 logger.log("Done sleeping...");
-                logger.addSummaryLine("Slept for " + timeToSleep + " seconds, successfully");
+                logger.addSummaryLine("Slept for " + timeToSleep/1000 + " seconds, successfully");
             } catch (Exception e) {
                 logger.addSummaryLine("Sleeping interrupted:" + e.getMessage());
                 result = StepResult.FAILURE;

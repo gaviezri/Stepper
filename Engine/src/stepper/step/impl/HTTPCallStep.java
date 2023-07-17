@@ -1,12 +1,8 @@
 package stepper.step.impl;
 
-import com.google.gson.Gson;
-import dto.flow.LoadDataDTO;
 import javafx.util.Pair;
 import stepper.communication.EngineRequestsDispatcher;
 import stepper.dd.impl.DataDefinitionRegistry;
-import stepper.exception.GivenValueTypeDontMatchException;
-import stepper.exception.NoMatchingKeyWasFoundException;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -14,13 +10,6 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static communication.Utils.GSON_INSTANCE;
 import static communication.Utils.JSON_CONTENT_TYPE;
 
 public class HTTPCallStep extends AbstractStepDefinition {
@@ -34,8 +23,9 @@ public class HTTPCallStep extends AbstractStepDefinition {
         HTTP,
         HTTPS
     }
+
     public HTTPCallStep() {
-        super("HTTP call", false);
+        super("HTTP Call", false);
 
         //inputs
         addInput(new DataDefinitionDeclarationImpl("RESOURCE", DataNecessity.MANDATORY,"Resource Name (include query parameters)", DataDefinitionRegistry.STRING));
@@ -48,7 +38,6 @@ public class HTTPCallStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("CODE", DataNecessity.NA, "Response code", DataDefinitionRegistry.NUMBER));
         addOutput(new DataDefinitionDeclarationImpl("RESPONSE_BODY", DataNecessity.NA, "Response body", DataDefinitionRegistry.STRING));
     }
-    
     
     private Pair<String,Number> preProcessStepInputsAndGetResponse(StepExecutionContext context, StepLogger logger) throws Exception {
         String resource;
@@ -92,13 +81,12 @@ public class HTTPCallStep extends AbstractStepDefinition {
         }
 
         logger.log("Received Response. Status code: " + res.getValue().toString());
-        context.storeDataValue("CODE",res.getValue(),DataDefinitionRegistry.NUMBER);
-        context.storeDataValue("RESPONSE_BODY",res.getKey(),DataDefinitionRegistry.STRING);
+        context.storeDataValue("CODE", res.getValue(),DataDefinitionRegistry.NUMBER);
+        context.storeDataValue("RESPONSE_BODY", res.getKey(),DataDefinitionRegistry.STRING);
         context.tock();
         context.getCurrentStepManager().setStepResult(result);
         return result;
     }
-
 
     @Override
     public StepResult validateInputs(StepExecutionContext context) {
@@ -120,6 +108,7 @@ public class HTTPCallStep extends AbstractStepDefinition {
                 throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
         }
     }
+
     @Override
     public DataNecessity getResourceNecessity(String dataOriginalName) {
         switch (dataOriginalName) {

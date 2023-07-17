@@ -362,7 +362,7 @@ public class FlowLoader implements Serializable {
                 for (int j = 0; j < flowInitialInputValues.getLength(); j++) {
                     initialInputValue = (Element) flowInitialInputValues.item(j);
                     inputName = initialInputValue.getAttribute("input-name");
-                    initialValue = initialInputValue.getAttribute("initial-value");
+                    initialValue = initialInputValue.getAttribute("initial-value").toUpperCase();
 //                  this function validates the initial input received from the XML file and assign them to the corresponding data definition
                     validateInputNameAndValueAndAddToFlowDef(inputName, initialValue,i,flow.getAttribute("name"));
                 }

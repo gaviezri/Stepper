@@ -6,6 +6,7 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.impl.FlowDefinitionImpl;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.step.api.StepDefinition;
+import stepper.step.impl.HTTPCallStep;
 import stepper.step.impl.ZipperStep;
 
 import java.io.Serializable;
@@ -20,14 +21,9 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
         /** EVERY STEP WITH ENUM-INPUT NEEDS TO BE MAPPED HERE FOR FUTURE VALIDATION!*/
 
         enumInputName2InputVal.put("OPERATION", ZipperStep.OperationType.class);
+        enumInputName2InputVal.put("PROTOCOL", HTTPCallStep.ProtocolType.class);
+        enumInputName2InputVal.put("METHOD", HTTPCallStep.MethodType.class);
 
-//          curEnum.clear();
-//         TODO: add enum formal types
-//        curEnum.add("GET");
-//        curEnum.add("PUT");
-//        curEnum.add("POST");
-//        curEnum.add("DELETE");
-//        enumInputName2InputVal.put("METHOD", new ArrayList<>(curEnum));
     }
 
     public FlowDefinition getFlowByName(String name){

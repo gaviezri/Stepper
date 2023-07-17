@@ -20,6 +20,8 @@ public enum StepDefinitionRegistry {
     ZIPPER(new ZipperStep()),
     COMMAND_LINE(new CommandLineStep()),
     HTTP_CALL(new HTTPCallStep()),
+    TO_JSON(new ToJsonStep()),
+    JSON_DATA_EXTRACTOR(new JsonDataExtractorStep())
     ;
 
     private final StepDefinition stepDefinition;

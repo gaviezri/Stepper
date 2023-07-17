@@ -29,26 +29,26 @@ public class UserRequestsDispatcher extends StepperRequestsDispatcher{
     }
     private UserRequestsDispatcher() {}
 
-    public String getBodyResponseFromConnection(HttpURLConnection connection) throws IOException {
-        StringBuilder response = new StringBuilder();
-        try {
-            BufferedReader br = null;
-            if (100 <= connection.getResponseCode() && connection.getResponseCode() <= 399){
-                br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            }else {
-                br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            }
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                response.append(line);
-            }
-        }
-        catch (Exception e){
-            return e.getMessage();
-        }
-        return response.toString();
-    }
+//    public String getBodyResponseFromConnection(HttpURLConnection connection) throws IOException {
+//        StringBuilder response = new StringBuilder();
+//        try {
+//            BufferedReader br = null;
+//            if (100 <= connection.getResponseCode() && connection.getResponseCode() <= 399){
+//                br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            }else {
+//                br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+//            }
+//
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                response.append(line);
+//            }
+//        }
+//        catch (Exception e){
+//            return e.getMessage();
+//        }
+//        return response.toString();
+//    }
 
     public FlowsExecutionHistoryDTO getHistory() {
         try {

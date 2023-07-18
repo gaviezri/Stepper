@@ -31,19 +31,21 @@ public class StatisticsController extends BodyControllerComponent {
 
         // { Original Step Name : (Occurrences Counter, Sum Durations) }
         Platform.runLater(()-> {
-            
-            Map<String, Pair<Integer, Duration>> newStepStatistics = statisticsDTO.getStepStatistics();
-            Map<String, Pair<Integer, Duration>> newFlowStatistics = statisticsDTO.getFlowStatistics();
-            if (FoundDeltaFromLastUpdate(newStepStatistics, false)) {
-                updateBarChartByName(newStepStatistics, stepSumTimeChart, false);
-                updateBarChartByName(newFlowStatistics, stepExecutionChart, true);
+            try {
+                Map<String, Pair<Integer, Duration>> newStepStatistics = statisticsDTO.getStepStatistics();
+                Map<String, Pair<Integer, Duration>> newFlowStatistics = statisticsDTO.getFlowStatistics();
+                if (FoundDeltaFromLastUpdate(newStepStatistics, false)) {
+                    updateBarChartByName(newStepStatistics, stepSumTimeChart, false);
+                    updateBarChartByName(newFlowStatistics, stepExecutionChart, true);
+                }
+                if (FoundDeltaFromLastUpdate(newFlowStatistics, true)) {
+                    updateBarChartByName(newFlowStatistics, flowSumTimeChart, false);
+                    updateBarChartByName(newFlowStatistics, flowExecutionChart, true);
+                }
+                stepStatistics = newStepStatistics;
+                flowStatistics = newFlowStatistics;
+            } catch (Exception e){
             }
-            if (FoundDeltaFromLastUpdate(newFlowStatistics, true)){
-                updateBarChartByName(newFlowStatistics, flowSumTimeChart, false);
-                updateBarChartByName(newFlowStatistics, flowExecutionChart, true);
-            }
-            stepStatistics = newStepStatistics;
-            flowStatistics = newFlowStatistics;
         });
 
 

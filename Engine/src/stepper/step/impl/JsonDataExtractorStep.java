@@ -3,6 +3,7 @@ package stepper.step.impl;
 import com.jayway.jsonpath.JsonPath;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
+import stepper.dd.impl.json.JSONDataDefinition;
 import stepper.flow.execution.context.StepExecutionContext;
 import stepper.flow.execution.logger.StepLogger;
 import stepper.step.api.AbstractStepDefinition;
@@ -52,7 +53,7 @@ public class JsonDataExtractorStep extends AbstractStepDefinition {
             else {
                 while (counter < jsonPathList.size()) {
                     try {
-                        curExtractedValue = JsonPath.read(json, "$.id.*");
+                        curExtractedValue = JsonPath.parse(json).read("$.id", String.class);
 //                    curExtractedValue = JsonPath.read(json, jsonPathList.get(counter));
                     }
                     catch (Exception e){

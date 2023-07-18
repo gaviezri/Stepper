@@ -37,7 +37,6 @@ public class Main extends Application {
                 });
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
                     throwable.printStackTrace();
-                    Platform.runLater(()-> Utils.ShowError("Error", "Application failed.", "Internal app error."));
                 });
             }
         } catch (Exception e) {

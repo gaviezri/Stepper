@@ -45,7 +45,7 @@ public class FlowLoader implements Serializable {
         }
     }
 
-    private FlowBuilder builder = new FlowBuilderImpl();
+    private final FlowBuilder builder = new FlowBuilderImpl();
     private Integer threadCount = 1;
 
 

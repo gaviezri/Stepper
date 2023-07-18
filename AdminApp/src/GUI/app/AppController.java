@@ -38,8 +38,8 @@ public class AppController {
     private HeaderController headerComponentController;
     @FXML
     private BodyController bodyComponentController;
-    private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
-    private AdminRequestsDispatcher reqDispatcher = AdminRequestsDispatcher.getInstance();
+    private final ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private final AdminRequestsDispatcher reqDispatcher = AdminRequestsDispatcher.getInstance();
     public void initialize(){
         this.headerComponentController.setMainController(this);
         this.bodyComponentController.setMainController(this);

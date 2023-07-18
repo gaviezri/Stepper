@@ -31,14 +31,14 @@ public class InputController extends LibraryControllerComponent {
     // NESTED CLASS INPUTFIELD
     // holds all the data needed to create an input field, and the input field itself
     public static class InputField {
-        private static Map<Node,InputField> Node2InputField = new HashMap<>();
-        private String name;
-        private String type;
-        private String userString;
-        private List<String> stepNames;
-        private BooleanProperty satisfied;
-        private boolean isMandatory;
-        private static List<InputField> allFields = new LinkedList<>();
+        private static final Map<Node,InputField> Node2InputField = new HashMap<>();
+        private final String name;
+        private final String type;
+        private final String userString;
+        private final List<String> stepNames;
+        private final BooleanProperty satisfied;
+        private final boolean isMandatory;
+        private static final List<InputField> allFields = new LinkedList<>();
         private Boolean isInitialValue = false;
         private Node inputFieldElement;
 

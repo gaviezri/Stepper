@@ -10,13 +10,14 @@ import dto.user.system.info.UsersSystemInfoDTO;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static communication.Utils.*;
 
 
 public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
-    private static AdminRequestsDispatcher instance = new AdminRequestsDispatcher();
+    private static final AdminRequestsDispatcher instance = new AdminRequestsDispatcher();
     public static AdminRequestsDispatcher getInstance() {
         return instance;
     }
@@ -28,7 +29,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
     public LoadDataDTO loadXML(String xmlContent){
         try {
             HttpURLConnection con = getConnection(LOAD_XML_ENDPOINT, "POST", XML_CONTENT_TYPE);
-            con.getOutputStream().write(xmlContent.getBytes("UTF-8"));
+            con.getOutputStream().write(xmlContent.getBytes(StandardCharsets.UTF_8));
             con.getOutputStream().flush();
 
             LoadDataDTO dto = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), LoadDataDTO.class);
@@ -92,7 +93,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         try {
             HttpURLConnection con = getConnection(ROLES_ENDPOINT, "POST", JSON_CONTENT_TYPE);
             OutputStream os = con.getOutputStream();
-            os.write(GSON_INSTANCE.toJson(new RolesDTO(newRole)).getBytes("UTF-8"));
+            os.write(GSON_INSTANCE.toJson(new RolesDTO(newRole)).getBytes(StandardCharsets.UTF_8));
             RolesMapDTO rolesMapDTO = GSON_INSTANCE.fromJson(getBodyResponseFromConnection(con), RolesMapDTO.class);
             return rolesMapDTO.getRolesMap();
         } catch (Exception e) {
@@ -140,7 +141,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         try {
             HttpURLConnection con = getConnection(ROLES_USER_ENDPOINT, "PUT", JSON_CONTENT_TYPE);
             OutputStream os = con.getOutputStream();
-            os.write(GSON_INSTANCE.toJson(new UsersSystemInfoDTO(modifiedUsers)).getBytes("UTF-8"));
+            os.write(GSON_INSTANCE.toJson(new UsersSystemInfoDTO(modifiedUsers)).getBytes(StandardCharsets.UTF_8));
             getBodyResponseFromConnection(con);
             con.disconnect();
         } catch (Exception e) {
@@ -173,7 +174,7 @@ public class AdminRequestsDispatcher extends StepperRequestsDispatcher{
         try {
             HttpURLConnection con = getConnection(ROLES_ENDPOINT, "DELETE", JSON_CONTENT_TYPE);
             OutputStream os = con.getOutputStream();
-            os.write(GSON_INSTANCE.toJson(new RolesDTO(Arrays.asList(selectedRole))).getBytes("UTF-8"));
+            os.write(GSON_INSTANCE.toJson(new RolesDTO(Collections.singletonList(selectedRole))).getBytes(StandardCharsets.UTF_8));
             getBodyResponseFromConnection(con);
             con.disconnect();
         } catch (Exception e) {

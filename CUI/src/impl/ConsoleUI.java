@@ -103,8 +103,8 @@ public class ConsoleUI extends UIAbstractDefinition {
     }
 
     private void printStatisticsLineToConsole(String typeName, String name, int occurrencesCounter, Duration totalDuration){
-        out.println(String.format("%s name: %s, number of executions: %d , average duration: %d ms\n",
-                typeName,name,occurrencesCounter,totalDuration.toMillis()/occurrencesCounter));
+        out.printf("%s name: %s, number of executions: %d , average duration: %d ms\n%n",
+                typeName,name,occurrencesCounter,totalDuration.toMillis()/occurrencesCounter);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ConsoleUI extends UIAbstractDefinition {
             getFreeInputs(valueResult, typeResult, mandatoryInputs, mandatoryInputsTypes, mandatoryInputsUserString, true);
             out.println("Optional inputs\n-----------------");
             getFreeInputs(valueResult, typeResult, optionalInputs, optionalInputsTypes,  optionalInputsUserString, false);
-        } catch (Exception e){;
+        } catch (Exception e){
             return null;
         }
         return new Pair<>(valueResult, typeResult);

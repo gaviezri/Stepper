@@ -47,8 +47,8 @@ public class Role {
     }
 
 
-    private String Name;
-    private String Description;
+    private final String Name;
+    private final String Description;
     private List<String> assignedFlowNames;
 
 

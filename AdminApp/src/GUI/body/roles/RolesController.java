@@ -219,9 +219,7 @@ public class RolesController extends BodyControllerComponent {
             Role newRole = getNewRoleFromDialog();
             if (newRole != null) {
                 Platform.runLater(()->{
-                    if (availableRolesListView.getItems().contains(newRole)) {
-                        availableRolesListView.getItems().remove(newRole);
-                    }
+                    availableRolesListView.getItems().remove(newRole);
                     newlyAddedOrModifiedRoles.add(newRole);
                     availableRolesListView.getItems().add(newRole);
                     try {

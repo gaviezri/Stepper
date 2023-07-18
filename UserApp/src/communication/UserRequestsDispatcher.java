@@ -23,7 +23,7 @@ import static communication.Utils.*;
 
 public class UserRequestsDispatcher extends StepperRequestsDispatcher{
 
-    private static UserRequestsDispatcher instance = new UserRequestsDispatcher();
+    private static final UserRequestsDispatcher instance = new UserRequestsDispatcher();
     public static UserRequestsDispatcher getInstance() {
         return instance;
     }

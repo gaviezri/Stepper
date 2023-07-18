@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class UsersSystemInfoDTO {
-    private Collection<UserSystemInfo> usersSystemInfo;
+    private final Collection<UserSystemInfo> usersSystemInfo;
 
     public UsersSystemInfoDTO(Collection<UserSystemInfo> usersSystemInfo) {
         this.usersSystemInfo = usersSystemInfo;

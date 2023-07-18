@@ -37,7 +37,7 @@ public class UsersManagementController extends BodyControllerComponent {
             this.assigned.set(false);
         }
 
-        public String getName() { return name.get(); };
+        public String getName() { return name.get(); }
 
         public BooleanProperty assignedProperty() {return assigned;}
 
@@ -137,9 +137,7 @@ public class UsersManagementController extends BodyControllerComponent {
                 } else {
                     selectedUser.unAssignNewRole(x);
                 }
-                if(!modifiedUsers.contains(selectedUser)) {
-                    modifiedUsers.add(selectedUser);
-                }
+                modifiedUsers.add(selectedUser);
             }
         });
         return item;

@@ -53,11 +53,11 @@ public class FlowDefinitionDTO extends AbstractDTO implements Cloneable {
 //    }
 
     public FlowDefinitionDTO(FlowDefinitionDTO other){
-        flowName = new String(other.flowName);
-        description = new String(other.description);
+        flowName = other.flowName;
+        description = other.description;
         formalOutputs = new ArrayList<>(other.formalOutputs);
-        isFlowReadonly = Boolean.valueOf(other.isFlowReadonly);
-        continuationsCount = new Integer(other.continuationsCount);
+        isFlowReadonly = other.isFlowReadonly;
+        continuationsCount = other.continuationsCount;
         step2alias = new ArrayList<>(other.step2alias);
         isStepReadonly = new ArrayList<>(other.isStepReadonly);
         stepsDTO = new StepsDTO(other.stepsDTO);

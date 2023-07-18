@@ -37,7 +37,7 @@ public interface FlowDefinition {
 
     static Map<String,String> getStepInput2UserString() {
         return null;
-    };
+    }
 
     void setFlowFormalOutputs(List<String> flowFormalOutputs);
 

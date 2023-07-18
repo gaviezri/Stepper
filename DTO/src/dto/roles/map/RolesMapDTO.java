@@ -6,7 +6,7 @@ import dto.AbstractDTO;
 import java.util.Map;
 
 public class RolesMapDTO extends AbstractDTO {
-    private Map<String, Role> rolesMap;
+    private final Map<String, Role> rolesMap;
 
     public RolesMapDTO(Map<String, Role> rolesMap) {
         this.rolesMap = rolesMap;

@@ -16,10 +16,10 @@ public abstract class AbstractDTO {
 
     public boolean getStatus() {
         return valid;
-    };
+    }
 
     public String getErrorMessage(){
         return errorMessage;
-    };
+    }
 
 }

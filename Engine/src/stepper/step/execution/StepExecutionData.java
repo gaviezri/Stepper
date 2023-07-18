@@ -17,7 +17,7 @@ public class StepExecutionData implements Serializable {
     private StepResult stepResult;
     private Instant start;
     private Duration totalDuration;
-    private Map<String, Pair<DataDefinition,Object>> dataName2DefinitionAndValue = new HashMap<>();
+    private final Map<String, Pair<DataDefinition,Object>> dataName2DefinitionAndValue = new HashMap<>();
 
     public Duration getDuration() {
         return totalDuration;

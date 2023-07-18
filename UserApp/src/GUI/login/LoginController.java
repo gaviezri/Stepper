@@ -29,7 +29,7 @@ public class LoginController {
     private Stage loginStage;
     private Stage mainStage;
 
-    private BooleanProperty loggedIn = new SimpleBooleanProperty(false);
+    private final BooleanProperty loggedIn = new SimpleBooleanProperty(false);
 
     public void setStage(Stage loginStage) {
         this.loginStage = loginStage;
@@ -50,11 +50,7 @@ public class LoginController {
 
     public void initialize() {
         userNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 0) {
-                loginButton.setDisable(false);
-            } else {
-                loginButton.setDisable(true);
-            }
+            loginButton.setDisable(newValue.length() <= 0);
         });
     }
 

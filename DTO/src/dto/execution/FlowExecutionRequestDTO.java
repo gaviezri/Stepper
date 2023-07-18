@@ -4,8 +4,8 @@ import javafx.util.Pair;
 import java.util.Map;
 
 public class FlowExecutionRequestDTO {
-    private Pair<Map,Map> valName2ValType;
-    private String flowName;
+    private final Pair<Map,Map> valName2ValType;
+    private final String flowName;
 
     public FlowExecutionRequestDTO(Pair<Map,Map> valName2ValType, String flowName) {
         this.valName2ValType = valName2ValType;

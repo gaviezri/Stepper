@@ -21,11 +21,11 @@ import java.util.Map;
 public class StepExecutionContextImpl implements StepExecutionContext {
     StepUsageDeclaration currentStepUsageDeclaration;
     private String currentStepName;
-    private DataAliasingManager dataAliasingManager;
-    private Map<String, Object> ExecutionDataValues; // final name TO value
-    private Map<String, stepper.dd.api.DataDefinition> ExecutionDataName2Definition = new HashMap<>();
-    private Map<String, StepExecutionDataManager> step2Manager = new LinkedHashMap<>();
-    private MappingGraph mappingGraph;
+    private final DataAliasingManager dataAliasingManager;
+    private final Map<String, Object> ExecutionDataValues; // final name TO value
+    private final Map<String, stepper.dd.api.DataDefinition> ExecutionDataName2Definition = new HashMap<>();
+    private final Map<String, StepExecutionDataManager> step2Manager = new LinkedHashMap<>();
+    private final MappingGraph mappingGraph;
 //    public String getFinalDataName(String name) {
 //        return dataAliasingManager.getAliasDataName(currentStepName, name);
 //    }

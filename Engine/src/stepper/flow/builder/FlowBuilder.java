@@ -26,7 +26,7 @@ public interface FlowBuilder {
     void instantiateFlowsAndSetNames(List<String> flowNames);
     void setFlowFormalOutputs(int flowidx, Set<String> flowFormalOutputs);
     void setFlowDescription(List<String> descriptions);
-    public List<FlowDefinition> buildFlows();
+    List<FlowDefinition> buildFlows();
     void addStepToFlow(int flow, String name, String finalname, boolean skipIfFail);
     void addFlowLevelAlias(int flowidx, String stepFinalName, String sourceDataName, String sourceDataAlias);
     String getStepOriginalName(int flowidx, String stepName);

@@ -18,7 +18,7 @@ import static java.util.stream.IntStream.range;
 
 public class MappingGraph implements Serializable {
     private final List<String> stepNodes;
-    private List<List<MappingEdge>> edges;
+    private final List<List<MappingEdge>> edges;
 
     public MappingGraph(List<StepUsageDeclaration> stepUsageDecl, List<Pair<String, String>> customMapping, DataAliasingManager dataAliasingManager) {
         // creating the custom mapping in the graph's constructor

@@ -91,8 +91,8 @@ public class ZipperStep extends AbstractStepDefinition {
         try (
                 java.io.FileOutputStream fos = new java.io.FileOutputStream(zippedFile);
                 java.util.zip.ZipOutputStream zipOut = new java.util.zip.ZipOutputStream(fos);
-                java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile);
-                )
+                java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile)
+        )
         {
             zipOut.putNextEntry(new ZipEntry(sourceFile.getName()));
             byte[] buffer = new byte[1024];
@@ -108,7 +108,7 @@ public class ZipperStep extends AbstractStepDefinition {
         File zipFile = new File(source);
         File targetDirectory = new File(source.substring(0, source.lastIndexOf('.')));
         try (
-                ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile));
+                ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))
         ) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -118,7 +118,7 @@ public class ZipperStep extends AbstractStepDefinition {
                 } else {
                     file.createNewFile();
                     try (
-                            OutputStream outputStream = new FileOutputStream(file);
+                            OutputStream outputStream = new FileOutputStream(file)
                     ) {
                         byte[] buffer = new byte[1024];
                         int bytesRead;

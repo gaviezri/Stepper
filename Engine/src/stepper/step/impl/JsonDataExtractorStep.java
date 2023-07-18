@@ -9,11 +9,8 @@ import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
-
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static communication.Utils.GSON_INSTANCE;
 
 public class JsonDataExtractorStep extends AbstractStepDefinition {
 

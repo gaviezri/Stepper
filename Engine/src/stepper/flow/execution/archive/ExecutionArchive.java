@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class ExecutionArchive implements Serializable {
-    private Stack<FlowExecution> flowExecutionStack;
+    private final Stack<FlowExecution> flowExecutionStack;
 
     public ExecutionArchive() {
         flowExecutionStack = new Stack<>();

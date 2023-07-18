@@ -72,7 +72,7 @@ public class HistoryController extends BodyControllerComponent implements Initia
         private RadioButton resultFilter;
         @FXML
         private RadioButton nameFilter;
-        private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
+        private final FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
         @FXML
         private VBox rerunButton;
         @FXML
@@ -88,8 +88,8 @@ public class HistoryController extends BodyControllerComponent implements Initia
         private ObservableList<SingleFlowExecutionDTO> fetchedItems;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
-        private RadioButton curFilteringElement = noneFilter;
-        private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
+        private final RadioButton curFilteringElement = noneFilter;
+        private final Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
 
 
         @Override

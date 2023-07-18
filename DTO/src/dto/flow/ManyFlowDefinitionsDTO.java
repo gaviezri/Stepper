@@ -1,8 +1,10 @@
 package dto.flow;
 
+import dto.AbstractDTO;
+
 import java.util.List;
 
-public class ManyFlowDefinitionsDTO {
+public class ManyFlowDefinitionsDTO extends AbstractDTO {
     private final List<FlowDefinitionDTO> flowDefinitions;
 
     public ManyFlowDefinitionsDTO(List<FlowDefinitionDTO> flowDefinitions) {

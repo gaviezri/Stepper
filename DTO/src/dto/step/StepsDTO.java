@@ -1,5 +1,6 @@
 package dto.step;
 
+import dto.AbstractDTO;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.definition.mapping.MappingGraph;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class StepsDTO {
+public class StepsDTO extends AbstractDTO {
     final List<SingleStepDTO> steps = new ArrayList<>();
 
     public StepsDTO(List<StepUsageDeclaration> stepsUsageDecl, MappingGraph mappingGraph)

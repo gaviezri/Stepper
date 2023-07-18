@@ -1,5 +1,6 @@
 package dto.execution.history;
 
+import dto.AbstractDTO;
 import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.step.api.enums.StepResult;
@@ -7,7 +8,7 @@ import stepper.step.api.enums.StepResult;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FlowsExecutionHistoryDTO {
+public class FlowsExecutionHistoryDTO extends AbstractDTO {
     public enum SortFilter {
         NAME,
         TIME,

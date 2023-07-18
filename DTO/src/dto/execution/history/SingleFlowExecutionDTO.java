@@ -1,5 +1,6 @@
 package dto.execution.history;
 
+import dto.AbstractDTO;
 import javafx.util.Pair;
 import stepper.dd.api.DataDefinition;
 import stepper.flow.execution.FlowExecution;
@@ -11,7 +12,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SingleFlowExecutionDTO {
+public class SingleFlowExecutionDTO extends AbstractDTO {
     private final String flowName;
     private final String startTime; // need to be in format: {dd-mm-yyyy hh:mm:ss}
     private final FlowExecutionResult flowExecutionResult;

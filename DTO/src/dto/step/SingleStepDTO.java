@@ -1,11 +1,12 @@
 package dto.step;
 
+import dto.AbstractDTO;
 import javafx.util.Pair;
 import stepper.flow.definition.api.StepUsageDeclaration;
 
 import java.util.*;
 
-public class SingleStepDTO {
+public class SingleStepDTO extends AbstractDTO {
     String stepName;
 
     // INPUTS INFO

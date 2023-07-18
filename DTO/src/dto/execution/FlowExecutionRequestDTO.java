@@ -1,9 +1,10 @@
 package dto.execution;
 
+import dto.AbstractDTO;
 import javafx.util.Pair;
 import java.util.Map;
 
-public class FlowExecutionRequestDTO {
+public class FlowExecutionRequestDTO extends AbstractDTO {
     private final Pair<Map,Map> valName2ValType;
     private final String flowName;
 

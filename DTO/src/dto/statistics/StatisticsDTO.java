@@ -1,11 +1,12 @@
 package dto.statistics;
 
+import dto.AbstractDTO;
 import javafx.util.Pair;
 
 import java.time.Duration;
 import java.util.Map;
 
-public class StatisticsDTO {
+public class StatisticsDTO extends AbstractDTO {
     // { Original Step Name : (Occurrences Counter, Sum Durations) }
     Map<String, Pair<Integer, Duration>> stepStatistics;
     // { Flow Name : (Occurrences Counter, Sum Durations) }

@@ -10,10 +10,9 @@ import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.enums.DataNecessity;
 import stepper.step.api.enums.StepResult;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static communication.Utils.GSON_INSTANCE;
 
 public class JsonDataExtractorStep extends AbstractStepDefinition {
 
@@ -28,38 +27,45 @@ public class JsonDataExtractorStep extends AbstractStepDefinition {
         addOutput(new DataDefinitionDeclarationImpl("VALUE", DataNecessity.NA, "Dats value", DataDefinitionRegistry.STRING));
     }
 
-    private String[] extractJsonPathList(String fullJsonPath){
-        String[] parts = new String[]{};
-
-        if(fullJsonPath.contains(Pattern.quote("|"))) {
-            parts = fullJsonPath.split(Pattern.quote("|"));
-        }
-        else{
-            parts[0] = fullJsonPath;
-        }
-
-        return parts;
+    private List<String> extractJsonPathList(String fullJsonPath){
+        return Arrays.asList(fullJsonPath.split(Pattern.quote("|")));
     }
+
     @Override
     public StepResult invoke(StepExecutionContext context) {
         context.tick();
         StepLogger logger = context.getStepLogger();
         StepResult result = StepResult.SUCCESS;
-        String jsonPath;
-        String json;
-        String extractedValue = null;
-
+        /** this function handles both single and multiply json path commands.
+         * it will extract the data from the json by each command and append it to the result string */
         try {
-            jsonPath = context.getDataValue("JSON_PATH", String.class);
-            json = context.getDataValue("JSON", String.class);
-            extractJsonPathList(jsonPath);
+            String json = context.getDataValue("JSON", String.class);
+            String jsonPath = context.getDataValue("JSON_PATH", String.class);
+            List<String> jsonPathList = extractJsonPathList(jsonPath);
+            StringBuilder extractedValue = new StringBuilder();
+            String curExtractedValue = null;
+            int counter = 0;
 
-            List<String> extractedValueList = JsonPath.read(json, jsonPath);
-
-            if(extractedValueList.isEmpty()) {
+            if (jsonPathList.isEmpty()) {
                 logger.log("No value found for json path " + jsonPath);
-            } else{
-                extractedValue = String.join(",", extractedValueList);
+            }
+            else {
+                while (counter < jsonPathList.size()) {
+                    try {
+                        curExtractedValue = JsonPath.read(json, "$.id.*");
+//                    curExtractedValue = JsonPath.read(json, jsonPathList.get(counter));
+                    }
+                    catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                    if (counter == 0) {
+                        extractedValue.append(curExtractedValue);
+                    }
+                    else{
+                        extractedValue.append(", ").append(curExtractedValue);
+                    }
+                    counter += 1;
+                }
             }
 
             logger.log("Extracting data " + jsonPath + ". Value: " + extractedValue);

@@ -453,7 +453,7 @@ public class InputController extends LibraryControllerComponent {
             });
         }
         catch(Exception e){
-            System.out.println("it was the stream all alonng");
+            System.out.println(e.getMessage());
         }
 
 

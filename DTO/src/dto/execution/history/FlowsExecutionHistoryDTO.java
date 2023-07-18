@@ -24,11 +24,10 @@ public class FlowsExecutionHistoryDTO {
         }
     }
 
-    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList, Map<UUID,Integer> uuid2Cookie, Map<Integer,String> cookie2Name){
+    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList, Map<UUID,String> uuid2User){
         this.flowExecutionDTOs.addAll(flowExecutionsList);
         this.flowExecutionDTOs.stream()
-                .forEach(x-> x.setExecutingUserName(cookie2Name.
-                                get(uuid2Cookie.get(x.getUniqueId()))));
+                .forEach(x-> x.setExecutingUserName(uuid2User.get(x.getUniqueId())));
     }
     public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList){
         this.flowExecutionDTOs.addAll(flowExecutionsList);

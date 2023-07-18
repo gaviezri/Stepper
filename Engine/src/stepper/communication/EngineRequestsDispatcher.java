@@ -13,12 +13,12 @@ import static communication.Utils.GSON_INSTANCE;
 import static communication.Utils.JSON_CONTENT_TYPE;
 
 public class EngineRequestsDispatcher extends StepperRequestsDispatcher {
-    private static EngineRequestsDispatcher instance = new EngineRequestsDispatcher();
+    private static final EngineRequestsDispatcher instance = new EngineRequestsDispatcher();
     public static EngineRequestsDispatcher getInstance() {
         return instance;
     }
 
-    private EngineRequestsDispatcher(){};
+    private EngineRequestsDispatcher(){}
 
     protected HttpURLConnection getConnection(String protocol, String resource, String address, String method, String contentType, String body) throws Exception{
         URL url = new URL(protocol + "://" + address + resource);

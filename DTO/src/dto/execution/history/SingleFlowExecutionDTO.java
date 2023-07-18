@@ -12,11 +12,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SingleFlowExecutionDTO {
-    private String flowName;
-    private String startTime; // need to be in format: {dd-mm-yyyy hh:mm:ss}
-    private FlowExecutionResult flowExecutionResult;
-    private  UUID uniqueId;
-    private Map<String, Object> dataName2value;
+    private final String flowName;
+    private final String startTime; // need to be in format: {dd-mm-yyyy hh:mm:ss}
+    private final FlowExecutionResult flowExecutionResult;
+    private final UUID uniqueId;
+    private final Map<String, Object> dataName2value;
 
     private String executingUserName;
 

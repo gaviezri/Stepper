@@ -63,12 +63,10 @@ public class ToJsonStep extends AbstractStepDefinition {
 
     @Override
     public DataNecessity getResourceNecessity(String dataOriginalName) {
-        switch (dataOriginalName) {
-            case "CONTENT":
-                return DataNecessity.MANDATORY;
-            default:
-                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        if (dataOriginalName.equals("CONTENT")) {
+            return DataNecessity.MANDATORY;
         }
+        throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
     }
 
     @Override

@@ -35,12 +35,12 @@ public class DefinitionController extends LibraryControllerComponent {
     @FXML private TitledPane inputsTitledPane;
     @FXML private TitledPane outputsTitledPane;
     private List<FlowDefinitionDTO> flowDefinitionDTOList = new ArrayList<>();
-    private  SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
-    private  List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
-    private List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
-    private List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
+    private final SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
+    private final List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
+    private final List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
+    private final List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
     public ListView<String> getFlowDefAvailableFlowsList() {
         return flowDefAvailableFlowsList;
     }

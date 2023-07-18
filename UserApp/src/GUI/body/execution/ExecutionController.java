@@ -69,13 +69,13 @@ public class ExecutionController extends BodyControllerComponent {
     @FXML private Label continuationLabel;
 
 
-    private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
+    private final Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
     private Map<String, List<Pair<String,String>>> continuationDataMap;
 
     private static final int POLLING_INTERVAL = 200;
     private boolean fooled = false;
     private Boolean notifiedFlowEnd = false;
-    private BooleanProperty gotContinuations = new SimpleBooleanProperty(false);
+    private final BooleanProperty gotContinuations = new SimpleBooleanProperty(false);
 
 
 
@@ -252,7 +252,7 @@ public class ExecutionController extends BodyControllerComponent {
                             allStepsListOfLogs.get(stepName),
                             allSummaryLines.get(stepName),
                             outputsForAllSteps.get(stepName), true);
-                };
+                }
             }
             else{
                 currentFlowStepsExecutionTableDataMap.put(stepName,
@@ -417,7 +417,7 @@ public class ExecutionController extends BodyControllerComponent {
         if (continuationDataMap.size() > 0) {
             continuationListView.getItems().clear();
             continuationDataMap.forEach((key, value) -> {
-                continuationListView.getItems().add(key.toString());
+                continuationListView.getItems().add(key);
             });
         }
     }

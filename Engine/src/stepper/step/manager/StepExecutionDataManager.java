@@ -18,8 +18,8 @@ import java.util.Map;
 public class StepExecutionDataManager implements DataManager, Serializable {
     // manager for each step in the flow
     // manages a step logger and the step's execution data i.e.
-    private StepExecutionLoggerImpl stepLogger;
-    private StepExecutionData stepExecutionData;
+    private final StepExecutionLoggerImpl stepLogger;
+    private final StepExecutionData stepExecutionData;
 
     public StepExecutionDataManager(String step){
         stepLogger = new StepExecutionLoggerImpl(step);

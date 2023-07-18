@@ -5,7 +5,6 @@ import GUI.body.execution.ExecutionController;
 import GUI.body.library.LibraryController;
 import GUI.body.library.definition.DefinitionController;
 import GUI.body.library.input.InputController;
-import GUI.body.statistics.StatisticsController;
 import GUI.body.history.HistoryController;
 import dto.execution.progress.ExecutedFlowDetailsDTO;
 import dto.execution.history.FlowsExecutionHistoryDTO;
@@ -30,7 +29,6 @@ public class BodyController {
     private AppController mainController;
     @FXML private LibraryController flowLibComponentController;
     @FXML private ExecutionController flowExecComponentController;
-    @FXML private StatisticsController flowStatComponentController;
     @FXML private HistoryController flowHistoryComponentController;
     @FXML private TabPane mainTabPane;
     @FXML private Tab flowLibTab;
@@ -46,9 +44,6 @@ public class BodyController {
         this.mainTabPane.getSelectionModel().select(activeTab);
     }
 
-    public void updateStatistics() {
-        this.flowStatComponentController.updateBarChars();
-    }
 
     public void updateHistory(FlowsExecutionHistoryDTO historyDTO){
             flowHistoTab.setDisable(false);
@@ -63,10 +58,8 @@ public class BodyController {
 
     public void initialize() throws Exception{
         initializeTab(flowExecTab);
-        initializeTab(flowStatTab);
         initializeTab(flowHistoTab);
 
-        flowStatComponentController.setBodyController(this);
         flowHistoryComponentController.setBodyController(this);
         flowLibComponentController.setBodyController(this);
         flowLibComponentController.bindInputPaneEnablementToSelectButton();
@@ -98,7 +91,6 @@ public class BodyController {
     private void bindInputExecuteButtonToExecutionTabEnablementAndInitiateExecution() {
         flowLibComponentController.getInputComponentController().getStartButton().setOnAction(event -> {
             flowExecTab.setDisable(false);
-            flowStatTab.setDisable(false);
             flowHistoTab.setDisable(false);
             mainTabPane.getSelectionModel().select(flowExecTab);
             flowExecComponentController.setActiveFlowDetails(getFlowDefinitionsDataByName(getSelectedFlowName()));

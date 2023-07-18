@@ -54,20 +54,16 @@ public class UsersPresenceServlet extends HttpServlet {
 
     @Override
     final protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        switch (req.getServletPath()) {
-            case USER_LOGIN_ENDPOINT:
-                handleNewUserLogin(req, resp);
-                break;
+        if (req.getServletPath().equals(USER_LOGIN_ENDPOINT)) {
+            handleNewUserLogin(req, resp);
         }
     }
 
     @Override
     final protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Servlet.userCheckIn(req);
-        switch (req.getServletPath()){
-            case ADMIN_LOGOUT_ENDPOINT:
-                handleAdminLogout();
-                break;
+        if (req.getServletPath().equals(ADMIN_LOGOUT_ENDPOINT)) {
+            handleAdminLogout();
         }
     }
 
@@ -96,10 +92,10 @@ public class UsersPresenceServlet extends HttpServlet {
                 synchronized (this.getServletContext()) {
                     id = addNewUserToContext(name, usersInfoMap, userSystemInfo);
                 }
-                System.out.println(String.format("New user \"%s\" with id \"%d\" was logged in...",name,id));
+                System.out.printf("New user \"%s\" with id \"%d\" was logged in...%n",name,id);
             }
             else {
-                System.out.println(String.format("Something went wrong probably user with name %s already logged in",name));
+                System.out.printf("Something went wrong probably user with name %s already logged in%n",name);
             }
         }
         else{
@@ -147,14 +143,14 @@ public class UsersPresenceServlet extends HttpServlet {
         Map<Integer, String> usersCookies = Servlet.getCookie2User();
         Map<Integer, Long> usersLastSeen = Servlet.getCookie2LastAccessMap();
         Integer id = Servlet.idCookieBaker(req.getCookies());
-        String userName = new String(usersCookies.get(id));
+        String userName = usersCookies.get(id);
         synchronized (getServletContext()){
              // get current logged in users
             usersInfoMap.remove(userName);
             usersCookies.remove(id);
             usersLastSeen.remove(id);
         }
-        System.out.println(String.format("%s with id %d was logged out (deleted)", userName, id));
+        System.out.printf("%s with id %d was logged out (deleted)%n", userName, id);
     }
 
     private String handleUserStatus(String name) {

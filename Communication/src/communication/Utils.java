@@ -10,8 +10,8 @@ public class Utils {
     // Create a single instance of Gson object
     final static public Gson GSON_INSTANCE = GsonCreator.createGson();
     final static public String ENGINE_CONTROLLER = "engineController";
-    final static public String COOKIE_2_FLOW_EXEC_ID = "cookie2FlowExecId";
-    final static public String UUID_2_COOKIE = "uuid2Cookie";
+    final static public String USER_2_FLOW_EXEC_ID = "cookie2FlowExecId";
+    final static public String UUID_2_USER = "uuid2Cookie";
     final static public String ADMIN_LOGGED_IN = "isAdminLoggedIn";
     final static public String USERS_IN_SYSTEM = "usersLoggedInMap";
     final static public String COOKIE_2_USER = "userName2Id";

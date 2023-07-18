@@ -17,21 +17,17 @@ public class SpendSomeTimeStep extends AbstractStepDefinition {
     }
     @Override
     public DataNecessity getResourceNecessity(String dataOriginalName) {
-        switch (dataOriginalName) {
-            case "TIME_TO_SPEND":
-                return DataNecessity.MANDATORY;
-            default:
-                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        if (dataOriginalName.equals("TIME_TO_SPEND")) {
+            return DataNecessity.MANDATORY;
         }
+        throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
     }
     @Override
     public stepper.dd.api.DataDefinition getResourceDataDefinition(String dataOriginalName) {
-        switch (dataOriginalName) {
-            case "TIME_TO_SPEND":
-                return DataDefinitionRegistry.NUMBER;
-            default:
-                throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
+        if (dataOriginalName.equals("TIME_TO_SPEND")) {
+            return DataDefinitionRegistry.NUMBER;
         }
+        throw new RuntimeException("Unknown data name: " + dataOriginalName + " for step: " + getStepName());
     }
 
     @Override

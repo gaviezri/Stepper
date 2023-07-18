@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StepExecutionLoggerImpl implements StepLogger, Serializable {
-    private List<LogLine> logs = new ArrayList<>();
+    private final List<LogLine> logs = new ArrayList<>();
     private LogLine summaryLine;
     private final String step;
 

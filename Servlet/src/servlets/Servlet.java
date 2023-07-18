@@ -68,8 +68,8 @@ public class Servlet {
     public static Map<String, UserSystemInfo> getUserName2Info() {
         return (Map) instance.contextRef.getAttribute(Utils.USERS_IN_SYSTEM);
     }
-    public static Map<UUID, Integer> getUuid2Cookie() {
-        return (Map) instance.contextRef.getAttribute(Utils.UUID_2_COOKIE);
+    public static Map<UUID, String> getUuid2User() {
+        return (Map) instance.contextRef.getAttribute(Utils.UUID_2_USER);
     }
 
     public static Boolean getIsAdminLoggedIn() {
@@ -106,12 +106,12 @@ public class Servlet {
         return (Role.RoleManager) instance.contextRef.getAttribute(Utils.ROLES_MANAGER);
     }
 
-    public static Stack<UUID> getFlowExecIdStack(Integer cookie) {
-        return ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).get(cookie);
+    public static Stack<UUID> getFlowExecIdStack(String user) {
+        return ((Map<String,Stack<UUID>>) instance.contextRef.getAttribute(Utils.USER_2_FLOW_EXEC_ID)).get(user);
     }
 
-    public static void createNewFlowExecStack(Integer cookie) {
-        ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).put(cookie, new Stack<>());
+    public static void createNewFlowExecStack(String user) {
+        ((Map<String,Stack<UUID>>) instance.contextRef.getAttribute(Utils.USER_2_FLOW_EXEC_ID)).put(user, new Stack<>());
     }
     public static Integer idCookieBaker(Cookie[] cookies){
        try {

@@ -47,10 +47,10 @@ public class AppController {
     @FXML
     private TabPane bodyComponent;
 
-    private UserRequestsDispatcher reqDispatcher = UserRequestsDispatcher.getInstance();
-    private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
-    private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
-    private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private final UserRequestsDispatcher reqDispatcher = UserRequestsDispatcher.getInstance();
+    private final IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
+    private final IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
+    private final ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
 
     private Boolean isExecutionInProgess = false;
 

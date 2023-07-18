@@ -21,7 +21,11 @@ public class Main extends Application {
                 primaryStage.setTitle("Stepper - Admin");
 
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-                    mainController.doFinalize();
+                    throwable.printStackTrace();
+                    GUI.utils.Utils.ShowError("Error",
+                            "Internal Error",
+                            throwable.getMessage());
+                    throwable.printStackTrace();
                 });
 
                 primaryStage.setOnCloseRequest(event -> {

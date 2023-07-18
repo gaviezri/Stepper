@@ -70,7 +70,7 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         private RadioButton resultFilter;
         @FXML
         private RadioButton nameFilter;
-        private FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
+        private final FlowsExecutionHistoryDTO.SortFilter curSortingFilter = FlowsExecutionHistoryDTO.SortFilter.TIME;
         @FXML
         private ToggleGroup resFilters;
         @FXML
@@ -84,8 +84,8 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         private ObservableList<SingleFlowExecutionDTO> fetchedItems;
         private FlowsExecutionHistoryDTO curFlowsExecutionHistoryDTO;
         private SingleFlowExecutionDTO selectedFlow;
-        private RadioButton curFilteringElement = noneFilter;
-        private Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
+        private final RadioButton curFilteringElement = noneFilter;
+        private final Map<String , SingleStepExecutionTableData> currentFlowStepsExecutionTableDataMap = new LinkedHashMap<>();
 
 
         @Override

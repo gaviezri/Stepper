@@ -1,5 +1,6 @@
 package GUI.body.history;
 
+import com.google.gson.internal.LinkedTreeMap;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -36,15 +37,15 @@ public class SingleStepExecutionTableData {
         }
 
     }
-   private String Name;
+   private final String Name;
    private StepResult Result = StepResult.NOT_EXECUTED;
    private Duration Duration;
    private List<String> Logs;
    private String SummaryLine;
-    private List<VBox> OutputsNodes = new LinkedList<>();
-   private List<String> OutputsThatWereTakenCareOf = new ArrayList<>();
-   private List<String> TypeOfOutputsThatWereTakenCareOf  = new ArrayList<>();
-   private List<String> outputNamesAndTypes = new ArrayList<>();
+    private final List<VBox> OutputsNodes = new LinkedList<>();
+   private final List<String> OutputsThatWereTakenCareOf = new ArrayList<>();
+   private final List<String> TypeOfOutputsThatWereTakenCareOf  = new ArrayList<>();
+   private final List<String> outputNamesAndTypes = new ArrayList<>();
 
     public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs, String summaryLine , Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
         Name = stepName;
@@ -110,6 +111,13 @@ public class SingleStepExecutionTableData {
     }
 
     public VBox createOutputNode(String name, DataDefinition dataDefinition, Object value) {
+        if (dataDefinition.getName().equals("Relation")) {
+            LinkedTreeMap<String, Object> theRelationAsMap = (LinkedTreeMap<String, Object>) value;
+            Relation relation = new Relation((List<String>) theRelationAsMap.get("columnsNames"),
+                    (List<LinkedTreeMap>) theRelationAsMap.get("rows"),
+                    (LinkedTreeMap) theRelationAsMap.get("columns"));
+            value = relation;
+        }
         VBox backBone = new VBox();
         backBone.setSpacing(10);
 

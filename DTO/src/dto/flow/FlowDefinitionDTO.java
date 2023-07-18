@@ -53,11 +53,11 @@ public class FlowDefinitionDTO extends AbstractDTO implements Cloneable {
 //    }
 
     public FlowDefinitionDTO(FlowDefinitionDTO other){
-        flowName = new String(other.flowName);
-        description = new String(other.description);
+        flowName = other.flowName;
+        description = other.description;
         formalOutputs = new ArrayList<>(other.formalOutputs);
-        isFlowReadonly = Boolean.valueOf(other.isFlowReadonly);
-        continuationsCount = new Integer(other.continuationsCount);
+        isFlowReadonly = other.isFlowReadonly;
+        continuationsCount = other.continuationsCount;
         step2alias = new ArrayList<>(other.step2alias);
         isStepReadonly = new ArrayList<>(other.isStepReadonly);
         stepsDTO = new StepsDTO(other.stepsDTO);
@@ -77,7 +77,7 @@ public class FlowDefinitionDTO extends AbstractDTO implements Cloneable {
         flowName = flowDef.getName();
         description = flowDef.getDescription();
         formalOutputs = flowDef.getFlowFormalOutputs();
-        isFlowReadonly = flowDef.getAccessibility();
+        isFlowReadonly = flowDef.isReadOnly();
         step2alias = flowDef.getFlowSteps().stream()
                                 .map( stepusgdecl -> new Pair<>(stepusgdecl.getStepDefinition().getStepName(), stepusgdecl.getFinalStepName()))
                                 .collect(Collectors.toList());

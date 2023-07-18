@@ -9,7 +9,7 @@ import java.util.List;
 public class FlowExecutionLoggerImpl implements StepLogger {
     final private String FlowName;
     final private String FlowId;
-    private List<LogLine> logs = new ArrayList<>();
+    private final List<LogLine> logs = new ArrayList<>();
     private LogLine summaryLine;
 
     public FlowExecutionLoggerImpl(String flowName, String flowId) {

@@ -37,7 +37,7 @@ public interface FlowDefinition {
 
     static Map<String,String> getStepInput2UserString() {
         return null;
-    };
+    }
 
     void setFlowFormalOutputs(List<String> flowFormalOutputs);
 
@@ -71,8 +71,8 @@ public interface FlowDefinition {
 
     DataNecessity getResourceDataNecessity(String FinalStepName, String dataOriginalName);
 
-    void setAccessibility();
-    Boolean getAccessibility();
+    void setReadonly();
+    Boolean isReadOnly();
     void setFreeInputs();
     List<String> getFreeInputsFinalNames();
 

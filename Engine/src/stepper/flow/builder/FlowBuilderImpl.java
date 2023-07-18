@@ -14,7 +14,7 @@ import java.util.*;
 
 public class FlowBuilderImpl implements FlowBuilder, Serializable {
     private List<FlowDefinition> flowDefinitions = new ArrayList<>();
-    private Map<String, Class<?extends Enum>> enumInputName2InputVal = new HashMap<>();
+    private final Map<String, Class<?extends Enum>> enumInputName2InputVal = new HashMap<>();
 
 
     public FlowBuilderImpl(){
@@ -49,7 +49,7 @@ public class FlowBuilderImpl implements FlowBuilder, Serializable {
         for (FlowDefinition flowDefinition : flowDefinitions) {
             flowDefinition.createMapping();
             flowDefinition.validateFlowStructure();
-            flowDefinition.setAccessibility();
+            flowDefinition.setReadonly();
             flowDefinition.setFreeInputs();
 //            flowDefinition.setInitialInputs();
         }

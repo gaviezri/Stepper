@@ -7,7 +7,7 @@
    <tabs>
       <Tab fx:id="stepExecutionCount" closable="false" text="Step execution count">
          <content>
-            <BarChart fx:id="stepExecutionChar">
+            <BarChart fx:id="stepExecutionChart">
               <xAxis>
                 <CategoryAxis label="STEPS" side="BOTTOM" />
               </xAxis>
@@ -19,7 +19,7 @@
       </Tab>
       <Tab fx:id="flowSumTimeTab" closable="false" text="Flow total run time ">
          <content>
-            <BarChart fx:id="flowSumTimeChar">
+            <BarChart fx:id="flowSumTimeChart">
                <xAxis>
                   <CategoryAxis label="FLOWS" side="BOTTOM" />
                </xAxis>
@@ -31,7 +31,7 @@
       </Tab>
       <Tab fx:id="flowExecutionCount" closable="false" text="Flow execution count">
          <content>
-            <BarChart fx:id="flowExecutionChar">
+            <BarChart fx:id="flowExecutionChart">
                <xAxis>
                   <CategoryAxis label="FLOWS" side="BOTTOM" />
                </xAxis>
@@ -43,7 +43,7 @@
       </Tab>
       <Tab fx:id="stepSumTimeTab" closable="false" text="Step total run time ">
          <content>
-            <BarChart fx:id="stepSumTimeChar">
+            <BarChart fx:id="stepSumTimeChart">
               <xAxis>
                 <CategoryAxis label="STEPS" side="BOTTOM" />
               </xAxis>

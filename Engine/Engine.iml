@@ -10,6 +10,8 @@
     <orderEntry type="library" scope="PROVIDED" name="google.code.gson" level="project" />
     <orderEntry type="module" module-name="DTO" />
     <orderEntry type="module" module-name="Communication" />
-    <orderEntry type="library" name="jayson path" level="project" />
+    <orderEntry type="library" exported="" name="jayson path" level="project" />
+
+
   </component>
 </module>

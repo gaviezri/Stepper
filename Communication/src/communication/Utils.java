@@ -1,9 +1,6 @@
 package communication;
 
 import com.google.gson.*;
-import stepper.dd.api.DataDefinition;
-
-import java.lang.reflect.Type;
 
 
 public class Utils {
@@ -13,8 +10,8 @@ public class Utils {
     // Create a single instance of Gson object
     final static public Gson GSON_INSTANCE = GsonCreator.createGson();
     final static public String ENGINE_CONTROLLER = "engineController";
-    final static public String COOKIE_2_FLOW_EXEC_ID = "cookie2FlowExecId";
-    final static public String UUID_2_COOKIE = "uuid2Cookie";
+    final static public String USER_2_FLOW_EXEC_ID = "cookie2FlowExecId";
+    final static public String UUID_2_USER = "uuid2Cookie";
     final static public String ADMIN_LOGGED_IN = "isAdminLoggedIn";
     final static public String USERS_IN_SYSTEM = "usersLoggedInMap";
     final static public String COOKIE_2_USER = "userName2Id";
@@ -27,6 +24,8 @@ public class Utils {
     public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
     public static final String XML_CONTENT_TYPE = "application/xml";
     public static final String HISTORY_FILTER = "filter";
+    public static final String ALL_FLOWS = "All Flows";
+    public static final String READ_ONLY_FLOWS = "Read Only Flows";
 
     /*#################### endpoints ####################*/
     public static final String USER_LOGIN = "/user/login?name=";
@@ -49,5 +48,5 @@ public class Utils {
     public static final String FLOW_EXECUTION_PROGRESS_ENDPOINT = "/flow/execution/progress";
     public static final String FILTER_HISTORY_FILTER_ENDPOINT = "/history/filter";
     public static final String COOKIE_2_LAST_ACCESS = "cookie2LastAccess";
-    public static final long THREE_SECONDS = 3000;
+    public static final long ONE_MINUTE = 60000;
 }

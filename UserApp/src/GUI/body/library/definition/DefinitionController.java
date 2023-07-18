@@ -35,12 +35,12 @@ public class DefinitionController extends LibraryControllerComponent {
     @FXML private TitledPane inputsTitledPane;
     @FXML private TitledPane outputsTitledPane;
     private List<FlowDefinitionDTO> flowDefinitionDTOList = new ArrayList<>();
-    private  SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private  SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private  IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
-    private  List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
-    private List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
-    private List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
+    private final SimpleListProperty<String> flowDescriptionsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final SimpleListProperty <StringProperty> flowFormalOutputsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final IntegerProperty selectedFlowIdx = new SimpleIntegerProperty(-1);
+    private final List<VBox> stepsVBoxByFlowIdx = new ArrayList<>();
+    private final List<VBox> inputsVBoxByFlowIdx = new ArrayList<>();
+    private final List<VBox> outputsVBoxByFlowIdx = new ArrayList<>();
     public ListView<String> getFlowDefAvailableFlowsList() {
         return flowDefAvailableFlowsList;
     }
@@ -137,12 +137,13 @@ public class DefinitionController extends LibraryControllerComponent {
             if (newFlowEqualsNamewise(flowDefDTOlist)) {
                 updateAnyContinuationAvailableBasedOnRoleModification(flowDefDTOlist);
                 return;
+            } else {
+                clearGUIelements();
             }
             clearAllData();
             flowDefinitionDTOList = flowDefDTOlist;
             // add a reset method
             for(FlowDefinitionDTO dto : flowDefinitionDTOList){
-
                 setFlowsHeadersData(dto);
                 setFlowsStepsData(dto);
                 setFlowInputsData(dto);
@@ -150,12 +151,19 @@ public class DefinitionController extends LibraryControllerComponent {
             }
     }
 
+    private void clearGUIelements() {
+        Platform.runLater(() -> {
+            flowDataScrollPane.visibleProperty().set(false);
+            selectFlowButton.visibleProperty().setValue(false);
+            selectedFlowDescriptionLabel.setText("");
+        });
+    }
+
     private void updateAnyContinuationAvailableBasedOnRoleModification(List<FlowDefinitionDTO> flowDefDTOlist) {
         for(int i = 0; i < flowDefDTOlist.size(); i++) {
             FlowDefinitionDTO dto = flowDefDTOlist.get(i);
             FlowDefinitionDTO oldDto = flowDefinitionDTOList.get(i);
             if(dto.getContinuationsCount() != oldDto.getContinuationsCount()) {
-               //flowDefinitionDTOList.get(i).setContinuationsCount(dto.getContinuationsCount());
                 Platform.runLater(() -> {
                     continuationsLabel.textProperty().set("Continuations: " + dto.getContinuationsCount());
                 });
@@ -379,12 +387,16 @@ public class DefinitionController extends LibraryControllerComponent {
 
             Map<String,Object> lastFlowOutputs = libraryController.getBodyController().getMainController().getLastFlowOutputs();
             Map<String,Object> inputsToSet = new HashMap<>();
-            for (Pair<String,String> output2Input : output2InputMapping) {
-                String outputName = output2Input.getKey();
-                String inputName = output2Input.getValue();
-                Object outputValue = lastFlowOutputs.get(outputName);
-                if (outputValue == null) {continue;}
-                inputsToSet.put(inputName,outputValue);
+            if (lastFlowOutputs != null ) {
+                for (Pair<String,String> output2Input : output2InputMapping) {
+                    String outputName = output2Input.getKey();
+                    String inputName = output2Input.getValue();
+                    Object outputValue = lastFlowOutputs.get(outputName);
+                    if (outputValue == null) {
+                        continue;
+                    }
+                    inputsToSet.put(inputName, outputValue);
+                }
             }
             flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
             libraryController.getInputComponentController().setInputsToSelectedFlow(flowDefinitionDTOList.get(index.getAsInt()),inputsToSet,false);
@@ -393,5 +405,18 @@ public class DefinitionController extends LibraryControllerComponent {
 
     public FlowDefinitionDTO getFlowDefinitionsDataByIndex(int flowIndex) {
         return flowDefinitionDTOList.get(flowIndex);
+    }
+
+    public FlowDefinitionDTO getFlowDefinitionsDataByName(String selectedFlowName) {
+        return flowDefinitionDTOList.stream().filter(flow -> flow.getFlowName().equals(selectedFlowName)).findFirst().orElse(null);
+    }
+
+    public void setSelectedFlowByName(String flowName) {
+        OptionalInt index = IntStream.range(0, flowDefinitionDTOList.size())
+                .filter(i -> flowDefinitionDTOList.get(i).getFlowName().equals(flowName))
+                .findFirst();
+        if (index.isPresent()) {
+            flowDefAvailableFlowsList.getSelectionModel().select(index.getAsInt());
+        }
     }
 }

@@ -4,6 +4,7 @@ import GUI.body.BodyControllerComponent;
 import GUI.body.roles.create.role.NewRoleModalController;
 import communication.Role;
 import communication.UserSystemInfo;
+import communication.Utils;
 import dto.flow.FlowNamesDTO;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -22,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +50,7 @@ public class RolesController extends BodyControllerComponent {
     private List<UserSystemInfo> onlineUsers;
     private ObservableList<Role> newlyAddedOrModifiedRoles;
     private BooleanProperty changesMade;
+    private final  List<String> systemRoles = Arrays.asList(Utils.READ_ONLY_FLOWS, Utils.ALL_FLOWS);
 
     public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
         onlineUsers = new ArrayList<>(userSystemInfos);
@@ -55,6 +58,16 @@ public class RolesController extends BodyControllerComponent {
 
     public ListView getRolesListView() {
         return availableRolesListView;
+    }
+
+    public void enableRolesListView() {
+        if (availableRolesListView.isDisable()) {
+            availableRolesListView.setDisable(false);
+        }
+    }
+
+    public List<Role> getModifiedRoles() {
+        return newlyAddedOrModifiedRoles;
     }
 
 
@@ -96,15 +109,17 @@ public class RolesController extends BodyControllerComponent {
 
     private void initializeDeleteRoleButton() {
 
-        deleteRoleButton.setOnMouseClicked(event -> {
-            Platform.runLater(() -> {
+        deleteRoleButton.setOnMouseClicked(event -> Platform.runLater(() -> {
+            try {
                 Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
                 availableRolesListView.getItems().remove(selectedRole);
                 if (selectedRole != null) {
                     bodyController.deleteRoleOnServer(selectedRole);
                 }
-            });
-        });
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }));
     }
 
     private void initializeAssignedUsersListView() {
@@ -155,6 +170,7 @@ public class RolesController extends BodyControllerComponent {
     private void initializeAvailableRolesListView() {
         setRolesListViewCellFactory();
         defineRolesListViewSelectionBehaviour();
+        availableRolesListView.setDisable(true);
     }
 
     private void setRolesListViewCellFactory() {
@@ -162,38 +178,46 @@ public class RolesController extends BodyControllerComponent {
             @Override
             protected void updateItem(Role item, boolean empty) {
                 super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
+                Platform.runLater(()->{
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.getName());
+                    }
+                });
             }
         });
     }
 
     private void defineRolesListViewSelectionBehaviour() {
-
-        availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            assignedFlowsListView.setDisable(false);
-        });
+        availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(()-> {
+                    if (newValue != null) {
+                        deleteRoleButton.setDisable(systemRoles.contains(newValue.getName()));
+                        assignedFlowsListView.setDisable(systemRoles.contains(newValue.getName()));
+                    }
+                }
+        ));
 
         availableRolesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                         Platform.runLater(()->{
-                            Role selectedRole = newValue;
-                            List<String> AssignedUsers = onlineUsers.stream()
-                                    .filter(user -> user.getRoles().contains(selectedRole))
-                                    .map(UserSystemInfo::getName)
-                                    .collect(Collectors.toList());
-                            assignedUsersListView.setItems(FXCollections.observableList(AssignedUsers));
+                            try {
+                                Role selectedRole = newValue;
+                                List<String> AssignedUsers = onlineUsers.stream()
+                                        .filter(user -> user.getRoles().contains(selectedRole))
+                                        .map(UserSystemInfo::getName)
+                                        .collect(Collectors.toList());
+                                assignedUsersListView.setItems(FXCollections.observableList(AssignedUsers));
 
-                            List<String> assignedFlows = selectedRole.getAssignedFlowNames();
+                                List<String> assignedFlows = selectedRole.getAssignedFlowNames();
 
-                            // recheck the assigned flows based on the selected role
-                            for (int i = 0; i < assignedFlowsListView.getItems().size(); i++) {
-                                FlowListItem listItem = assignedFlowsListView.getItems().get(i);
-                                listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
+                                // recheck the assigned flows based on the selected role
+                                for (int i = 0; i < assignedFlowsListView.getItems().size(); i++) {
+                                    FlowListItem listItem = assignedFlowsListView.getItems().get(i);
+                                    listItem.assignedProperty().setValue(assignedFlows.contains(listItem.getName()));
+                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
                             }
                         });
             }
@@ -206,17 +230,23 @@ public class RolesController extends BodyControllerComponent {
         newRoleButton.setOnAction(event -> {
             Role newRole = getNewRoleFromDialog();
             if (newRole != null) {
-                if (availableRolesListView.getItems().contains(newRole)) {
-                    availableRolesListView.getItems().remove(newRole);
-                }
-                newlyAddedOrModifiedRoles.add(newRole);
-                availableRolesListView.getItems().add(newRole);
-                try {
-                    availableRolesListView.getItems().sort(Comparator.comparing(Role::getName));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                changesMade.setValue(true);
+                Platform.runLater(()->{
+                    try {
+                        if (availableRolesListView.getItems().contains(newRole)) {
+                            availableRolesListView.getItems().remove(newRole);
+                        }
+                        newlyAddedOrModifiedRoles.add(newRole);
+                        availableRolesListView.getItems().add(newRole);
+                        try {
+                            availableRolesListView.getItems().sort(Comparator.comparing(Role::getName));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        changesMade.setValue(true);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
             }
         });
     }
@@ -252,46 +282,65 @@ public class RolesController extends BodyControllerComponent {
     public void updateFlowNames(FlowNamesDTO flowNames) {
             ObservableList<String> fetchedFlowNames = FXCollections.observableArrayList(flowNames.getFlowNames());
             Platform.runLater(() -> {
-            for (String flowName : fetchedFlowNames) {
-                if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
-                    assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
+                try {
+                    for (String flowName : fetchedFlowNames) {
+                        if (assignedFlowsListView.getItems().stream().noneMatch(item -> item.getName().equals(flowName))) {
+                            assignedFlowsListView.getItems().add(createNewFlowListItem(flowName));
+                        }
+                    }
+                    assignedFlowsListView.refresh();
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-            }});
+            });
     }
 
     private FlowListItem createNewFlowListItem(String flowName) {
         FlowListItem item = new FlowListItem(flowName, false);
-        item.assignedProperty().addListener((observable, oldValue, newValue) -> {
-            changesMade.setValue(true);
-            Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
-            if (selectedRole != null) {
-                if (newValue) {
-                    selectedRole.assignNewFlow(flowName);
-                } else {
-                    selectedRole.unassignOldFlow(flowName);
+        item.assignedProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+            try {
+                changesMade.setValue(true);
+                Role selectedRole = availableRolesListView.getSelectionModel().getSelectedItem();
+                if (selectedRole != null) {
+                    if (newValue) {
+                        selectedRole.assignNewFlow(flowName);
+                    } else {
+                        selectedRole.unassignOldFlow(flowName);
+                    }
+                    if (!newlyAddedOrModifiedRoles.contains(selectedRole)) {
+                        newlyAddedOrModifiedRoles.add(selectedRole);
+                    } else {
+                        newlyAddedOrModifiedRoles.set(newlyAddedOrModifiedRoles.indexOf(selectedRole), selectedRole);
+                    }
                 }
-                if (!newlyAddedOrModifiedRoles.contains(selectedRole)) {
-                    newlyAddedOrModifiedRoles.add(selectedRole);
-                } else {
-                    newlyAddedOrModifiedRoles.set(newlyAddedOrModifiedRoles.indexOf(selectedRole), selectedRole);
-                }
+            }   catch (Exception e) {
+             e.printStackTrace();
             }
-        });
+        }));
         return item;
     }
 
 
     public void updateRoles(List<Role> rolesFromServer) {
         Platform.runLater(() -> {
-            ObservableList<Role> rolesFromListView = availableRolesListView.getItems();
-
-            for (Role role : rolesFromServer) {
-                if (rolesFromListView.stream()
-                        .noneMatch(item -> item.getName().equals(role.getName()))) {
-                    rolesFromListView.add(role);
+            try {
+                ObservableList<Role> rolesFromListView = availableRolesListView.getItems();
+                for (Role role : rolesFromServer) {
+                    if (rolesFromListView.stream()
+                            .noneMatch(item -> item.getName().equals(role.getName()))) {
+                        rolesFromListView.add(role);
+                    } else {
+                        Role roleFromListView = rolesFromListView.stream()
+                                .filter(item -> item.getName().equals(role.getName()))
+                                .findFirst()
+                                .get();
+                        roleFromListView.setAssignedFlowNames(role.getAssignedFlowNames());
+                    }
                 }
+                rolesFromListView.sort(Comparator.comparing(Role::getName));
+            } catch (Exception e){
+                e.printStackTrace();
             }
-            rolesFromListView.sort(Comparator.comparing(Role::getName));
         });
     }
 }

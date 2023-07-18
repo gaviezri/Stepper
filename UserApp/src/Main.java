@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import GUI.login.LoginController;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
     private AppController mainController;
@@ -27,7 +28,7 @@ public class Main extends Application {
                 startLoginModal(primaryStage);
 
                 Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getResource("GUI/userApp.css").toExternalForm());
+                scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("GUI/userApp.css")).toExternalForm());
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Stepper");
                 primaryStage.setOnCloseRequest(event -> {
@@ -36,9 +37,7 @@ public class Main extends Application {
                 });
                 Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
                     throwable.printStackTrace();
-                    UserRequestsDispatcher.getInstance().logout();
-                    Utils.ShowError("Error", "Application failed.", "Internal app error.");
-                    mainController.stop();
+                    Platform.runLater(()-> Utils.ShowError("Error", "Application failed.", "Internal app error."));
                 });
             }
         } catch (Exception e) {

@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializable {
-    private Map<String,String> inputs2finalNames = new LinkedHashMap<>();
-    private Map<String,String> outputs2finalNames = new LinkedHashMap<>();
+    private final Map<String,String> inputs2finalNames = new LinkedHashMap<>();
+    private final Map<String,String> outputs2finalNames = new LinkedHashMap<>();
     private final StepDefinition stepDefinition;
-    private boolean skipIfFail;
-    private String stepName;
+    private final boolean skipIfFail;
+    private final String stepName;
     // steporder == step index in the flow
-    private int stepOrder;
+    private final int stepOrder;
     @Override
     public Boolean isInputMandatory(String inputFinalName){
         String orgName = getInputOrgNameByFinalName(inputFinalName);
@@ -110,14 +110,11 @@ public class StepUsageDeclarationImpl implements StepUsageDeclaration, Serializa
     }
 
     private String getResourceFinalNameFrom(String dataName, List<DataDefinitionDeclaration> list, Map<String, String> resource2finalNames) {
-        if (resource2finalNames.values().contains(dataName)){
+        if (resource2finalNames.containsValue(dataName)){
             return dataName;
         }
         String finalName = resource2finalNames.get(dataName);
-        if (finalName != null){
-            return finalName;
-        }
-        return null;
+        return finalName;
     }
 
     @Override

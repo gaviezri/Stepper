@@ -17,19 +17,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlowDefinitionImpl implements FlowDefinition, Serializable {
-    private  String name;
+    private final String name;
     private  String description;
-    private List<Pair<String,Class>> allMandatoryInputs = new ArrayList<>();
-    private List<DataDefinitionDeclaration> unsatisfiedMandatoryInputs = new ArrayList<>();
-    private List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
-    private List<String> freeInputNames = new ArrayList<>();
-    private List<String> freeInputFinalNames = new ArrayList<>();
-    private List<Pair<DataDefinitionDeclaration,List<StepUsageDeclaration>>> flowFreeInputs2StepsThatUseThem = new ArrayList<>();
+    private final List<Pair<String,Class>> allMandatoryInputs = new ArrayList<>();
+    private final List<DataDefinitionDeclaration> unsatisfiedMandatoryInputs = new ArrayList<>();
+    private final List<DataDefinitionDeclaration> flowInputs = new ArrayList<>();
+    private final List<String> freeInputNames = new ArrayList<>();
+    private final List<String> freeInputFinalNames = new ArrayList<>();
+    private final List<Pair<DataDefinitionDeclaration,List<StepUsageDeclaration>>> flowFreeInputs2StepsThatUseThem = new ArrayList<>();
     private  List<String> flowFormalOutputNames = new ArrayList<>();
-    private List<String> stepsFinalNames = new ArrayList<>();
-    private DataAliasingManager dataAliasingManager = new DataAliasingManager();
-    private  List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
-    private  List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
+    private final List<String> stepsFinalNames = new ArrayList<>();
+    private final DataAliasingManager dataAliasingManager = new DataAliasingManager();
+    private final List<StepUsageDeclaration> stepsUsageDecl = new ArrayList<>();
+    private final List<Pair<String,String>> rawSourceStepData2TargetStepDataMapping = new ArrayList<>();
     private MappingGraph mappingGraph;
     final private Continuation continuation = new Continuation();
     private boolean isReadOnly;
@@ -333,14 +333,12 @@ public class FlowDefinitionImpl implements FlowDefinition, Serializable {
                 .getStepDefinition()
                 .getResourceNecessity(dataName);
     }
-
-
     @Override
-    public void setAccessibility(){
+    public void setReadonly(){
         isReadOnly = stepsUsageDecl.stream().allMatch(step -> step.getStepDefinition().isReadonly());
     }
     @Override
-    public Boolean getAccessibility(){
+    public Boolean isReadOnly(){
         return isReadOnly;
     }
     @Override

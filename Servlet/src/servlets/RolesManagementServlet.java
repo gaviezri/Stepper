@@ -41,28 +41,22 @@ public class RolesManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Servlet.userCheckIn(req);
-        switch (req.getServletPath()) {
-            case ROLES_ENDPOINT:
-                handleRolesPost(req, resp);
-                break;
+        if (req.getServletPath().equals(ROLES_ENDPOINT)) {
+            handleRolesPost(req, resp);
         }
     }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Servlet.userCheckIn(req);
-        switch (req.getServletPath()) {
-            case ROLES_USER_ENDPOINT:
-                handleRolesUserPut(req, resp);
-                break;
+        if (req.getServletPath().equals(ROLES_USER_ENDPOINT)) {
+            handleRolesUserPut(req, resp);
         }
     }
     @Override
     protected  void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Servlet.userCheckIn(req);
-        switch (req.getServletPath()) {
-            case ROLES_ENDPOINT:
-                handleRolesDelete(req, resp);
-                break;
+        if (req.getServletPath().equals(ROLES_ENDPOINT)) {
+            handleRolesDelete(req, resp);
         }
     }
 
@@ -162,17 +156,16 @@ public class RolesManagementServlet extends HttpServlet {
 
     private void handleRoleGet(HttpServletResponse resp) throws IOException {
         ServletContext context = getServletContext();
-        String results = GSON_INSTANCE.toJson(new RolesDTO());
+        String results;
 
-            if(context.getAttribute(ROLES_CHANGED).equals(true) ||
-                    context.getAttribute(FETCH_STARTUP_DATA_ADMIN).equals(true)){
-                synchronized (context) {
-                context.setAttribute(ROLES_CHANGED, false);
-                context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
-                List<Role> roles = Servlet.getRoles();
-                results = GSON_INSTANCE.toJson(new RolesDTO(roles));
-            }
+
+        synchronized (context) {
+            context.setAttribute(ROLES_CHANGED, false);
+            context.setAttribute(FETCH_STARTUP_DATA_ADMIN, false);
+            List<Role> roles = Servlet.getRoles();
+            results = GSON_INSTANCE.toJson(new RolesDTO(roles));
         }
+
         resp.getWriter().println(results);
     }
 }

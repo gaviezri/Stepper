@@ -38,15 +38,15 @@ public class SingleStepExecutionTableData {
         }
 
     }
-   private String Name;
+   private final String Name;
    private StepResult Result = StepResult.NOT_EXECUTED;
    private Duration Duration;
    private List<String> Logs;
    private String SummaryLine;
-    private List<VBox> OutputsNodes = new LinkedList<>();
-   private List<String> OutputsThatWereTakenCareOf = new ArrayList<>();
-   private List<String> TypeOfOutputsThatWereTakenCareOf  = new ArrayList<>();
-   private List<String> outputNamesAndTypes = new ArrayList<>();
+    private final List<VBox> OutputsNodes = new LinkedList<>();
+   private final List<String> OutputsThatWereTakenCareOf = new ArrayList<>();
+   private final List<String> TypeOfOutputsThatWereTakenCareOf  = new ArrayList<>();
+   private final List<String> outputNamesAndTypes = new ArrayList<>();
 
     public SingleStepExecutionTableData(String stepName, StepResult stepResult, javafx.util.Duration duration, List<String> logs,String summaryLine ,Map<String, Pair<DataDefinition, Object>> outputName2DefAndVal) {
         Name = stepName;
@@ -146,7 +146,7 @@ public class SingleStepExecutionTableData {
         backBone.getChildren().add(nameAndType);
         Label nameLabel = new Label("Name: " + name);
         nameLabel.setWrapText(true);
-        Label typeLabel = new Label("Type: " + dataDefinition.toString());
+        Label typeLabel = new Label("Type: " + dataDefinition);
         typeLabel.setWrapText(true);
 
         nameAndType.getChildren().add(nameLabel);

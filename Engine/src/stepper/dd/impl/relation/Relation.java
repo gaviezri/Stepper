@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 public class Relation extends RelationDataDefinition implements Serializable {
 
-    private List<String> columnsNames;
-    private List<SingleRow> rows = new ArrayList<>();
-    private Map<String,List<String>> columns = new LinkedHashMap<>();
+    private final List<String> columnsNames;
+    private final List<SingleRow> rows = new ArrayList<>();
+    private final Map<String,List<String>> columns = new LinkedHashMap<>();
 
     int rowSize = 0;
     int colSize = 0;
@@ -130,7 +130,7 @@ public class Relation extends RelationDataDefinition implements Serializable {
 
     public static class SingleRow implements Serializable{
 
-        private Map<String, String> data;
+        private final Map<String, String> data;
 
         public SingleRow() {
             data = new HashMap<>();

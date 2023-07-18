@@ -12,11 +12,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SingleFlowExecutionDTO {
-    private String flowName;
-    private String startTime; // need to be in format: {dd-mm-yyyy hh:mm:ss}
-    private FlowExecutionResult flowExecutionResult;
-    private  UUID uniqueId;
-    private Map<String, Object> dataName2value;
+    private final String flowName;
+    private final String startTime; // need to be in format: {dd-mm-yyyy hh:mm:ss}
+    private final FlowExecutionResult flowExecutionResult;
+    private final UUID uniqueId;
+    private final Map<String, Object> dataName2value;
+
+    private String executingUserName;
 
     private Map<String, StepExecutionDataManager> finalStepName2stepsManagers = new LinkedHashMap<>();
 
@@ -83,5 +85,25 @@ public class SingleFlowExecutionDTO {
 
     public Map<String, Pair<DataDefinition, Object>> getStepOutputs(String stepName) {
         return finalStepName2stepsManagers.get(stepName).getStepOutputs();
+    }
+
+    public String setExecutingUserName(String executorName) {
+        return this.executingUserName = executorName;
+    }
+
+    public String getExecutingUserName() {
+        return executingUserName;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SingleFlowExecutionDTO that = (SingleFlowExecutionDTO) o;
+        return Objects.equals(flowName, that.flowName) && Objects.equals(uniqueId, that.uniqueId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flowName, uniqueId);
     }
 }

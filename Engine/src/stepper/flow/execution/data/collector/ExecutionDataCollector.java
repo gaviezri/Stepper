@@ -20,11 +20,11 @@ public class ExecutionDataCollector {
     private Integer currentStepIdx;
     private Integer stepsCount;
     private Map<String, Object> executionDataValues = new HashMap<>();
-    private Map<String, StepResult> stepResults = new HashMap<>();
-    private Map<String, List<String>> step2ListOfLogs = new HashMap<>();
-    private Map<String ,Map<String,Pair<DataDefinition,Object>>> step2MapOfOutputsNames2DataDefAndValue = new HashMap<>();
-    private Map<String, Duration> step2Duration = new HashMap<>();
-    private Map<String,String> step2SummaryLine = new HashMap<>();
+    private final Map<String, StepResult> stepResults = new HashMap<>();
+    private final Map<String, List<String>> step2ListOfLogs = new HashMap<>();
+    private final Map<String ,Map<String,Pair<DataDefinition,Object>>> step2MapOfOutputsNames2DataDefAndValue = new HashMap<>();
+    private final Map<String, Duration> step2Duration = new HashMap<>();
+    private final Map<String,String> step2SummaryLine = new HashMap<>();
     private FlowExecutionResult flowExecutionResult = FlowExecutionResult.NONE;
     private Boolean isFlowInProgress = true;
     private FlowExecution flowExecution;

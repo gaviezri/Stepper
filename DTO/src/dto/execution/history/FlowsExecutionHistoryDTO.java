@@ -15,7 +15,6 @@ public class FlowsExecutionHistoryDTO {
     }
 
     private final List<SingleFlowExecutionDTO> flowExecutionDTOs = new ArrayList<>();
-    private final List<String> executorsNames = new ArrayList<>();
     private List<SingleFlowExecutionDTO> curFilteredExecutions = flowExecutionDTOs;
 
     public FlowsExecutionHistoryDTO(Stack<FlowExecution> flowExecutionStack) {
@@ -25,14 +24,10 @@ public class FlowsExecutionHistoryDTO {
         }
     }
 
-    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList, Map<UUID,Integer> uuid2Cookie, Map<Integer,String> cookie2Name){
+    public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList, Map<UUID,String> uuid2User){
         this.flowExecutionDTOs.addAll(flowExecutionsList);
-        this.flowExecutionDTOs.stream().
-                map(SingleFlowExecutionDTO::getUniqueId).
-                forEach(x-> this.executorsNames.
-                        add(cookie2Name.
-                                get(uuid2Cookie.get(x)
-                                )));
+        this.flowExecutionDTOs.stream()
+                .forEach(x-> x.setExecutingUserName(uuid2User.get(x.getUniqueId())));
     }
     public FlowsExecutionHistoryDTO(List<SingleFlowExecutionDTO> flowExecutionsList){
         this.flowExecutionDTOs.addAll(flowExecutionsList);

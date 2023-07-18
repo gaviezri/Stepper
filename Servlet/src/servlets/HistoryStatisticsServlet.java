@@ -17,7 +17,6 @@ import static communication.Utils.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static dto.execution.history.FlowsExecutionHistoryDTO.SortFilter;
@@ -48,18 +47,18 @@ public class HistoryStatisticsServlet extends HttpServlet {
         return GSON_INSTANCE.toJson(allCurrentLoadedFlowsStatisticsDetails);
     }
     private String handleHistoryRequest(Cookie[] cookies){
-        List<SingleFlowExecutionDTO> accessibleFlowsHistoryDetails = Servlet.getEngineController().getExecutedFlowsHistoryDetails().getFlowExecutionDTOs();;
+        List<SingleFlowExecutionDTO> accessibleFlowsHistoryDetails = Servlet.getEngineController().getExecutedFlowsHistoryDetails().getFlowExecutionDTOs();
         UserSystemInfo userInfo = Servlet.getUserSystemInfo(cookies);
 
         if(!(Servlet.isAdmin(cookies) || userInfo.isManager())){
             accessibleFlowsHistoryDetails = accessibleFlowsHistoryDetails.stream().
-                    filter(x->Servlet.getFlowExecIdStack(Servlet.idCookieBaker(cookies)).
+                    filter(x->Servlet.getFlowExecIdStack(Servlet.getCookie2User().get(Servlet.idCookieBaker(cookies))).
                             contains(x.getUniqueId())).collect(Collectors.toList());
         }
 
-        String curUserName = Servlet.getCookie2User().get(Servlet.idCookieBaker(cookies));
 
-        return GSON_INSTANCE.toJson(new FlowsExecutionHistoryDTO(accessibleFlowsHistoryDetails, Servlet.getUuid2Cookie(), Servlet.getCookie2User()));
+
+        return GSON_INSTANCE.toJson(new FlowsExecutionHistoryDTO(accessibleFlowsHistoryDetails, Servlet.getUuid2User()));
     }
 
     private void filterHistoryByParam(SortFilter filter){

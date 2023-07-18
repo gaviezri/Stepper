@@ -47,10 +47,10 @@ public class AppController {
     @FXML
     private TabPane bodyComponent;
 
-    private UserRequestsDispatcher reqDispatcher = UserRequestsDispatcher.getInstance();
-    private IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
-    private IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
-    private ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
+    private final UserRequestsDispatcher reqDispatcher = UserRequestsDispatcher.getInstance();
+    private final IntegerProperty numOfFlowsExecuted = new SimpleIntegerProperty(0);
+    private final IntegerProperty numOfFlowsFinished = new SimpleIntegerProperty(0);
+    private final ScheduledExecutorService executorServiceForPollingExecutions = Executors.newSingleThreadScheduledExecutor();
 
     private Boolean isExecutionInProgess = false;
 
@@ -74,16 +74,19 @@ public class AppController {
                 updateExecutionProgress();
                 updateManagerAndRoles();
                 updateAccessibleFlows();
-//                FlowsExecutionHistoryDTO hDTO = reqDispatcher.getHistoryDTO();
-//
-//                if (sDTO.getFlowStatistics().size() > 0 && hDTO.getFlowExecutionDTOs().size() > 0) {
-//                    bodyComponentController.updateHistory(reqDispatcher.getHistoryDTO());
-//                }
+                updateHistory();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateHistory() {
+        FlowsExecutionHistoryDTO flowsExecutionHistoryDTO = reqDispatcher.getHistory();
+        if (flowsExecutionHistoryDTO.getFlowExecutionDTOs().size() > 0) {
+            bodyComponentController.updateHistory(flowsExecutionHistoryDTO);
+        }
     }
 
     private void updateExecutionProgress() {
@@ -126,65 +129,6 @@ public class AppController {
         reqDispatcher.executeFlow(flowName, valName2valType);
         isExecutionInProgess = true;
     }
-
-    private void fetchHistory() {
-        FlowsExecutionHistoryDTO historyDTO = reqDispatcher.getHistory();
-        bodyComponentController.updateHistory(historyDTO);
-    }
-
-//
-//    public List<FlowDefinitionDTO> getAllFlowDefinitionsData() {
-//        return engineController.getAllFlowDefinitionsData();
-//    }
-//
-//    public FlowExecutionResult getFlowExecutionResult() {
-//        return lastExecutedDataCenter.getFlowExecutionResult();
-//    }
-//
-//    public boolean isFlowExecutionInProgress() {
-//        return lastExecutedDataCenter.isFlowExecutionInProgress();
-//    }
-//
-//    public String getLastExecutedFlowName() {
-//        return lastExecutedDataCenter.getLastExecutedFlowName();
-//    }
-//
-//    public int getCurrentStepIdx() {
-//        return lastExecutedDataCenter.getCurrentStepIdx();
-//    }
-//
-//    public String getCurrentStepName() {
-//        return lastExecutedDataCenter.getCurrentStepName();
-//    }
-//
-//    public int getStepsCount(){
-//        return lastExecutedDataCenter.getStepsCount();
-//    }
-//
-//    public Map getExecutedStepsStatus(){
-//        return lastExecutedDataCenter.getExecutedStepsStatus();
-//    }
-//
-//    public Map<String,Map<String, Pair<DataDefinition, Object>>> getOutputsForAllSteps() {
-//        return lastExecutedDataCenter.getOutputsForAllSteps();
-//    }
-//
-//    public Map<String,List<String>> getAllStepsListOfLogs(){
-//        return lastExecutedDataCenter.getAllStepsListOfLogs();
-//    }
-//
-//    public Map<String, Duration> getAllStepsDuration() {
-//        return lastExecutedDataCenter.getAllStepsDuration();
-//    }
-//
-//    public Map<String, String> getAllSummaryLines() {
-//        return lastExecutedDataCenter.getAllSummaryLines();
-//    }
-//
-//    public Map getLastFlowOutputs() {
-//        return lastExecutedDataCenter.getLastFlowOutputs();
-//    }
-
     public void stop() {
         if (executorServiceForPollingExecutions != null) {
             executorServiceForPollingExecutions.shutdown();

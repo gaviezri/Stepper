@@ -3,7 +3,6 @@ package servlets;
 import communication.Role;
 import communication.UserSystemInfo;
 import communication.Utils;
-import dto.flow.FlowDefinitionDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,9 +25,11 @@ public class Servlet {
 
     public static void userCheckIn(HttpServletRequest req){
         Integer cookie = idCookieBaker(req.getCookies());
-        synchronized (instance.contextRef){
-            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
-            cookie2LastAccessMap.put(cookie, System.currentTimeMillis());
+        if (!cookie.equals(-1)) {
+            synchronized (instance.contextRef){
+                Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+                cookie2LastAccessMap.put(cookie, System.currentTimeMillis());
+            }
         }
     }
     private static Servlet instance;
@@ -39,24 +40,27 @@ public class Servlet {
         userLogoutExecutorService = Executors.newSingleThreadScheduledExecutor();
         userLogoutExecutorService.scheduleAtFixedRate(()->{
             Collection<Integer> cookiesToRemove = new LinkedList<>();
-            Map<Integer,Long> cookie2LastAccessMap = (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+            Map<Integer,Long> cookie2LastAccessMap = getCookie2LastAccessMap();
             for (Map.Entry<Integer,Long> entry : cookie2LastAccessMap.entrySet()){
-                if (System.currentTimeMillis() - entry.getValue() > Utils.THREE_SECONDS){
+                if (System.currentTimeMillis() - entry.getValue() > Utils.ONE_MINUTE){
                     cookiesToRemove.add(entry.getKey());
                 }
             }
+
             synchronized (instance.contextRef) {
                 for (Integer cookie : cookiesToRemove) {
                     cookie2LastAccessMap.remove(cookie);
                     String userName = getCookie2User().get(cookie);
-                    getCookie2User().remove(cookie);
                     getUserName2Info().remove(userName);
-
+                    getCookie2User().remove(cookie);
                 }
             }
         }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
+    public static Map<Integer, Long> getCookie2LastAccessMap() {
+        return (Map) instance.contextRef.getAttribute(Utils.COOKIE_2_LAST_ACCESS);
+    }
     public static EngineController getEngineController() {
         return (EngineController)instance.contextRef.getAttribute(ENGINE_CONTROLLER);
     }
@@ -64,8 +68,8 @@ public class Servlet {
     public static Map<String, UserSystemInfo> getUserName2Info() {
         return (Map) instance.contextRef.getAttribute(Utils.USERS_IN_SYSTEM);
     }
-    public static Map<UUID, Integer> getUuid2Cookie() {
-        return (Map) instance.contextRef.getAttribute(Utils.UUID_2_COOKIE);
+    public static Map<UUID, String> getUuid2User() {
+        return (Map) instance.contextRef.getAttribute(Utils.UUID_2_USER);
     }
 
     public static Boolean getIsAdminLoggedIn() {
@@ -88,6 +92,12 @@ public class Servlet {
         return (Boolean) instance.contextRef.getAttribute(Utils.ROLES_CHANGED);
     }
 
+    public static void setRolesChanged(Boolean rolesChanged) {
+        synchronized (instance.contextRef){
+            instance.contextRef.setAttribute(Utils.ROLES_CHANGED, rolesChanged);
+        }
+    }
+
     public static Boolean getFetchStartupDataAdmin() {
         return (Boolean) instance.contextRef.getAttribute(Utils.FETCH_STARTUP_DATA_ADMIN);
     }
@@ -96,20 +106,19 @@ public class Servlet {
         return (Role.RoleManager) instance.contextRef.getAttribute(Utils.ROLES_MANAGER);
     }
 
-    public static Stack<UUID> getFlowExecIdStack(Integer cookie) {
-        return ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).get(cookie);
+    public static Stack<UUID> getFlowExecIdStack(String user) {
+        return ((Map<String,Stack<UUID>>) instance.contextRef.getAttribute(Utils.USER_2_FLOW_EXEC_ID)).get(user);
     }
 
-    public static void createNewFlowExecStack(Integer cookie) {
-        ((Map<Integer,Stack<UUID>>) instance.contextRef.getAttribute(Utils.COOKIE_2_FLOW_EXEC_ID)).put(cookie, new Stack<>());
+    public static void createNewFlowExecStack(String user) {
+        ((Map<String,Stack<UUID>>) instance.contextRef.getAttribute(Utils.USER_2_FLOW_EXEC_ID)).put(user, new Stack<>());
     }
     public static Integer idCookieBaker(Cookie[] cookies){
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("ID")) {
-                return Integer.parseInt(cookie.getValue());
-            }
-        }
-        return -1;
+       try {
+              return Integer.parseInt(Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("ID")).findFirst().get().getValue());
+       } catch (Exception e) {
+           return -1;
+       }
     }
 
     public static Set<String> getUserAccessibleFlowNames(UserSystemInfo userInfo){
@@ -136,5 +145,9 @@ public class Servlet {
         // get users cookie
         Integer userCookie = Servlet.idCookieBaker(cookies);
         return userCookie.equals(0);
+    }
+
+    public static void shutdown() {
+        userLogoutExecutorService.shutdown();
     }
 }

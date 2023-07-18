@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
  * 3. Managing the status query of the flows.
  * */
 public class FlowExecutorsManager implements Serializable {
-    private Map<UUID, ExecutionDataCollector> UUID2ExecutionDataCollector = new HashMap<>();
+    private final Map<UUID, ExecutionDataCollector> UUID2ExecutionDataCollector = new HashMap<>();
     private int workersCount;
     private ExecutorService executorService = null;
     public void prepareForSerialization() {

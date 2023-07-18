@@ -23,11 +23,11 @@ import java.util.*;
 
 public class EngineController implements Serializable {
 
-    private ExecutionArchive executionArchive = new ExecutionArchive();
-    private FlowLoader flowLoader = new FlowLoader();
-    private LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
-    private FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
-    private StatisticsManager statisticsManager = new StatisticsManager(getArchive());
+    private final ExecutionArchive executionArchive = new ExecutionArchive();
+    private final FlowLoader flowLoader = new FlowLoader();
+    private final LoadedFlowsLibrary flowLibrary = new LoadedFlowsLibrary();
+    private final FlowExecutorsManager flowsExecutorsManager = new FlowExecutorsManager();
+    private final StatisticsManager statisticsManager = new StatisticsManager(getArchive());
     private static EngineController instance = null;
 
 
@@ -98,9 +98,9 @@ public class EngineController implements Serializable {
         }
     }
 
-    public FlowNamesDTO getFlowDefinitionsNames(){
+    public FlowNamesDTO getFlowDefinitionsNames(boolean readonly){
         try {
-            return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames());
+            return new FlowNamesDTO(flowLibrary.getFlowDefinitionsNames(readonly));
         }catch (Exception e){
             return new FlowNamesDTO("No Flows Loaded Yet!");
         }

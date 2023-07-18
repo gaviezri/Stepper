@@ -27,11 +27,28 @@ public class Role {
         public void deleteRole(Role selectedRole) {
             rolesMap.remove(selectedRole.getName());
         }
+
+        public void AssignFlowsToRole(String roleName, List<String> flowNames) {
+            Role role = rolesMap.get(roleName);
+            role.setAssignedFlowNames(flowNames);
+        }
+
+        public void addRolesToContext(List<Role> roles) {
+            synchronized (roles){
+                for (Map.Entry<String,Role> entry : rolesMap.entrySet()) {
+                    if (!roles.contains(entry.getValue())) {
+                        roles.add(entry.getValue());
+                    } else {
+                        roles.set(roles.indexOf(entry.getValue()), entry.getValue());
+                    }
+                }
+            }
+        }
     }
 
 
-    private String Name;
-    private String Description;
+    private final String Name;
+    private final String Description;
     private List<String> assignedFlowNames;
 
 
@@ -43,7 +60,7 @@ public class Role {
         this.assignedFlowNames = new LinkedList<>();
     }
 
-    public Role(String Name, String Description, List<String> assignedFlowNames, int id) {
+    public Role(String Name, String Description, List<String> assignedFlowNames) {
         this.Name = Name;
         this.Description = Description;
         this.assignedFlowNames = assignedFlowNames;

@@ -12,11 +12,15 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import dto.flow.FlowDefinitionDTO;
 
+import javax.xml.soap.Text;
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,14 +31,14 @@ public class InputController extends LibraryControllerComponent {
     // NESTED CLASS INPUTFIELD
     // holds all the data needed to create an input field, and the input field itself
     public static class InputField {
-        private static Map<Node,InputField> Node2InputField = new HashMap<>();
-        private String name;
-        private String type;
-        private String userString;
-        private List<String> stepNames;
-        private BooleanProperty satisfied;
-        private boolean isMandatory;
-        private static List<InputField> allFields = new LinkedList<>();
+        private static final Map<Node,InputField> Node2InputField = new HashMap<>();
+        private final String name;
+        private final String type;
+        private final String userString;
+        private final List<String> stepNames;
+        private final BooleanProperty satisfied;
+        private final boolean isMandatory;
+        private static final List<InputField> allFields = new LinkedList<>();
         private Boolean isInitialValue = false;
         private Node inputFieldElement;
 
@@ -60,7 +64,11 @@ public class InputController extends LibraryControllerComponent {
             switch(type){
                 case "String":
                 case "List":
-                    return ((TextField) inputFieldElement).getText();
+                    if (inputFieldElement instanceof TextField)
+                        return ((TextField) inputFieldElement).getText();
+                    else
+                        return ((TextField)((HBox) inputFieldElement).getChildren().get(0)).getText();
+
                 case "Integer":
                     return ((TextField) inputFieldElement).getText();
                 case "Double":
@@ -111,8 +119,11 @@ public class InputController extends LibraryControllerComponent {
             this.isInitialValue = isInitialValue;
             if (type.equals("Enum")) {
                 ((ComboBox) inputFieldElement).setValue(initialValues.get(name).toString());
-            } else {
+            } else if (inputFieldElement instanceof TextField) {
                 ((TextField) inputFieldElement).setText(initialValues.get(name).toString());
+            } else {
+                // HBox
+                ((TextField) ((HBox) inputFieldElement).getChildren().get(0)).setText(initialValues.get(name).toString());
             }
             inputFieldElement.setDisable(isReRun);
         }
@@ -161,9 +172,51 @@ public class InputController extends LibraryControllerComponent {
         }
 
         private void setStringInputField() {
+            TextField theTextContent;
+            if (name.toLowerCase().contains("folder") || name.toLowerCase().contains("file")){
+                theTextContent = createResourceInputField();
+            } else {
+                theTextContent = createSimpleStringInputField();
+            }
+            satisfied.bind((theTextContent.textProperty().isNotEmpty()));
+
+        }
+
+        private TextField createSimpleStringInputField() {
             inputFieldElement = new TextField();
             ((TextField) inputFieldElement).setPromptText(setTextualPrompt(" |"));
-            satisfied.bind(((TextField) inputFieldElement).textProperty().isNotEmpty());
+            return (TextField) inputFieldElement;
+        }
+
+        private TextField createResourceInputField() {
+            inputFieldElement = new HBox();
+            HBox wrapper = (HBox) inputFieldElement;
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setSpacing(10);
+            TextField textField = new TextField();
+            textField.setPromptText(setTextualPrompt(" |"));
+            wrapper.getChildren().add(textField);
+            Button button = new Button("Browse");
+            button.setOnAction(event -> {
+                File file = chooseResource(name.toLowerCase().contains("folder"));
+                    if (file != null) {
+                        textField.setText(file.getAbsolutePath());
+                    }
+            });
+            wrapper.getChildren().add(button);
+            return textField;
+        }
+
+        private File chooseResource(boolean isFolder) {
+            if (isFolder) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Select Folder");
+                return directoryChooser.showDialog(null);
+            } else {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Select File");
+                return fileChooser.showOpenDialog(null);
+            }
         }
 
         // SET PLACEHOLDER TEXT
@@ -307,7 +360,11 @@ public class InputController extends LibraryControllerComponent {
         });
         startFlowButton.setOnMouseReleased((event)-> {
             Platform.runLater(() -> {
-                executionController.clearStepDetails();
+                try {
+                    executionController.clearStepDetails();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 startFlowButton.translateYProperty().set(-5);
             });
         });

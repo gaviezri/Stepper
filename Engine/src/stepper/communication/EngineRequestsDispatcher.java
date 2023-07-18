@@ -1,7 +1,6 @@
 package stepper.communication;
 
 import communication.StepperRequestsDispatcher;
-import dto.flow.LoadDataDTO;
 import javafx.util.Pair;
 
 import java.io.OutputStream;
@@ -9,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static communication.Utils.GSON_INSTANCE;
 import static communication.Utils.JSON_CONTENT_TYPE;
 
 public class EngineRequestsDispatcher extends StepperRequestsDispatcher {

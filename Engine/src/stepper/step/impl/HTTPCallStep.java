@@ -62,7 +62,6 @@ public class HTTPCallStep extends AbstractStepDefinition {
             body = context.getDataValue("BODY", String.class);
         }catch (Exception e){}
 
-        logger.log(protocol + "://" + address + "/" + resource);
          return EngineRequestsDispatcher.getInstance().createHTTPRequestAndReturnOutput(protocol, resource,
                 address, method, JSON_CONTENT_TYPE, body);
     }

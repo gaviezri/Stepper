@@ -36,11 +36,20 @@ public class FlowExecutionServlet extends HttpServlet {
         String userName = Servlet.getCookie2User().get(cookie);
         UUID flowUUID = Servlet.getFlowExecIdStack(userName).peek();
         ExecutedFlowDetailsDTO executionProgressDTO = Servlet.getEngineController().getExecutedFlowDetailsByUUID(flowUUID);
+
         try {
+            Integer cookie = Servlet.idCookieBaker(req.getCookies());
+            UUID flowUUID = Servlet.getFlowExecIdStack(cookie).peek();
+            ExecutedFlowDetailsDTO executionProgressDTO = Servlet.getEngineController().getExecutedFlowDetailsByUUID(flowUUID);
             resp.getWriter().println(GSON_INSTANCE.toJson(executionProgressDTO));
-        } catch (IOException e) {
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        // by cookie get the top UUID in the stack
+        // get the progress of the flow execution by UUID from engine
+        // return the progress to the user using dto
     }
 
     private void handleFlowExecutionPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

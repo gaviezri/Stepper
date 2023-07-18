@@ -322,25 +322,26 @@ public class RolesController extends BodyControllerComponent {
 
 
     public void updateRoles(List<Role> rolesFromServer) {
-        Platform.runLater(() -> {
-            try {
-                ObservableList<Role> rolesFromListView = availableRolesListView.getItems();
-                for (Role role : rolesFromServer) {
-                    if (rolesFromListView.stream()
-                            .noneMatch(item -> item.getName().equals(role.getName()))) {
-                        rolesFromListView.add(role);
-                    } else {
-                        Role roleFromListView = rolesFromListView.stream()
-                                .filter(item -> item.getName().equals(role.getName()))
-                                .findFirst()
-                                .get();
-                        roleFromListView.setAssignedFlowNames(role.getAssignedFlowNames());
-                    }
-                }
-                rolesFromListView.sort(Comparator.comparing(Role::getName));
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+//        Platform.runLater(() -> {
+//            try {
+//                ObservableList<Role> rolesFromListView = availableRolesListView.getItems();
+//                for (Role role : rolesFromServer) {
+//                    if (rolesFromListView.stream()
+//                            .noneMatch(item -> item.getName().equals(role.getName()))) {
+//                        rolesFromListView.add(role);
+//                    } else {
+//                        Role roleFromListView = rolesFromListView.stream()
+//                                .filter(item -> item.getName().equals(role.getName()))
+//                                .findFirst()
+//                                .get();
+//
+//                        roleFromListView.setAssignedFlowNames(role.getAssignedFlowNames());
+//                    }
+//                }
+//                rolesFromListView.sort(Comparator.comparing(Role::getName));
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        });
     }
 }

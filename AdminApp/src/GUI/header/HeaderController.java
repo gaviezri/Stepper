@@ -55,7 +55,12 @@ public class HeaderController  {
             StringBuilder sb = StringifyXMLContent(path);
             LoadDataDTO result = AdminRequestsDispatcher.getInstance().loadXML(sb.toString());
             updateGUIonXMLLoadingStatus(path, result);
+            triggerRolesUpdate();
         }
+    }
+
+    private void triggerRolesUpdate() {
+        this.mainController.getBodyController().triggerRolesUpdate();
     }
 
     private File getFlowXMLFile() {

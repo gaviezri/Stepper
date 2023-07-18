@@ -360,7 +360,11 @@ public class InputController extends LibraryControllerComponent {
         });
         startFlowButton.setOnMouseReleased((event)-> {
             Platform.runLater(() -> {
-                executionController.clearStepDetails();
+                try {
+                    executionController.clearStepDetails();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 startFlowButton.translateYProperty().set(-5);
             });
         });

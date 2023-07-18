@@ -91,11 +91,15 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
         @Override
         public void initialize(URL location, ResourceBundle resources) {
                 Platform.runLater(()-> {
-                        flowNameColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
-                        flowExecutionResultColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
-                        startTimeColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
-                        userColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("executingUserName"));
-                        noneFilter.setSelected(true);
+                        try {
+                                flowNameColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("flowName"));
+                                flowExecutionResultColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, FlowExecutionResult>("flowExecutionResult"));
+                                startTimeColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("startTime"));
+                                userColumn.setCellValueFactory(new PropertyValueFactory<SingleFlowExecutionDTO, String>("executingUserName"));
+                                noneFilter.setSelected(true);
+                        } catch (Exception e){
+                                e.printStackTrace();
+                        }
                 });
 
                 initializeHistoryTable();
@@ -164,15 +168,19 @@ public class HistoryController extends GUI.body.BodyControllerComponent implemen
                 curFlowsExecutionHistoryDTO = flowsExecutionHistoryDTO;
                 fetchedItems = FXCollections.observableArrayList(curFlowsExecutionHistoryDTO.getFlowExecutionDTOs());
                 Platform.runLater(()-> {
-                        ObservableList<SingleFlowExecutionDTO> itemsInTable = historyTable.getItems();
-                        SingleFlowExecutionDTO selectedItem = historyTable.getSelectionModel().getSelectedItem();
-                        for (SingleFlowExecutionDTO flow : fetchedItems) {
-                                if (!itemsInTable.contains(flow)) {
-                                        itemsInTable.add(flow);
+                        try {
+                                ObservableList<SingleFlowExecutionDTO> itemsInTable = historyTable.getItems();
+                                SingleFlowExecutionDTO selectedItem = historyTable.getSelectionModel().getSelectedItem();
+                                for (SingleFlowExecutionDTO flow : fetchedItems) {
+                                        if (!itemsInTable.contains(flow)) {
+                                                itemsInTable.add(flow);
+                                        }
                                 }
-                        }
-                        if (selectedItem != null) {
-                                historyTable.getSelectionModel().select(selectedItem);
+                                if (selectedItem != null) {
+                                        historyTable.getSelectionModel().select(selectedItem);
+                                }
+                        } catch (Exception e){
+                                e.printStackTrace();
                         }
                 });
         }

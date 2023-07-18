@@ -31,10 +31,14 @@ public class StatisticsController extends BodyControllerComponent {
         Map<String, Pair<Integer, Duration>> flowStatistics = statisticsDTO.getFlowStatistics();
 
         Platform.runLater(()-> {
-            updateBarCharByName(stepStatistics, stepSumTimeChar, false);
-            updateBarCharByName(stepStatistics, stepExecutionChar, true);
-            updateBarCharByName(flowStatistics, flowSumTimeChar, false);
-            updateBarCharByName(flowStatistics, flowExecutionChar, true);
+            try {
+                updateBarCharByName(stepStatistics, stepSumTimeChar, false);
+                updateBarCharByName(stepStatistics, stepExecutionChar, true);
+                updateBarCharByName(flowStatistics, flowSumTimeChar, false);
+                updateBarCharByName(flowStatistics, flowExecutionChar, true);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         });
     }
 

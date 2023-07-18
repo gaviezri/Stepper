@@ -119,4 +119,8 @@ public class AppController {
     public void deleteRoleOnServer(Role selectedRole) {
         reqDispatcher.deleteRole(selectedRole);
     }
+
+    public BodyController getBodyController() {
+        return bodyComponentController;
+    }
 }

@@ -1,6 +1,5 @@
 package servlets;
 
-import com.sun.org.apache.regexp.internal.RE;
 import communication.Role;
 import communication.UserSystemInfo;
 import dto.flow.FlowDefinitionDTO;

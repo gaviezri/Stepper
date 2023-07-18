@@ -1,6 +1,7 @@
 package stepper.step.impl;
 
 import com.jayway.jsonpath.JsonPath;
+import communication.Utils;
 import stepper.dd.api.DataDefinition;
 import stepper.dd.impl.DataDefinitionRegistry;
 import stepper.flow.execution.context.StepExecutionContext;
@@ -40,6 +41,8 @@ public class JsonDataExtractorStep extends AbstractStepDefinition {
          * it will extract the data from the json by each command and append it to the result string */
         try {
             String json = context.getDataValue("JSON", String.class);
+            json = Utils.GSON_INSTANCE.fromJson(json,String.class);
+
             String jsonPath = context.getDataValue("JSON_PATH", String.class);
             List<String> jsonPathList = extractJsonPathList(jsonPath);
             StringBuilder extractedValue = new StringBuilder();
@@ -52,8 +55,7 @@ public class JsonDataExtractorStep extends AbstractStepDefinition {
             else {
                 while (counter < jsonPathList.size()) {
                     try {
-                        curExtractedValue = JsonPath.read(json, "$.id.*");
-//                    curExtractedValue = JsonPath.read(json, jsonPathList.get(counter));
+                    curExtractedValue = JsonPath.read(json, jsonPathList.get(counter));
                     }
                     catch (Exception e){
                         System.out.println(e.getMessage());
@@ -68,8 +70,8 @@ public class JsonDataExtractorStep extends AbstractStepDefinition {
                 }
             }
 
-            logger.log("Extracting data " + jsonPath + ". Value: " + extractedValue);
-            context.storeDataValue("VALUE", extractedValue , DataDefinitionRegistry.STRING);
+            logger.log("Extracting data " + jsonPath + ". Value: " + extractedValue.toString());
+            context.storeDataValue("VALUE", extractedValue.toString() , DataDefinitionRegistry.STRING);
         }
         catch (Exception e) {
             logger.log("Exception occurred: " + e.getMessage());

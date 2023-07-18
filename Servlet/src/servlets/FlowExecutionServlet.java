@@ -38,9 +38,6 @@ public class FlowExecutionServlet extends HttpServlet {
         ExecutedFlowDetailsDTO executionProgressDTO = Servlet.getEngineController().getExecutedFlowDetailsByUUID(flowUUID);
 
         try {
-            Integer cookie = Servlet.idCookieBaker(req.getCookies());
-            UUID flowUUID = Servlet.getFlowExecIdStack(cookie).peek();
-            ExecutedFlowDetailsDTO executionProgressDTO = Servlet.getEngineController().getExecutedFlowDetailsByUUID(flowUUID);
             resp.getWriter().println(GSON_INSTANCE.toJson(executionProgressDTO));
         }
         catch (Exception e){

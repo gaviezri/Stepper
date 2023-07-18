@@ -12,6 +12,7 @@ import stepper.step.api.enums.StepResult;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 public class JsonDataExtractorStep extends AbstractStepDefinition {
 
     public JsonDataExtractorStep() {

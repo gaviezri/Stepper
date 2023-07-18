@@ -17,12 +17,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UsersManagementController extends BodyControllerComponent {
+
     private class RoleListItem {
         private final StringProperty name = new SimpleStringProperty();
         private final BooleanProperty assigned = new SimpleBooleanProperty();
@@ -72,6 +74,11 @@ public class UsersManagementController extends BodyControllerComponent {
         initializeOnlineUsersListView();
     }
 
+    public Collection<UserSystemInfo> getModifiedUsers() {
+        return modifiedUsers;
+    }
+
+
     public void initializeSaveChangesButton(){
         saveChangesButton.disableProperty().bind(Bindings.not(changesMade));
         saveChangesButton.setOnAction(event -> {
@@ -87,8 +94,12 @@ public class UsersManagementController extends BodyControllerComponent {
             List<Role> newValue = rolesListView.getItems();
             if (newValue != null) {
                 Platform.runLater(() -> {
-                    deleteRolesFromUserManagementListViewWhichAreAbscentInRolesTab(newValue);
-                    addRolesToUserManagementListViewWhichArePresentInRolesTab(newValue);
+                    try {
+                        deleteRolesFromUserManagementListViewWhichAreAbscentInRolesTab(newValue);
+                        addRolesToUserManagementListViewWhichArePresentInRolesTab(newValue);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 });
             }
         });
@@ -109,13 +120,17 @@ public class UsersManagementController extends BodyControllerComponent {
         onlineUsersListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Platform.runLater(()-> {
-                    rolesListView.setDisable(false);
-                    selectedUserLabel.setText(newValue.getName());
-                    managerCheckbox.setSelected(newValue.isManager());
-                    Set<String> rolesNamesSet = newValue.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
-                    rolesListView.getItems()
-                            .forEach(x->x.assignedProperty()
-                                    .set(rolesNamesSet.contains(x.getName())));
+                    try {
+                        rolesListView.setDisable(false);
+                        selectedUserLabel.setText(newValue.getName());
+                        managerCheckbox.setSelected(newValue.isManager());
+                        Set<String> rolesNamesSet = newValue.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+                        rolesListView.getItems()
+                                .forEach(x -> x.assignedProperty()
+                                        .set(rolesNamesSet.contains(x.getName())));
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 });
             } else {
                 Platform.runLater(()-> {
@@ -163,23 +178,27 @@ public class UsersManagementController extends BodyControllerComponent {
 
     public void updateOnlineUsers(Collection<UserSystemInfo> userSystemInfos) {
         Platform.runLater(()-> {
-            UserSystemInfo selectedUsi = onlineUsersListView.getSelectionModel().getSelectedItem();
-            ObservableList<UserSystemInfo> items = onlineUsersListView.getItems();
-            if (userSystemInfos.size()>0){
-                // insert new items only if they are not in the list
-                for (UserSystemInfo userSystemInfo : userSystemInfos) {
-                    if (!items.contains(userSystemInfo)) {
-                        items.add(userSystemInfo);
-                        reselectSelectedUserAfterUpdate(selectedUsi);
-                        // or update existing items if they are not equal
-                    } else if (aUserInfoHasBeenUpdated(items, userSystemInfo)) {
-                        items.set(items.indexOf(userSystemInfo), userSystemInfo);
-                        reselectSelectedUserAfterUpdate(selectedUsi);
+            try {
+                UserSystemInfo selectedUsi = onlineUsersListView.getSelectionModel().getSelectedItem();
+                ObservableList<UserSystemInfo> items = onlineUsersListView.getItems();
+                if (userSystemInfos.size() > 0) {
+                    // insert new items only if they are not in the list
+                    for (UserSystemInfo userSystemInfo : userSystemInfos) {
+                        if (!items.contains(userSystemInfo)) {
+                            items.add(userSystemInfo);
+                            reselectSelectedUserAfterUpdate(selectedUsi);
+                            // or update existing items if they are not equal
+                        } else if (aUserInfoHasBeenUpdated(items, userSystemInfo)) {
+                            items.set(items.indexOf(userSystemInfo), userSystemInfo);
+                            reselectSelectedUserAfterUpdate(selectedUsi);
+                        }
                     }
+                    items.removeIf(x -> !userSystemInfos.contains(x));
+                } else {
+                    items.clear();
                 }
-                items.removeIf(x-> !userSystemInfos.contains(x));
-            } else {
-                items.clear();
+            } catch (Exception e){
+                e.printStackTrace();
             }
         });
     }

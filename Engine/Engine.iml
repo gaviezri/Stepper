@@ -11,6 +11,7 @@
     <orderEntry type="module" module-name="DTO" />
     <orderEntry type="module" module-name="Communication" />
     <orderEntry type="library" exported="" name="jayson path" level="project" />
-    <orderEntry type="library" name="jayway" level="project" />
+
+
   </component>
 </module>

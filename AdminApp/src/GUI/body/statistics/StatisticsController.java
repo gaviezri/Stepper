@@ -31,6 +31,7 @@ public class StatisticsController extends BodyControllerComponent {
 
         // { Original Step Name : (Occurrences Counter, Sum Durations) }
         Platform.runLater(()-> {
+            
             Map<String, Pair<Integer, Duration>> newStepStatistics = statisticsDTO.getStepStatistics();
             Map<String, Pair<Integer, Duration>> newFlowStatistics = statisticsDTO.getFlowStatistics();
             if (FoundDeltaFromLastUpdate(newStepStatistics, false)) {
